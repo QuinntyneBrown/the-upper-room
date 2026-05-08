@@ -1,4 +1,4 @@
-// traces_to: L2-001..L2-008, L2-061, L2-099, L2-103, L2-104, L2-105
+// traces_to: L2-001..L2-008, L2-061, L2-099, L2-100, L2-103, L2-104, L2-105
 import { Component, inject, signal } from '@angular/core';
 import { TarIcon } from '../../../../components/src/lib/icon/icon';
 import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-snackbar.service';
@@ -9,11 +9,14 @@ import {
 import { TarEmptyState } from '../../../../components/src/lib/states/tar-empty-state';
 import { TarSkeleton } from '../../../../components/src/lib/states/tar-skeleton';
 import { TarListError } from '../../../../components/src/lib/states/tar-list-error';
+import { TranslocoPipe } from '../i18n/transloco.pipe';
 
 @Component({
   selector: 'app-styleguide',
-  imports: [TarIcon, TarEmptyState, TarSkeleton, TarListError],
+  imports: [TarIcon, TarEmptyState, TarSkeleton, TarListError, TranslocoPipe],
   template: `
+    <h2 data-testid="greeting">{{ 'styleguide.greeting' | transloco }}</h2>
+
     <button data-testid="seed-button" class="seed-button" type="button">Action</button>
     <div data-testid="seed-card" class="seed-card">Card</div>
     <span data-testid="seed-chip" class="seed-chip">Chip</span>
