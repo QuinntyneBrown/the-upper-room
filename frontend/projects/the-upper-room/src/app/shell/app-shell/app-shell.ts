@@ -4,10 +4,11 @@ import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { TarIcon } from '../../../../../components/src/lib/icon/icon';
 import { breadcrumbsFromUrl, Crumb } from '../breadcrumb.service';
+import { OfflineBanner } from '../../network/offline-banner/offline-banner';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, TarIcon],
+  imports: [RouterOutlet, TarIcon, OfflineBanner],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
 })
