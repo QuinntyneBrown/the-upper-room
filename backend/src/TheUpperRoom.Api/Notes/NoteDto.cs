@@ -23,7 +23,7 @@ public sealed record NoteDto(
         note.CreatedBy,
         note.CreatedAt,
         note.UpdatedAt,
-        note.History.Select(v => new NoteVersionDto(v.Id, v.BodyMarkdown, v.BodyHtmlSanitized)).ToArray());
+        note.History.Select(v => new NoteVersionDto(v.Id, v.BodyMarkdown, v.BodyHtmlSanitized, v.CreatedAt, v.CreatedBy)).ToArray());
 }
 
-public sealed record NoteVersionDto(string Id, string BodyMarkdown, string BodyHtmlSanitized);
+public sealed record NoteVersionDto(string Id, string BodyMarkdown, string BodyHtmlSanitized, DateTimeOffset CreatedAt, string CreatedBy);

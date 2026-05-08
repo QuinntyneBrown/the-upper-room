@@ -41,12 +41,15 @@
             <span data-testid="note-time" class="notes__time">{{ relativeTime(note.updatedAt) }}</span>
           </div>
           <div data-testid="note-body" class="notes__body" [innerHTML]="note.bodyHtmlSanitized"></div>
-          @if (canModify(note)) {
-            <div class="notes__item-actions">
+          <div class="notes__item-actions">
+            @if (note.history.length > 0) {
+              <button data-testid="note-history-button" type="button" class="notes__btn-text" (click)="openHistory(note)">History</button>
+            }
+            @if (canModify(note)) {
               <button data-testid="note-edit-button" type="button" class="notes__btn-text" (click)="startEdit(note)">Edit</button>
               <button data-testid="note-delete-button" type="button" class="notes__btn-text notes__btn-text--danger" (click)="deleteNote(note.id)">Delete</button>
-            </div>
-          }
+            }
+          </div>
         }
       </div>
     } @empty {
@@ -54,3 +57,24 @@
     }
   </div>
 </div>
+
+@if (historyNote(); as hn) {
+  <div class="notes__dialog-backdrop" (click)="closeHistory()"></div>
+  <div data-testid="note-history-dialog" class="notes__dialog" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+    <div class="notes__dialog-header">
+      <h2 class="notes__dialog-title">Edit history</h2>
+      <button data-testid="note-history-close" type="button" class="notes__btn-text" (click)="closeHistory()">Close</button>
+    </div>
+    <div class="notes__dialog-layout">
+      <ul class="notes__history-list">
+        @for (v of hn.history; track v.id) {
+          <li data-testid="note-history-version" class="notes__history-item" (click)="selectVersion(v.bodyHtmlSanitized)">
+            <span data-testid="note-history-version-time" class="notes__time">{{ relativeTime(v.createdAt) }}</span>
+            <span class="notes__author">{{ v.createdBy }}</span>
+          </li>
+        }
+      </ul>
+      <div data-testid="note-history-preview" class="notes__history-preview notes__body" [innerHTML]="historyPreviewHtml()"></div>
+    </div>
+  </div>
+}

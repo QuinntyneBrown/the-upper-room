@@ -1,7 +1,7 @@
 ---
 id: TASK-0082
 title: Note edit history dialog
-status: Accepted
+status: Completed
 phase: N
 depends_on: [TASK-0081]
 traces_to: [L2-041]

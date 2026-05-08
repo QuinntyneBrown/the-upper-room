@@ -1,4 +1,4 @@
-// traces_to: L2-042
+// traces_to: L2-041, L2-042
 import { Component, ElementRef, Input, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-snackbar.service';
@@ -12,7 +12,7 @@ export interface NoteDto {
   createdBy: string;
   createdAt: string;
   updatedAt: string;
-  history: { id: string; bodyMarkdown: string; bodyHtmlSanitized: string }[];
+  history: { id: string; bodyMarkdown: string; bodyHtmlSanitized: string; createdAt: string; createdBy: string }[];
 }
 
 @Component({
@@ -37,6 +37,8 @@ export class TarNotes implements OnInit {
   protected readonly editingText = signal('');
   protected readonly currentUserId = signal<string | null>(null);
   protected readonly isAdmin = signal(false);
+  protected readonly historyNote = signal<NoteDto | null>(null);
+  protected readonly historyPreviewHtml = signal<string | null>(null);
 
   ngOnInit(): void {
     this.http.get<{ id: string; roles: string[] }>('/api/v1/users/me').subscribe((me) => {
@@ -101,6 +103,20 @@ export class TarNotes implements OnInit {
   protected canModify(note: NoteDto): boolean {
     const uid = this.currentUserId();
     return uid !== null && (note.createdBy === uid || this.isAdmin());
+  }
+
+  protected openHistory(note: NoteDto): void {
+    this.historyNote.set(note);
+    this.historyPreviewHtml.set(note.bodyHtmlSanitized);
+  }
+
+  protected closeHistory(): void {
+    this.historyNote.set(null);
+    this.historyPreviewHtml.set(null);
+  }
+
+  protected selectVersion(html: string): void {
+    this.historyPreviewHtml.set(html);
   }
 
   protected relativeTime(dateStr: string): string {
