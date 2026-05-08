@@ -1,8 +1,7 @@
 // traces_to: L2-107
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { ConfirmService, SnackbarService, TarButton } from 'components';
 
 export interface SessionRow {
   readonly id: string;
@@ -14,6 +13,7 @@ export interface SessionRow {
 
 @Component({
   selector: 'app-sessions-card',
+  imports: [TarButton],
   templateUrl: './sessions-card.html',
   styleUrl: './sessions-card.scss',
 })

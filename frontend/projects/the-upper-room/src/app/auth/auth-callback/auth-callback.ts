@@ -2,13 +2,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { SnackbarService } from 'components';
 import { PkceService } from '../pkce.service';
 import { AccessTokenStore } from '../access-token-store';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
 
 @Component({
   selector: 'app-auth-callback',
-  template: `<p>Signing you in…</p>`,
+  templateUrl: './auth-callback.html',
+  styleUrl: './auth-callback.scss',
 })
 export class AuthCallback implements OnInit {
   private readonly route = inject(ActivatedRoute);

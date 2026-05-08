@@ -3,8 +3,6 @@ using System.Text.RegularExpressions;
 
 namespace TheUpperRoom.Api.Auth;
 
-public sealed record PasswordEvaluation(bool IsValid, int Score, string? Helper);
-
 public sealed class PasswordPolicy
 {
     private const int MinLen = 12;

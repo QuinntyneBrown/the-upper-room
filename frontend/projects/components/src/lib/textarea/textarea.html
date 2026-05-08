@@ -1,0 +1,29 @@
+<mat-form-field
+  class="tar-textarea"
+  [class.tar-textarea--full-width]="fullWidth"
+  appearance="outline"
+>
+  @if (label) {
+    <mat-label>{{ label }}</mat-label>
+  }
+  <textarea
+    matInput
+    class="tar-textarea__input"
+    [value]="value"
+    [placeholder]="placeholder"
+    [required]="required"
+    [disabled]="disabled"
+    [attr.maxlength]="maxLength"
+    [rows]="rows"
+    [attr.data-testid]="testId"
+    [attr.aria-label]="ariaLabel || label"
+    (input)="onInput($event)"
+    (blur)="blurred.emit()"
+  ></textarea>
+  @if (hint) {
+    <mat-hint class="tar-textarea__hint">{{ hint }}</mat-hint>
+  }
+  @if (error) {
+    <mat-error class="tar-textarea__error" [attr.data-testid]="errorTestId">{{ error }}</mat-error>
+  }
+</mat-form-field>

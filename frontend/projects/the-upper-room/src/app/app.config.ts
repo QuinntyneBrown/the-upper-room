@@ -2,6 +2,9 @@
 import { ApplicationConfig, ErrorHandler, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideApi } from 'api';
+import { provideTarComponents } from 'components';
+import { provideDomain } from 'domain';
 
 import { routes } from './app.routes';
 import { correlationIdInterceptor } from './interceptors/correlation-id.interceptor';
@@ -29,5 +32,8 @@ export const appConfig: ApplicationConfig = {
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: ACCESS_TOKEN_SOURCE, useExisting: AccessTokenStore },
     { provide: AUTH_PROVIDER, useExisting: PkceAuthProvider },
+    provideApi(),
+    provideTarComponents(),
+    provideDomain(),
   ],
 };

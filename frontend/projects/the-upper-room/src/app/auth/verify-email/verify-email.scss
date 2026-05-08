@@ -1,0 +1,37 @@
+// traces_to: L2-018
+:host {
+  display: block;
+}
+
+.verify-email {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  gap: var(--md-sys-space-3);
+  padding: var(--md-sys-space-6);
+}
+
+.verify-email__title {
+  margin: 0;
+  font: var(--md-sys-typescale-headline-small);
+}
+
+.verify-email__body {
+  margin: 0;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.verify-email__cooldown {
+  color: var(--md-sys-color-on-surface-variant);
+  font: var(--md-sys-typescale-body-small);
+}
+
+.verify-email__link-btn {
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: var(--md-sys-space-3) var(--md-sys-space-6);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-label-large);
+  text-decoration: none;
+}

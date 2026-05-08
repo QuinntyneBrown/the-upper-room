@@ -1,0 +1,21 @@
+:host {
+  display: inline-block;
+}
+
+.tar-button {
+  font: var(--md-sys-typescale-label-large);
+  border-radius: var(--md-sys-shape-corner-full);
+}
+
+.tar-button--full-width {
+  width: 100%;
+}
+
+.tar-button--tonal {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.tar-button__icon {
+  margin-inline-end: var(--md-sys-space-2);
+}

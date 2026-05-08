@@ -1,0 +1,39 @@
+// traces_to: L2-069
+:host {
+  display: contents;
+}
+
+.error-boundary {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  gap: var(--md-sys-space-3);
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+  padding: var(--md-sys-space-8);
+  background: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+}
+
+.error-boundary__title {
+  margin: 0;
+  font: var(--md-sys-typescale-headline-medium);
+}
+
+.error-boundary__body {
+  margin: 0;
+}
+
+.error-boundary__code {
+  font-family: ui-monospace, monospace;
+  background: var(--md-sys-color-surface-container);
+  padding: var(--md-sys-space-1) var(--md-sys-space-2);
+  border-radius: var(--md-sys-shape-corner-extra-small);
+}
+
+.error-boundary__actions {
+  display: flex;
+  gap: var(--md-sys-space-2);
+}

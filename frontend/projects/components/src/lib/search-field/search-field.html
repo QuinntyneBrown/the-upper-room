@@ -1,0 +1,30 @@
+<mat-form-field class="tar-search-field" appearance="outline">
+  @if (label) {
+    <mat-label>{{ label }}</mat-label>
+  }
+  <mat-icon matIconPrefix class="tar-search-field__icon">search</mat-icon>
+  <input
+    matInput
+    class="tar-search-field__input"
+    type="search"
+    [value]="value"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [attr.aria-label]="ariaLabel || label || placeholder"
+    [attr.data-testid]="testId"
+    (input)="onInput($event)"
+  />
+  @if (value) {
+    <button
+      mat-icon-button
+      matIconSuffix
+      type="button"
+      class="tar-search-field__clear"
+      aria-label="Clear search"
+      [attr.data-testid]="testId ? testId + '-clear' : null"
+      (click)="onClear()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+</mat-form-field>

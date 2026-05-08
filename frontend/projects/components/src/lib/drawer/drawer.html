@@ -1,0 +1,37 @@
+@if (open) {
+  <div
+    class="tar-drawer__scrim"
+    [attr.data-testid]="testId ? testId + '-scrim' : null"
+    (click)="closeOnScrim && closed.emit()"
+  ></div>
+  <aside
+    class="tar-drawer"
+    [class]="'tar-drawer--' + position"
+    [attr.role]="role"
+    [attr.aria-modal]="role === 'dialog' ? 'true' : null"
+    [attr.aria-label]="ariaLabel"
+    [attr.data-testid]="testId"
+  >
+    <header class="tar-drawer__header">
+      @if (title) {
+        <h2 class="tar-drawer__title">{{ title }}</h2>
+      }
+      <button
+        mat-icon-button
+        type="button"
+        class="tar-drawer__close"
+        aria-label="Close"
+        [attr.data-testid]="testId ? testId + '-close' : null"
+        (click)="closed.emit()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+    <div class="tar-drawer__body">
+      <ng-content />
+    </div>
+    <footer class="tar-drawer__footer">
+      <ng-content select="[tar-drawer-footer]" />
+    </footer>
+  </aside>
+}

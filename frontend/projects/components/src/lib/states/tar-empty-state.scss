@@ -1,0 +1,30 @@
+// traces_to: L2-103
+:host {
+  display: grid;
+  gap: var(--md-sys-space-3);
+  justify-items: center;
+  text-align: center;
+  padding: var(--md-sys-space-8);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.tar-empty-state__icon {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.tar-empty-state__heading {
+  margin: 0;
+  color: var(--md-sys-color-on-surface);
+  font: var(--md-sys-typescale-headline-small);
+}
+
+.tar-empty-state__body {
+  margin: 0;
+  max-width: 360px;
+  font: var(--md-sys-typescale-body-medium);
+}
+
+.tar-empty-state__actions {
+  display: flex;
+  gap: var(--md-sys-space-2);
+}

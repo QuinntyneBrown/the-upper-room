@@ -1,0 +1,11 @@
+@if (svc.bannerState(); as state) {
+  <tar-banner
+    testId="offline-banner"
+    [message]="state === 'offline' ? offlineMessage : onlineMessage"
+    [severity]="state === 'offline' ? 'error' : 'success'"
+    [icon]="state === 'offline' ? 'wifi_off' : 'check_circle'"
+    [dismissible]="true"
+    [actionLabel]="null"
+    (dismissed)="svc.dismiss()"
+  />
+}

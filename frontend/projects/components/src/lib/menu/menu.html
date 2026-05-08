@@ -1,0 +1,32 @@
+<button
+  mat-icon-button
+  type="button"
+  class="tar-menu__trigger"
+  [matMenuTriggerFor]="menu"
+  [attr.aria-label]="ariaLabel"
+  [attr.data-testid]="testId"
+>
+  <mat-icon>{{ triggerIcon }}</mat-icon>
+</button>
+<mat-menu #menu="matMenu" class="tar-menu" [xPosition]="xPosition" [yPosition]="yPosition">
+  @for (item of items; track item.id) {
+    @if (item.divider) {
+      <mat-divider class="tar-menu__divider" />
+    } @else {
+      <button
+        mat-menu-item
+        type="button"
+        class="tar-menu__item"
+        [class.tar-menu__item--danger]="item.danger"
+        [disabled]="item.disabled ?? false"
+        [attr.data-testid]="testId ? testId + '-' + item.id : null"
+        (click)="itemSelected.emit(item.id)"
+      >
+        @if (item.icon) {
+          <mat-icon class="tar-menu__icon">{{ item.icon }}</mat-icon>
+        }
+        <span class="tar-menu__label">{{ item.label }}</span>
+      </button>
+    }
+  }
+</mat-menu>

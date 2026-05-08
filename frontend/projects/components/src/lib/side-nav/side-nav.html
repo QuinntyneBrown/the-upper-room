@@ -1,0 +1,17 @@
+<mat-sidenav-container class="tar-side-nav" autosize>
+  <mat-sidenav
+    #sidenav
+    class="tar-side-nav__drawer"
+    [mode]="mode"
+    [opened]="opened"
+    [position]="position"
+    [fixedInViewport]="fixedInViewport"
+    [attr.data-testid]="testId"
+    (openedChange)="openedChange.emit($event)"
+  >
+    <ng-content select="[tar-side-nav-content]" />
+  </mat-sidenav>
+  <mat-sidenav-content class="tar-side-nav__content">
+    <ng-content />
+  </mat-sidenav-content>
+</mat-sidenav-container>

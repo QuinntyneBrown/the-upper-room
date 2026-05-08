@@ -1,0 +1,26 @@
+<mat-toolbar
+  class="tar-toolbar"
+  [class.tar-toolbar--scrolled]="scrolled"
+  [color]="color"
+  [attr.data-testid]="testId"
+>
+  @if (showMenu) {
+    <button
+      mat-icon-button
+      class="tar-toolbar__menu"
+      type="button"
+      [attr.aria-label]="menuAriaLabel"
+      [attr.data-testid]="testId ? testId + '-menu' : null"
+      (click)="menuClicked.emit()"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+  }
+  @if (title) {
+    <span class="tar-toolbar__title">{{ title }}</span>
+  }
+  <span class="tar-toolbar__spacer"></span>
+  <div class="tar-toolbar__actions">
+    <ng-content />
+  </div>
+</mat-toolbar>

@@ -1,0 +1,30 @@
+<header
+  class="tar-page-header"
+  [class.tar-page-header--scrolled]="scrolled"
+  [attr.data-testid]="testId"
+>
+  @if (showBack) {
+    <button
+      mat-icon-button
+      class="tar-page-header__back"
+      type="button"
+      [attr.aria-label]="backLabel"
+      [attr.data-testid]="testId ? testId + '-back' : null"
+      (click)="backClicked.emit()"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  }
+  <div class="tar-page-header__content">
+    @if (eyebrow) {
+      <span class="tar-page-header__eyebrow">{{ eyebrow }}</span>
+    }
+    <h1 class="tar-page-header__title">{{ title }}</h1>
+    @if (subtitle) {
+      <p class="tar-page-header__subtitle">{{ subtitle }}</p>
+    }
+  </div>
+  <div class="tar-page-header__actions">
+    <ng-content />
+  </div>
+</header>

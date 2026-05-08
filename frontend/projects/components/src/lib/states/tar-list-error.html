@@ -1,0 +1,14 @@
+<tar-icon name="error" size="xl" class="tar-list-error__icon" />
+<h2 data-testid="error-heading" class="tar-list-error__heading">We couldn't load this</h2>
+<p data-testid="error-body" class="tar-list-error__body">
+  Something went wrong. Reference: {{ correlationId }}
+</p>
+<button
+  mat-flat-button
+  data-testid="error-retry"
+  type="button"
+  class="tar-list-error__retry"
+  (click)="retry.emit()"
+>
+  Try again
+</button>

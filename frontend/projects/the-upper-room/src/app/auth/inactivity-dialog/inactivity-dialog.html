@@ -1,0 +1,24 @@
+@if (idle.state() === 'warning') {
+  <tar-dialog
+    [open]="true"
+    title="Are you still there?"
+    [closeOnBackdrop]="false"
+    [showActions]="true"
+    testId="inactivity-dialog"
+    role="dialog"
+  >
+    <p class="inactivity-dialog__body">
+      You'll be signed out in
+      <span data-testid="inactivity-countdown">{{ idle.countdown() }}</span> seconds.
+    </p>
+    <ng-container tar-dialog-actions>
+      <tar-button
+        testId="inactivity-stay"
+        variant="filled"
+        (clicked)="idle.staySignedIn()"
+      >
+        Stay signed in
+      </tar-button>
+    </ng-container>
+  </tar-dialog>
+}

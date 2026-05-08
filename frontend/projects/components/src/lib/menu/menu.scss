@@ -1,0 +1,23 @@
+:host {
+  display: inline-flex;
+}
+
+.tar-menu__trigger {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.tar-menu__item {
+  font: var(--md-sys-typescale-body-large);
+}
+
+.tar-menu__item--danger {
+  color: var(--md-sys-color-error);
+}
+
+.tar-menu__icon {
+  color: inherit;
+}
+
+.tar-menu__label {
+  font: var(--md-sys-typescale-body-large);
+}

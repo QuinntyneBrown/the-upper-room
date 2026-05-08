@@ -1,5 +1,9 @@
 // traces_to: L2-107
-.card {
+:host {
+  display: block;
+}
+
+.sessions-card {
   display: grid;
   gap: var(--md-sys-space-3);
   padding: var(--md-sys-space-6);
@@ -8,19 +12,19 @@
   box-shadow: var(--md-sys-elevation-level-1);
 }
 
-.card__header {
+.sessions-card__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--md-sys-space-3);
 }
 
-h2 {
+.sessions-card__title {
   margin: 0;
   font: var(--md-sys-typescale-title-large);
 }
 
-.list {
+.sessions-card__list {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -28,7 +32,7 @@ h2 {
   gap: var(--md-sys-space-2);
 }
 
-.row {
+.sessions-card__row {
   display: grid;
   gap: var(--md-sys-space-1);
   padding: var(--md-sys-space-3);
@@ -36,7 +40,7 @@ h2 {
   background: var(--md-sys-color-surface);
 }
 
-.chip {
+.sessions-card__chip {
   margin-left: var(--md-sys-space-2);
   padding: var(--md-sys-space-1) var(--md-sys-space-3);
   border-radius: var(--md-sys-shape-corner-full);
@@ -45,23 +49,7 @@ h2 {
   font: var(--md-sys-typescale-label-small);
 }
 
-small {
+.sessions-card__meta {
   color: var(--md-sys-color-on-surface-variant);
   font: var(--md-sys-typescale-body-small);
-}
-
-.btn {
-  border: 0;
-  border-radius: var(--md-sys-shape-corner-full);
-  padding: var(--md-sys-space-2) var(--md-sys-space-6);
-  background: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
-  font: var(--md-sys-typescale-label-large);
-  cursor: pointer;
-}
-
-.btn--ghost {
-  background: transparent;
-  color: inherit;
-  border: 1px solid var(--md-sys-color-outline);
 }

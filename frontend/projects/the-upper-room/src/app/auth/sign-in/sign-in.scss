@@ -1,18 +1,21 @@
 // traces_to: L2-016
 @use '../../../../../components/src/lib/breakpoints/mixins' as bp;
 
-.page {
+:host {
+  display: block;
+}
+
+.sign-in {
   min-height: 100dvh;
   display: grid;
   place-items: center;
   padding: var(--md-sys-space-4);
 }
 
-.card {
+.sign-in__card {
   display: grid;
   gap: var(--md-sys-space-4);
   width: 100%;
-  max-width: none;
   padding: var(--md-sys-space-6);
   background: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface);
@@ -24,66 +27,18 @@
   }
 }
 
-.card__title {
+.sign-in__title {
   margin: 0;
   font: var(--md-sys-typescale-headline-small);
 }
 
-.field {
-  display: grid;
-  gap: var(--md-sys-space-1);
-}
-
-.field__label {
-  font: var(--md-sys-typescale-label-large);
-}
-
-.field__row {
-  display: flex;
-  gap: var(--md-sys-space-2);
-}
-
-.field__input {
-  flex: 1;
-  padding: var(--md-sys-space-2) var(--md-sys-space-3);
-  border-radius: var(--md-sys-shape-corner-extra-small);
-  border: 1px solid var(--md-sys-color-outline);
-  font: var(--md-sys-typescale-body-medium);
-  background: var(--md-sys-color-surface);
-  color: inherit;
-}
-
-.field__error {
-  color: var(--md-sys-color-error);
-  font: var(--md-sys-typescale-body-small);
-}
-
-.field__toggle {
-  border: 1px solid var(--md-sys-color-outline);
-  border-radius: var(--md-sys-shape-corner-extra-small);
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-  padding: 0 var(--md-sys-space-3);
-}
-
-.form-error {
+.sign-in__form-error {
   margin: 0;
   color: var(--md-sys-color-error);
   font: var(--md-sys-typescale-body-small);
 }
 
-.card__submit {
-  border: 0;
-  border-radius: var(--md-sys-shape-corner-full);
-  padding: var(--md-sys-space-3) var(--md-sys-space-6);
-  background: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
-  font: var(--md-sys-typescale-label-large);
-  cursor: pointer;
-}
-
-.card__links {
+.sign-in__links {
   display: flex;
   justify-content: space-between;
   font: var(--md-sys-typescale-body-small);

@@ -1,0 +1,23 @@
+@if (single) {
+  <mat-chip-listbox
+    class="tar-chip-set"
+    [attr.aria-label]="ariaLabel"
+    [attr.data-testid]="testId"
+    (change)="valueChange.emit($any($event).value)"
+  >
+    @for (opt of options; track opt.value) {
+      <mat-chip-option
+        class="tar-chip-set__option"
+        [value]="opt.value"
+        [selected]="opt.value === value"
+        [disabled]="opt.disabled ?? false"
+      >
+        {{ opt.label }}
+      </mat-chip-option>
+    }
+  </mat-chip-listbox>
+} @else {
+  <mat-chip-set class="tar-chip-set" [attr.aria-label]="ariaLabel" [attr.data-testid]="testId">
+    <ng-content />
+  </mat-chip-set>
+}

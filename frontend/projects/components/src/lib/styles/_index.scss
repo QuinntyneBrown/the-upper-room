@@ -1,0 +1,8 @@
+// Shared SCSS entry point for components in this library.
+//
+// Component .scss files reference design tokens through CSS custom
+// properties (var(--md-sys-*)) — those are emitted at the app level
+// from `tokens/_tokens.scss`. This partial only forwards the
+// breakpoint mixins so component styles can use @include bp.sm etc.
+
+@forward '../breakpoints/mixins';

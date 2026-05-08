@@ -1,8 +1,26 @@
+// Material 3 theming. Defines --mat-sys-* CSS variables.
+@use '@angular/material' as mat;
+
 // traces_to: L2-001..L2-008
+// Component design tokens (--md-sys-*) and responsive grid utility.
 @use '../../components/src/lib/tokens/tokens';
 @use '../../components/src/lib/breakpoints/grid';
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
 
 html,
 body {
@@ -10,6 +28,11 @@ body {
   background: var(--md-sys-color-background);
   color: var(--md-sys-color-on-background);
   font: var(--md-sys-typescale-body-medium);
+}
+
+body {
+  color-scheme: light;
+  height: 100%;
 }
 
 *,

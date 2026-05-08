@@ -3,13 +3,26 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
-import { TarPasswordStrength } from '../tar-password-strength/tar-password-strength';
-import { evaluatePassword } from '../password-policy';
+import {
+  evaluatePassword,
+  SnackbarService,
+  TarButton,
+  TarCheckbox,
+  TarPasswordField,
+  TarPasswordStrength,
+  TarTextField,
+} from 'components';
 
 @Component({
   selector: 'app-sign-up',
-  imports: [RouterLink, TarPasswordStrength],
+  imports: [
+    RouterLink,
+    TarTextField,
+    TarPasswordField,
+    TarPasswordStrength,
+    TarCheckbox,
+    TarButton,
+  ],
   templateUrl: './sign-up.html',
   styleUrl: './sign-up.scss',
 })
@@ -37,7 +50,7 @@ export class SignUp implements OnInit {
       !this.submitting() &&
       this.termsAccepted() &&
       this.isValidEmail(this.email()) &&
-      this.passwordEval().valid &&
+      this.passwordEval().score >= 3 &&
       this.city().trim().length > 0,
   );
 

@@ -1,39 +1,34 @@
 @let isOpen = drawerOpen();
 @let didScroll = scrolled();
 
-<a data-testid="skip-link" class="skip-link" href="#main" (click)="skipToMain($event)"
-  >Skip to main content</a
->
+<a data-testid="skip-link" class="app-shell__skip-link" href="#main" (click)="skipToMain($event)">
+  Skip to main content
+</a>
 
-<header data-testid="top-bar" class="top-bar" [class.is-elevated]="didScroll">
-  <button
-    data-testid="drawer-toggle"
-    class="icon-btn drawer-toggle"
-    type="button"
-    aria-label="Open navigation"
-    (click)="toggleDrawer()"
-  >
-    <tar-icon name="menu" />
-  </button>
-  <span class="app-name">The Upper Room</span>
-  <span class="spacer"></span>
+<header data-testid="top-bar" class="app-shell__top-bar" [class.app-shell__top-bar--elevated]="didScroll">
+  <tar-icon-button
+    testId="drawer-toggle"
+    icon="menu"
+    ariaLabel="Open navigation"
+    class="app-shell__drawer-toggle"
+    (clicked)="toggleDrawer()"
+  />
+  <span class="app-shell__app-name">The Upper Room</span>
+  <span class="app-shell__spacer"></span>
   <app-city-switcher />
-  <div class="avatar">
-    <button
-      data-testid="avatar-trigger"
-      class="icon-btn"
-      type="button"
-      aria-label="Account menu"
-      (click)="toggleAvatarMenu()"
-    >
-      <tar-icon name="profile" />
-    </button>
+  <div class="app-shell__avatar">
+    <tar-icon-button
+      testId="avatar-trigger"
+      icon="account_circle"
+      ariaLabel="Account menu"
+      (clicked)="toggleAvatarMenu()"
+    />
     @if (avatarMenuOpen()) {
-      <div class="avatar__menu" role="menu">
+      <div class="app-shell__avatar-menu" role="menu">
         <button
           data-testid="avatar-menu-sign-out"
           type="button"
-          class="avatar__item"
+          class="app-shell__avatar-item"
           role="menuitem"
           (click)="onSignOut()"
         >
@@ -48,17 +43,17 @@
 
 <nav
   data-testid="drawer"
-  class="drawer"
+  class="app-shell__drawer"
   [attr.aria-hidden]="!isOpen"
-  [class.is-open]="isOpen"
+  [class.app-shell__drawer--open]="isOpen"
   (keydown.escape)="closeDrawer()"
 ></nav>
 
 @if (isOpen) {
-  <div data-testid="drawer-scrim" class="scrim" (click)="closeDrawer()"></div>
+  <div data-testid="drawer-scrim" class="app-shell__scrim" (click)="closeDrawer()"></div>
 }
 
-<nav data-testid="breadcrumbs" class="breadcrumbs" aria-label="Breadcrumb">
+<nav data-testid="breadcrumbs" class="app-shell__breadcrumbs" aria-label="Breadcrumb">
   @for (c of crumbs(); track c.url; let last = $last) {
     <a [attr.aria-current]="last ? 'page' : null" [href]="c.url">{{ c.label }}</a>
     @if (!last) {
@@ -67,8 +62,8 @@
   }
 </nav>
 
-<main id="main" tabindex="-1">
+<main id="main" tabindex="-1" class="app-shell__main">
   <router-outlet />
 </main>
 
-<footer data-testid="footer" class="footer">© The Upper Room</footer>
+<footer data-testid="footer" class="app-shell__footer">© The Upper Room</footer>

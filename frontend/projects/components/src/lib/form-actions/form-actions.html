@@ -1,0 +1,37 @@
+<div
+  class="tar-form-actions"
+  [class.tar-form-actions--sticky]="sticky"
+  [class.tar-form-actions--start]="align === 'start'"
+  [class.tar-form-actions--space-between]="align === 'space-between'"
+>
+  @if (cancelLabel) {
+    <button
+      mat-button
+      type="button"
+      class="tar-form-actions__cancel"
+      [disabled]="!dirty || saving"
+      [attr.data-testid]="cancelTestId"
+      (click)="cancelled.emit()"
+    >
+      {{ cancelLabel }}
+    </button>
+  }
+  <button
+    mat-flat-button
+    [type]="saveType"
+    color="primary"
+    class="tar-form-actions__save"
+    [disabled]="!dirty || saving || disabled"
+    [attr.data-testid]="saveTestId"
+    (click)="saved.emit()"
+  >
+    @if (saving) {
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="18"
+        class="tar-form-actions__spinner"
+      />
+    }
+    {{ saveLabel }}
+  </button>
+</div>

@@ -1,14 +1,19 @@
 // traces_to: L2-017
 @use '../../../../../components/src/lib/breakpoints/mixins' as bp;
 
-.page {
+:host {
+  display: block;
+}
+
+.sign-up {
   min-height: 100dvh;
   display: grid;
   place-items: center;
   padding: var(--md-sys-space-4);
 }
 
-.card {
+.sign-up__card,
+.sign-up__expired {
   display: grid;
   gap: var(--md-sys-space-4);
   width: 100%;
@@ -23,54 +28,30 @@
   }
 }
 
-.card--error {
+.sign-up__expired {
   background: var(--md-sys-color-error-container);
   color: var(--md-sys-color-on-error-container);
 }
 
-.card__title {
+.sign-up__title {
   margin: 0;
   font: var(--md-sys-typescale-headline-small);
 }
 
-.field {
-  display: grid;
-  gap: var(--md-sys-space-1);
-}
-
-.field__label {
-  font: var(--md-sys-typescale-label-large);
-}
-
-.field__input {
-  padding: var(--md-sys-space-2) var(--md-sys-space-3);
-  border-radius: var(--md-sys-shape-corner-extra-small);
-  border: 1px solid var(--md-sys-color-outline);
-  font: var(--md-sys-typescale-body-medium);
-  background: var(--md-sys-color-surface);
-  color: inherit;
-}
-
-.field__error {
-  color: var(--md-sys-color-error);
+.sign-up__sign-in-link {
+  display: inline-block;
+  margin-top: var(--md-sys-space-1);
+  color: var(--md-sys-color-primary);
   font: var(--md-sys-typescale-body-small);
-
-  a {
-    margin-left: var(--md-sys-space-1);
-    color: var(--md-sys-color-primary);
-  }
 }
 
-.terms {
-  display: flex;
-  align-items: center;
+.sign-up__password {
+  display: grid;
   gap: var(--md-sys-space-2);
-  font: var(--md-sys-typescale-body-medium);
 }
 
-.card__submit,
-.btn {
-  border: 0;
+.sign-up__link-btn {
+  align-self: start;
   border-radius: var(--md-sys-shape-corner-full);
   padding: var(--md-sys-space-3) var(--md-sys-space-6);
   background: var(--md-sys-color-primary);
@@ -78,10 +59,4 @@
   font: var(--md-sys-typescale-label-large);
   text-decoration: none;
   text-align: center;
-  cursor: pointer;
-}
-
-.card__submit:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
 }

@@ -1,0 +1,16 @@
+<h1 class="appearance__title">Appearance</h1>
+<div class="appearance__options" role="radiogroup" aria-label="Theme mode">
+  @for (m of modes; track m) {
+    <button
+      [attr.data-testid]="'theme-option-' + m"
+      type="button"
+      class="appearance__option"
+      [class.appearance__option--active]="theme.mode() === m"
+      role="radio"
+      [attr.aria-checked]="theme.mode() === m"
+      (click)="theme.setMode(m)"
+    >
+      {{ m }}
+    </button>
+  }
+</div>

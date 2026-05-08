@@ -1,0 +1,38 @@
+@if (visible) {
+  <div
+    class="tar-banner"
+    [class]="'tar-banner--' + severity"
+    [attr.data-testid]="testId"
+    [attr.role]="severity === 'error' ? 'alert' : 'status'"
+  >
+    @if (icon) {
+      <mat-icon class="tar-banner__icon">{{ icon }}</mat-icon>
+    }
+    <span class="tar-banner__text" [attr.data-testid]="testId ? testId + '-text' : null">
+      {{ message }}
+    </span>
+    @if (actionLabel) {
+      <button
+        mat-button
+        type="button"
+        class="tar-banner__action"
+        [attr.data-testid]="testId ? testId + '-action' : null"
+        (click)="actioned.emit()"
+      >
+        {{ actionLabel }}
+      </button>
+    }
+    @if (dismissible) {
+      <button
+        mat-icon-button
+        type="button"
+        class="tar-banner__close"
+        [attr.aria-label]="dismissLabel"
+        [attr.data-testid]="testId ? testId + '-close' : null"
+        (click)="dismissed.emit()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </div>
+}

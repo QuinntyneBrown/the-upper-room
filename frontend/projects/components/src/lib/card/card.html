@@ -1,0 +1,29 @@
+<mat-card
+  class="tar-card"
+  [class.tar-card--interactive]="interactive"
+  [appearance]="appearance"
+  [attr.data-testid]="testId"
+  [attr.role]="interactive ? 'button' : null"
+  [attr.tabindex]="interactive ? 0 : null"
+  (click)="interactive && clicked.emit($event)"
+  (keydown.enter)="interactive && clicked.emit($any($event))"
+>
+  @if (heading || subheading) {
+    <mat-card-header class="tar-card__header">
+      @if (heading) {
+        <mat-card-title class="tar-card__title">{{ heading }}</mat-card-title>
+      }
+      @if (subheading) {
+        <mat-card-subtitle class="tar-card__subtitle">{{ subheading }}</mat-card-subtitle>
+      }
+    </mat-card-header>
+  }
+  <mat-card-content class="tar-card__body">
+    <ng-content />
+  </mat-card-content>
+  @if (showActions) {
+    <mat-card-actions class="tar-card__actions">
+      <ng-content select="[tar-card-actions]" />
+    </mat-card-actions>
+  }
+</mat-card>

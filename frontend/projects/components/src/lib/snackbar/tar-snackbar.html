@@ -1,0 +1,36 @@
+@if (svc.current(); as item) {
+  <mat-card
+    appearance="filled"
+    data-testid="snackbar"
+    class="tar-snackbar"
+    [class]="'tar-snackbar--' + item.severity + ' ' + viewportClass()"
+    [attr.role]="item.severity === 'error' ? 'alert' : 'status'"
+    (mouseenter)="svc.pause()"
+    (mouseleave)="svc.resume()"
+    (focusin)="svc.pause()"
+    (focusout)="svc.resume()"
+  >
+    <span data-testid="snackbar-message" class="tar-snackbar__message">{{ item.message }}</span>
+    @if (item.action; as action) {
+      <button
+        mat-button
+        data-testid="snackbar-action"
+        type="button"
+        class="tar-snackbar__action"
+        (click)="onAction()"
+      >
+        {{ action.label }}
+      </button>
+    }
+    <button
+      mat-icon-button
+      data-testid="snackbar-dismiss"
+      type="button"
+      class="tar-snackbar__dismiss"
+      aria-label="Dismiss"
+      (click)="svc.dismiss()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card>
+}

@@ -1,8 +1,8 @@
 // traces_to: L2-024, L2-032
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
+import { PERMISSIONS_SERVICE } from 'domain';
 import { AccessTokenStore } from '../auth/access-token-store';
-import { PermissionsService } from './permissions.service';
 import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-snackbar.service';
 
 export const authGuard: CanActivateFn = (_route, state) => {
@@ -15,7 +15,7 @@ export const authGuard: CanActivateFn = (_route, state) => {
 };
 
 export const roleGuard: CanActivateFn = (route) => {
-  const perms = inject(PermissionsService);
+  const perms = inject(PERMISSIONS_SERVICE);
   const router = inject(Router);
   const snackbar = inject(SnackbarService);
   const required = (route.data['roles'] ?? []) as string[];

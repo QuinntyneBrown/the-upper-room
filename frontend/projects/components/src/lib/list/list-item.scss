@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+.tar-list-item {
+  font: var(--md-sys-typescale-body-large);
+  color: var(--md-sys-color-on-surface);
+  border-radius: var(--md-sys-shape-corner-small);
+}
+
+.tar-list-item--interactive {
+  cursor: pointer;
+}
+
+.tar-list-item--active {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.tar-list-item__icon {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.tar-list-item__title {
+  font: var(--md-sys-typescale-body-large);
+}
+
+.tar-list-item__description {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+}

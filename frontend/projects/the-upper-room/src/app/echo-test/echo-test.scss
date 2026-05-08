@@ -1,0 +1,24 @@
+:host {
+  display: grid;
+  gap: var(--md-sys-space-2);
+  padding: var(--md-sys-space-4);
+}
+
+.echo-test__actions {
+  display: flex;
+  gap: var(--md-sys-space-2);
+}
+
+.echo-test__result {
+  margin: 0;
+  padding: var(--md-sys-space-3);
+  background: var(--md-sys-color-surface-container);
+  border-radius: var(--md-sys-shape-corner-small);
+  font-family: ui-monospace, monospace;
+  white-space: pre-wrap;
+}
+
+.echo-test__corr-id {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+}

@@ -1,0 +1,23 @@
+:host {
+  display: inline-flex;
+}
+
+.tar-chip {
+  font: var(--md-sys-typescale-label-large);
+  border-radius: var(--md-sys-shape-corner-small);
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+}
+
+.tar-chip--selected {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.tar-chip__icon {
+  color: inherit;
+}
+
+.tar-chip__label {
+  font: var(--md-sys-typescale-label-large);
+}

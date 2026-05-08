@@ -1,0 +1,13 @@
+<section class="rbac-demo">
+  <h1 class="rbac-demo__title">RBAC demo</h1>
+  <tar-button
+    testId="rbac-delete"
+    variant="filled"
+    *tarHasPermission="'Contact:Delete'"
+  >
+    Delete
+  </tar-button>
+  <span data-testid="rbac-admin" class="rbac-demo__badge" *tarHasRole="['SystemAdmin']">
+    Admin badge
+  </span>
+</section>

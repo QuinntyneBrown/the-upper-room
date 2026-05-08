@@ -4,7 +4,8 @@ import { ErrorBoundaryService } from '../error-boundary.service';
 
 @Component({
   selector: 'app-throw',
-  template: ``,
+  templateUrl: './throw-route.html',
+  styleUrl: './throw-route.scss',
 })
 export class Throw implements OnInit {
   private readonly boundary = inject(ErrorBoundaryService);

@@ -1,0 +1,42 @@
+@if (selectable) {
+  <mat-chip-option
+    class="tar-chip"
+    [class.tar-chip--selected]="selected"
+    [selected]="selected"
+    [disabled]="disabled"
+    [attr.data-testid]="testId"
+    (selectionChange)="selectionChange.emit($event.selected)"
+  >
+    @if (icon) {
+      <mat-icon matChipAvatar class="tar-chip__icon">{{ icon }}</mat-icon>
+    }
+    <span class="tar-chip__label">{{ label }}</span>
+  </mat-chip-option>
+} @else if (removable) {
+  <mat-chip
+    class="tar-chip"
+    [removable]="true"
+    [disabled]="disabled"
+    [attr.data-testid]="testId"
+    (removed)="removed.emit()"
+  >
+    @if (icon) {
+      <mat-icon matChipAvatar class="tar-chip__icon">{{ icon }}</mat-icon>
+    }
+    <span class="tar-chip__label">{{ label }}</span>
+    <button matChipRemove [attr.aria-label]="'Remove ' + label">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-chip>
+} @else {
+  <mat-chip
+    class="tar-chip"
+    [disabled]="disabled"
+    [attr.data-testid]="testId"
+  >
+    @if (icon) {
+      <mat-icon matChipAvatar class="tar-chip__icon">{{ icon }}</mat-icon>
+    }
+    <span class="tar-chip__label">{{ label }}</span>
+  </mat-chip>
+}

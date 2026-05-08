@@ -1,12 +1,12 @@
 // traces_to: L2-109
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { PermissionsService } from '../rbac/permissions.service';
+import { PERMISSIONS_SERVICE } from 'domain';
 
 export const ALL_CITIES = '__all__';
 
 @Injectable({ providedIn: 'root' })
 export class CityScopeService {
-  private readonly perms = inject(PermissionsService);
+  private readonly perms = inject(PERMISSIONS_SERVICE);
 
   readonly active = signal<string>(ALL_CITIES);
 

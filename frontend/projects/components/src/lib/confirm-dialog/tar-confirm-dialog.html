@@ -1,0 +1,51 @@
+@if (svc.current(); as req) {
+  <div class="tar-confirm-dialog__backdrop" (click)="svc.resolve(false)"></div>
+  <mat-card
+    appearance="filled"
+    data-testid="confirm-dialog"
+    class="tar-confirm-dialog"
+    role="dialog"
+    aria-modal="true"
+    [attr.data-severity]="req.severity ?? 'info'"
+    (click)="$event.stopPropagation()"
+  >
+    <h2 data-testid="confirm-title" class="tar-confirm-dialog__title">{{ req.title }}</h2>
+    @if (req.body) {
+      <p data-testid="confirm-body" class="tar-confirm-dialog__body">{{ req.body }}</p>
+    }
+    @if (req.requireTypedConfirmation; as phrase) {
+      <mat-form-field appearance="outline" class="tar-confirm-dialog__field">
+        <input
+          matInput
+          data-testid="confirm-typed-input"
+          type="text"
+          [placeholder]="'Type ' + phrase + ' to confirm'"
+          [value]="typed()"
+          (input)="typed.set($any($event.target).value)"
+        />
+      </mat-form-field>
+    }
+    <div class="tar-confirm-dialog__actions">
+      <button
+        #cancel
+        mat-button
+        data-testid="confirm-cancel"
+        type="button"
+        class="tar-confirm-dialog__btn tar-confirm-dialog__btn--cancel"
+        (click)="svc.resolve(false)"
+      >
+        {{ req.cancelLabel ?? 'Cancel' }}
+      </button>
+      <button
+        mat-flat-button
+        data-testid="confirm-button"
+        type="button"
+        class="tar-confirm-dialog__btn tar-confirm-dialog__btn--confirm"
+        [disabled]="!confirmEnabled()"
+        (click)="svc.resolve(true)"
+      >
+        {{ req.confirmLabel ?? 'Confirm' }}
+      </button>
+    </div>
+  </mat-card>
+}

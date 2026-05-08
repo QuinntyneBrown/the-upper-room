@@ -1,7 +1,7 @@
 // traces_to: L2-077
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
+import { ConfirmService, TarButton, TarFormActions, TarTextField } from 'components';
 import { mapErrorToMessage } from '../../interceptors/error-catalog';
 
 export interface CityRow {
@@ -15,6 +15,7 @@ export interface CityRow {
 
 @Component({
   selector: 'app-cities-admin',
+  imports: [TarButton, TarTextField, TarFormActions],
   templateUrl: './cities-admin.html',
   styleUrl: './cities-admin.scss',
 })
@@ -41,8 +42,12 @@ export class CitiesAdmin implements OnInit {
     this.creating.set(true);
   }
 
-  protected onSave(event: Event): void {
-    event.preventDefault();
+  protected onSubmitForm(): void {
+    this.onSave();
+  }
+
+  protected onSave(event?: Event): void {
+    event?.preventDefault?.();
     this.formError.set(null);
     this.http
       .post<CityRow>('/api/v1/cities', { name: this.newName(), country: this.newCountry() })

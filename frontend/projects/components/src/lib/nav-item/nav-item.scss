@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.tar-nav-item {
+  border-radius: var(--md-sys-shape-corner-full);
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.tar-nav-item--active {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.tar-nav-item__icon {
+  color: inherit;
+}
+
+.tar-nav-item__label {
+  font: var(--md-sys-typescale-label-large);
+}
+
+.tar-nav-item__badge {
+  font: var(--md-sys-typescale-label-small);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: 0 var(--md-sys-space-2);
+}

@@ -1,0 +1,61 @@
+@use '../styles' as bp;
+
+.tar-drawer__scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
+  z-index: 60;
+}
+
+.tar-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 480px;
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  box-shadow: var(--md-sys-elevation-level-3);
+  z-index: 70;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+
+  @include bp.md {
+    width: 480px;
+  }
+}
+
+.tar-drawer--end {
+  right: 0;
+}
+
+.tar-drawer--start {
+  left: 0;
+}
+
+.tar-drawer__header {
+  display: flex;
+  align-items: center;
+  gap: var(--md-sys-space-2);
+  padding: var(--md-sys-space-4) var(--md-sys-space-6);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.tar-drawer__title {
+  margin: 0;
+  flex: 1;
+  font: var(--md-sys-typescale-headline-small);
+}
+
+.tar-drawer__body {
+  padding: var(--md-sys-space-6);
+  overflow: auto;
+}
+
+.tar-drawer__footer:not(:empty) {
+  padding: var(--md-sys-space-4) var(--md-sys-space-6);
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  display: flex;
+  gap: var(--md-sys-space-2);
+  justify-content: flex-end;
+}

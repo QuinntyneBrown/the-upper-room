@@ -1,0 +1,13 @@
+<mat-checkbox
+  class="tar-checkbox"
+  [checked]="checked"
+  [disabled]="disabled"
+  [indeterminate]="indeterminate"
+  [required]="required"
+  [color]="color"
+  [attr.data-testid]="testId"
+  [attr.aria-label]="ariaLabel"
+  (change)="checkedChange.emit($event.checked)"
+>
+  <span class="tar-checkbox__label"><ng-content /></span>
+</mat-checkbox>

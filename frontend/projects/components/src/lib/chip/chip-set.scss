@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+.tar-chip-set {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--md-sys-space-2);
+}

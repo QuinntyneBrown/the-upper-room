@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+.tar-textarea {
+  font: var(--md-sys-typescale-body-large);
+}
+
+.tar-textarea--full-width {
+  width: 100%;
+}
+
+.tar-textarea__input {
+  resize: vertical;
+}

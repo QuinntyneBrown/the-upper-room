@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.tar-card {
+  border-radius: var(--md-sys-shape-corner-medium);
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+}
+
+.tar-card--interactive {
+  cursor: pointer;
+  transition:
+    box-shadow var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard),
+    background var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
+}
+
+.tar-card--interactive:hover {
+  background: var(--md-sys-color-surface-container-high);
+  box-shadow: var(--md-sys-elevation-level-2);
+}
+
+.tar-card__title {
+  font: var(--md-sys-typescale-title-large);
+  color: var(--md-sys-color-on-surface);
+}
+
+.tar-card__subtitle {
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.tar-card__body {
+  font: var(--md-sys-typescale-body-medium);
+}
+
+.tar-card__actions {
+  display: flex;
+  gap: var(--md-sys-space-2);
+  padding: var(--md-sys-space-2) var(--md-sys-space-4);
+}

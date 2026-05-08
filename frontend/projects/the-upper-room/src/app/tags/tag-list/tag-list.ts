@@ -1,8 +1,14 @@
 // traces_to: L2-038, L2-039
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import {
+  ConfirmService,
+  SnackbarService,
+  TarButton,
+  TarSelect,
+  TarSelectOption,
+  TarTextField,
+} from 'components';
 
 export interface Tag {
   readonly id: string;
@@ -18,6 +24,7 @@ export const COLORS = [
 
 @Component({
   selector: 'app-tag-list',
+  imports: [TarTextField, TarSelect, TarButton],
   templateUrl: './tag-list.html',
   styleUrl: './tag-list.scss',
 })
@@ -32,7 +39,10 @@ export class TagList implements OnInit {
   protected readonly nameError = signal<string | null>(null);
   protected readonly editingId = signal<string | null>(null);
   protected readonly editColor = signal('');
-  protected readonly colors = COLORS;
+  protected readonly colorOptions: readonly TarSelectOption<string>[] = COLORS.map((c) => ({
+    value: c,
+    label: c,
+  }));
 
   protected readonly groupedTags = computed(() => {
     const map = new Map<string, Tag[]>();

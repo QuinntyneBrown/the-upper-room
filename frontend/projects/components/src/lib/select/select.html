@@ -1,0 +1,35 @@
+<mat-form-field
+  class="tar-select"
+  [class.tar-select--full-width]="fullWidth"
+  appearance="outline"
+>
+  @if (label) {
+    <mat-label>{{ label }}</mat-label>
+  }
+  <mat-select
+    class="tar-select__control"
+    [value]="value"
+    [placeholder]="placeholder"
+    [required]="required"
+    [disabled]="disabled"
+    [attr.data-testid]="testId"
+    [attr.aria-label]="ariaLabel || label"
+    (selectionChange)="valueChange.emit($event.value)"
+  >
+    @for (opt of options; track opt.value) {
+      <mat-option
+        class="tar-select__option"
+        [value]="opt.value"
+        [disabled]="opt.disabled ?? false"
+      >
+        {{ opt.label }}
+      </mat-option>
+    }
+  </mat-select>
+  @if (hint) {
+    <mat-hint class="tar-select__hint">{{ hint }}</mat-hint>
+  }
+  @if (error) {
+    <mat-error class="tar-select__error" [attr.data-testid]="errorTestId">{{ error }}</mat-error>
+  }
+</mat-form-field>

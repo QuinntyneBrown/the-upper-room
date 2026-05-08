@@ -48,6 +48,4 @@ public sealed class GetContactsQueryTests : IClassFixture<WebApplicationFactory<
         Assert.All(body.Items, c => Assert.Equal("Toronto", c.CityId));
     }
 
-    private sealed record PagedEnvelope(ContactDto[] Items, int Total);
-    private sealed record ContactDto(string Id, string Name, string CityId);
 }

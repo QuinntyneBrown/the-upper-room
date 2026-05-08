@@ -1,76 +1,69 @@
-<section class="page">
-  <header class="page__header">
-    <h1>Tags</h1>
+<section class="tag-list">
+  <header class="tag-list__header">
+    <h1 class="tag-list__title">Tags</h1>
   </header>
 
-  <form class="create-form" (submit)="onCreate($event)" novalidate>
-    <label class="field">
-      <span class="field__label">Tag name</span>
-      <input
-        data-testid="tag-name"
-        class="field__input"
-        type="text"
-        [value]="name()"
-        (input)="name.set($any($event.target).value)"
-      />
-      @if (nameError()) {
-        <span data-testid="tag-error-name" class="field__error">{{ nameError() }}</span>
-      }
-    </label>
-    <label class="field">
-      <span class="field__label">Color</span>
-      <select
-        data-testid="tag-color"
-        class="field__input"
-        [value]="color()"
-        (change)="color.set($any($event.target).value)"
-      >
-        @for (c of colors; track c) {
-          <option [value]="c">{{ c }}</option>
-        }
-      </select>
-    </label>
-    <button data-testid="tag-create" type="submit" class="btn">Add tag</button>
+  <form class="tag-list__create" (submit)="onCreate($event)" novalidate>
+    <tar-text-field
+      label="Tag name"
+      testId="tag-name"
+      errorTestId="tag-error-name"
+      [value]="name()"
+      [error]="nameError()"
+      (valueChange)="name.set($event)"
+    />
+    <tar-select
+      label="Color"
+      testId="tag-color"
+      [value]="color()"
+      [options]="colorOptions"
+      (valueChange)="color.set($event)"
+    />
+    <tar-button testId="tag-create" variant="filled" type="submit">Add tag</tar-button>
   </form>
 
   @for (group of groupedTags(); track group.color) {
-    <section [attr.data-testid]="'tag-group-' + group.color" class="group">
-      <h2 class="group__title">{{ group.color }}</h2>
-      <div class="chips">
+    <section [attr.data-testid]="'tag-group-' + group.color" class="tag-list__group">
+      <h2 class="tag-list__group-title">{{ group.color }}</h2>
+      <div class="tag-list__chips">
         @for (tag of group.tags; track tag.id) {
-          <div [attr.data-testid]="'tag-chip-' + tag.id" class="chip" [attr.data-color]="tag.color">
-            <span class="chip__label">{{ tag.name }}</span>
+          <div
+            [attr.data-testid]="'tag-chip-' + tag.id"
+            class="tag-list__chip"
+            [attr.data-color]="tag.color"
+          >
+            <span class="tag-list__chip-label">{{ tag.name }}</span>
             @if (editingId() === tag.id) {
-              <select
-                [attr.data-testid]="'tag-edit-color-' + tag.id"
-                class="chip__color-select"
+              <tar-select
+                [testId]="'tag-edit-color-' + tag.id"
                 [value]="editColor()"
-                (change)="editColor.set($any($event.target).value)"
+                [options]="colorOptions"
+                (valueChange)="editColor.set($event)"
+              />
+              <tar-button
+                [testId]="'tag-save-edit-' + tag.id"
+                variant="text"
+                (clicked)="onSaveEdit(tag)"
               >
-                @for (c of colors; track c) {
-                  <option [value]="c">{{ c }}</option>
-                }
-              </select>
-              <button
-                [attr.data-testid]="'tag-save-edit-' + tag.id"
-                type="button"
-                class="chip__action"
-                (click)="onSaveEdit(tag)"
-              >Save</button>
+                Save
+              </tar-button>
             } @else {
-              <button
-                [attr.data-testid]="'tag-edit-' + tag.id"
-                type="button"
-                class="chip__action"
-                (click)="onEdit(tag)"
-              >Edit</button>
+              <tar-button
+                [testId]="'tag-edit-' + tag.id"
+                variant="text"
+                (clicked)="onEdit(tag)"
+              >
+                Edit
+              </tar-button>
             }
-            <button
-              [attr.data-testid]="'tag-delete-' + tag.id"
-              type="button"
-              class="chip__action chip__action--danger"
-              (click)="onDelete(tag)"
-            >Delete</button>
+            <tar-button
+              [testId]="'tag-delete-' + tag.id"
+              variant="text"
+              color="warn"
+              (clicked)="onDelete(tag)"
+            >
+              Delete
+            </tar-button>
           </div>
         }
       </div>

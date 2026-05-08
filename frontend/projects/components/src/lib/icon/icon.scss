@@ -1,0 +1,18 @@
+// traces_to: L2-007
+.tar-icon {
+  font-family: 'Material Symbols Rounded', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.tar-icon--xs { font-size: var(--icon-size-xs); width: var(--icon-size-xs); height: var(--icon-size-xs); }
+.tar-icon--sm { font-size: var(--icon-size-sm); width: var(--icon-size-sm); height: var(--icon-size-sm); }
+.tar-icon--md { font-size: var(--icon-size-md); width: var(--icon-size-md); height: var(--icon-size-md); }
+.tar-icon--lg { font-size: var(--icon-size-lg); width: var(--icon-size-lg); height: var(--icon-size-lg); }
+.tar-icon--xl { font-size: var(--icon-size-xl); width: var(--icon-size-xl); height: var(--icon-size-xl); }

@@ -1,0 +1,55 @@
+// traces_to: L2-061
+.tar-snackbar {
+  position: fixed;
+  bottom: var(--md-sys-space-6);
+  left: var(--md-sys-space-6);
+  max-width: 560px;
+  min-width: 288px;
+  padding: var(--md-sys-space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--md-sys-space-4);
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  box-shadow: var(--md-sys-elevation-level-3);
+  font: var(--md-sys-typescale-body-medium);
+  z-index: 50;
+}
+
+.tar-snackbar--xs {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+}
+
+.tar-snackbar--info {
+  background: var(--md-sys-color-inverse-surface);
+  color: var(--md-sys-color-inverse-on-surface);
+}
+
+.tar-snackbar--success {
+  background: #1b5e20;
+  color: #ffffff;
+}
+
+.tar-snackbar--warning {
+  background: #e65100;
+  color: #ffffff;
+}
+
+.tar-snackbar--error {
+  background: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+}
+
+.tar-snackbar__message {
+  flex: 1;
+}
+
+.tar-snackbar__action {
+  color: var(--md-sys-color-inverse-primary);
+  font: var(--md-sys-typescale-label-large);
+}
+
+.tar-snackbar__dismiss {
+  color: inherit;
+}

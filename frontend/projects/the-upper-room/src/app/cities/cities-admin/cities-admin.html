@@ -1,43 +1,41 @@
-<section class="page">
-  <header class="header">
-    <h1>Cities</h1>
-    <button data-testid="cities-new" type="button" class="btn" (click)="onNew()">New city</button>
+<section class="cities-admin">
+  <header class="cities-admin__header">
+    <h1 class="cities-admin__title">Cities</h1>
+    <tar-button testId="cities-new" variant="filled" icon="add" (clicked)="onNew()">
+      New city
+    </tar-button>
   </header>
 
   @if (creating()) {
-    <form class="card" (submit)="onSave($event)" novalidate>
-      <label class="field">
-        <span class="field__label">Name</span>
-        <input
-          data-testid="cities-name"
-          class="field__input"
-          type="text"
-          [value]="newName()"
-          (input)="newName.set($any($event.target).value)"
-        />
-        <small>Slug preview: {{ slugPreview() || '—' }}</small>
-      </label>
-      <label class="field">
-        <span class="field__label">Country</span>
-        <input
-          data-testid="cities-country"
-          class="field__input"
-          type="text"
-          [value]="newCountry()"
-          (input)="newCountry.set($any($event.target).value)"
-        />
-      </label>
+    <form class="cities-admin__card" (submit)="onSave($event)" novalidate>
+      <tar-text-field
+        label="Name"
+        testId="cities-name"
+        [value]="newName()"
+        [hint]="'Slug preview: ' + (slugPreview() || '—')"
+        (valueChange)="newName.set($event)"
+      />
+      <tar-text-field
+        label="Country"
+        testId="cities-country"
+        [value]="newCountry()"
+        (valueChange)="newCountry.set($event)"
+      />
       @if (formError(); as msg) {
-        <p data-testid="cities-form-error" class="error">{{ msg }}</p>
+        <p data-testid="cities-form-error" class="cities-admin__error">{{ msg }}</p>
       }
-      <div class="actions">
-        <button type="button" class="btn btn--ghost" (click)="creating.set(false)">Cancel</button>
-        <button data-testid="cities-save" type="submit" class="btn">Save</button>
-      </div>
+      <tar-form-actions
+        saveLabel="Save"
+        cancelLabel="Cancel"
+        saveTestId="cities-save"
+        [dirty]="true"
+        (saved)="onSubmitForm()"
+        (cancelled)="creating.set(false)"
+      />
     </form>
   }
 
-  <table class="table">
+  <table class="cities-admin__table">
     <thead>
       <tr>
         <th>Name</th>
@@ -56,14 +54,13 @@
           <td>{{ c.archived ? 'Archived' : 'Active' }}</td>
           <td>
             @if (!c.archived) {
-              <button
-                [attr.data-testid]="'city-archive-' + c.slug"
-                type="button"
-                class="btn btn--ghost"
-                (click)="onArchive(c)"
+              <tar-button
+                [testId]="'city-archive-' + c.slug"
+                variant="outlined"
+                (clicked)="onArchive(c)"
               >
                 Archive
-              </button>
+              </tar-button>
             }
           </td>
         </tr>

@@ -1,27 +1,25 @@
-<section class="page">
-  <header class="page__header">
-    <h1>Users</h1>
-    <button data-testid="user-invite" type="button" class="btn" (click)="openInvite()">
+<section class="user-list">
+  <header class="user-list__header">
+    <h1 class="user-list__title">Users</h1>
+    <tar-button testId="user-invite" variant="filled" icon="person_add" (clicked)="openInvite()">
       Invite user
-    </button>
+    </tar-button>
   </header>
 
-  <div class="toolbar">
-    <input
-      data-testid="user-search"
-      class="input"
-      type="search"
+  <div class="user-list__toolbar">
+    <tar-search-field
+      testId="user-search"
       placeholder="Search users"
       [value]="searchInput()"
-      (input)="onSearch($any($event.target).value)"
+      (valueChange)="onSearch($event)"
     />
-    <div class="chips">
+    <div class="user-list__chips">
       @for (r of roles; track r) {
         <button
           [attr.data-testid]="'user-filter-' + r"
           type="button"
-          class="chip"
-          [class.chip--active]="roleFilter() === r"
+          class="user-list__chip"
+          [class.user-list__chip--active]="roleFilter() === r"
           (click)="onRole(r)"
         >
           {{ r }}
@@ -38,7 +36,7 @@
       body="Try adjusting your filters or invite a new user."
     />
   } @else {
-    <table class="table">
+    <table class="user-list__table">
       <thead>
         <tr>
           <th>Name</th>
@@ -53,12 +51,12 @@
         @for (u of users(); track u.id) {
           <tr
             [attr.data-testid]="'user-row-' + u.email"
-            class="row"
+            class="user-list__row"
             (click)="selectUser(u)"
           >
             <td>{{ u.name }}</td>
             <td>{{ u.email }}</td>
-            <td><span class="role">{{ u.role }}</span></td>
+            <td><span class="user-list__role">{{ u.role }}</span></td>
             <td>{{ u.city }}</td>
             <td>{{ u.status }}</td>
             <td>{{ u.lastSignIn }}</td>
@@ -68,10 +66,11 @@
     </table>
   }
 
-  <footer data-testid="user-paginator" class="paginator">
-    Page size:
+  <footer data-testid="user-paginator" class="user-list__paginator">
+    <span class="user-list__paginator-label">Page size:</span>
     <select
       data-testid="user-page-size"
+      class="user-list__paginator-select"
       [value]="pageSize()"
       (change)="onPageSize($any($event.target).value)"
     >
@@ -83,7 +82,7 @@
   </footer>
 
   @if (inviteOpen()) {
-    <app-invite-user-dialog
+    <tar-invite-user-dialog
       [emailError]="inviteEmailError()"
       (submitted)="onInviteSubmit($event)"
       (cancelled)="closeInvite()"
@@ -91,7 +90,7 @@
   }
 
   @if (selectedUser(); as su) {
-    <app-user-detail-drawer
+    <tar-user-detail-drawer
       [user]="su"
       (closed)="closeDrawer()"
       (disableRequested)="onDisable($event)"

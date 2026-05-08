@@ -1,0 +1,11 @@
+<mat-paginator
+  class="tar-pagination"
+  [length]="length"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  [pageSizeOptions]="pageSizeOptions"
+  [showFirstLastButtons]="showFirstLastButtons"
+  [hidePageSize]="hidePageSize"
+  [attr.data-testid]="testId"
+  (page)="onPage($event)"
+/>

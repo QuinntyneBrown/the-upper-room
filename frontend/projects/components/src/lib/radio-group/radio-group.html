@@ -1,0 +1,22 @@
+<mat-radio-group
+  class="tar-radio-group"
+  [class.tar-radio-group--inline]="inline"
+  [value]="value"
+  [disabled]="disabled"
+  [attr.aria-label]="ariaLabel || label"
+  [attr.data-testid]="testId"
+  (change)="valueChange.emit($event.value)"
+>
+  @if (label) {
+    <span class="tar-radio-group__label">{{ label }}</span>
+  }
+  @for (opt of options; track opt.value) {
+    <mat-radio-button
+      class="tar-radio-group__option"
+      [value]="opt.value"
+      [disabled]="opt.disabled ?? false"
+    >
+      {{ opt.label }}
+    </mat-radio-button>
+  }
+</mat-radio-group>

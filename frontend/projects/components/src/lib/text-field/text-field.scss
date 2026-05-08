@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+.tar-text-field {
+  font: var(--md-sys-typescale-body-large);
+}
+
+.tar-text-field--full-width {
+  width: 100%;
+}
+
+.tar-text-field__prefix,
+.tar-text-field__suffix {
+  color: var(--md-sys-color-on-surface-variant);
+}

@@ -1,0 +1,30 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tar-toolbar {
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  transition: box-shadow var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
+}
+
+.tar-toolbar--scrolled {
+  box-shadow: var(--md-sys-elevation-level-2);
+}
+
+.tar-toolbar__title {
+  font: var(--md-sys-typescale-title-large);
+}
+
+.tar-toolbar__spacer {
+  flex: 1 1 auto;
+}
+
+.tar-toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--md-sys-space-2);
+}

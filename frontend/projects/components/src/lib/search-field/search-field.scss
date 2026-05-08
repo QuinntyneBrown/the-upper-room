@@ -1,0 +1,13 @@
+:host {
+  display: block;
+}
+
+.tar-search-field {
+  width: 100%;
+  font: var(--md-sys-typescale-body-large);
+}
+
+.tar-search-field__icon,
+.tar-search-field__clear {
+  color: var(--md-sys-color-on-surface-variant);
+}

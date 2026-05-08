@@ -1,0 +1,11 @@
+<mat-slide-toggle
+  class="tar-toggle"
+  [checked]="checked"
+  [disabled]="disabled"
+  [color]="color"
+  [attr.aria-label]="ariaLabel"
+  [attr.data-testid]="testId"
+  (change)="checkedChange.emit($event.checked)"
+>
+  <span class="tar-toggle__label"><ng-content /></span>
+</mat-slide-toggle>

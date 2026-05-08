@@ -1,0 +1,32 @@
+// traces_to: L2-104
+:host {
+  display: grid;
+  gap: var(--md-sys-space-2);
+}
+
+.tar-skeleton__row {
+  background: linear-gradient(
+    90deg,
+    var(--md-sys-color-surface-container-low),
+    var(--md-sys-color-surface-container-high),
+    var(--md-sys-color-surface-container-low)
+  );
+  background-size: 200% 100%;
+  border-radius: var(--md-sys-shape-corner-small);
+  animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tar-skeleton__row {
+    animation-duration: 0s;
+  }
+}

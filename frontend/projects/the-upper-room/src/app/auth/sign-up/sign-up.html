@@ -1,78 +1,71 @@
-<section class="page">
+<section class="sign-up">
   @if (invitationExpired()) {
-    <div data-testid="invitation-expired" class="card card--error">
-      <h1>This invitation has expired.</h1>
+    <div data-testid="invitation-expired" class="sign-up__expired">
+      <h1 class="sign-up__title">This invitation has expired.</h1>
       <p>Ask your city lead to send you a new one.</p>
-      <a data-testid="invitation-request-new" routerLink="/sign-in" class="btn">
+      <a data-testid="invitation-request-new" routerLink="/sign-in" class="sign-up__link-btn">
         Request a new invite
       </a>
     </div>
   } @else {
-    <form data-testid="sign-up-card" class="card" (submit)="onSubmit($event)" novalidate>
-      <h1 class="card__title">Create your account</h1>
+    <form data-testid="sign-up-card" class="sign-up__card" (submit)="onSubmit($event)" novalidate>
+      <h1 class="sign-up__title">Create your account</h1>
 
-      <label class="field">
-        <span class="field__label">Email</span>
-        <input
-          data-testid="sign-up-email"
-          class="field__input"
+      <div>
+        <tar-text-field
+          label="Email"
           type="email"
           autocomplete="email"
+          testId="sign-up-email"
+          errorTestId="sign-up-error-email"
           [value]="email()"
-          [readOnly]="fromInvitation()"
-          (input)="email.set($any($event.target).value)"
+          [readonly]="fromInvitation()"
+          [error]="emailError()"
+          (valueChange)="email.set($event)"
         />
-        @if (emailError(); as msg) {
-          <span data-testid="sign-up-error-email" class="field__error">
-            {{ msg }}
-            <a data-testid="sign-up-sign-in-link" href="/sign-in">Sign in</a>
-          </span>
+        @if (emailError() && fromInvitation() === false) {
+          <a data-testid="sign-up-sign-in-link" href="/sign-in" class="sign-up__sign-in-link">
+            Sign in
+          </a>
         }
-      </label>
+      </div>
 
-      <label class="field">
-        <span class="field__label">Password</span>
-        <input
-          data-testid="sign-up-password"
-          class="field__input"
-          type="password"
+      <div class="sign-up__password">
+        <tar-password-field
+          label="Password"
           autocomplete="new-password"
+          testId="sign-up-password"
           [value]="password()"
-          (input)="password.set($any($event.target).value)"
+          (valueChange)="password.set($event)"
         />
         <tar-password-strength [password]="password()" [userEmail]="email()" />
-      </label>
+      </div>
 
-      <label class="field">
-        <span class="field__label">City</span>
-        <input
-          data-testid="sign-up-city"
-          class="field__input"
-          type="text"
-          [value]="city()"
-          [readOnly]="fromInvitation()"
-          (input)="city.set($any($event.target).value)"
-        />
-      </label>
+      <tar-text-field
+        label="City"
+        testId="sign-up-city"
+        [value]="city()"
+        [readonly]="fromInvitation()"
+        (valueChange)="city.set($event)"
+      />
 
-      <label class="terms">
-        <input
-          data-testid="sign-up-terms"
-          type="checkbox"
-          [checked]="termsAccepted()"
-          (change)="termsAccepted.set($any($event.target).checked)"
-        />
-        <span>I accept the terms and privacy policy</span>
-      </label>
+      <tar-checkbox
+        testId="sign-up-terms"
+        [checked]="termsAccepted()"
+        (checkedChange)="termsAccepted.set($event)"
+      >
+        I accept the terms and privacy policy
+      </tar-checkbox>
 
-      <button
-        data-testid="sign-up-submit"
+      <tar-button
+        testId="sign-up-submit"
+        variant="filled"
         type="submit"
-        class="card__submit"
+        [fullWidth]="true"
         [disabled]="!canSubmit()"
       >
         Create account
-      </button>
+      </tar-button>
     </form>
   }
 </section>

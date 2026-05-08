@@ -1,0 +1,10 @@
+// traces_to: L2-022
+:host {
+  display: contents;
+}
+
+.inactivity-dialog__body {
+  margin: 0;
+  font: var(--md-sys-typescale-body-medium);
+  text-align: center;
+}

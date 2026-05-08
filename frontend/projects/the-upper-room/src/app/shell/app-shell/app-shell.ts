@@ -2,7 +2,7 @@
 import { Component, HostListener, signal, computed, inject } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { TarIcon } from '../../../../../components/src/lib/icon/icon';
+import { TarIconButton } from 'components';
 import { breadcrumbsFromUrl, Crumb } from '../breadcrumb.service';
 import { OfflineBanner } from '../../network/offline-banner/offline-banner';
 import { SignOutService } from '../../auth/sign-out.service';
@@ -10,7 +10,7 @@ import { CitySwitcher } from '../../cities/city-switcher/city-switcher';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, TarIcon, OfflineBanner, CitySwitcher],
+  imports: [RouterOutlet, TarIconButton, OfflineBanner, CitySwitcher],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
 })

@@ -1,0 +1,38 @@
+@if (interactive) {
+  <a
+    mat-list-item
+    class="tar-list-item tar-list-item--interactive"
+    [class.tar-list-item--active]="active"
+    [attr.data-testid]="testId"
+    (click)="clicked.emit($event)"
+  >
+    @if (icon) {
+      <mat-icon matListItemIcon class="tar-list-item__icon">{{ icon }}</mat-icon>
+    }
+    @if (title) {
+      <span matListItemTitle class="tar-list-item__title">{{ title }}</span>
+    }
+    @if (description) {
+      <span matListItemLine class="tar-list-item__description">{{ description }}</span>
+    }
+    <ng-content />
+  </a>
+} @else {
+  <div
+    mat-list-item
+    class="tar-list-item"
+    [class.tar-list-item--active]="active"
+    [attr.data-testid]="testId"
+  >
+    @if (icon) {
+      <mat-icon matListItemIcon class="tar-list-item__icon">{{ icon }}</mat-icon>
+    }
+    @if (title) {
+      <span matListItemTitle class="tar-list-item__title">{{ title }}</span>
+    }
+    @if (description) {
+      <span matListItemLine class="tar-list-item__description">{{ description }}</span>
+    }
+    <ng-content />
+  </div>
+}

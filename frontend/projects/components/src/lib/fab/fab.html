@@ -1,0 +1,29 @@
+@if (extended) {
+  <button
+    mat-fab
+    extended
+    class="tar-fab tar-fab--extended"
+    [color]="color"
+    [type]="type"
+    [disabled]="disabled"
+    [attr.aria-label]="ariaLabel"
+    [attr.data-testid]="testId"
+    (click)="clicked.emit($event)"
+  >
+    <mat-icon class="tar-fab__icon">{{ icon }}</mat-icon>
+    <ng-content />
+  </button>
+} @else {
+  <button
+    mat-fab
+    class="tar-fab"
+    [color]="color"
+    [type]="type"
+    [disabled]="disabled"
+    [attr.aria-label]="ariaLabel"
+    [attr.data-testid]="testId"
+    (click)="clicked.emit($event)"
+  >
+    <mat-icon class="tar-fab__icon">{{ icon }}</mat-icon>
+  </button>
+}

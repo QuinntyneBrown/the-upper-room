@@ -1,0 +1,43 @@
+<h2 data-testid="greeting" class="styleguide__greeting">{{ 'styleguide.greeting' | transloco }}</h2>
+
+<tar-tag-selector [tags]="selectedTags()" (tagsChange)="selectedTags.set($event)" />
+
+<button data-testid="seed-button" class="styleguide__seed-button" type="button">Action</button>
+<div data-testid="seed-card" class="styleguide__seed-card">Card</div>
+<span data-testid="seed-chip" class="styleguide__seed-chip">Chip</span>
+<tar-icon name="contacts" />
+<tar-icon name="partners" size="lg" />
+
+<div data-testid="grid-demo" class="u-grid">
+  @for (i of cards; track i) {
+    <div class="styleguide__seed-card">{{ i }}</div>
+  }
+</div>
+
+<div class="styleguide__demos">
+  <tar-button testId="snackbar-trigger-info" variant="outlined" (clicked)="show('info')">info</tar-button>
+  <tar-button testId="snackbar-trigger-success" variant="outlined" (clicked)="show('success')">success</tar-button>
+  <tar-button testId="snackbar-trigger-warning" variant="outlined" (clicked)="show('warning')">warning</tar-button>
+  <tar-button testId="snackbar-trigger-error" variant="outlined" (clicked)="show('error')">error</tar-button>
+  <tar-button testId="snackbar-trigger-with-undo" variant="outlined" (clicked)="showUndo()">with-undo</tar-button>
+  <tar-button testId="snackbar-trigger-queue-pair" variant="outlined" (clicked)="showPair()">queue-pair</tar-button>
+  <span data-testid="undo-count">{{ undoCount() }}</span>
+
+  <tar-button testId="confirm-trigger-info" variant="outlined" (clicked)="confirm('info')">confirm-info</tar-button>
+  <tar-button testId="confirm-trigger-warning" variant="outlined" (clicked)="confirm('warning')">confirm-warning</tar-button>
+  <tar-button testId="confirm-trigger-danger-typed" variant="outlined" (clicked)="confirmTyped()">confirm-danger-typed</tar-button>
+  <span data-testid="confirm-result">{{ confirmResult() }}</span>
+</div>
+
+<div data-testid="empty-demo">
+  <tar-empty-state heading="Nothing here" body="Add your first item to get started." />
+</div>
+
+<div data-testid="skeleton-demo">
+  <tar-skeleton />
+</div>
+
+<div data-testid="error-demo">
+  <tar-list-error correlationId="test-correlation" (retry)="onRetry()" />
+  <span data-testid="error-retry-count">{{ retryCount() }}</span>
+</div>

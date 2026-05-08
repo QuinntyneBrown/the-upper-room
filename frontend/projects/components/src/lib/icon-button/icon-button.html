@@ -1,0 +1,11 @@
+<button
+  mat-icon-button
+  class="tar-icon-button"
+  [type]="type"
+  [disabled]="disabled"
+  [attr.aria-label]="ariaLabel"
+  [attr.data-testid]="testId"
+  (click)="clicked.emit($event)"
+>
+  <mat-icon class="tar-icon-button__icon">{{ icon }}</mat-icon>
+</button>

@@ -1,0 +1,17 @@
+<mat-tab-group
+  class="tar-tabs"
+  [selectedIndex]="selectedIndex"
+  [color]="color"
+  [attr.data-testid]="testId"
+  (selectedIndexChange)="selectedIndexChange.emit($event)"
+>
+  @for (tab of tabs; track tab.id) {
+    <mat-tab class="tar-tabs__tab" [label]="tab.label" [disabled]="tab.disabled ?? false">
+      <ng-template matTabContent>
+        <div class="tar-tabs__panel" [attr.data-testid]="testId ? testId + '-panel-' + tab.id : null">
+          <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: tab }" />
+        </div>
+      </ng-template>
+    </mat-tab>
+  }
+</mat-tab-group>

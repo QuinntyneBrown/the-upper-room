@@ -1,0 +1,86 @@
+@switch (variant) {
+  @case ('filled') {
+    <button
+      mat-flat-button
+      class="tar-button tar-button--filled"
+      [class.tar-button--full-width]="fullWidth"
+      [color]="color"
+      [type]="type"
+      [disabled]="disabled || loading"
+      [attr.data-testid]="testId"
+      (click)="clicked.emit($event)"
+    >
+      @if (icon) {
+        <mat-icon class="tar-button__icon">{{ icon }}</mat-icon>
+      }
+      <ng-content />
+    </button>
+  }
+  @case ('tonal') {
+    <button
+      mat-flat-button
+      class="tar-button tar-button--tonal"
+      [class.tar-button--full-width]="fullWidth"
+      [type]="type"
+      [disabled]="disabled || loading"
+      [attr.data-testid]="testId"
+      (click)="clicked.emit($event)"
+    >
+      @if (icon) {
+        <mat-icon class="tar-button__icon">{{ icon }}</mat-icon>
+      }
+      <ng-content />
+    </button>
+  }
+  @case ('outlined') {
+    <button
+      mat-stroked-button
+      class="tar-button tar-button--outlined"
+      [class.tar-button--full-width]="fullWidth"
+      [color]="color"
+      [type]="type"
+      [disabled]="disabled || loading"
+      [attr.data-testid]="testId"
+      (click)="clicked.emit($event)"
+    >
+      @if (icon) {
+        <mat-icon class="tar-button__icon">{{ icon }}</mat-icon>
+      }
+      <ng-content />
+    </button>
+  }
+  @case ('elevated') {
+    <button
+      mat-raised-button
+      class="tar-button tar-button--elevated"
+      [class.tar-button--full-width]="fullWidth"
+      [color]="color"
+      [type]="type"
+      [disabled]="disabled || loading"
+      [attr.data-testid]="testId"
+      (click)="clicked.emit($event)"
+    >
+      @if (icon) {
+        <mat-icon class="tar-button__icon">{{ icon }}</mat-icon>
+      }
+      <ng-content />
+    </button>
+  }
+  @default {
+    <button
+      mat-button
+      class="tar-button tar-button--text"
+      [class.tar-button--full-width]="fullWidth"
+      [color]="color"
+      [type]="type"
+      [disabled]="disabled || loading"
+      [attr.data-testid]="testId"
+      (click)="clicked.emit($event)"
+    >
+      @if (icon) {
+        <mat-icon class="tar-button__icon">{{ icon }}</mat-icon>
+      }
+      <ng-content />
+    </button>
+  }
+}

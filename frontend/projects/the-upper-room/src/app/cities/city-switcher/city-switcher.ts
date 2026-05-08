@@ -1,7 +1,8 @@
 // traces_to: L2-109
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { PermissionsService } from '../../rbac/permissions.service';
+import { TarBanner } from 'components';
+import { PERMISSIONS_SERVICE } from 'domain';
 import { ALL_CITIES, CityScopeService } from '../city-scope.service';
 
 interface CityRow {
@@ -13,12 +14,13 @@ interface CityRow {
 
 @Component({
   selector: 'app-city-switcher',
+  imports: [TarBanner],
   templateUrl: './city-switcher.html',
   styleUrl: './city-switcher.scss',
 })
 export class CitySwitcher implements OnInit {
   private readonly http = inject(HttpClient);
-  private readonly perms = inject(PermissionsService);
+  private readonly perms = inject(PERMISSIONS_SERVICE);
   protected readonly scope = inject(CityScopeService);
 
   protected readonly canSwitch = computed(() => this.perms.hasPermission('City:Switch'));

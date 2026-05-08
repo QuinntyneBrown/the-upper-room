@@ -1,0 +1,28 @@
+@if (svc.current(); as err) {
+  <div data-testid="error-boundary" class="error-boundary" role="alert">
+    <h1 class="error-boundary__title">Something went wrong</h1>
+    <p class="error-boundary__body">We've been notified. Please try again.</p>
+    <p class="error-boundary__body">
+      Reference:
+      <code data-testid="error-boundary-correlation" class="error-boundary__code">
+        {{ err.correlationId }}
+      </code>
+    </p>
+    <div class="error-boundary__actions">
+      <tar-button
+        testId="error-boundary-copy"
+        variant="outlined"
+        (clicked)="copy(err.correlationId)"
+      >
+        Copy reference
+      </tar-button>
+      <tar-button
+        testId="error-boundary-reload"
+        variant="filled"
+        (clicked)="reload()"
+      >
+        Reload page
+      </tar-button>
+    </div>
+  </div>
+}

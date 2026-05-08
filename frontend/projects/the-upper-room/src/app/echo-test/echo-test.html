@@ -1,0 +1,6 @@
+<div class="echo-test__actions">
+  <tar-button testId="echo-get" variant="outlined" (clicked)="get()">GET</tar-button>
+  <tar-button testId="echo-post" variant="outlined" (clicked)="post()">POST</tar-button>
+</div>
+<pre data-testid="echo-result" class="echo-test__result">{{ result() }}</pre>
+<span data-testid="echo-correlation-id" class="echo-test__corr-id">{{ corrId() }}</span>

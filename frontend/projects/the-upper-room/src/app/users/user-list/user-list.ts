@@ -8,21 +8,17 @@ import {
   signal,
 } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
-import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
-import { InviteUserDialog, InvitePayload } from '../invite-user-dialog/invite-user-dialog';
-import { UserDetailDrawer } from '../user-detail-drawer/user-detail-drawer';
+import {
+  ConfirmService,
+  SnackbarService,
+  TarButton,
+  TarEmptyState,
+  TarSearchField,
+} from 'components';
+import { InvitePayload, UserRow } from 'api';
+import { InviteUserDialog, UserDetailDrawer } from 'domain';
 
-export interface UserRow {
-  readonly id: string;
-  readonly email: string;
-  readonly name: string;
-  readonly role: string;
-  readonly city: string;
-  readonly status: string;
-  readonly lastSignIn: string;
-}
+export type { UserRow } from 'api';
 
 interface ListResponse {
   readonly items: UserRow[];
@@ -34,7 +30,13 @@ type RoleFilter = (typeof ROLES)[number];
 
 @Component({
   selector: 'app-user-list',
-  imports: [TarEmptyState, InviteUserDialog, UserDetailDrawer],
+  imports: [
+    TarEmptyState,
+    TarSearchField,
+    TarButton,
+    InviteUserDialog,
+    UserDetailDrawer,
+  ],
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss',
 })

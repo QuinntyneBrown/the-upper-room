@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  padding: var(--md-sys-space-6);
+}
+
+.auth-callback__message {
+  margin: 0;
+  font: var(--md-sys-typescale-body-large);
+  color: var(--md-sys-color-on-surface);
+}

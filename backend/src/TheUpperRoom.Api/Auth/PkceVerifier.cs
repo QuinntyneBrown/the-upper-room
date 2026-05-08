@@ -4,11 +4,6 @@ using System.Text;
 
 namespace TheUpperRoom.Api.Auth;
 
-public interface IPkceVerifier
-{
-    bool Verify(string codeVerifier, string expectedChallenge);
-}
-
 public sealed class PkceVerifier : IPkceVerifier
 {
     public bool Verify(string codeVerifier, string expectedChallenge)

@@ -1,0 +1,35 @@
+@if (routerLink) {
+  <a
+    mat-list-item
+    class="tar-nav-item"
+    [class.tar-nav-item--active]="active"
+    [routerLink]="routerLink"
+    [attr.data-testid]="testId"
+    (click)="clicked.emit($event)"
+  >
+    @if (icon) {
+      <mat-icon matListItemIcon class="tar-nav-item__icon">{{ icon }}</mat-icon>
+    }
+    <span matListItemTitle class="tar-nav-item__label">{{ label }}</span>
+    @if (badge !== null) {
+      <span matListItemMeta class="tar-nav-item__badge">{{ badge }}</span>
+    }
+  </a>
+} @else {
+  <button
+    mat-list-item
+    type="button"
+    class="tar-nav-item"
+    [class.tar-nav-item--active]="active"
+    [attr.data-testid]="testId"
+    (click)="clicked.emit($any($event))"
+  >
+    @if (icon) {
+      <mat-icon matListItemIcon class="tar-nav-item__icon">{{ icon }}</mat-icon>
+    }
+    <span matListItemTitle class="tar-nav-item__label">{{ label }}</span>
+    @if (badge !== null) {
+      <span matListItemMeta class="tar-nav-item__badge">{{ badge }}</span>
+    }
+  </button>
+}

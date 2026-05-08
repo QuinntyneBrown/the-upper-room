@@ -1,0 +1,57 @@
+@use '../styles' as bp;
+
+:host {
+  display: block;
+}
+
+.tar-page-header {
+  display: flex;
+  align-items: center;
+  gap: var(--md-sys-space-3);
+  padding: var(--md-sys-space-4) var(--md-sys-space-6);
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  transition: box-shadow var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
+}
+
+.tar-page-header--scrolled {
+  box-shadow: var(--md-sys-elevation-level-1);
+}
+
+.tar-page-header__back {
+  flex: 0 0 auto;
+}
+
+.tar-page-header__content {
+  flex: 1 1 auto;
+  display: grid;
+  gap: var(--md-sys-space-1);
+  min-width: 0;
+}
+
+.tar-page-header__eyebrow {
+  font: var(--md-sys-typescale-label-medium);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.tar-page-header__title {
+  margin: 0;
+  font: var(--md-sys-typescale-headline-small);
+
+  @include bp.md {
+    font: var(--md-sys-typescale-headline-medium);
+  }
+}
+
+.tar-page-header__subtitle {
+  margin: 0;
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.tar-page-header__actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--md-sys-space-2);
+}

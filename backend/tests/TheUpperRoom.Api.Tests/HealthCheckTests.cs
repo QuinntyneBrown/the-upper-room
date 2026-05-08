@@ -1,6 +1,6 @@
 // traces_to: L2-080
 using System.Net;
-using System.Net.Http.Json;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace TheUpperRoom.Api.Tests;
@@ -19,10 +19,7 @@ public sealed class HealthCheckTests : IClassFixture<WebApplicationFactory<Progr
         var response = await client.GetAsync("/health");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        var body = await response.Content.ReadFromJsonAsync<HealthResponse>();
-        Assert.NotNull(body);
-        Assert.Equal("Healthy", body!.Status);
+        using var body = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync());
+        Assert.Equal("Healthy", body.RootElement.GetProperty("status").GetString());
     }
-
-    private sealed record HealthResponse(string Status);
 }

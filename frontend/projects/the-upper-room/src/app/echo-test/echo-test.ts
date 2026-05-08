@@ -1,16 +1,13 @@
 // traces_to: L2-084
 import { Component, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { TarButton } from 'components';
 
 @Component({
   selector: 'app-echo-test',
-  template: `
-    <button data-testid="echo-get" type="button" (click)="get()">GET</button>
-    <button data-testid="echo-post" type="button" (click)="post()">POST</button>
-    <pre data-testid="echo-result">{{ result() }}</pre>
-    <span data-testid="echo-correlation-id">{{ corrId() }}</span>
-  `,
-  styles: [':host { display: grid; gap: var(--md-sys-space-2); }'],
+  imports: [TarButton],
+  templateUrl: './echo-test.html',
+  styleUrl: './echo-test.scss',
 })
 export class EchoTest {
   private readonly http = inject(HttpClient);

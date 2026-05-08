@@ -1,27 +1,28 @@
-<section data-testid="sessions-card" class="card">
-  <header class="card__header">
-    <h2>Active sessions</h2>
+<section data-testid="sessions-card" class="sessions-card">
+  <header class="sessions-card__header">
+    <h2 class="sessions-card__title">Active sessions</h2>
     @if (hasOthers()) {
-      <button
-        data-testid="sessions-sign-out-others"
-        type="button"
-        class="btn btn--ghost"
-        (click)="onSignOutOthers()"
+      <tar-button
+        testId="sessions-sign-out-others"
+        variant="outlined"
+        (clicked)="onSignOutOthers()"
       >
         Sign out other sessions
-      </button>
+      </tar-button>
     }
   </header>
-  <ul class="list">
+  <ul class="sessions-card__list">
     @for (s of sessions(); track s.id) {
-      <li [attr.data-testid]="'session-row-' + s.id" class="row">
+      <li [attr.data-testid]="'session-row-' + s.id" class="sessions-card__row">
         <div>
           <strong>{{ s.device }}</strong>
           @if (s.current) {
-            <span class="chip">This device</span>
+            <span class="sessions-card__chip">This device</span>
           }
         </div>
-        <small>{{ s.location }} · last seen {{ s.lastSeen }}</small>
+        <small class="sessions-card__meta">
+          {{ s.location }} · last seen {{ s.lastSeen }}
+        </small>
       </li>
     }
   </ul>

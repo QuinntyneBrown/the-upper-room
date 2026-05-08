@@ -1,20 +1,20 @@
 @if (canSwitch()) {
-  <div class="switcher">
+  <div class="city-switcher">
     <button
       data-testid="city-switcher-trigger"
       type="button"
-      class="trigger"
+      class="city-switcher__trigger"
       (click)="toggle()"
     >
       {{ currentLabel() }}
     </button>
     @if (open()) {
-      <ul data-testid="city-switcher-menu" class="menu" role="menu">
+      <ul data-testid="city-switcher-menu" class="city-switcher__menu" role="menu">
         @for (c of visibleCities(); track c.id) {
           <li
             [attr.data-testid]="'city-switcher-option-' + c.slug"
             role="menuitem"
-            class="item"
+            class="city-switcher__item"
             (click)="select(c.slug)"
           >
             <span>{{ c.name }}</span>
@@ -26,7 +26,7 @@
         <li
           data-testid="city-switcher-option-all"
           role="menuitem"
-          class="item item--all"
+          class="city-switcher__item city-switcher__item--all"
           (click)="select(allCitiesValue)"
         >
           All cities (read-only)
@@ -38,8 +38,11 @@
     }
   </div>
   @if (scope.isAllCities()) {
-    <div data-testid="city-switcher-all-banner" class="banner" role="status">
-      Switch to a single city to make changes.
-    </div>
+    <tar-banner
+      testId="city-switcher-all-banner"
+      severity="warning"
+      message="Switch to a single city to make changes."
+      [dismissible]="false"
+    />
   }
 }

@@ -1,0 +1,23 @@
+:host {
+  display: block;
+}
+
+.rbac-demo {
+  display: grid;
+  gap: var(--md-sys-space-3);
+  padding: var(--md-sys-space-6);
+  justify-items: start;
+}
+
+.rbac-demo__title {
+  margin: 0;
+  font: var(--md-sys-typescale-headline-medium);
+}
+
+.rbac-demo__badge {
+  padding: var(--md-sys-space-1) var(--md-sys-space-3);
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  font: var(--md-sys-typescale-label-medium);
+}

@@ -1,10 +1,15 @@
 // traces_to: L2-107, L2-106
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
-import { TarAvatarUploader } from '../../../../../components/src/lib/avatar/tar-avatar-uploader';
-import { PermissionsService } from '../../rbac/permissions.service';
+import {
+  SnackbarService,
+  TarAvatarUploader,
+  TarFormActions,
+  TarTextField,
+} from 'components';
+import { PERMISSIONS_SERVICE } from 'domain';
 import { mapErrorToMessage } from '../../interceptors/error-catalog';
+import { SessionsCard } from '../sessions-card/sessions-card';
 
 export interface ProfileForm {
   firstName: string;
@@ -31,18 +36,16 @@ const EMPTY: ProfileForm = {
   avatarUrl: null,
 };
 
-import { SessionsCard } from '../sessions-card/sessions-card';
-
 @Component({
   selector: 'app-my-profile',
-  imports: [TarAvatarUploader, SessionsCard],
+  imports: [TarAvatarUploader, TarTextField, TarFormActions, SessionsCard],
   templateUrl: './my-profile.html',
   styleUrl: './my-profile.scss',
 })
 export class MyProfile implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly snackbar = inject(SnackbarService);
-  private readonly perms = inject(PermissionsService);
+  private readonly perms = inject(PERMISSIONS_SERVICE);
 
   protected readonly baseline = signal<ProfileForm>(EMPTY);
   protected readonly form = signal<ProfileForm>(EMPTY);
@@ -66,8 +69,8 @@ export class MyProfile implements OnInit {
     this.form.update((f) => ({ ...f, [field]: value }));
   }
 
-  protected onSave(event: Event): void {
-    event.preventDefault();
+  protected onSave(event?: Event): void {
+    event?.preventDefault?.();
     if (!this.isDirty()) return;
     this.http
       .patch<ProfileForm>('/api/v1/users/me/profile', this.form())

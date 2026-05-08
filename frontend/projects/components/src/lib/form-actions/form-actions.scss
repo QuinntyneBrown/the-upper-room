@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.tar-form-actions {
+  display: flex;
+  gap: var(--md-sys-space-2);
+  justify-content: flex-end;
+  padding: var(--md-sys-space-4) 0;
+}
+
+.tar-form-actions--start {
+  justify-content: flex-start;
+}
+
+.tar-form-actions--space-between {
+  justify-content: space-between;
+}
+
+.tar-form-actions--sticky {
+  position: sticky;
+  bottom: 0;
+  background: var(--md-sys-color-surface);
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  z-index: 1;
+}
+
+.tar-form-actions__spinner {
+  margin-inline-end: var(--md-sys-space-2);
+}

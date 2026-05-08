@@ -1,0 +1,44 @@
+<section class="verify-email">
+  @switch (state()) {
+    @case ('verifying') {
+      <p>Verifying your email…</p>
+    }
+    @case ('verified') {
+      <tar-icon name="success" size="xl" />
+      <h1 data-testid="verify-email-verified" class="verify-email__title">Email verified</h1>
+      <a data-testid="verify-email-dashboard" routerLink="/dashboard" class="verify-email__link-btn">
+        Go to dashboard
+      </a>
+    }
+    @case ('expired') {
+      <tar-icon name="warning" size="xl" />
+      <h1 data-testid="verify-email-expired" class="verify-email__title">Link expired</h1>
+      <p class="verify-email__body">Verification links are valid for 24 hours.</p>
+      <tar-button
+        testId="verify-email-send-new"
+        variant="filled"
+        (clicked)="resend()"
+      >
+        Send a new link
+      </tar-button>
+    }
+    @default {
+      <tar-icon name="info" size="xl" />
+      <h1 class="verify-email__title">Verify your email</h1>
+      <p class="verify-email__body">We sent you a link to confirm your address.</p>
+      <tar-button
+        testId="verify-email-resend"
+        variant="outlined"
+        [disabled]="cooldown() > 0"
+        (clicked)="resend()"
+      >
+        Resend email
+      </tar-button>
+      @if (cooldown() > 0) {
+        <span data-testid="verify-email-cooldown" class="verify-email__cooldown">
+          Please wait {{ cooldown() }}s before requesting another email
+        </span>
+      }
+    }
+  }
+</section>
