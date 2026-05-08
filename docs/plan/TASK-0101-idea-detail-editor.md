@@ -1,7 +1,7 @@
 ---
 id: TASK-0101
 title: Idea detail + Markdown editor
-status: Draft
+status: Accepted
 phase: I
 depends_on: [TASK-0100]
 traces_to: [L2-050, L2-051]
