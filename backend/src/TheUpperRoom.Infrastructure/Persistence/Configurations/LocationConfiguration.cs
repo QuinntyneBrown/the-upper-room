@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using TheUpperRoom.Domain.Common.ValueObjects;
 using TheUpperRoom.Domain.Locations;
 
 namespace TheUpperRoom.Infrastructure.Persistence.Configurations;
@@ -17,17 +18,16 @@ internal sealed class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(e => e.ParkingNotes).HasMaxLength(500);
         builder.Property(e => e.Archived).IsRequired();
 
-        builder.OwnsOne(e => e.Address, address =>
-        {
-            address.Property(a => a.Street1).HasColumnName("AddressStreet1").HasMaxLength(200).IsRequired();
-            address.Property(a => a.Street2).HasColumnName("AddressStreet2").HasMaxLength(200);
-            address.Property(a => a.City).HasColumnName("AddressCity").HasMaxLength(100).IsRequired();
-            address.Property(a => a.Region).HasColumnName("AddressRegion").HasMaxLength(100);
-            address.Property(a => a.PostalCode).HasColumnName("AddressPostalCode").HasMaxLength(30);
-            address.Property(a => a.Country).HasColumnName("AddressCountry").HasMaxLength(100).IsRequired();
-            address.Property(a => a.Latitude).HasColumnName("AddressLatitude").HasColumnType("decimal(9,6)");
-            address.Property(a => a.Longitude).HasColumnName("AddressLongitude").HasColumnType("decimal(9,6)");
-        });
+        builder.Ignore(e => e.PhotoUrls);
+        builder.Ignore(e => e.TagIds);
+
+        // Address is stored as a JSON document so EF treats it as a scalar
+        // (constructor-bindable). The same converter strategy is used for
+        // address collections on Contact/Partner, keeping a single mapping
+        // strategy across the model.
+        builder.Property(e => e.Address)
+            .HasColumnName("Address").HasColumnType("nvarchar(max)").IsRequired()
+            .HasConversion(JsonConverters.SingleConverter<Address>());
 
         builder.Property<List<string>>("_photoUrls")
             .HasField("_photoUrls").UsePropertyAccessMode(PropertyAccessMode.Field)

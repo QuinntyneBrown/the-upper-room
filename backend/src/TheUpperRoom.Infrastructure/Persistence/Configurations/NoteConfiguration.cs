@@ -18,6 +18,8 @@ internal sealed class NoteConfiguration : IEntityTypeConfiguration<Note>
 
         builder.HasIndex(e => new { e.SubjectType, e.SubjectId });
 
+        builder.Ignore(e => e.History);
+
         builder.Property<List<NoteVersion>>("_history")
             .HasField("_history").UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("History").HasColumnType("nvarchar(max)")

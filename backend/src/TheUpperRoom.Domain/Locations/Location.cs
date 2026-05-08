@@ -8,6 +8,12 @@ public sealed class Location : CityScopedAuditableEntity
     private readonly List<string> _photoUrls = [];
     private readonly List<string> _tagIds = [];
 
+    private Location() : base(string.Empty, "ef", DateTimeOffset.UnixEpoch)
+    {
+        Name = string.Empty;
+        Address = null!;
+    }
+
     public Location(
         string cityId,
         string name,

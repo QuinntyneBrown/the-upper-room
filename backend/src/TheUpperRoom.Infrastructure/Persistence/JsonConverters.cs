@@ -11,6 +11,10 @@ internal static class JsonConverters
         WriteIndented = false,
     };
 
+    public static ValueConverter<T, string> SingleConverter<T>() => new(
+        v => JsonSerializer.Serialize(v, Options),
+        v => Deserialize<T>(v)!);
+
     public static ValueConverter<List<T>, string> ListConverter<T>() => new(
         v => JsonSerializer.Serialize(v, Options),
         v => Deserialize<List<T>>(v) ?? new List<T>());

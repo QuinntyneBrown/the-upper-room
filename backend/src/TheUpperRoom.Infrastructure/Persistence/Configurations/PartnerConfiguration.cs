@@ -22,6 +22,14 @@ internal sealed class PartnerConfiguration : IEntityTypeConfiguration<Partner>
 
         builder.HasIndex(e => new { e.CityId, e.Name }).IsUnique();
 
+        builder.Ignore(e => e.IsDeleted);
+        builder.Ignore(e => e.Addresses);
+        builder.Ignore(e => e.Phones);
+        builder.Ignore(e => e.Emails);
+        builder.Ignore(e => e.SocialLinks);
+        builder.Ignore(e => e.LinkedContacts);
+        builder.Ignore(e => e.TagIds);
+
         builder.Property<List<Address>>("_addresses")
             .HasField("_addresses").UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("Addresses").HasColumnType("nvarchar(max)")

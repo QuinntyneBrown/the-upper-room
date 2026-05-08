@@ -19,6 +19,9 @@ internal sealed class IdeaConfiguration : IEntityTypeConfiguration<Idea>
         builder.Property(e => e.CoverImageUrl).HasMaxLength(2048);
 
         builder.Ignore(e => e.VoteCount);
+        builder.Ignore(e => e.PartnerIds);
+        builder.Ignore(e => e.TagIds);
+        builder.Ignore(e => e.VoteUserIds);
 
         builder.Property<List<string>>("_partnerIds")
             .HasField("_partnerIds").UsePropertyAccessMode(PropertyAccessMode.Field)

@@ -15,6 +15,8 @@ internal sealed class KanbanBoardConfiguration : IEntityTypeConfiguration<Kanban
         builder.Property(e => e.Description).HasMaxLength(500);
         builder.Property(e => e.WipLimitPerColumn);
 
+        builder.Ignore(e => e.CardSchema);
+
         builder.Property<List<CardSchemaField>>("_cardSchema")
             .HasField("_cardSchema").UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("CardSchema").HasColumnType("nvarchar(max)")

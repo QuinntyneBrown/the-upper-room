@@ -23,6 +23,13 @@ internal sealed class ContactConfiguration : IEntityTypeConfiguration<Contact>
         builder.Property(e => e.Archived).IsRequired();
         builder.Property(e => e.DeletedAt);
 
+        builder.Ignore(e => e.DisplayName);
+        builder.Ignore(e => e.IsDeleted);
+        builder.Ignore(e => e.Addresses);
+        builder.Ignore(e => e.Phones);
+        builder.Ignore(e => e.Emails);
+        builder.Ignore(e => e.TagIds);
+
         builder.Property<List<Address>>("_addresses")
             .HasField("_addresses").UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("Addresses").HasColumnType("nvarchar(max)")

@@ -18,6 +18,7 @@ internal sealed class NotificationConfiguration : IEntityTypeConfiguration<Notif
         builder.Property(e => e.CreatedAt).IsRequired();
         builder.Property(e => e.DeepLink).HasMaxLength(1000);
         builder.Property(e => e.ReadAt);
+        builder.Ignore(e => e.IsRead);
         builder.HasIndex(e => new { e.UserId, e.CreatedAt });
     }
 }

@@ -24,6 +24,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(e => e.EmailVerifiedAt);
         builder.Property(e => e.LastSignInAt);
 
+        builder.Ignore(e => e.DisplayName);
+        builder.Ignore(e => e.Roles);
+
         builder.HasIndex(e => e.Email).IsUnique();
 
         builder.Property<List<string>>("_roles")
