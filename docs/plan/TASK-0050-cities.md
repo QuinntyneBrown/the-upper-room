@@ -1,7 +1,7 @@
 ---
 id: TASK-0050
 title: City CRUD + listing (SystemAdmin)
-status: Draft
+status: Accepted
 phase: CI
 depends_on: [TASK-0030]
 traces_to: [L2-013, L2-077]
