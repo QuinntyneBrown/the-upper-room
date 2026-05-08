@@ -1,7 +1,7 @@
 ---
 id: TASK-0031
 title: *tarHasPermission and *tarHasRole structural directives
-status: Accepted
+status: Completed
 phase: R
 depends_on: [TASK-0030]
 traces_to: [L2-025]
