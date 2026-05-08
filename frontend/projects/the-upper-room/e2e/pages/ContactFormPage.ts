@@ -1,4 +1,4 @@
-// traces_to: L2-032
+// traces_to: L2-032, L2-029
 import { Page, Locator } from '@playwright/test';
 
 export class ContactFormPage {
@@ -15,4 +15,16 @@ export class ContactFormPage {
   cancel(): Locator { return this.page.getByTestId('contact-cancel'); }
   unsavedDot(): Locator { return this.page.getByTestId('contact-unsaved-dot'); }
   firstNameError(): Locator { return this.page.getByTestId('contact-error-first-name'); }
+
+  addPhone(): Locator { return this.page.getByTestId('contact-add-phone'); }
+  addEmail(): Locator { return this.page.getByTestId('contact-add-email'); }
+  addAddress(): Locator { return this.page.getByTestId('contact-add-address'); }
+  phoneRow(index: number): Locator { return this.page.getByTestId(`contact-phone-row-${index}`); }
+  phoneInput(index: number): Locator { return this.page.getByTestId(`contact-phone-input-${index}`); }
+  phoneError(index: number): Locator { return this.page.getByTestId(`contact-phone-error-${index}`); }
+  removePhone(index: number): Locator { return this.page.getByTestId(`contact-phone-remove-${index}`); }
+  emailRow(index: number): Locator { return this.page.getByTestId(`contact-email-row-${index}`); }
+  emailInput(index: number): Locator { return this.page.getByTestId(`contact-email-input-${index}`); }
+  emailPrimary(index: number): Locator { return this.page.getByTestId(`contact-email-primary-${index}`); }
+  formBanner(): Locator { return this.page.getByTestId('contact-form-banner'); }
 }
