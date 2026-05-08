@@ -17,14 +17,30 @@
   </button>
   <span class="app-name">The Upper Room</span>
   <span class="spacer"></span>
-  <button
-    data-testid="avatar-trigger"
-    class="icon-btn"
-    type="button"
-    aria-label="Account menu"
-  >
-    <tar-icon name="profile" />
-  </button>
+  <div class="avatar">
+    <button
+      data-testid="avatar-trigger"
+      class="icon-btn"
+      type="button"
+      aria-label="Account menu"
+      (click)="toggleAvatarMenu()"
+    >
+      <tar-icon name="profile" />
+    </button>
+    @if (avatarMenuOpen()) {
+      <div class="avatar__menu" role="menu">
+        <button
+          data-testid="avatar-menu-sign-out"
+          type="button"
+          class="avatar__item"
+          role="menuitem"
+          (click)="onSignOut()"
+        >
+          Sign out
+        </button>
+      </div>
+    }
+  </div>
 </header>
 
 <app-offline-banner />
