@@ -1,7 +1,7 @@
 ---
 id: TASK-0090
 title: Board CRUD + list page
-status: Accepted
+status: Completed
 phase: K
 depends_on: [TASK-0033, TASK-0010]
 traces_to: [L2-043, L2-044]

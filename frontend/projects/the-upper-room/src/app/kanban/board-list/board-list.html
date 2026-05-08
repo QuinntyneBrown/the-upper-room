@@ -1,6 +1,6 @@
 <div class="toolbar">
   <h1 class="page-title">Boards</h1>
-  @if (canCreate()) {
+  @if (canCreate() && !isEmpty()) {
     <button data-testid="boards-new-button" type="button" class="btn-filled" (click)="openWizard()">
       New board
     </button>
