@@ -1,7 +1,7 @@
 ---
 id: TASK-0024
 title: Forgot / reset password
-status: Draft
+status: Accepted
 phase: A
 depends_on: [TASK-0021]
 traces_to: [L2-020]
