@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+// traces_to: L2-074
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -7,6 +8,4 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
-  protected readonly title = signal('the-upper-room');
-}
+export class App {}
