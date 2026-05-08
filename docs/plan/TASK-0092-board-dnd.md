@@ -1,7 +1,7 @@
 ---
 id: TASK-0092
 title: Drag-and-drop cards across columns
-status: Draft
+status: Accepted
 phase: K
 depends_on: [TASK-0091]
 traces_to: [L2-045]
