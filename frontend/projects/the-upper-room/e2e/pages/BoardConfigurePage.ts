@@ -27,4 +27,8 @@ export class BoardConfigurePage {
   moveCardsConfirm(): Locator {
     return this.page.getByTestId('config-move-cards-confirm');
   }
+
+  swimlaneModeSelect(): Locator {
+    return this.page.getByTestId('board-configure-swimlane-select');
+  }
 }
