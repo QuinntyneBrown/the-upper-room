@@ -1,7 +1,7 @@
 ---
 id: TASK-0052
 title: Tag CRUD page (admin)
-status: Draft
+status: Accepted
 phase: CI
 depends_on: [TASK-0030]
 traces_to: [L2-038, L2-039]
