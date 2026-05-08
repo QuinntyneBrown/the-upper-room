@@ -1,7 +1,7 @@
 ---
 id: TASK-0102
 title: Idea status workflow
-status: Draft
+status: Accepted
 phase: I
 depends_on: [TASK-0101]
 traces_to: [L2-048, L2-050]
