@@ -20,6 +20,7 @@ interface BoardDetail {
   readonly name: string;
   readonly columns: BoardColumn[];
   readonly cards: BoardCard[];
+  readonly swimlaneMode?: string;
 }
 
 @Component({
@@ -35,6 +36,7 @@ export class BoardConfigure {
   protected readonly columns = signal<BoardColumn[]>([]);
   protected readonly deleteTarget = signal<BoardColumn | null>(null);
   protected readonly moveCardsTo = signal<string>('');
+  protected readonly swimlaneMode = signal<string>('None');
 
   protected readonly cardCountByColumn = computed(() => {
     const counts = new Map<string, number>();
@@ -60,6 +62,7 @@ export class BoardConfigure {
       this.http.get<BoardDetail>(`/api/v1/boards/${boardId}`).subscribe((b) => {
         this.board.set(b);
         this.columns.set([...b.columns]);
+        this.swimlaneMode.set(b.swimlaneMode ?? 'None');
       });
     }
   }
@@ -107,6 +110,12 @@ export class BoardConfigure {
 
   protected cancelMove(): void {
     this.deleteTarget.set(null);
+  }
+
+  protected onSwimlaneChange(mode: string): void {
+    this.swimlaneMode.set(mode);
+    const boardId = this.board()?.id;
+    if (boardId) this.http.patch(`/api/v1/boards/${boardId}`, { swimlaneMode: mode }).subscribe();
   }
 
   private persistOrder(order: string[]): void {

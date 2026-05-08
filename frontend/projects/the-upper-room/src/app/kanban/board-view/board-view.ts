@@ -18,6 +18,7 @@ export interface BoardCard {
   readonly tags: BoardCardTag[];
   readonly assigneeName: string | null;
   readonly dueDate: string | null;
+  readonly swimlaneKey: string | null;
   readonly data?: Record<string, string | null>;
 }
 
@@ -35,6 +36,7 @@ export interface BoardDetail {
   readonly columns: BoardColumn[];
   readonly cards: BoardCard[];
   readonly cardSchema?: CardSchemaField[];
+  readonly swimlaneMode?: 'None' | 'Assignee' | 'Priority';
 }
 
 @Component({
@@ -81,6 +83,15 @@ export class BoardView {
     return result;
   });
 
+  protected readonly swimlaneMode = computed(() => this.board()?.swimlaneMode ?? 'None');
+
+  protected readonly swimlanes = computed<string[]>(() => {
+    if (this.swimlaneMode() === 'None') return [];
+    const seen = new Set<string>();
+    for (const card of this.board()?.cards ?? []) seen.add(card.swimlaneKey ?? '');
+    return [...seen].sort();
+  });
+
   constructor() {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
     if (id) {
@@ -98,6 +109,13 @@ export class BoardView {
 
   protected cardsFor(columnId: string): BoardCard[] {
     return this.visibleCardsByColumn().get(columnId) ?? [];
+  }
+
+  protected cardsForLane(columnId: string, laneKey: string): BoardCard[] {
+    const filter = this.activeTagName();
+    return (this.board()?.cards ?? [])
+      .filter((c) => c.columnId === columnId && c.swimlaneKey === laneKey)
+      .filter((c) => !filter || c.tags.some((t) => t.name === filter));
   }
 
   protected visibleTags(card: BoardCard): BoardCardTag[] {
@@ -127,14 +145,17 @@ export class BoardView {
     event.preventDefault();
   }
 
-  protected onDrop(event: DragEvent, column: BoardColumn): void {
+  protected onDrop(event: DragEvent, column: BoardColumn, targetSwimlaneKey?: string): void {
     event.preventDefault();
     const cardId = event.dataTransfer?.getData('text/plain');
     if (!cardId) return;
     const current = this.board();
     if (!current) return;
     const card = current.cards.find((c) => c.id === cardId);
-    if (!card || card.columnId === column.id) return;
+    if (!card) return;
+    const sameColumn = card.columnId === column.id;
+    const sameLane = targetSwimlaneKey === undefined || card.swimlaneKey === targetSwimlaneKey;
+    if (sameColumn && sameLane) return;
     if (this.isOverLimit(column)) {
       this.snackbar.show(`WIP limit reached for ${column.name}`, 'error');
       return;
@@ -143,15 +164,14 @@ export class BoardView {
 
     this.board.set({
       ...current,
-      cards: current.cards.map((c) => (c.id === cardId ? { ...c, columnId: column.id } : c)),
+      cards: current.cards.map((c) =>
+        c.id === cardId ? { ...c, columnId: column.id, swimlaneKey: targetSwimlaneKey ?? c.swimlaneKey } : c
+      ),
     });
 
-    this.http
-      .post(`/api/v1/cards/${cardId}/move`, {
-        targetColumnId: column.id,
-        sourceColumnId,
-      })
-      .subscribe();
+    const body: Record<string, string | undefined> = { targetColumnId: column.id, sourceColumnId };
+    if (targetSwimlaneKey !== undefined) body['targetSwimlaneKey'] = targetSwimlaneKey;
+    this.http.post(`/api/v1/cards/${cardId}/move`, body).subscribe();
   }
 
   protected cardCount(columnId: string): number {

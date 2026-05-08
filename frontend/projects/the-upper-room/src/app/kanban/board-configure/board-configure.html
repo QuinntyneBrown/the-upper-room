@@ -3,6 +3,23 @@
     <h1 class="page-header__title">Configure: {{ b.name }}</h1>
   </header>
 
+  <section class="config-section">
+    <h2 class="config-section__heading">Swimlanes</h2>
+    <label class="config-label">
+      Group by
+      <select
+        data-testid="board-configure-swimlane-select"
+        class="config-select"
+        [value]="swimlaneMode()"
+        (change)="onSwimlaneChange($any($event.target).value)"
+      >
+        <option value="None">None</option>
+        <option value="Assignee">Assignee</option>
+        <option value="Priority">Priority</option>
+      </select>
+    </label>
+  </section>
+
   <ul class="column-list">
     @for (column of columns(); track column.id) {
       <li

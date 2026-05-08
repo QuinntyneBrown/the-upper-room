@@ -21,59 +21,111 @@
     }
   </header>
 
-  <div data-testid="board-view-columns" class="columns">
-    @for (column of b.columns; track column.id) {
-      <section
-        [attr.data-testid]="'board-column-' + column.name"
-        [attr.data-over-limit]="isOverLimit(column) ? 'true' : null"
-        class="column"
-        [class.column--over-limit]="isOverLimit(column)"
-        (dragover)="onDragOver($event)"
-        (drop)="onDrop($event, column)"
-      >
-        <header class="column__header">
-          <span class="column__name">{{ column.name }}</span>
-          <span class="column__count">
-            @if (column.wipLimit !== undefined) {
-              {{ cardCount(column.id) }} / {{ column.wipLimit }}
-            } @else {
-              {{ cardCount(column.id) }}
-            }
-          </span>
-        </header>
-        <ul class="column__cards">
-          @for (card of cardsFor(column.id); track card.id) {
-            <li
-              [attr.data-testid]="'board-card-' + card.title"
-              class="card"
-              draggable="true"
-              (dragstart)="onDragStart($event, card)"
-              (click)="openCard(card)"
-            >
-              <span class="card__title">{{ card.title }}</span>
-              @if (visibleTags(card).length > 0) {
-                <div class="card__tags">
-                  @for (tag of visibleTags(card); track tag.id) {
-                    <span data-testid="card-tag" class="card__tag" [attr.data-color]="tag.color">{{ tag.name }}</span>
+  @if (swimlaneMode() === 'None') {
+    <div data-testid="board-view-columns" class="columns">
+      @for (column of b.columns; track column.id) {
+        <section
+          [attr.data-testid]="'board-column-' + column.name"
+          [attr.data-over-limit]="isOverLimit(column) ? 'true' : null"
+          class="column"
+          [class.column--over-limit]="isOverLimit(column)"
+          (dragover)="onDragOver($event)"
+          (drop)="onDrop($event, column)"
+        >
+          <header class="column__header">
+            <span class="column__name">{{ column.name }}</span>
+            <span class="column__count">
+              @if (column.wipLimit !== undefined) {
+                {{ cardCount(column.id) }} / {{ column.wipLimit }}
+              } @else {
+                {{ cardCount(column.id) }}
+              }
+            </span>
+          </header>
+          <ul class="column__cards">
+            @for (card of cardsFor(column.id); track card.id) {
+              <li
+                [attr.data-testid]="'board-card-' + card.title"
+                class="card"
+                draggable="true"
+                (dragstart)="onDragStart($event, card)"
+                (click)="openCard(card)"
+              >
+                <span class="card__title">{{ card.title }}</span>
+                @if (visibleTags(card).length > 0) {
+                  <div class="card__tags">
+                    @for (tag of visibleTags(card); track tag.id) {
+                      <span data-testid="card-tag" class="card__tag" [attr.data-color]="tag.color">{{ tag.name }}</span>
+                    }
+                  </div>
+                }
+                <div class="card__meta">
+                  @if (card.assigneeName) {
+                    <span data-testid="card-assignee" class="card__avatar" [attr.aria-label]="card.assigneeName">
+                      {{ initials(card.assigneeName) }}
+                    </span>
+                  }
+                  @if (card.dueDate) {
+                    <span data-testid="card-due-date" class="card__due">{{ formatDueDate(card.dueDate) }}</span>
                   }
                 </div>
-              }
-              <div class="card__meta">
-                @if (card.assigneeName) {
-                  <span data-testid="card-assignee" class="card__avatar" [attr.aria-label]="card.assigneeName">
-                    {{ initials(card.assigneeName) }}
-                  </span>
-                }
-                @if (card.dueDate) {
-                  <span data-testid="card-due-date" class="card__due">{{ formatDueDate(card.dueDate) }}</span>
-                }
-              </div>
-            </li>
-          }
-        </ul>
-      </section>
-    }
-  </div>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+  } @else {
+    <div class="swimlanes">
+      @for (lane of swimlanes(); track lane) {
+        <div [attr.data-testid]="'board-swimlane-' + lane" class="swimlane">
+          <div class="swimlane__header">
+            <span class="swimlane__label">{{ lane || 'Unassigned' }}</span>
+          </div>
+          <div class="swimlane__columns">
+            @for (column of b.columns; track column.id) {
+              <section
+                [attr.data-testid]="'board-column-' + column.name"
+                class="column"
+                (dragover)="onDragOver($event)"
+                (drop)="onDrop($event, column, lane)"
+              >
+                <header class="column__header">
+                  <span class="column__name">{{ column.name }}</span>
+                  <span class="column__count">{{ cardsForLane(column.id, lane).length }}</span>
+                </header>
+                <ul class="column__cards">
+                  @for (card of cardsForLane(column.id, lane); track card.id) {
+                    <li
+                      [attr.data-testid]="'board-card-' + card.title"
+                      class="card"
+                      draggable="true"
+                      (dragstart)="onDragStart($event, card)"
+                      (click)="openCard(card)"
+                    >
+                      <span class="card__title">{{ card.title }}</span>
+                      @if (visibleTags(card).length > 0) {
+                        <div class="card__tags">
+                          @for (tag of visibleTags(card); track tag.id) {
+                            <span data-testid="card-tag" class="card__tag" [attr.data-color]="tag.color">{{ tag.name }}</span>
+                          }
+                        </div>
+                      }
+                      <div class="card__meta">
+                        @if (card.dueDate) {
+                          <span data-testid="card-due-date" class="card__due">{{ formatDueDate(card.dueDate) }}</span>
+                        }
+                      </div>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
 
   @if (selectedCard(); as sc) {
     <app-card-detail-dialog
