@@ -1,7 +1,7 @@
 ---
 id: TASK-0045
 title: Active sessions / revoke other devices
-status: Draft
+status: Accepted
 phase: U
 depends_on: [TASK-0043, TASK-0026]
 traces_to: [L2-107]
