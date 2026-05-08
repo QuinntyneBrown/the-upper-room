@@ -1,0 +1,66 @@
+<div data-testid="markdown-editor" class="md-editor">
+  <nav class="md-editor__tabs">
+    <button
+      data-testid="markdown-tab-write"
+      type="button"
+      class="md-tab"
+      [class.md-tab--active]="activeTab() === 'write'"
+      (click)="activeTab.set('write')"
+    >Write</button>
+    <button
+      data-testid="markdown-tab-preview"
+      type="button"
+      class="md-tab"
+      [class.md-tab--active]="activeTab() === 'preview'"
+      (click)="activeTab.set('preview')"
+    >Preview</button>
+  </nav>
+
+  @if (activeTab() === 'write') {
+    <div class="md-editor__toolbar">
+      <button data-testid="markdown-toolbar-bold"    type="button" class="md-toolbar-btn" title="Bold"         (click)="applyBold()"><b>B</b></button>
+      <button data-testid="markdown-toolbar-italic"  type="button" class="md-toolbar-btn" title="Italic"       (click)="applyItalic()"><i>I</i></button>
+      <button data-testid="markdown-toolbar-heading" type="button" class="md-toolbar-btn" title="Heading"      (click)="applyHeading()">H</button>
+      <button data-testid="markdown-toolbar-link"    type="button" class="md-toolbar-btn" title="Link"         (click)="applyLink()">🔗</button>
+      <button data-testid="markdown-toolbar-list"    type="button" class="md-toolbar-btn" title="List"         (click)="applyList()">≡</button>
+      <button data-testid="markdown-toolbar-code"    type="button" class="md-toolbar-btn" title="Code"         (click)="applyCode()">&lt;/&gt;</button>
+      <label  data-testid="markdown-toolbar-image"   class="md-toolbar-btn" title="Image" style="cursor:pointer">
+        <span class="material-symbols-outlined" style="font-size:18px;line-height:1">image</span>
+        <input
+          #imageInput
+          data-testid="markdown-image-input"
+          type="file"
+          accept="image/*"
+          class="md-image-input"
+          (change)="onImageFileChange($event)"
+        />
+      </label>
+    </div>
+
+    <textarea
+      #textareaEl
+      data-testid="markdown-editor-textarea"
+      class="md-editor__textarea"
+      [value]="value()"
+      [maxlength]="maxLength()"
+      (input)="onInput($event)"
+      placeholder="Write your idea here…"
+    ></textarea>
+
+    <div class="md-editor__footer">
+      <span
+        data-testid="markdown-editor-char-count"
+        class="md-char-count"
+        [class.error]="isAtLimit()"
+      >{{ charCount() }} / {{ maxLength() }}</span>
+    </div>
+  }
+
+  @if (activeTab() === 'preview') {
+    <div
+      data-testid="markdown-preview-pane"
+      class="md-editor__preview"
+      [innerHTML]="previewHtml()"
+    ></div>
+  }
+</div>

@@ -1,4 +1,5 @@
-// traces_to: L2-048, L2-049
+// traces_to: L2-048, L2-049, L2-050, L2-051
+using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 
@@ -8,12 +9,36 @@ namespace TheUpperRoom.Api.Ideas;
 [Route("api/v1/ideas")]
 public sealed class IdeasController : ControllerBase
 {
-    private sealed record IdeaRecord(
-        string Id, string Title, string Description, string Status,
-        string ProposedBy, DateTimeOffset CreatedAt, DateTimeOffset UpdatedAt, string[] Tags);
+    private sealed class IdeaRecord(
+        string id, string title, string description,
+        string bodyMarkdown, string bodyHtmlSanitized, string? coverImageUrl,
+        string status, string proposedBy, DateTimeOffset createdAt, DateTimeOffset updatedAt, string[] tags)
+    {
+        public string Id { get; } = id;
+        public string Title { get; } = title;
+        public string Description { get; } = description;
+        public string BodyMarkdown { get; set; } = bodyMarkdown;
+        public string BodyHtmlSanitized { get; set; } = bodyHtmlSanitized;
+        public string? CoverImageUrl { get; set; } = coverImageUrl;
+        public string Status { get; } = status;
+        public string ProposedBy { get; } = proposedBy;
+        public DateTimeOffset CreatedAt { get; } = createdAt;
+        public DateTimeOffset UpdatedAt { get; } = updatedAt;
+        public string[] Tags { get; } = tags;
+    }
 
+    private static readonly HtmlSanitizer _sanitizer = BuildSanitizer();
     private static readonly List<IdeaRecord> _store = [];
     private static readonly List<(string IdeaId, string UserId)> _votes = [];
+
+    private static HtmlSanitizer BuildSanitizer()
+    {
+        var s = new HtmlSanitizer();
+        s.AllowedTags.Clear();
+        s.AllowedTags.UnionWith(["p", "h1", "h2", "h3", "h4", "h5", "h6",
+            "ul", "ol", "li", "a", "code", "pre", "em", "strong", "blockquote", "br"]);
+        return s;
+    }
 
     [HttpGet]
     public IActionResult List(
@@ -48,6 +73,18 @@ public sealed class IdeasController : ControllerBase
         return Ok(new { items, total = items.Count });
     }
 
+    [HttpGet("{id}")]
+    public IActionResult GetById(string id)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+
+        var idea = _store.FirstOrDefault(i => i.Id == id);
+        if (idea is null) return NotFound();
+
+        return Ok(ToDto(idea, user.Id));
+    }
+
     [HttpPost("{id}/vote")]
     public IActionResult ToggleVote(string id)
     {
@@ -66,8 +103,31 @@ public sealed class IdeasController : ControllerBase
         return Ok(ToDto(idea, user.Id));
     }
 
+    [HttpPatch("{id}")]
+    public IActionResult Update(string id, [FromBody] UpdateIdeaRequest? body)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+
+        var idea = _store.FirstOrDefault(i => i.Id == id);
+        if (idea is null) return NotFound();
+
+        if (body?.BodyMarkdown is not null)
+        {
+            idea.BodyMarkdown = body.BodyMarkdown;
+            idea.BodyHtmlSanitized = _sanitizer.Sanitize(body.BodyMarkdown);
+        }
+
+        if (body?.CoverImageUrl is not null)
+            idea.CoverImageUrl = body.CoverImageUrl;
+
+        return Ok(ToDto(idea, user.Id));
+    }
+
     private IdeaDto ToDto(IdeaRecord idea, string userId) => new(
-        idea.Id, idea.Title, idea.Description, idea.Status,
+        idea.Id, idea.Title, idea.Description,
+        idea.BodyMarkdown, idea.BodyHtmlSanitized, idea.CoverImageUrl,
+        idea.Status,
         VoteCount: _votes.Count(v => v.IdeaId == idea.Id),
         HasVoted: _votes.Any(v => v.IdeaId == idea.Id && v.UserId == userId),
         idea.ProposedBy, idea.CreatedAt, idea.UpdatedAt, idea.Tags);
@@ -80,3 +140,5 @@ public sealed class IdeasController : ControllerBase
             : user;
     }
 }
+
+public sealed record UpdateIdeaRequest(string? BodyMarkdown, string? CoverImageUrl);

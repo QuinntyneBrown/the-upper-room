@@ -8,6 +8,9 @@ export interface IdeaDto {
   readonly id: string;
   readonly title: string;
   readonly description: string;
+  readonly bodyMarkdown: string;
+  readonly bodyHtmlSanitized: string;
+  readonly coverImageUrl: string | null;
   readonly status: string;
   readonly voteCount: number;
   readonly hasVoted: boolean;

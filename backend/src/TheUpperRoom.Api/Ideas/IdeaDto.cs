@@ -1,10 +1,13 @@
-// traces_to: L2-048, L2-049
+// traces_to: L2-048, L2-049, L2-050, L2-051
 namespace TheUpperRoom.Api.Ideas;
 
 public sealed record IdeaDto(
     string Id,
     string Title,
     string Description,
+    string BodyMarkdown,
+    string BodyHtmlSanitized,
+    string? CoverImageUrl,
     string Status,
     int VoteCount,
     bool HasVoted,

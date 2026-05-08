@@ -1,0 +1,55 @@
+@if (idea(); as i) {
+  @if (i.coverImageUrl) {
+    <img
+      data-testid="idea-hero-image"
+      class="idea-hero"
+      [src]="i.coverImageUrl"
+      [alt]="i.title"
+    />
+  }
+
+  <div class="idea-content">
+    <header class="idea-content__header">
+      <div>
+        <h1 data-testid="idea-detail-title" class="idea-content__title">{{ i.title }}</h1>
+        <p data-testid="idea-detail-proposer" class="idea-content__meta">{{ i.proposedBy }}</p>
+      </div>
+      <div class="idea-content__actions">
+        <button
+          data-testid="idea-detail-vote"
+          type="button"
+          class="idea-vote"
+          [class.idea-vote--active]="i.hasVoted"
+          (click)="toggleVote()"
+          [attr.aria-label]="i.hasVoted ? 'Remove vote' : 'Vote for this idea'"
+        >
+          <span class="idea-vote__icon">favorite</span>
+          <span>{{ i.voteCount }}</span>
+        </button>
+        <button
+          data-testid="idea-detail-edit"
+          type="button"
+          class="btn-outlined"
+          (click)="openEdit()"
+        >Edit</button>
+      </div>
+    </header>
+
+    @if (!editMode()) {
+      <div
+        data-testid="idea-detail-body"
+        class="idea-content__body"
+        [innerHTML]="i.bodyHtmlSanitized"
+      ></div>
+    } @else {
+      <app-markdown-editor
+        [value]="editBody()"
+        (valueChange)="editBody.set($event)"
+      />
+      <div class="idea-content__edit-actions">
+        <button type="button" class="btn-primary" (click)="saveEdit()">Save</button>
+        <button type="button" class="btn-outlined" (click)="cancelEdit()">Cancel</button>
+      </div>
+    }
+  </div>
+}

@@ -28,6 +28,7 @@ import { BoardList } from './kanban/board-list/board-list';
 import { BoardView } from './kanban/board-view/board-view';
 import { BoardConfigure } from './kanban/board-configure/board-configure';
 import { IdeaList } from './ideas/idea-list/idea-list';
+import { IdeaDetail } from './ideas/idea-detail/idea-detail';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -65,6 +66,7 @@ export const routes: Routes = [
       { path: 'contacts/:id', component: ContactDetail },
       { path: 'contacts/:id/edit', component: ContactEdit },
       { path: 'ideas', component: IdeaList },
+      { path: 'ideas/:id', component: IdeaDetail },
       { path: 'partners', component: Stub },
       { path: 'partners/:id', component: Stub },
       { path: 'boards', component: BoardList },

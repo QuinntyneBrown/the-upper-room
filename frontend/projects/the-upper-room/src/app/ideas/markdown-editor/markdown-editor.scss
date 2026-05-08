@@ -1,0 +1,93 @@
+:host { display: block; }
+
+.md-editor {
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-medium);
+  overflow: hidden;
+}
+
+.md-editor__tabs {
+  display: flex;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.md-tab {
+  padding: var(--md-sys-space-2) var(--md-sys-space-4);
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-on-surface-variant);
+
+  &--active {
+    border-bottom-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-primary);
+  }
+}
+
+.md-editor__toolbar {
+  display: flex;
+  gap: var(--md-sys-space-1);
+  padding: var(--md-sys-space-1) var(--md-sys-space-2);
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-container-low);
+  flex-wrap: wrap;
+}
+
+.md-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  background: transparent;
+  cursor: pointer;
+  font: var(--md-sys-typescale-label-medium);
+  color: var(--md-sys-color-on-surface-variant);
+
+  &:hover { background: var(--md-sys-color-surface-container-high); }
+}
+
+.md-image-input {
+  display: none;
+}
+
+.md-editor__textarea {
+  display: block;
+  width: 100%;
+  min-height: 200px;
+  border: none;
+  padding: var(--md-sys-space-3);
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface);
+  resize: vertical;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.md-editor__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--md-sys-space-1) var(--md-sys-space-3);
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  background: var(--md-sys-color-surface-container-low);
+}
+
+.md-char-count {
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-on-surface-variant);
+
+  &.error { color: var(--md-sys-color-error); }
+}
+
+.md-editor__preview {
+  min-height: 200px;
+  padding: var(--md-sys-space-3);
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-surface);
+}
