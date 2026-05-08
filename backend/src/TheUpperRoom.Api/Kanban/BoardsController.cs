@@ -19,6 +19,23 @@ public sealed class BoardsController : ControllerBase
         return Ok(new { items = Boards.ToArray(), total = Boards.Count });
     }
 
+    [HttpGet("{id}")]
+    public ActionResult<BoardDetailDto> GetById(string id)
+    {
+        var user = CurrentUser();
+        if (user is null) return Unauthorized();
+
+        var board = Boards.FirstOrDefault(b => b.Id == id);
+        if (board is null) return NotFound();
+
+        return Ok(new BoardDetailDto(
+            Id: board.Id,
+            Name: board.Name,
+            Description: board.Description,
+            Columns: Array.Empty<BoardColumnDto>(),
+            Cards: Array.Empty<BoardCardDto>()));
+    }
+
     [HttpPost]
     public ActionResult<BoardListItem> Create([FromBody] CreateBoardRequest? body)
     {

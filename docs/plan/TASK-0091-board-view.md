@@ -1,7 +1,7 @@
 ---
 id: TASK-0091
 title: Board view (columns + read-only cards)
-status: Accepted
+status: Completed
 phase: K
 depends_on: [TASK-0090]
 traces_to: [L2-045]

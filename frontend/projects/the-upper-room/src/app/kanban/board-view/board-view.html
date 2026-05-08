@@ -1,0 +1,58 @@
+@if (board(); as b) {
+  <header data-testid="board-view-header" class="board-header">
+    <h1 class="board-header__title">{{ b.name }}</h1>
+    @if (b.description) {
+      <p class="board-header__description">{{ b.description }}</p>
+    }
+    @if (tagChips().length > 0) {
+      <div class="board-header__filters" role="group" aria-label="Tag filters">
+        @for (tag of tagChips(); track tag.id) {
+          <button
+            type="button"
+            class="filter-chip"
+            [class.filter-chip--active]="isTagActive(tag.name)"
+            [attr.data-testid]="'board-tag-filter-' + tag.name"
+            (click)="toggleTag(tag.name)"
+          >
+            Tag={{ tag.name }}
+          </button>
+        }
+      </div>
+    }
+  </header>
+
+  <div data-testid="board-view-columns" class="columns">
+    @for (column of b.columns; track column.id) {
+      <section [attr.data-testid]="'board-column-' + column.name" class="column">
+        <header class="column__header">
+          <span class="column__name">{{ column.name }}</span>
+          <span class="column__count">{{ cardsFor(column.id).length }}</span>
+        </header>
+        <ul class="column__cards">
+          @for (card of cardsFor(column.id); track card.id) {
+            <li [attr.data-testid]="'board-card-' + card.title" class="card">
+              <span class="card__title">{{ card.title }}</span>
+              @if (visibleTags(card).length > 0) {
+                <div class="card__tags">
+                  @for (tag of visibleTags(card); track tag.id) {
+                    <span data-testid="card-tag" class="card__tag" [attr.data-color]="tag.color">{{ tag.name }}</span>
+                  }
+                </div>
+              }
+              <div class="card__meta">
+                @if (card.assigneeName) {
+                  <span data-testid="card-assignee" class="card__avatar" [attr.aria-label]="card.assigneeName">
+                    {{ initials(card.assigneeName) }}
+                  </span>
+                }
+                @if (card.dueDate) {
+                  <span data-testid="card-due-date" class="card__due">{{ formatDueDate(card.dueDate) }}</span>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  </div>
+}

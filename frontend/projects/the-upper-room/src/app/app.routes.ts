@@ -25,6 +25,7 @@ import { ContactCreate } from './contacts/contact-create/contact-create';
 import { ContactDetail } from './contacts/contact-detail/contact-detail';
 import { ContactEdit } from './contacts/contact-edit/contact-edit';
 import { BoardList } from './kanban/board-list/board-list';
+import { BoardView } from './kanban/board-view/board-view';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -64,6 +65,7 @@ export const routes: Routes = [
       { path: 'partners', component: Stub },
       { path: 'partners/:id', component: Stub },
       { path: 'boards', component: BoardList },
+      { path: 'boards/:id', component: BoardView },
       { path: 'profile', component: MyProfile },
       {
         path: 'admin/users',
