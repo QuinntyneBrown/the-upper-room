@@ -1,7 +1,7 @@
 ---
 id: TASK-0051
 title: City switcher (SystemAdmin top bar)
-status: Draft
+status: Accepted
 phase: CI
 depends_on: [TASK-0050]
 traces_to: [L2-109]
