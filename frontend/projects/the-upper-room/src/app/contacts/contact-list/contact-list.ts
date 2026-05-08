@@ -9,11 +9,13 @@ import { TarAvatar } from '../../../../../components/src/lib/avatar/tar-avatar';
 
 export interface ContactPhone {
   readonly value: string;
+  readonly label?: string;
   readonly primary: boolean;
 }
 
 export interface ContactEmail {
   readonly value: string;
+  readonly label?: string;
   readonly primary: boolean;
 }
 

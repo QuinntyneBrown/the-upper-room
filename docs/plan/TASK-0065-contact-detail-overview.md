@@ -1,7 +1,7 @@
 ---
 id: TASK-0065
 title: Contact detail Overview tab
-status: Accepted
+status: Completed
 phase: C
 depends_on: [TASK-0062]
 traces_to: [L2-031]

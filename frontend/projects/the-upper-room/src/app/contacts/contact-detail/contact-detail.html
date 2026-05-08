@@ -1,0 +1,78 @@
+@if (contact(); as c) {
+  <header data-testid="contact-detail-header" class="contact-header">
+    <tar-avatar [user]="avatarUser(c)" [size]="96" />
+    <div class="contact-header__info">
+      <h1 class="contact-header__name">{{ c.name }}</h1>
+      @if (c.title || c.org) {
+        <p class="contact-header__subtitle">{{ c.title }}{{ c.title && c.org ? ' @ ' : '' }}{{ c.org }}</p>
+      }
+    </div>
+    <div class="contact-header__actions">
+      <a data-testid="contact-edit-button" [href]="'/contacts/' + c.id + '/edit'" class="btn-outlined">Edit</a>
+      <button data-testid="contact-archive-button" type="button" class="btn-outlined">Archive</button>
+    </div>
+  </header>
+
+  <nav class="tab-bar">
+    <button data-testid="contact-tab-overview" type="button" class="tab" [class.tab--active]="activeTab() === 'overview'" (click)="activeTab.set('overview')">Overview</button>
+    <button data-testid="contact-tab-notes" type="button" class="tab" [class.tab--active]="activeTab() === 'notes'" (click)="activeTab.set('notes')">Notes</button>
+    <button data-testid="contact-tab-activity" type="button" class="tab" [class.tab--active]="activeTab() === 'activity'" (click)="activeTab.set('activity')">Activity</button>
+  </nav>
+
+  @if (activeTab() === 'overview') {
+    <div data-testid="contact-panel-overview" class="overview-panel">
+      <div class="contact-info-card">
+        @if (c.phones && c.phones.length > 0) {
+          <section data-testid="contact-detail-phones" class="info-section">
+            <h2 class="info-section__heading">Phones</h2>
+            @for (phone of c.phones; track phone.value) {
+              <div class="info-row">
+                @if (phone.label) { <span class="info-row__label">{{ phone.label }}</span> }
+                <a class="info-row__value" [href]="'tel:' + phone.value">{{ phone.value }}</a>
+                @if (phone.primary) { <span class="primary-badge">Primary</span> }
+              </div>
+            }
+          </section>
+        }
+
+        @if (c.emails && c.emails.length > 0) {
+          <section data-testid="contact-detail-emails" class="info-section">
+            <h2 class="info-section__heading">Emails</h2>
+            @for (email of c.emails; track email.value) {
+              <div class="info-row">
+                @if (email.label) { <span class="info-row__label">{{ email.label }}</span> }
+                <a class="info-row__value" [href]="'mailto:' + email.value">{{ email.value }}</a>
+                @if (email.primary) { <span class="primary-badge">Primary</span> }
+              </div>
+            }
+          </section>
+        }
+      </div>
+
+      <div class="sidebar-cards">
+        @if (c.tags && c.tags.length > 0) {
+          <div data-testid="contact-detail-tags" class="sidebar-card">
+            <h2 class="sidebar-card__heading">Tags</h2>
+            <div class="tag-chips">
+              @for (tag of c.tags; track tag.id) {
+                <span class="tag-chip" [attr.data-color]="tag.color">{{ tag.name }}</span>
+              }
+            </div>
+          </div>
+        }
+        <div data-testid="contact-detail-partners" class="sidebar-card">
+          <h2 class="sidebar-card__heading">Linked Partners</h2>
+          <p class="empty-hint">No partners linked yet.</p>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (activeTab() === 'notes') {
+    <div class="placeholder-panel">Notes coming soon.</div>
+  }
+
+  @if (activeTab() === 'activity') {
+    <div class="placeholder-panel">Activity coming soon.</div>
+  }
+}
