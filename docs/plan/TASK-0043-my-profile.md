@@ -1,7 +1,7 @@
 ---
 id: TASK-0043
 title: My Profile page
-status: Draft
+status: Accepted
 phase: U
 depends_on: [TASK-0021]
 traces_to: [L2-107]
