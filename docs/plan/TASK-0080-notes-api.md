@@ -1,7 +1,7 @@
 ---
 id: TASK-0080
 title: Note data model + API + Markdown sanitization
-status: Accepted
+status: Completed
 phase: N
 depends_on: [TASK-0033]
 traces_to: [L2-041, L2-093]
@@ -31,4 +31,4 @@ Persist notes (`subjectType`, `subjectId`, body markdown + sanitized HTML), keep
 **Scenario:** A test page calls the API directly and asserts sanitization.
 
 ## Definition of Done
-- [ ] Sanitizer config matches an allow-list (paragraphs, headers, lists, links, code, em, strong, blockquote).
+- [x] Sanitizer config matches an allow-list (paragraphs, headers, lists, links, code, em, strong, blockquote).
