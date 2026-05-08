@@ -1,7 +1,7 @@
 ---
 id: TASK-0096
 title: Card schema editor
-status: Draft
+status: Accepted
 phase: K
 depends_on: [TASK-0090, TASK-0094]
 traces_to: [L2-047]
