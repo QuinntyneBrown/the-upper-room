@@ -1,0 +1,154 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm"
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "api": {
+      "projectType": "library",
+      "root": "projects/api",
+      "sourceRoot": "projects/api/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/api/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/api/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/api/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "components": {
+      "projectType": "library",
+      "root": "projects/components",
+      "sourceRoot": "projects/components/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/components/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/components/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/components/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "domain": {
+      "projectType": "library",
+      "root": "projects/domain",
+      "sourceRoot": "projects/domain/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/domain/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/domain/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/domain/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "the-upper-room": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/the-upper-room",
+      "sourceRoot": "projects/the-upper-room/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/the-upper-room/src/main.ts",
+            "tsConfig": "projects/the-upper-room/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/the-upper-room/public"
+              }
+            ],
+            "styles": ["projects/the-upper-room/src/styles.scss"]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "the-upper-room:build:production"
+            },
+            "development": {
+              "buildTarget": "the-upper-room:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test"
+        }
+      }
+    }
+  }
+}
