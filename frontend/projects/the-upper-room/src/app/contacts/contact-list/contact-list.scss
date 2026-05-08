@@ -1,0 +1,15 @@
+// traces_to: L2-029
+:host {
+  display: block;
+  padding: var(--md-sys-space-6);
+}
+
+.btn-filled {
+  border: 0;
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: var(--md-sys-space-2) var(--md-sys-space-6);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-label-large);
+  cursor: pointer;
+}

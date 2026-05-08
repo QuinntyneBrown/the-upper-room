@@ -1,0 +1,15 @@
+@if (isEmpty()) {
+  <div data-testid="contacts-empty-state">
+    <tar-empty-state
+      icon="person_add"
+      heading="No contacts yet"
+      body="Add your first contact to get started."
+    >
+      @if (canCreate()) {
+        <button data-testid="contacts-new-button" type="button" class="btn-filled">
+          New contact
+        </button>
+      }
+    </tar-empty-state>
+  </div>
+}

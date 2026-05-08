@@ -1,7 +1,7 @@
 ---
 id: TASK-0060
 title: Contact data model + minimal API + empty list page
-status: Accepted
+status: Completed
 phase: C
 depends_on: [TASK-0033, TASK-0010]
 traces_to: [L2-029, L2-030, L2-077]

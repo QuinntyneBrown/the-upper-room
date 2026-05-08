@@ -17,6 +17,19 @@ public static class ContactsEndpoints
 
     public static IEndpointRouteBuilder MapContactsEndpoints(this IEndpointRouteBuilder app)
     {
+        app.MapGet("/api/v1/contacts", (HttpContext ctx) =>
+        {
+            var userId = ctx.Request.Headers["X-Test-User-Id"].ToString();
+            if (string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user))
+                return Results.Unauthorized();
+
+            var items = user.Role == Roles.SystemAdmin
+                ? Seed
+                : Seed.Where(c => c.CityId == user.City).ToArray();
+
+            return Results.Ok(new { items, total = items.Length });
+        });
+
         app.MapGet("/api/v1/contacts/{id}", (string id, HttpContext ctx) =>
         {
             var userId = ctx.Request.Headers["X-Test-User-Id"].ToString();

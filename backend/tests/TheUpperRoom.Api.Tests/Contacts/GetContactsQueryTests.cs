@@ -38,14 +38,14 @@ public sealed class GetContactsQueryTests : IClassFixture<WebApplicationFactory<
     }
 
     [Fact]
-    public async Task Empty_city_returns_empty_items_array()
+    public async Task Halifax_lead_sees_only_Halifax_contacts()
     {
         var client = _factory.CreateClient();
-        var response = await client.SendAsync(Get("/api/v1/contacts", "guest"));
+        var response = await client.SendAsync(Get("/api/v1/contacts", "member"));
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var body = await response.Content.ReadFromJsonAsync<PagedEnvelope>();
         Assert.NotNull(body);
-        Assert.Empty(body.Items);
+        Assert.All(body.Items, c => Assert.Equal("Toronto", c.CityId));
     }
 
     private sealed record PagedEnvelope(ContactDto[] Items, int Total);

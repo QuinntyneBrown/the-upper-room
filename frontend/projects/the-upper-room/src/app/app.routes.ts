@@ -1,4 +1,4 @@
-// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016, L2-015, L2-017, L2-024, L2-038
+// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016, L2-015, L2-017, L2-024, L2-038, L2-029
 import { Routes } from '@angular/router';
 import { Landing } from './landing/landing';
 import { Stub } from './stub/stub';
@@ -20,6 +20,7 @@ import { UserList } from './users/user-list/user-list';
 import { MyProfile } from './users/my-profile/my-profile';
 import { CitiesAdmin } from './cities/cities-admin/cities-admin';
 import { TagList } from './tags/tag-list/tag-list';
+import { ContactList } from './contacts/contact-list/contact-list';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -47,7 +48,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: Stub },
       { path: 'dashboard-stub', component: Stub },
-      { path: 'contacts', component: Stub },
+      { path: 'contacts', component: ContactList },
       { path: 'contacts/:id', component: Stub },
       { path: 'contacts/:id/edit', component: Stub },
       { path: 'partners', component: Stub },
