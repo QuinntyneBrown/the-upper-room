@@ -14,6 +14,7 @@ import { SignUp } from './auth/sign-up/sign-up';
 import { VerifyEmail } from './auth/verify-email/verify-email';
 import { ForgotPassword } from './auth/forgot-password/forgot-password';
 import { ResetPassword } from './auth/reset-password/reset-password';
+import { RbacDemo } from './rbac/rbac-demo/rbac-demo';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: 'echo-test', component: EchoTest },
   { path: 'forbidden', component: Forbidden },
   { path: '__throw', component: Throw },
+  { path: '__rbac-demo', component: RbacDemo },
   { path: 'settings/appearance', component: Appearance },
   { path: 'sign-in', component: SignIn },
   { path: 'sign-up', component: SignUp },
