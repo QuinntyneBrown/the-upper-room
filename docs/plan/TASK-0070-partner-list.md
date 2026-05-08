@@ -1,7 +1,7 @@
 ---
 id: TASK-0070
 title: Partner data model + API + list page
-status: Draft
+status: Accepted
 phase: P
 depends_on: [TASK-0033, TASK-0010]
 traces_to: [L2-034, L2-035, L2-077]
