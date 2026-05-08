@@ -1,7 +1,7 @@
 ---
 id: TASK-0011
 title: Static error pages — 404, 403, 500 boundary
-status: Draft
+status: Accepted
 phase: F
 depends_on: [TASK-0005]
 traces_to: [L2-067, L2-068, L2-069]
