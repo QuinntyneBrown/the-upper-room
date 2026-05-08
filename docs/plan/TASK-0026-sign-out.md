@@ -1,7 +1,7 @@
 ---
 id: TASK-0026
 title: Sign out (revoke + clear)
-status: Accepted
+status: Completed
 phase: A
 depends_on: [TASK-0021]
 traces_to: [L2-021, L2-012]
