@@ -1,7 +1,7 @@
 ---
 id: TASK-0012
 title: Offline banner
-status: Draft
+status: Accepted
 phase: F
 depends_on: [TASK-0005]
 traces_to: [L2-070]
