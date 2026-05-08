@@ -1,4 +1,4 @@
-// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016, L2-015, L2-017, L2-024, L2-038, L2-029, L2-032
+// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016, L2-015, L2-017, L2-024, L2-038, L2-029, L2-032, L2-048
 import { Routes } from '@angular/router';
 import { Landing } from './landing/landing';
 import { Stub } from './stub/stub';
@@ -27,6 +27,7 @@ import { ContactEdit } from './contacts/contact-edit/contact-edit';
 import { BoardList } from './kanban/board-list/board-list';
 import { BoardView } from './kanban/board-view/board-view';
 import { BoardConfigure } from './kanban/board-configure/board-configure';
+import { IdeaList } from './ideas/idea-list/idea-list';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -63,6 +64,7 @@ export const routes: Routes = [
       },
       { path: 'contacts/:id', component: ContactDetail },
       { path: 'contacts/:id/edit', component: ContactEdit },
+      { path: 'ideas', component: IdeaList },
       { path: 'partners', component: Stub },
       { path: 'partners/:id', component: Stub },
       { path: 'boards', component: BoardList },

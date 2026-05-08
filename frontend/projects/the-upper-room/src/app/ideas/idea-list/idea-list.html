@@ -1,0 +1,58 @@
+<header class="ideas-header">
+  <h1 class="ideas-header__title">Ideas</h1>
+  <div class="ideas-header__controls">
+    <button
+      data-testid="idea-filter-my-ideas"
+      type="button"
+      class="filter-chip"
+      [class.filter-chip--active]="myIdeasFilter()"
+      (click)="toggleMyIdeas()"
+    >
+      My ideas
+    </button>
+    <select
+      data-testid="idea-sort-select"
+      class="sort-select"
+      [value]="sort()"
+      (change)="onSortChange($any($event.target).value)"
+    >
+      <option value="newest">Newest</option>
+      <option value="votes">Most votes</option>
+      <option value="updated">Updated</option>
+    </select>
+  </div>
+</header>
+
+@if (ideas().length === 0) {
+  <tar-empty-state
+    data-testid="idea-list-empty"
+    icon="lightbulb"
+    heading="No ideas yet"
+    body="Be the first to share an idea."
+  />
+} @else {
+  <div class="ideas-grid">
+    @for (idea of ideas(); track idea.id) {
+      <article data-testid="idea-card" class="idea-card">
+        <h2 class="idea-card__title">{{ idea.title }}</h2>
+        @if (idea.description) {
+          <p class="idea-card__description">{{ idea.description }}</p>
+        }
+        <div class="idea-card__footer">
+          <span class="idea-card__status">{{ idea.status }}</span>
+          <button
+            data-testid="idea-vote-button"
+            type="button"
+            class="idea-vote"
+            [class.idea-vote--active]="idea.hasVoted"
+            (click)="toggleVote(idea)"
+            [attr.aria-label]="idea.hasVoted ? 'Remove vote' : 'Vote for this idea'"
+          >
+            <span class="idea-vote__icon">favorite</span>
+            <span data-testid="idea-vote-count" class="idea-vote__count">{{ idea.voteCount }}</span>
+          </button>
+        </div>
+      </article>
+    }
+  </div>
+}

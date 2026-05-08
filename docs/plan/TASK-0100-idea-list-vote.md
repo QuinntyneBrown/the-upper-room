@@ -1,7 +1,7 @@
 ---
 id: TASK-0100
 title: Idea data model + API + list with vote
-status: Accepted
+status: Completed
 phase: I
 depends_on: [TASK-0033, TASK-0010]
 traces_to: [L2-048, L2-049]
