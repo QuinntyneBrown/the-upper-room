@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+// traces_to: L2-001..L2-006
+@use '../../components/src/lib/tokens/tokens';
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+html,
+body {
+  margin: 0;
+  background: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+  font: var(--md-sys-typescale-body-medium);
+}
