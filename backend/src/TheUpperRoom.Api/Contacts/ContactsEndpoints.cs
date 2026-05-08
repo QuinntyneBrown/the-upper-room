@@ -52,6 +52,28 @@ public static class ContactsEndpoints
             return Results.Created($"/api/v1/contacts/{id}", contact);
         });
 
+        app.MapPut("/api/v1/contacts/{id}", async (string id, HttpContext ctx) =>
+        {
+            var userId = ctx.Request.Headers["X-Test-User-Id"].ToString();
+            if (string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user))
+                return Results.Unauthorized();
+
+            var body = await ctx.Request.ReadFromJsonAsync<CreateContactRequest>();
+            if (body is null) return Results.BadRequest();
+            if (string.IsNullOrWhiteSpace(body.FirstName))
+                return Results.UnprocessableEntity(new { error = "First name is required." });
+
+            var contact = Seed.FirstOrDefault(c => c.Id == id);
+            if (contact is null) return Results.NotFound();
+
+            var visible = CityScope.VisibleOrNull(contact, user.City);
+            if (visible is null) return Results.NotFound();
+
+            var name = string.Join(' ', new[] { body.FirstName.Trim(), body.LastName?.Trim() }.Where(s => !string.IsNullOrEmpty(s)));
+            var updated = contact with { Name = body.DisplayName ?? name };
+            return Results.Ok(updated);
+        });
+
         app.MapGet("/api/v1/contacts/{id}", (string id, HttpContext ctx) =>
         {
             var userId = ctx.Request.Headers["X-Test-User-Id"].ToString();

@@ -23,6 +23,7 @@ import { TagList } from './tags/tag-list/tag-list';
 import { ContactList } from './contacts/contact-list/contact-list';
 import { ContactCreate } from './contacts/contact-create/contact-create';
 import { ContactDetail } from './contacts/contact-detail/contact-detail';
+import { ContactEdit } from './contacts/contact-edit/contact-edit';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -58,7 +59,7 @@ export const routes: Routes = [
         data: { permissions: ['Contact:Create'] },
       },
       { path: 'contacts/:id', component: ContactDetail },
-      { path: 'contacts/:id/edit', component: Stub },
+      { path: 'contacts/:id/edit', component: ContactEdit },
       { path: 'partners', component: Stub },
       { path: 'partners/:id', component: Stub },
       { path: 'profile', component: MyProfile },
