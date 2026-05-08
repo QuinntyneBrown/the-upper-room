@@ -1,7 +1,7 @@
 ---
 id: TASK-0080
 title: Note data model + API + Markdown sanitization
-status: Draft
+status: Accepted
 phase: N
 depends_on: [TASK-0033]
 traces_to: [L2-041, L2-093]
