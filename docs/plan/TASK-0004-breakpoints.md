@@ -1,7 +1,7 @@
 ---
 id: TASK-0004
 title: Breakpoint mixins + responsive grid utility
-status: Draft
+status: Accepted
 phase: F
 depends_on: [TASK-0002]
 traces_to: [L2-008, L2-014]
