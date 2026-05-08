@@ -1,7 +1,7 @@
 ---
 id: TASK-0014
 title: Theme toggle (system / light / dark) with persistence
-status: Draft
+status: Accepted
 phase: F
 depends_on: [TASK-0002, TASK-0005]
 traces_to: [L2-115]
