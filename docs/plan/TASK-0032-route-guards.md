@@ -1,7 +1,7 @@
 ---
 id: TASK-0032
 title: Frontend route guards (auth + role)
-status: Draft
+status: Accepted
 phase: R
 depends_on: [TASK-0020, TASK-0030]
 traces_to: [L2-024]
