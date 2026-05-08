@@ -23,7 +23,10 @@ export class SignOutService {
       confirmLabel: 'Sign out',
     });
     if (!ok) return;
+    this.forceSignOut();
+  }
 
+  forceSignOut(): void {
     this.http
       .post('/api/v1/auth/sign-out', {})
       .pipe(catchError(() => of(null)))
