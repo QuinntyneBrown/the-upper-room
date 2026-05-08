@@ -1,7 +1,7 @@
 ---
 id: TASK-0002
 title: M3 design tokens — color, typography, spacing, elevation, shape, motion
-status: Draft
+status: Accepted
 phase: F
 depends_on: [TASK-0001]
 traces_to: [L2-001, L2-002, L2-003, L2-004, L2-005, L2-006]
