@@ -45,6 +45,16 @@
   text-decoration: none;
 }
 
+.btn-danger {
+  border: 1px solid var(--md-sys-color-error);
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: var(--md-sys-space-2) var(--md-sys-space-4);
+  background: transparent;
+  color: var(--md-sys-color-error);
+  font: var(--md-sys-typescale-label-large);
+  cursor: pointer;
+}
+
 .tab-bar {
   display: flex;
   gap: 0;

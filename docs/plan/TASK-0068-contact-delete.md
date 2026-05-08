@@ -1,7 +1,7 @@
 ---
 id: TASK-0068
 title: Contact delete (typed confirmation, soft delete, 30-day purge)
-status: Accepted
+status: Completed
 phase: C
 depends_on: [TASK-0066, TASK-0009]
 traces_to: [L2-033]
