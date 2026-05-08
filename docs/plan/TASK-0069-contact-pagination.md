@@ -1,7 +1,7 @@
 ---
 id: TASK-0069
 title: Contact list pagination + infinite scroll on XS/SM
-status: Draft
+status: Accepted
 phase: C
 depends_on: [TASK-0061]
 traces_to: [L2-112]
