@@ -13,6 +13,7 @@
       <div>
         <h1 data-testid="idea-detail-title" class="idea-content__title">{{ i.title }}</h1>
         <p data-testid="idea-detail-proposer" class="idea-content__meta">{{ i.proposedBy }}</p>
+        <span data-testid="idea-status-chip" class="idea-status-chip">{{ i.status }}</span>
       </div>
       <div class="idea-content__actions">
         <button
@@ -26,6 +27,29 @@
           <span class="idea-vote__icon">favorite</span>
           <span>{{ i.voteCount }}</span>
         </button>
+
+        @if (canSubmit()) {
+          <button
+            data-testid="idea-submit-button"
+            type="button"
+            class="btn-primary"
+            (click)="submitIdea()"
+          >Submit for review</button>
+        }
+
+        @if (isLead()) {
+          <select
+            data-testid="idea-status-select"
+            class="status-select"
+            [value]="i.status"
+            (change)="onStatusChange($any($event.target).value)"
+          >
+            @for (opt of statusOptions; track opt) {
+              <option [value]="opt">{{ opt }}</option>
+            }
+          </select>
+        }
+
         <button
           data-testid="idea-detail-edit"
           type="button"

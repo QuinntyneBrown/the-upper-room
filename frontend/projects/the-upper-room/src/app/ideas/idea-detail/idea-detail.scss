@@ -93,6 +93,25 @@
   line-height: 1.6;
 }
 
+.idea-status-chip {
+  display: inline-block;
+  padding: 2px var(--md-sys-space-2);
+  border-radius: var(--md-sys-shape-corner-full);
+  font: var(--md-sys-typescale-label-small);
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  margin-top: var(--md-sys-space-1);
+}
+
+.status-select {
+  padding: var(--md-sys-space-1) var(--md-sys-space-2);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  background: var(--md-sys-color-surface);
+  color: inherit;
+  font: var(--md-sys-typescale-label-medium);
+}
+
 .idea-content__edit-actions {
   display: flex;
   gap: var(--md-sys-space-2);

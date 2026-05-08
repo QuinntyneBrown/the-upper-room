@@ -1,4 +1,4 @@
-// traces_to: L2-048, L2-049, L2-050, L2-051
+// traces_to: L2-048, L2-049, L2-050, L2-051, L2-052
 using Ganss.Xss;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
@@ -20,7 +20,7 @@ public sealed class IdeasController : ControllerBase
         public string BodyMarkdown { get; set; } = bodyMarkdown;
         public string BodyHtmlSanitized { get; set; } = bodyHtmlSanitized;
         public string? CoverImageUrl { get; set; } = coverImageUrl;
-        public string Status { get; } = status;
+        public string Status { get; set; } = status;
         public string ProposedBy { get; } = proposedBy;
         public DateTimeOffset CreatedAt { get; } = createdAt;
         public DateTimeOffset UpdatedAt { get; } = updatedAt;
@@ -30,6 +30,20 @@ public sealed class IdeasController : ControllerBase
     private static readonly HtmlSanitizer _sanitizer = BuildSanitizer();
     private static readonly List<IdeaRecord> _store = [];
     private static readonly List<(string IdeaId, string UserId)> _votes = [];
+
+    private static readonly Dictionary<string, string[]> _proposerTransitions = new()
+    {
+        ["Draft"] = ["Submitted"],
+    };
+
+    private static readonly Dictionary<string, string[]> _leadTransitions = new()
+    {
+        ["Draft"]       = ["Submitted"],
+        ["Submitted"]   = ["UnderReview", "Selected", "Archived"],
+        ["UnderReview"] = ["Selected", "InProgress", "Archived"],
+        ["Selected"]    = ["InProgress", "Archived"],
+        ["InProgress"]  = ["Completed", "Archived"],
+    };
 
     private static HtmlSanitizer BuildSanitizer()
     {
@@ -103,6 +117,28 @@ public sealed class IdeasController : ControllerBase
         return Ok(ToDto(idea, user.Id));
     }
 
+    [HttpPost("{id}/status")]
+    public IActionResult ChangeStatus(string id, [FromBody] ChangeStatusRequest? body)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+
+        var idea = _store.FirstOrDefault(i => i.Id == id);
+        if (idea is null) return NotFound();
+        if (body is null) return BadRequest();
+
+        var isLead = user.Role is Roles.CityLead or Roles.SystemAdmin;
+        var isProposer = idea.ProposedBy == user.Id;
+
+        var transitions = isLead ? _leadTransitions : (isProposer ? _proposerTransitions : new());
+
+        if (!transitions.TryGetValue(idea.Status, out var allowed) || !allowed.Contains(body.Status))
+            return UnprocessableEntity(new { error = "Invalid status transition." });
+
+        idea.Status = body.Status;
+        return Ok(ToDto(idea, user.Id));
+    }
+
     [HttpPatch("{id}")]
     public IActionResult Update(string id, [FromBody] UpdateIdeaRequest? body)
     {
@@ -142,3 +178,4 @@ public sealed class IdeasController : ControllerBase
 }
 
 public sealed record UpdateIdeaRequest(string? BodyMarkdown, string? CoverImageUrl);
+public sealed record ChangeStatusRequest(string Status);
