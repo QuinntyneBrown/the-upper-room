@@ -1,4 +1,4 @@
-// traces_to: L2-084, L2-069
+// traces_to: L2-084, L2-069, L2-115
 import { ApplicationConfig, ErrorHandler, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -9,6 +9,8 @@ import { authInterceptor } from './interceptors/auth.interceptor';
 import { retryInterceptor } from './interceptors/retry.interceptor';
 import { errorInterceptor } from './interceptors/error.interceptor';
 import { GlobalErrorHandler } from './error/global-error-handler';
+import { ACCESS_TOKEN_SOURCE } from './services/access-token.contract';
+import { TestTokenSource } from './services/test-token.source';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,5 +25,6 @@ export const appConfig: ApplicationConfig = {
       ]),
     ),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    { provide: ACCESS_TOKEN_SOURCE, useExisting: TestTokenSource },
   ],
 };
