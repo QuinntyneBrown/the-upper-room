@@ -16,6 +16,14 @@ export class StyleguidePage {
     return this.page.getByTestId(`icon-${alias}`);
   }
 
+  gridDemo(): Locator {
+    return this.page.getByTestId('grid-demo');
+  }
+
+  cardCount(): Locator {
+    return this.page.getByTestId('grid-demo').locator('> *');
+  }
+
   async goto(): Promise<void> {
     await this.page.goto('/styleguide');
   }
