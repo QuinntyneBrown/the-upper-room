@@ -1,5 +1,12 @@
 // traces_to: L2-001..L2-006
 :root {
+  // Icon sizes (L2-007)
+  --icon-size-xs: 16px;
+  --icon-size-sm: 20px;
+  --icon-size-md: 24px;
+  --icon-size-lg: 32px;
+  --icon-size-xl: 40px;
+
   // Color (light) — M3 seed #6750A4
   --md-sys-color-primary: #6750a4;
   --md-sys-color-on-primary: #ffffff;

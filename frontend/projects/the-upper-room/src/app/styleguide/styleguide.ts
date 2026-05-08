@@ -1,12 +1,16 @@
-// traces_to: L2-001..L2-006
+// traces_to: L2-001..L2-007
 import { Component } from '@angular/core';
+import { TarIcon } from '../../../../components/src/lib/icon/icon';
 
 @Component({
   selector: 'app-styleguide',
+  imports: [TarIcon],
   template: `
     <button data-testid="seed-button" class="seed-button" type="button">Action</button>
     <div data-testid="seed-card" class="seed-card">Card</div>
     <span data-testid="seed-chip" class="seed-chip">Chip</span>
+    <tar-icon name="contacts" />
+    <tar-icon name="partners" size="lg" />
   `,
   styles: [
     `
