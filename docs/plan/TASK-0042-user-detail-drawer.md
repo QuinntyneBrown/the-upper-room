@@ -1,7 +1,7 @@
 ---
 id: TASK-0042
 title: User detail drawer (admin actions)
-status: Draft
+status: Accepted
 phase: U
 depends_on: [TASK-0040]
 traces_to: [L2-028]
