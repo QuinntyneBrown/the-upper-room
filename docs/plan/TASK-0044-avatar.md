@@ -1,7 +1,7 @@
 ---
 id: TASK-0044
 title: Avatar component + image upload
-status: Accepted
+status: Completed
 phase: U
 depends_on: [TASK-0043]
 traces_to: [L2-106]
