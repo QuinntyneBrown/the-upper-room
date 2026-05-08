@@ -1,7 +1,7 @@
 ---
 id: TASK-0094
 title: Card detail dialog
-status: Accepted
+status: Completed
 phase: K
 depends_on: [TASK-0091]
 traces_to: [L2-046]

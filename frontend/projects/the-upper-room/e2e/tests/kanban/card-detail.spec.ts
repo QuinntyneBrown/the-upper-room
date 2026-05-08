@@ -136,7 +136,7 @@ test('inline title edit + blur persists via PATCH', async ({ page }) => {
   await view.card('Plan kickoff').click();
   const dialog = new CardDetailDialog(page);
   await dialog.title().fill('Plan kickoff (revised)');
-  await dialog.title().blur();
+  await dialog.title().press('Tab');
   await expect.poll(() => patches.length).toBe(1);
   expect((patches[0].body as { title: string }).title).toBe('Plan kickoff (revised)');
 });

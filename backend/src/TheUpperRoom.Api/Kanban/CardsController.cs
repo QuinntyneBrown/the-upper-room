@@ -8,6 +8,16 @@ namespace TheUpperRoom.Api.Kanban;
 [Route("api/v1/cards")]
 public sealed class CardsController : ControllerBase
 {
+    [HttpPatch("{id}")]
+    public IActionResult Patch(string id, [FromBody] Dictionary<string, object?>? body)
+    {
+        var user = CurrentUser();
+        if (user is null) return Unauthorized();
+        if (body is null) return BadRequest();
+
+        return Ok(new { id, patched = body });
+    }
+
     [HttpPost("{id}/move")]
     public IActionResult Move(string id, [FromBody] MoveCardRequest? body)
     {

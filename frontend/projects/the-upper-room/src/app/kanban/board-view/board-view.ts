@@ -3,6 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { SnackbarService } from 'components';
+import { CardDetailDialog, CardSchemaField, CardDetailPatch } from '../card-detail-dialog/card-detail-dialog';
 
 export interface BoardCardTag {
   readonly id: string;
@@ -17,6 +18,7 @@ export interface BoardCard {
   readonly tags: BoardCardTag[];
   readonly assigneeName: string | null;
   readonly dueDate: string | null;
+  readonly data?: Record<string, string | null>;
 }
 
 export interface BoardColumn {
@@ -32,10 +34,12 @@ export interface BoardDetail {
   readonly description: string | null;
   readonly columns: BoardColumn[];
   readonly cards: BoardCard[];
+  readonly cardSchema?: CardSchemaField[];
 }
 
 @Component({
   selector: 'app-board-view',
+  imports: [CardDetailDialog],
   templateUrl: './board-view.html',
   styleUrl: './board-view.scss',
 })
@@ -46,6 +50,14 @@ export class BoardView {
 
   protected readonly board = signal<BoardDetail | null>(null);
   protected readonly activeTagName = signal<string | null>(null);
+  protected readonly selectedCardId = signal<string | null>(null);
+
+  protected readonly selectedCard = computed(() => {
+    const id = this.selectedCardId();
+    return id ? (this.board()?.cards.find((c) => c.id === id) ?? null) : null;
+  });
+
+  protected readonly cardSchema = computed(() => this.board()?.cardSchema ?? []);
 
   protected readonly tagChips = computed(() => {
     const seen = new Map<string, BoardCardTag>();
@@ -148,5 +160,23 @@ export class BoardView {
 
   protected isOverLimit(column: BoardColumn): boolean {
     return column.wipLimit !== undefined && this.cardCount(column.id) >= column.wipLimit;
+  }
+
+  protected openCard(card: BoardCard): void {
+    this.selectedCardId.set(card.id);
+  }
+
+  protected closeCard(): void {
+    this.selectedCardId.set(null);
+  }
+
+  protected onCardPatched(patch: CardDetailPatch): void {
+    const current = this.board();
+    if (!current) return;
+    this.board.set({
+      ...current,
+      cards: current.cards.map((c) => (c.id === patch.id ? { ...c, ...patch.body } : c)),
+    });
+    this.http.patch(`/api/v1/cards/${patch.id}`, patch.body).subscribe();
   }
 }
