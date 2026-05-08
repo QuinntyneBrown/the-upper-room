@@ -12,6 +12,8 @@ import { SignIn } from './auth/sign-in/sign-in';
 import { AuthCallback } from './auth/auth-callback/auth-callback';
 import { SignUp } from './auth/sign-up/sign-up';
 import { VerifyEmail } from './auth/verify-email/verify-email';
+import { ForgotPassword } from './auth/forgot-password/forgot-password';
+import { ResetPassword } from './auth/reset-password/reset-password';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -28,6 +30,8 @@ export const routes: Routes = [
   { path: 'invitations/accept', component: SignUp },
   { path: 'verify-email', component: VerifyEmail },
   { path: 'verify-email/confirm', component: VerifyEmail },
+  { path: 'forgot-password', component: ForgotPassword },
+  { path: 'reset-password', component: ResetPassword },
   { path: 'auth/callback', component: AuthCallback },
   {
     path: '',
