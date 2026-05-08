@@ -1,7 +1,7 @@
 ---
 id: TASK-0022
 title: Sign-up page + invitation acceptance
-status: Accepted
+status: Completed
 phase: A
 depends_on: [TASK-0021]
 traces_to: [L2-017]
