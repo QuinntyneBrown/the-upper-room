@@ -1,7 +1,7 @@
 ---
 id: TASK-0030
 title: Roles, permissions, and seed data
-status: Accepted
+status: Completed
 phase: R
 depends_on: [TASK-0021]
 traces_to: [L2-023, L2-078]
