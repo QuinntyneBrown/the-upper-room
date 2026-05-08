@@ -1,7 +1,7 @@
 ---
 id: TASK-0008
 title: Snackbar service with severity tokens
-status: Accepted
+status: Completed
 phase: F
 depends_on: [TASK-0002]
 traces_to: [L2-061]

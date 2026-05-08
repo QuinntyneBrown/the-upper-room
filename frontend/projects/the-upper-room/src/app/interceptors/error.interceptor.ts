@@ -2,7 +2,7 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
-import { SnackbarService } from '../services/snackbar.service';
+import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-snackbar.service';
 import { mapErrorToMessage } from './error-catalog';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
@@ -11,7 +11,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((err: unknown) => {
       if (err instanceof HttpErrorResponse) {
         const code = (err.error as { code?: string } | null)?.code;
-        snackbar.show(mapErrorToMessage(err.status, code));
+        snackbar.show(mapErrorToMessage(err.status, code), 'error');
       }
       return throwError(() => err);
     }),

@@ -1,11 +1,11 @@
 // traces_to: L2-074
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SnackbarHost } from './snackbar-host/snackbar-host';
+import { TarSnackbar } from '../../../components/src/lib/snackbar/tar-snackbar';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SnackbarHost],
+  imports: [RouterOutlet, TarSnackbar],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
