@@ -1,0 +1,6 @@
+// traces_to: L2-079
+using TheUpperRoom.Domain.Cities;
+
+namespace TheUpperRoom.Api.Contacts;
+
+public sealed record Contact(string Id, string Name, string CityId) : IHasCity;

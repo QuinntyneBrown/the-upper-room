@@ -1,7 +1,7 @@
 ---
 id: TASK-0033
 title: City scoping in backend queries
-status: Accepted
+status: Completed
 phase: R
 depends_on: [TASK-0030]
 traces_to: [L2-079]
