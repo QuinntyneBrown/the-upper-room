@@ -1,7 +1,7 @@
 ---
 id: TASK-0098
 title: Mobile swipeable columns (XS)
-status: Draft
+status: Accepted
 phase: K
 depends_on: [TASK-0091]
 traces_to: [L2-045]
