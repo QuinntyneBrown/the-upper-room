@@ -31,9 +31,11 @@ const EMPTY: ProfileForm = {
   avatarUrl: null,
 };
 
+import { SessionsCard } from '../sessions-card/sessions-card';
+
 @Component({
   selector: 'app-my-profile',
-  imports: [TarAvatarUploader],
+  imports: [TarAvatarUploader, SessionsCard],
   templateUrl: './my-profile.html',
   styleUrl: './my-profile.scss',
 })
