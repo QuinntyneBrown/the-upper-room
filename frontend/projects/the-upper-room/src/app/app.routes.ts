@@ -1,9 +1,12 @@
-// traces_to: L2-074, L2-084
+// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069
 import { Routes } from '@angular/router';
 import { Landing } from './landing/landing';
 import { Stub } from './stub/stub';
 import { EchoTest } from './echo-test/echo-test';
 import { AppShell } from './shell/app-shell/app-shell';
+import { NotFound } from './error/not-found/not-found';
+import { Forbidden } from './error/forbidden/forbidden';
+import { Throw } from './error/throw-route/throw-route';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -12,6 +15,8 @@ export const routes: Routes = [
     loadComponent: () => import('./styleguide/styleguide').then((m) => m.Styleguide),
   },
   { path: 'echo-test', component: EchoTest },
+  { path: 'forbidden', component: Forbidden },
+  { path: '__throw', component: Throw },
   {
     path: '',
     component: AppShell,
@@ -24,4 +29,5 @@ export const routes: Routes = [
       { path: 'partners/:id', component: Stub },
     ],
   },
+  { path: '**', component: NotFound },
 ];
