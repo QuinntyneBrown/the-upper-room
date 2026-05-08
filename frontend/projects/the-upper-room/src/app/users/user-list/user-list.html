@@ -1,7 +1,9 @@
 <section class="page">
   <header class="page__header">
     <h1>Users</h1>
-    <button data-testid="user-invite" type="button" class="btn">Invite user</button>
+    <button data-testid="user-invite" type="button" class="btn" (click)="openInvite()">
+      Invite user
+    </button>
   </header>
 
   <div class="toolbar">
@@ -75,4 +77,12 @@
     </select>
     <span>{{ total() }} total</span>
   </footer>
+
+  @if (inviteOpen()) {
+    <app-invite-user-dialog
+      [emailError]="inviteEmailError()"
+      (submitted)="onInviteSubmit($event)"
+      (cancelled)="closeInvite()"
+    />
+  }
 </section>

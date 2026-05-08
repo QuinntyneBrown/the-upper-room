@@ -1,0 +1,95 @@
+<div class="backdrop" (click)="cancelled.emit()"></div>
+<form
+  data-testid="invite-dialog"
+  class="dialog"
+  role="dialog"
+  aria-modal="true"
+  (submit)="onSubmit($event)"
+  (click)="$event.stopPropagation()"
+  novalidate
+>
+  <h2>Invite a user</h2>
+
+  <label class="field">
+    <span class="field__label">Email</span>
+    <input
+      data-testid="invite-email"
+      class="field__input"
+      type="email"
+      autocomplete="email"
+      [value]="email()"
+      (input)="email.set($any($event.target).value)"
+    />
+    @if (emailError) {
+      <span data-testid="invite-error-email" class="field__error">{{ emailError }}</span>
+    }
+  </label>
+
+  <div class="row">
+    <label class="field">
+      <span class="field__label">First name</span>
+      <input
+        data-testid="invite-first-name"
+        class="field__input"
+        type="text"
+        [value]="firstName()"
+        (input)="firstName.set($any($event.target).value)"
+      />
+    </label>
+    <label class="field">
+      <span class="field__label">Last name</span>
+      <input
+        data-testid="invite-last-name"
+        class="field__input"
+        type="text"
+        [value]="lastName()"
+        (input)="lastName.set($any($event.target).value)"
+      />
+    </label>
+  </div>
+
+  <label class="field">
+    <span class="field__label">Role</span>
+    <select
+      data-testid="invite-role"
+      class="field__input"
+      [value]="role()"
+      (change)="role.set($any($event.target).value)"
+    >
+      @for (r of roles; track r) {
+        <option [value]="r">{{ r }}</option>
+      }
+    </select>
+  </label>
+
+  <label class="field">
+    <span class="field__label">City</span>
+    <input
+      data-testid="invite-city"
+      class="field__input"
+      type="text"
+      [value]="city()"
+      (input)="city.set($any($event.target).value)"
+    />
+  </label>
+
+  <label class="field">
+    <span class="field__label">Personal message (optional)</span>
+    <textarea
+      data-testid="invite-message"
+      class="field__input"
+      rows="3"
+      [value]="message()"
+      (input)="message.set($any($event.target).value)"
+    ></textarea>
+  </label>
+
+  <div class="actions">
+    <button data-testid="invite-cancel" type="button" class="btn btn--ghost" (click)="cancelled.emit()">
+      Cancel
+    </button>
+    <button data-testid="invite-submit" type="submit" class="btn" [disabled]="!canSubmit()">
+      Send invitation
+    </button>
+  </div>
+</form>

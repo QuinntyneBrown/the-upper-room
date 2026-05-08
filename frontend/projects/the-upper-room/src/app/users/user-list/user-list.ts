@@ -1,4 +1,4 @@
-// traces_to: L2-026
+// traces_to: L2-026, L2-027
 import {
   Component,
   computed,
@@ -7,8 +7,10 @@ import {
   OnDestroy,
   signal,
 } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
+import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { InviteUserDialog, InvitePayload } from '../invite-user-dialog/invite-user-dialog';
 
 export interface UserRow {
   readonly id: string;
@@ -30,12 +32,13 @@ type RoleFilter = (typeof ROLES)[number];
 
 @Component({
   selector: 'app-user-list',
-  imports: [TarEmptyState],
+  imports: [TarEmptyState, InviteUserDialog],
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss',
 })
 export class UserList implements OnDestroy {
   private readonly http = inject(HttpClient);
+  private readonly snackbar = inject(SnackbarService);
 
   protected readonly searchInput = signal('');
   protected readonly debouncedSearch = signal('');
@@ -48,11 +51,13 @@ export class UserList implements OnDestroy {
   protected readonly isEmpty = computed(() => this.users().length === 0);
   protected readonly roles = ROLES;
 
+  protected readonly inviteOpen = signal(false);
+  protected readonly inviteEmailError = signal<string | null>(null);
+
   private debounceId: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     effect(() => {
-      // Re-fetch whenever any of the signals below change
       this.fetch(this.debouncedSearch(), this.roleFilter(), this.pageSize(), this.page());
     });
   }
@@ -73,6 +78,38 @@ export class UserList implements OnDestroy {
 
   protected onPageSize(value: string): void {
     this.pageSize.set(Number(value));
+  }
+
+  protected openInvite(): void {
+    this.inviteEmailError.set(null);
+    this.inviteOpen.set(true);
+  }
+
+  protected closeInvite(): void {
+    this.inviteOpen.set(false);
+  }
+
+  protected onInviteSubmit(payload: InvitePayload): void {
+    this.http.post<{ id: string }>('/api/v1/invitations', payload).subscribe({
+      next: ({ id }) => {
+        this.inviteOpen.set(false);
+        this.snackbar.show(`Invitation sent to ${payload.email}`, 'success', {
+          label: 'Undo',
+          onClick: () => this.revokeInvitation(id),
+        });
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 409) {
+          this.inviteEmailError.set('This email already has a pending invitation.');
+        }
+      },
+    });
+  }
+
+  private revokeInvitation(id: string): void {
+    this.http.delete(`/api/v1/invitations/${id}`).subscribe({
+      next: () => this.snackbar.show('Invitation revoked', 'info'),
+    });
   }
 
   private fetch(search: string, role: RoleFilter, pageSize: number, page: number): void {
