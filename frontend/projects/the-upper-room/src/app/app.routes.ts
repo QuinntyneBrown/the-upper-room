@@ -1,4 +1,4 @@
-// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016, L2-015, L2-017, L2-024
+// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016, L2-015, L2-017, L2-024, L2-038
 import { Routes } from '@angular/router';
 import { Landing } from './landing/landing';
 import { Stub } from './stub/stub';
@@ -19,6 +19,7 @@ import { authGuard, roleGuard } from './rbac/guards';
 import { UserList } from './users/user-list/user-list';
 import { MyProfile } from './users/my-profile/my-profile';
 import { CitiesAdmin } from './cities/cities-admin/cities-admin';
+import { TagList } from './tags/tag-list/tag-list';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -61,6 +62,12 @@ export const routes: Routes = [
       {
         path: 'admin/cities',
         component: CitiesAdmin,
+        canActivate: [roleGuard],
+        data: { roles: ['SystemAdmin'] },
+      },
+      {
+        path: 'admin/tags',
+        component: TagList,
         canActivate: [roleGuard],
         data: { roles: ['SystemAdmin'] },
       },
