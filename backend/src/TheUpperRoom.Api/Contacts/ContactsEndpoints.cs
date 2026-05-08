@@ -31,8 +31,20 @@ public static class ContactsEndpoints
             if (!string.IsNullOrEmpty(search))
                 items = items.Where(c => c.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
 
-            var result = items.ToArray();
-            return Results.Ok(new { items = result, total = result.Length });
+            var allItems = items.ToArray();
+            var total = allItems.Length;
+
+            if (int.TryParse(ctx.Request.Query["page"], out var page) && page > 1 &&
+                int.TryParse(ctx.Request.Query["size"], out var size) && size > 0)
+            {
+                allItems = allItems.Skip((page - 1) * size).Take(size).ToArray();
+            }
+            else if (int.TryParse(ctx.Request.Query["size"], out var sz) && sz > 0)
+            {
+                allItems = allItems.Take(sz).ToArray();
+            }
+
+            return Results.Ok(new { items = allItems, total });
         });
 
         app.MapPost("/api/v1/contacts", async (HttpContext ctx) =>
