@@ -1,7 +1,7 @@
 ---
 id: TASK-0001
 title: Bootstrap Angular workspace, .NET solution, and landing page
-status: Accepted
+status: Completed
 phase: F
 depends_on: []
 traces_to: [L2-074, L2-080, L2-116]
