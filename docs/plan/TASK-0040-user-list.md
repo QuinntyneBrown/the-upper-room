@@ -1,7 +1,7 @@
 ---
 id: TASK-0040
 title: User list page (admin)
-status: Draft
+status: Accepted
 phase: U
 depends_on: [TASK-0031, TASK-0032]
 traces_to: [L2-026]
