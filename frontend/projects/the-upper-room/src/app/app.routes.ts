@@ -1,4 +1,4 @@
-// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016, L2-015, L2-017
+// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016, L2-015, L2-017, L2-024
 import { Routes } from '@angular/router';
 import { Landing } from './landing/landing';
 import { Stub } from './stub/stub';
@@ -15,6 +15,7 @@ import { VerifyEmail } from './auth/verify-email/verify-email';
 import { ForgotPassword } from './auth/forgot-password/forgot-password';
 import { ResetPassword } from './auth/reset-password/reset-password';
 import { RbacDemo } from './rbac/rbac-demo/rbac-demo';
+import { authGuard, roleGuard } from './rbac/guards';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -38,6 +39,7 @@ export const routes: Routes = [
   {
     path: '',
     component: AppShell,
+    canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: Stub },
       { path: 'dashboard-stub', component: Stub },
@@ -46,6 +48,12 @@ export const routes: Routes = [
       { path: 'contacts/:id/edit', component: Stub },
       { path: 'partners', component: Stub },
       { path: 'partners/:id', component: Stub },
+      {
+        path: 'admin/users',
+        component: Stub,
+        canActivate: [roleGuard],
+        data: { roles: ['SystemAdmin'] },
+      },
     ],
   },
   { path: '**', component: NotFound },
