@@ -32,6 +32,18 @@ export class StyleguidePage {
     return this.page.getByTestId(`confirm-trigger-${kind}`);
   }
 
+  emptyDemo(): Locator {
+    return this.page.getByTestId('empty-demo');
+  }
+
+  skeletonDemo(): Locator {
+    return this.page.getByTestId('skeleton-demo');
+  }
+
+  errorDemo(): Locator {
+    return this.page.getByTestId('error-demo');
+  }
+
   async goto(): Promise<void> {
     await this.page.goto('/styleguide');
   }
