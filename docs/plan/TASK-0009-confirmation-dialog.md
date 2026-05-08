@@ -1,7 +1,7 @@
 ---
 id: TASK-0009
 title: Confirmation dialog service (info, warning, danger, typed-confirmation)
-status: Accepted
+status: Completed
 phase: F
 depends_on: [TASK-0002]
 traces_to: [L2-099]

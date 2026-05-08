@@ -1,7 +1,11 @@
-// traces_to: L2-001..L2-008, L2-061
+// traces_to: L2-001..L2-008, L2-061, L2-099
 import { Component, inject, signal } from '@angular/core';
 import { TarIcon } from '../../../../components/src/lib/icon/icon';
 import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-snackbar.service';
+import {
+  ConfirmService,
+  ConfirmSeverity,
+} from '../../../../components/src/lib/confirm-dialog/confirm.service';
 
 @Component({
   selector: 'app-styleguide',
@@ -19,7 +23,7 @@ import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-sna
       }
     </div>
 
-    <div class="snackbar-demos">
+    <div class="demos">
       <button data-testid="snackbar-trigger-info" type="button" (click)="show('info')">info</button>
       <button data-testid="snackbar-trigger-success" type="button" (click)="show('success')">
         success
@@ -37,6 +41,21 @@ import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-sna
         queue-pair
       </button>
       <span data-testid="undo-count">{{ undoCount() }}</span>
+
+      <button data-testid="confirm-trigger-info" type="button" (click)="confirm('info')">
+        confirm-info
+      </button>
+      <button data-testid="confirm-trigger-warning" type="button" (click)="confirm('warning')">
+        confirm-warning
+      </button>
+      <button
+        data-testid="confirm-trigger-danger-typed"
+        type="button"
+        (click)="confirmTyped()"
+      >
+        confirm-danger-typed
+      </button>
+      <span data-testid="confirm-result">{{ confirmResult() }}</span>
     </div>
   `,
   styles: [
@@ -74,7 +93,7 @@ import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-sna
         color: var(--md-sys-color-on-secondary-container);
       }
 
-      .snackbar-demos {
+      .demos {
         display: flex;
         flex-wrap: wrap;
         gap: var(--md-sys-space-2);
@@ -84,8 +103,11 @@ import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-sna
 })
 export class Styleguide {
   private readonly snackbar = inject(SnackbarService);
+  private readonly confirmer = inject(ConfirmService);
+
   protected readonly cards = Array.from({ length: 12 }, (_, i) => i + 1);
   protected readonly undoCount = signal(0);
+  protected readonly confirmResult = signal('');
 
   protected show(severity: 'info' | 'success' | 'warning' | 'error'): void {
     this.snackbar.show(`${severity} message`, severity);
@@ -101,5 +123,25 @@ export class Styleguide {
   protected showPair(): void {
     this.snackbar.show('first', 'error');
     this.snackbar.show('second', 'error');
+  }
+
+  protected async confirm(severity: ConfirmSeverity): Promise<void> {
+    const ok = await this.confirmer.confirm({
+      severity,
+      title: `${severity} action`,
+      body: 'Are you sure?',
+    });
+    this.confirmResult.set(String(ok));
+  }
+
+  protected async confirmTyped(): Promise<void> {
+    const ok = await this.confirmer.confirm({
+      severity: 'danger',
+      title: 'Delete forever?',
+      body: 'This cannot be undone.',
+      requireTypedConfirmation: 'DELETE',
+      confirmLabel: 'Delete',
+    });
+    this.confirmResult.set(String(ok));
   }
 }
