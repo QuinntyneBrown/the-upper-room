@@ -1,7 +1,7 @@
 ---
 id: TASK-0003
 title: Iconography registry (Material Symbols Rounded)
-status: Draft
+status: Accepted
 phase: F
 depends_on: [TASK-0002]
 traces_to: [L2-007]
