@@ -1,7 +1,7 @@
 ---
 id: TASK-0041
 title: Invite user dialog
-status: Draft
+status: Accepted
 phase: U
 depends_on: [TASK-0040]
 traces_to: [L2-027]
