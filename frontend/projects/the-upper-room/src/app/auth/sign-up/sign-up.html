@@ -40,6 +40,7 @@
           [value]="password()"
           (input)="password.set($any($event.target).value)"
         />
+        <tar-password-strength [password]="password()" [userEmail]="email()" />
       </label>
 
       <label class="field">

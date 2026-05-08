@@ -4,10 +4,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { TarPasswordStrength } from '../tar-password-strength/tar-password-strength';
+import { evaluatePassword } from '../password-policy';
 
 @Component({
   selector: 'app-sign-up',
-  imports: [RouterLink],
+  imports: [RouterLink, TarPasswordStrength],
   templateUrl: './sign-up.html',
   styleUrl: './sign-up.scss',
 })
@@ -26,12 +28,16 @@ export class SignUp implements OnInit {
   protected readonly emailError = signal<string | null>(null);
   protected readonly submitting = signal(false);
 
+  protected readonly passwordEval = computed(() =>
+    evaluatePassword(this.password(), this.email()),
+  );
+
   protected readonly canSubmit = computed(
     () =>
       !this.submitting() &&
       this.termsAccepted() &&
       this.isValidEmail(this.email()) &&
-      this.password().length >= 12 &&
+      this.passwordEval().valid &&
       this.city().trim().length > 0,
   );
 
