@@ -27,4 +27,12 @@ export class BoardViewPage {
   tagFilterChip(tagName: string): Locator {
     return this.page.getByTestId(`board-tag-filter-${tagName}`);
   }
+
+  async dragCardTo(cardTitle: string, targetColumn: string): Promise<void> {
+    await this.card(cardTitle).dragTo(this.column(targetColumn));
+  }
+
+  async reload(): Promise<void> {
+    await this.page.reload();
+  }
 }
