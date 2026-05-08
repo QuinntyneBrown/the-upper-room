@@ -1,4 +1,4 @@
-// traces_to: L2-001..L2-008, L2-061, L2-099
+// traces_to: L2-001..L2-008, L2-061, L2-099, L2-103, L2-104, L2-105
 import { Component, inject, signal } from '@angular/core';
 import { TarIcon } from '../../../../components/src/lib/icon/icon';
 import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-snackbar.service';
@@ -6,10 +6,13 @@ import {
   ConfirmService,
   ConfirmSeverity,
 } from '../../../../components/src/lib/confirm-dialog/confirm.service';
+import { TarEmptyState } from '../../../../components/src/lib/states/tar-empty-state';
+import { TarSkeleton } from '../../../../components/src/lib/states/tar-skeleton';
+import { TarListError } from '../../../../components/src/lib/states/tar-list-error';
 
 @Component({
   selector: 'app-styleguide',
-  imports: [TarIcon],
+  imports: [TarIcon, TarEmptyState, TarSkeleton, TarListError],
   template: `
     <button data-testid="seed-button" class="seed-button" type="button">Action</button>
     <div data-testid="seed-card" class="seed-card">Card</div>
@@ -56,6 +59,19 @@ import {
         confirm-danger-typed
       </button>
       <span data-testid="confirm-result">{{ confirmResult() }}</span>
+    </div>
+
+    <div data-testid="empty-demo">
+      <tar-empty-state heading="Nothing here" body="Add your first item to get started." />
+    </div>
+
+    <div data-testid="skeleton-demo">
+      <tar-skeleton />
+    </div>
+
+    <div data-testid="error-demo">
+      <tar-list-error correlationId="test-correlation" (retry)="onRetry()" />
+      <span data-testid="error-retry-count">{{ retryCount() }}</span>
     </div>
   `,
   styles: [
@@ -108,6 +124,7 @@ export class Styleguide {
   protected readonly cards = Array.from({ length: 12 }, (_, i) => i + 1);
   protected readonly undoCount = signal(0);
   protected readonly confirmResult = signal('');
+  protected readonly retryCount = signal(0);
 
   protected show(severity: 'info' | 'success' | 'warning' | 'error'): void {
     this.snackbar.show(`${severity} message`, severity);
@@ -143,5 +160,9 @@ export class Styleguide {
       confirmLabel: 'Delete',
     });
     this.confirmResult.set(String(ok));
+  }
+
+  protected onRetry(): void {
+    this.retryCount.update((n) => n + 1);
   }
 }

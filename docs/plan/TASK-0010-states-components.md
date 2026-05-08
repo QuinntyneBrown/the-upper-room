@@ -1,7 +1,7 @@
 ---
 id: TASK-0010
 title: Empty / Loading / Skeleton / List-error state components
-status: Accepted
+status: Completed
 phase: F
 depends_on: [TASK-0002]
 traces_to: [L2-103, L2-104, L2-105]
