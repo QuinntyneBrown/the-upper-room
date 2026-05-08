@@ -1,0 +1,56 @@
+<div class="notes">
+  <div class="notes__composer">
+    <textarea
+      #composerEl
+      data-testid="notes-composer"
+      class="notes__textarea"
+      placeholder="Write a note… Cmd+Enter to save"
+      [value]="composerText()"
+      (input)="composerText.set($any($event.target).value)"
+      (keydown)="onComposerKeydown($event)"
+      rows="3"
+    ></textarea>
+    @if (composerError()) {
+      <p data-testid="notes-composer-error" class="notes__error">{{ composerError() }}</p>
+    }
+    <div class="notes__composer-actions">
+      <button data-testid="notes-submit" type="button" class="notes__btn-primary" (click)="submit()">Save</button>
+    </div>
+  </div>
+
+  <div class="notes__list">
+    @for (note of notes(); track note.id) {
+      <div data-testid="notes-item" class="notes__item">
+        @if (editingId() === note.id) {
+          <div data-testid="note-edit-form" class="notes__edit-form">
+            <textarea
+              data-testid="note-edit-input"
+              class="notes__textarea"
+              [value]="editingText()"
+              (input)="editingText.set($any($event.target).value)"
+              rows="3"
+            ></textarea>
+            <div class="notes__edit-actions">
+              <button data-testid="note-save-button" type="button" class="notes__btn-primary" (click)="saveEdit(note.id)">Save</button>
+              <button type="button" class="notes__btn-outlined" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </div>
+        } @else {
+          <div class="notes__meta">
+            <span data-testid="note-author" class="notes__author">{{ note.createdBy }}</span>
+            <span data-testid="note-time" class="notes__time">{{ relativeTime(note.updatedAt) }}</span>
+          </div>
+          <div data-testid="note-body" class="notes__body" [innerHTML]="note.bodyHtmlSanitized"></div>
+          @if (canModify(note)) {
+            <div class="notes__item-actions">
+              <button data-testid="note-edit-button" type="button" class="notes__btn-text" (click)="startEdit(note)">Edit</button>
+              <button data-testid="note-delete-button" type="button" class="notes__btn-text notes__btn-text--danger" (click)="deleteNote(note.id)">Delete</button>
+            </div>
+          }
+        }
+      </div>
+    } @empty {
+      <p class="notes__empty">No notes yet.</p>
+    }
+  </div>
+</div>

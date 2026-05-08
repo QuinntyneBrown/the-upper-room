@@ -6,13 +6,14 @@ import { Title } from '@angular/platform-browser';
 import { TarAvatar } from '../../../../../components/src/lib/avatar/tar-avatar';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
 import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
+import { TarNotes } from '../../notes/tar-notes';
 import type { Contact } from '../contact-list/contact-list';
 
 type Tab = 'overview' | 'notes' | 'activity';
 
 @Component({
   selector: 'app-contact-detail',
-  imports: [TarAvatar],
+  imports: [TarAvatar, TarNotes],
   templateUrl: './contact-detail.html',
   styleUrl: './contact-detail.scss',
 })
@@ -24,7 +25,7 @@ export class ContactDetail implements OnInit {
   private readonly snackbar = inject(SnackbarService);
   private readonly confirm = inject(ConfirmService);
 
-  private contactId = '';
+  protected contactId = '';
 
   protected readonly contact = signal<Contact | null>(null);
   protected readonly activeTab = signal<Tab>('overview');
