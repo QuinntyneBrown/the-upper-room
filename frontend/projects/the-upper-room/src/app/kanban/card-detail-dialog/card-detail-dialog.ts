@@ -1,5 +1,6 @@
 // traces_to: L2-046
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject, signal } from '@angular/core';
+import { ConfirmService } from 'components';
 import { BoardCard } from '../board-view/board-view';
 
 export interface CardSchemaField {
@@ -24,6 +25,10 @@ export class CardDetailDialog implements OnInit {
   @Input() schema: readonly CardSchemaField[] = [];
   @Output() closed = new EventEmitter<void>();
   @Output() patched = new EventEmitter<CardDetailPatch>();
+  @Output() archived = new EventEmitter<void>();
+  @Output() deleted = new EventEmitter<void>();
+
+  private readonly confirm = inject(ConfirmService);
 
   protected readonly currentTitle = signal('');
   protected readonly currentData = signal<Record<string, string>>({});
@@ -79,6 +84,21 @@ export class CardDetailDialog implements OnInit {
     if (!text) return;
     this.comments.update((list) => [...list, text]);
     this.newComment.set('');
+  }
+
+  protected onArchive(): void {
+    this.archived.emit();
+  }
+
+  protected async onDelete(): Promise<void> {
+    const ok = await this.confirm.confirm({
+      severity: 'danger',
+      title: 'Delete card?',
+      body: 'This will permanently remove the card.',
+      requireTypedConfirmation: this.card.title,
+      confirmLabel: 'Delete',
+    });
+    if (ok) this.deleted.emit();
   }
 
   protected onAttach(input: HTMLInputElement): void {

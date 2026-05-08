@@ -1,7 +1,7 @@
 ---
 id: TASK-0099
 title: Card archive + delete
-status: Accepted
+status: Completed
 phase: K
 depends_on: [TASK-0094, TASK-0009]
 traces_to: [L2-046]

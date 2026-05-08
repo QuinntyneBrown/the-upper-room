@@ -4,21 +4,32 @@
     @if (b.description) {
       <p class="board-header__description">{{ b.description }}</p>
     }
-    @if (tagChips().length > 0) {
-      <div class="board-header__filters" role="group" aria-label="Tag filters">
-        @for (tag of tagChips(); track tag.id) {
-          <button
-            type="button"
-            class="filter-chip"
-            [class.filter-chip--active]="isTagActive(tag.name)"
-            [attr.data-testid]="'board-tag-filter-' + tag.name"
-            (click)="toggleTag(tag.name)"
-          >
-            Tag={{ tag.name }}
-          </button>
-        }
-      </div>
-    }
+    <div class="board-header__toolbar">
+      @if (tagChips().length > 0) {
+        <div class="board-header__filters" role="group" aria-label="Tag filters">
+          @for (tag of tagChips(); track tag.id) {
+            <button
+              type="button"
+              class="filter-chip"
+              [class.filter-chip--active]="isTagActive(tag.name)"
+              [attr.data-testid]="'board-tag-filter-' + tag.name"
+              (click)="toggleTag(tag.name)"
+            >
+              Tag={{ tag.name }}
+            </button>
+          }
+        </div>
+      }
+      <button
+        data-testid="board-show-archived"
+        type="button"
+        class="filter-chip"
+        [class.filter-chip--active]="showArchived()"
+        (click)="showArchived.update((v) => !v)"
+      >
+        Show archived
+      </button>
+    </div>
   </header>
 
   @if (swimlaneMode() === 'None') {
@@ -169,6 +180,8 @@
       [schema]="cardSchema()"
       (closed)="closeCard()"
       (patched)="onCardPatched($event)"
+      (archived)="onCardArchived()"
+      (deleted)="onCardDeleted()"
     />
   }
 }

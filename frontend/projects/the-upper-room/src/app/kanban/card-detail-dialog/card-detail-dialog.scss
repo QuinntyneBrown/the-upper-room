@@ -112,6 +112,24 @@
   align-items: flex-end;
 }
 
+.dialog__header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--md-sys-space-1);
+}
+
+.btn-text {
+  border: 0;
+  background: transparent;
+  color: var(--md-sys-color-primary);
+  padding: var(--md-sys-space-1) var(--md-sys-space-2);
+  font: var(--md-sys-typescale-label-medium);
+  border-radius: var(--md-sys-shape-corner-small);
+  cursor: pointer;
+
+  &--danger { color: var(--md-sys-color-error); }
+}
+
 .btn-filled {
   border: 0;
   border-radius: var(--md-sys-shape-corner-full);

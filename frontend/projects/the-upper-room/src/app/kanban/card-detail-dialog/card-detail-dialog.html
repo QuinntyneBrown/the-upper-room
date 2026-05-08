@@ -9,9 +9,11 @@
         (input)="currentTitle.set($any($event.target).value)"
         (blur)="onTitleBlur()"
       />
-      <button data-testid="card-detail-close" type="button" class="btn-icon" (click)="onClose()" aria-label="Close">
-        ×
-      </button>
+      <div class="dialog__header-actions">
+        <button data-testid="card-detail-archive" type="button" class="btn-text" (click)="onArchive()">Archive</button>
+        <button data-testid="card-detail-delete" type="button" class="btn-text btn-text--danger" (click)="onDelete()">Delete</button>
+        <button data-testid="card-detail-close" type="button" class="btn-icon" (click)="onClose()" aria-label="Close">×</button>
+      </div>
     </header>
 
     @if (schema.length > 0) {

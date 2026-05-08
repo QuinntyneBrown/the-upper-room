@@ -19,6 +19,7 @@ export interface BoardCard {
   readonly assigneeName: string | null;
   readonly dueDate: string | null;
   readonly swimlaneKey: string | null;
+  readonly archived?: boolean;
   readonly data?: Record<string, string | null>;
 }
 
@@ -57,6 +58,7 @@ export class BoardView implements AfterViewInit, OnDestroy {
   protected readonly selectedCardId = signal<string | null>(null);
   protected readonly activeColumnIndex = signal(0);
   protected readonly moveSheetCard = signal<BoardCard | null>(null);
+  protected readonly showArchived = signal(false);
 
   private readonly scrollListener = () => this.onColumnsScroll();
   private touchStartX = 0;
@@ -82,9 +84,11 @@ export class BoardView implements AfterViewInit, OnDestroy {
   protected readonly visibleCardsByColumn = computed(() => {
     const result = new Map<string, BoardCard[]>();
     const filter = this.activeTagName();
+    const showArchived = this.showArchived();
     for (const column of this.board()?.columns ?? []) {
       const cards = (this.board()?.cards ?? [])
         .filter((c) => c.columnId === column.id)
+        .filter((c) => showArchived || !c.archived)
         .filter((c) => !filter || c.tags.some((t) => t.name === filter));
       result.set(column.id, cards);
     }
@@ -136,8 +140,10 @@ export class BoardView implements AfterViewInit, OnDestroy {
 
   protected cardsForLane(columnId: string, laneKey: string): BoardCard[] {
     const filter = this.activeTagName();
+    const showArchived = this.showArchived();
     return (this.board()?.cards ?? [])
       .filter((c) => c.columnId === columnId && c.swimlaneKey === laneKey)
+      .filter((c) => showArchived || !c.archived)
       .filter((c) => !filter || c.tags.some((t) => t.name === filter));
   }
 
@@ -272,5 +278,32 @@ export class BoardView implements AfterViewInit, OnDestroy {
       cards: current.cards.map((c) => (c.id === patch.id ? { ...c, ...patch.body } : c)),
     });
     this.http.patch(`/api/v1/cards/${patch.id}`, patch.body).subscribe();
+  }
+
+  protected onCardArchived(): void {
+    const card = this.selectedCard();
+    if (!card) return;
+    const current = this.board();
+    if (!current) return;
+    this.board.set({
+      ...current,
+      cards: current.cards.map((c) => (c.id === card.id ? { ...c, archived: true } : c)),
+    });
+    this.http.patch(`/api/v1/cards/${card.id}`, { archived: true }).subscribe();
+    this.closeCard();
+  }
+
+  protected onCardDeleted(): void {
+    const card = this.selectedCard();
+    if (!card) return;
+    const current = this.board();
+    if (!current) return;
+    this.board.set({
+      ...current,
+      cards: current.cards.filter((c) => c.id !== card.id),
+    });
+    this.http.delete(`/api/v1/cards/${card.id}`).subscribe();
+    this.snackbar.show('Card deleted', 'info');
+    this.closeCard();
   }
 }
