@@ -1,7 +1,7 @@
 ---
 id: TASK-0020
 title: Sign-in page (UI + mock auth provider)
-status: Draft
+status: Accepted
 phase: A
 depends_on: [TASK-0005, TASK-0007, TASK-0008]
 traces_to: [L2-016]
