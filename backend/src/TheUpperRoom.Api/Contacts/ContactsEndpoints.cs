@@ -35,6 +35,23 @@ public static class ContactsEndpoints
             return Results.Ok(new { items = result, total = result.Length });
         });
 
+        app.MapPost("/api/v1/contacts", async (HttpContext ctx) =>
+        {
+            var userId = ctx.Request.Headers["X-Test-User-Id"].ToString();
+            if (string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user))
+                return Results.Unauthorized();
+
+            var body = await ctx.Request.ReadFromJsonAsync<CreateContactRequest>();
+            if (body is null) return Results.BadRequest();
+            if (string.IsNullOrWhiteSpace(body.FirstName))
+                return Results.UnprocessableEntity(new { error = "First name is required." });
+
+            var name = string.Join(' ', new[] { body.FirstName.Trim(), body.LastName?.Trim() }.Where(s => !string.IsNullOrEmpty(s)));
+            var id = Guid.NewGuid().ToString("N")[..8];
+            var contact = new Contact(id, body.DisplayName ?? name, user.City);
+            return Results.Created($"/api/v1/contacts/{id}", contact);
+        });
+
         app.MapGet("/api/v1/contacts/{id}", (string id, HttpContext ctx) =>
         {
             var userId = ctx.Request.Headers["X-Test-User-Id"].ToString();

@@ -1,7 +1,7 @@
 ---
 id: TASK-0062
 title: Contact create form (basic info only)
-status: Accepted
+status: Completed
 phase: C
 depends_on: [TASK-0060]
 traces_to: [L2-032, L2-029]
