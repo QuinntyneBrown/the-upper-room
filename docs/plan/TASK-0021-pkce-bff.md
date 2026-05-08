@@ -1,7 +1,7 @@
 ---
 id: TASK-0021
 title: PKCE flow + BFF token exchange
-status: Draft
+status: Accepted
 phase: A
 depends_on: [TASK-0020]
 traces_to: [L2-015]
