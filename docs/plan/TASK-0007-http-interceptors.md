@@ -1,7 +1,7 @@
 ---
 id: TASK-0007
 title: HTTP interceptors — correlation, auth, retry, error mapping
-status: Accepted
+status: Completed
 phase: F
 depends_on: [TASK-0001]
 traces_to: [L2-084, L2-065, L2-066]
