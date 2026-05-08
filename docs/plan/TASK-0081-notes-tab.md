@@ -1,7 +1,7 @@
 ---
 id: TASK-0081
 title: Notes tab component (composer + list)
-status: Draft
+status: Accepted
 phase: N
 depends_on: [TASK-0080, TASK-0065]
 traces_to: [L2-042]
