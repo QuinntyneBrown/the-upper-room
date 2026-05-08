@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "e2e": "playwright test",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint . && stylelint \"**/*.scss\""
   },
   "private": true,
   "packageManager": "npm@10.9.4",
@@ -27,7 +28,11 @@
     "@angular/cli": "^21.2.7",
     "@angular/compiler-cli": "^21.2.0",
     "@playwright/test": "^1.49.0",
+    "eslint": "^9.16.0",
+    "eslint-plugin-the-upper-room": "file:../tools/eslint-plugin-the-upper-room",
     "jsdom": "^28.0.0",
+    "stylelint": "^16.10.0",
+    "stylelint-plugin-the-upper-room": "file:../tools/stylelint-plugin-the-upper-room",
     "ng-packagr": "^21.2.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",

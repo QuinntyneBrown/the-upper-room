@@ -1,7 +1,7 @@
 ---
 id: TASK-0006
 title: Lint rules — BEM, file-per-type, spacing tokens, i18n literals, contract tokens, Playwright POM
-status: Accepted
+status: Completed
 phase: F
 depends_on: [TASK-0001]
 traces_to: [L2-003, L2-081, L2-082, L2-083, L2-100, L2-102]

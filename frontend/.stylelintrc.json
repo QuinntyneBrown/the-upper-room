@@ -1,0 +1,7 @@
+{
+  "plugins": ["../tools/stylelint-plugin-the-upper-room"],
+  "rules": {
+    "the-upper-room/bem-class-name": true,
+    "the-upper-room/spacing-token-only": true
+  }
+}
