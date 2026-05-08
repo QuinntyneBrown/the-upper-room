@@ -1,7 +1,7 @@
 ---
 id: TASK-0095
 title: Column configuration (rename / reorder / color)
-status: Draft
+status: Accepted
 phase: K
 depends_on: [TASK-0090]
 traces_to: [L2-047]
