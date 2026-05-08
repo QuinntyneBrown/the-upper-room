@@ -6,6 +6,10 @@
     <button data-testid="contact-submit" type="submit" class="btn-filled" [disabled]="submitting()">Save</button>
   </div>
 
+  @if (formBanner()) {
+    <div data-testid="contact-form-banner" class="form-banner">{{ formBanner() }}</div>
+  }
+
   <div class="form-body">
     <div class="field-row">
       <div class="field">
@@ -89,5 +93,78 @@
         (input)="displayName.set($any($event.target).value)"
       />
     </div>
+
+    <section class="methods-section">
+      <h2 class="methods-section__heading">Phones</h2>
+      @for (phone of phones(); track $index) {
+        <div [attr.data-testid]="'contact-phone-row-' + $index" class="method-row">
+          <input
+            [attr.data-testid]="'contact-phone-input-' + $index"
+            class="field__input"
+            [class.field__input--error]="phone.error"
+            type="tel"
+            placeholder="+1 416 555 0100"
+            [value]="phone.value"
+            (input)="updatePhone($index, 'value', $any($event.target).value)"
+          />
+          <input
+            class="field__input method-row__label"
+            type="text"
+            placeholder="Label"
+            [value]="phone.label"
+            (input)="updatePhone($index, 'label', $any($event.target).value)"
+          />
+          <label class="method-row__primary">
+            <input type="checkbox" [checked]="phone.primary" (change)="updatePhone($index, 'primary', $any($event.target).checked)" />
+            Primary
+          </label>
+          <button [attr.data-testid]="'contact-phone-remove-' + $index" type="button" class="btn-icon" (click)="removePhone($index)" aria-label="Remove phone">×</button>
+          @if (phone.error) {
+            <span [attr.data-testid]="'contact-phone-error-' + $index" class="field__error">{{ phone.error }}</span>
+          }
+        </div>
+      }
+      <button data-testid="contact-add-phone" type="button" class="btn-add" (click)="addPhone()">+ Add phone</button>
+    </section>
+
+    <section class="methods-section">
+      <h2 class="methods-section__heading">Emails</h2>
+      @for (email of emails(); track $index) {
+        <div [attr.data-testid]="'contact-email-row-' + $index" class="method-row">
+          <input
+            [attr.data-testid]="'contact-email-input-' + $index"
+            class="field__input"
+            type="email"
+            placeholder="email@example.com"
+            [value]="email.value"
+            (input)="updateEmail($index, 'value', $any($event.target).value)"
+          />
+          <input
+            class="field__input method-row__label"
+            type="text"
+            placeholder="Label"
+            [value]="email.label"
+            (input)="updateEmail($index, 'label', $any($event.target).value)"
+          />
+          <label class="method-row__primary">
+            <input [attr.data-testid]="'contact-email-primary-' + $index" type="checkbox" [checked]="email.primary" (change)="updateEmail($index, 'primary', $any($event.target).checked)" />
+            Primary
+          </label>
+        </div>
+      }
+      <button data-testid="contact-add-email" type="button" class="btn-add" (click)="addEmail()">+ Add email</button>
+    </section>
+
+    <section class="methods-section">
+      <h2 class="methods-section__heading">Addresses</h2>
+      @for (addr of addresses(); track $index) {
+        <div [attr.data-testid]="'contact-address-row-' + $index" class="method-row method-row--address">
+          <input class="field__input" type="text" placeholder="Street" [value]="addr.street" />
+          <input class="field__input" type="text" placeholder="City" [value]="addr.city" />
+          <input class="field__input" type="text" placeholder="Country" [value]="addr.country" />
+        </div>
+      }
+      <button data-testid="contact-add-address" type="button" class="btn-add" (click)="addAddress()">+ Add address</button>
+    </section>
   </div>
 </form>
