@@ -5,6 +5,7 @@ export interface RbacSnapshot {
   readonly roles: readonly string[];
   readonly permissions: readonly string[];
   readonly userId?: string;
+  readonly cityId?: string;
 }
 
 const EMPTY: RbacSnapshot = { roles: [], permissions: [] };

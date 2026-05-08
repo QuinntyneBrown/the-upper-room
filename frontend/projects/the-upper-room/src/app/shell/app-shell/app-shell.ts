@@ -6,10 +6,11 @@ import { TarIcon } from '../../../../../components/src/lib/icon/icon';
 import { breadcrumbsFromUrl, Crumb } from '../breadcrumb.service';
 import { OfflineBanner } from '../../network/offline-banner/offline-banner';
 import { SignOutService } from '../../auth/sign-out.service';
+import { CitySwitcher } from '../../cities/city-switcher/city-switcher';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, TarIcon, OfflineBanner],
+  imports: [RouterOutlet, TarIcon, OfflineBanner, CitySwitcher],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
 })

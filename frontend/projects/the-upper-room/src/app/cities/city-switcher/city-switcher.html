@@ -1,0 +1,45 @@
+@if (canSwitch()) {
+  <div class="switcher">
+    <button
+      data-testid="city-switcher-trigger"
+      type="button"
+      class="trigger"
+      (click)="toggle()"
+    >
+      {{ currentLabel() }}
+    </button>
+    @if (open()) {
+      <ul data-testid="city-switcher-menu" class="menu" role="menu">
+        @for (c of visibleCities(); track c.id) {
+          <li
+            [attr.data-testid]="'city-switcher-option-' + c.slug"
+            role="menuitem"
+            class="item"
+            (click)="select(c.slug)"
+          >
+            <span>{{ c.name }}</span>
+            @if (scope.current() === c.slug) {
+              <span aria-label="current">✓</span>
+            }
+          </li>
+        }
+        <li
+          data-testid="city-switcher-option-all"
+          role="menuitem"
+          class="item item--all"
+          (click)="select(allCitiesValue)"
+        >
+          All cities (read-only)
+          @if (scope.isAllCities()) {
+            <span aria-label="current">✓</span>
+          }
+        </li>
+      </ul>
+    }
+  </div>
+  @if (scope.isAllCities()) {
+    <div data-testid="city-switcher-all-banner" class="banner" role="status">
+      Switch to a single city to make changes.
+    </div>
+  }
+}
