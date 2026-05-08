@@ -1,5 +1,8 @@
 <section class="page">
   <h1>My profile</h1>
+
+  <tar-avatar-uploader [user]="form()" (fileSelected)="onAvatarSelected($event)" />
+
   <form class="card" (submit)="onSave($event)" novalidate>
     <div class="row">
       <label class="field">

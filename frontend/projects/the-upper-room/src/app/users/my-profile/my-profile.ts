@@ -1,8 +1,10 @@
-// traces_to: L2-107
+// traces_to: L2-107, L2-106
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { TarAvatarUploader } from '../../../../../components/src/lib/avatar/tar-avatar-uploader';
 import { PermissionsService } from '../../rbac/permissions.service';
+import { mapErrorToMessage } from '../../interceptors/error-catalog';
 
 export interface ProfileForm {
   firstName: string;
@@ -13,6 +15,8 @@ export interface ProfileForm {
   city: string;
   timezone: string;
   locale: string;
+  avatarUrl?: string | null;
+  email?: string;
 }
 
 const EMPTY: ProfileForm = {
@@ -24,10 +28,12 @@ const EMPTY: ProfileForm = {
   city: '',
   timezone: '',
   locale: '',
+  avatarUrl: null,
 };
 
 @Component({
   selector: 'app-my-profile',
+  imports: [TarAvatarUploader],
   templateUrl: './my-profile.html',
   styleUrl: './my-profile.scss',
 })
@@ -72,5 +78,21 @@ export class MyProfile implements OnInit {
 
   protected onCancel(): void {
     this.form.set(this.baseline());
+  }
+
+  protected onAvatarSelected(file: File): void {
+    const body = new FormData();
+    body.append('file', file);
+    this.http.post<{ url: string }>('/api/v1/uploads', body).subscribe({
+      next: ({ url }) => {
+        const next = { ...this.form(), avatarUrl: url };
+        this.form.set(next);
+        this.baseline.set(next);
+      },
+      error: (err: HttpErrorResponse) => {
+        const code = (err.error as { code?: string } | null)?.code;
+        this.snackbar.show(mapErrorToMessage(err.status, code), 'error');
+      },
+    });
   }
 }
