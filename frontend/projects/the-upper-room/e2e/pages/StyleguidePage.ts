@@ -24,6 +24,10 @@ export class StyleguidePage {
     return this.page.getByTestId('grid-demo').locator('> *');
   }
 
+  snackbarTrigger(kind: 'info' | 'success' | 'warning' | 'error' | 'with-undo' | 'queue-pair'): Locator {
+    return this.page.getByTestId(`snackbar-trigger-${kind}`);
+  }
+
   async goto(): Promise<void> {
     await this.page.goto('/styleguide');
   }
