@@ -23,14 +23,24 @@
 
   <div data-testid="board-view-columns" class="columns">
     @for (column of b.columns; track column.id) {
-      <section [attr.data-testid]="'board-column-' + column.name" class="column">
+      <section
+        [attr.data-testid]="'board-column-' + column.name"
+        class="column"
+        (dragover)="onDragOver($event)"
+        (drop)="onDrop($event, column)"
+      >
         <header class="column__header">
           <span class="column__name">{{ column.name }}</span>
           <span class="column__count">{{ cardsFor(column.id).length }}</span>
         </header>
         <ul class="column__cards">
           @for (card of cardsFor(column.id); track card.id) {
-            <li [attr.data-testid]="'board-card-' + card.title" class="card">
+            <li
+              [attr.data-testid]="'board-card-' + card.title"
+              class="card"
+              draggable="true"
+              (dragstart)="onDragStart($event, card)"
+            >
               <span class="card__title">{{ card.title }}</span>
               @if (visibleTags(card).length > 0) {
                 <div class="card__tags">

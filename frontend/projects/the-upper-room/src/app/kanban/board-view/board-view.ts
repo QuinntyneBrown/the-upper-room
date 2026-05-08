@@ -102,4 +102,36 @@ export class BoardView {
   protected formatDueDate(value: string): string {
     return new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
+
+  protected onDragStart(event: DragEvent, card: BoardCard): void {
+    event.dataTransfer?.setData('text/plain', card.id);
+    event.dataTransfer!.effectAllowed = 'move';
+  }
+
+  protected onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  protected onDrop(event: DragEvent, column: BoardColumn): void {
+    event.preventDefault();
+    const cardId = event.dataTransfer?.getData('text/plain');
+    if (!cardId) return;
+    const current = this.board();
+    if (!current) return;
+    const card = current.cards.find((c) => c.id === cardId);
+    if (!card || card.columnId === column.id) return;
+    const sourceColumnId = card.columnId;
+
+    this.board.set({
+      ...current,
+      cards: current.cards.map((c) => (c.id === cardId ? { ...c, columnId: column.id } : c)),
+    });
+
+    this.http
+      .post(`/api/v1/cards/${cardId}/move`, {
+        targetColumnId: column.id,
+        sourceColumnId,
+      })
+      .subscribe();
+  }
 }
