@@ -36,9 +36,13 @@ export class TarNotes implements OnInit {
   protected readonly editingId = signal<string | null>(null);
   protected readonly editingText = signal('');
   protected readonly currentUserId = signal<string | null>(null);
+  protected readonly isAdmin = signal(false);
 
   ngOnInit(): void {
-    this.http.get<{ id: string }>('/api/v1/users/me').subscribe((me) => this.currentUserId.set(me.id));
+    this.http.get<{ id: string; roles: string[] }>('/api/v1/users/me').subscribe((me) => {
+      this.currentUserId.set(me.id);
+      this.isAdmin.set(me.roles.includes('SystemAdmin'));
+    });
     this.http
       .get<{ items: NoteDto[] }>(`/api/v1/notes?subjectType=${this.subjectType}&subjectId=${this.subjectId}`)
       .subscribe((r) => this.notes.set(r.items));
@@ -96,7 +100,7 @@ export class TarNotes implements OnInit {
 
   protected canModify(note: NoteDto): boolean {
     const uid = this.currentUserId();
-    return uid !== null && note.createdBy === uid;
+    return uid !== null && (note.createdBy === uid || this.isAdmin());
   }
 
   protected relativeTime(dateStr: string): string {
