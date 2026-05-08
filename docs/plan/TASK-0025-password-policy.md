@@ -1,7 +1,7 @@
 ---
 id: TASK-0025
 title: Password policy (12+ chars, HIBP, strength meter)
-status: Accepted
+status: Completed
 phase: A
 depends_on: [TASK-0022]
 traces_to: [L2-019]
