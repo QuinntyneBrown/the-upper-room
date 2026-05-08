@@ -1,7 +1,7 @@
 ---
 id: TASK-0027
 title: Session inactivity timeout dialog
-status: Draft
+status: Accepted
 phase: A
 depends_on: [TASK-0021]
 traces_to: [L2-022]
