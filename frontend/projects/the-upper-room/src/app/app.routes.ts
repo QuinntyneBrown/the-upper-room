@@ -18,6 +18,7 @@ import { RbacDemo } from './rbac/rbac-demo/rbac-demo';
 import { authGuard, roleGuard } from './rbac/guards';
 import { UserList } from './users/user-list/user-list';
 import { MyProfile } from './users/my-profile/my-profile';
+import { CitiesAdmin } from './cities/cities-admin/cities-admin';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -54,6 +55,12 @@ export const routes: Routes = [
       {
         path: 'admin/users',
         component: UserList,
+        canActivate: [roleGuard],
+        data: { roles: ['SystemAdmin'] },
+      },
+      {
+        path: 'admin/cities',
+        component: CitiesAdmin,
         canActivate: [roleGuard],
         data: { roles: ['SystemAdmin'] },
       },
