@@ -52,6 +52,21 @@ public static class ContactsEndpoints
             return Results.Created($"/api/v1/contacts/{id}", contact);
         });
 
+        app.MapMethods("/api/v1/contacts/{id}", ["PATCH"], async (string id, HttpContext ctx) =>
+        {
+            var userId = ctx.Request.Headers["X-Test-User-Id"].ToString();
+            if (string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user))
+                return Results.Unauthorized();
+
+            var contact = Seed.FirstOrDefault(c => c.Id == id);
+            if (contact is null) return Results.NotFound();
+
+            var visible = CityScope.VisibleOrNull(contact, user.City);
+            if (visible is null) return Results.NotFound();
+
+            return Results.Ok(contact);
+        });
+
         app.MapPut("/api/v1/contacts/{id}", async (string id, HttpContext ctx) =>
         {
             var userId = ctx.Request.Headers["X-Test-User-Id"].ToString();

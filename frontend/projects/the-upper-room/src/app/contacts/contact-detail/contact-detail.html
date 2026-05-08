@@ -9,7 +9,11 @@
     </div>
     <div class="contact-header__actions">
       <a data-testid="contact-edit-button" [href]="'/contacts/' + c.id + '/edit'" class="btn-outlined">Edit</a>
-      <button data-testid="contact-archive-button" type="button" class="btn-outlined">Archive</button>
+      @if (!c.archived) {
+        <button data-testid="contact-archive-button" type="button" class="btn-outlined" (click)="archive()">Archive</button>
+      } @else {
+        <button data-testid="contact-restore-button" type="button" class="btn-outlined" (click)="archive()">Restore</button>
+      }
     </div>
   </header>
 

@@ -1,9 +1,10 @@
-// traces_to: L2-031
+// traces_to: L2-031, L2-033
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { TarAvatar } from '../../../../../components/src/lib/avatar/tar-avatar';
+import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
 import type { Contact } from '../contact-list/contact-list';
 
 type Tab = 'overview' | 'notes' | 'activity';
@@ -18,13 +19,16 @@ export class ContactDetail implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
   private readonly titleService = inject(Title);
+  private readonly snackbar = inject(SnackbarService);
+
+  private contactId = '';
 
   protected readonly contact = signal<Contact | null>(null);
   protected readonly activeTab = signal<Tab>('overview');
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id')!;
-    this.http.get<Contact>(`/api/v1/contacts/${id}`).subscribe((c) => {
+    this.contactId = this.route.snapshot.paramMap.get('id')!;
+    this.http.get<Contact>(`/api/v1/contacts/${this.contactId}`).subscribe((c) => {
       this.contact.set(c);
       this.titleService.setTitle(`${c.name} · The Upper Room`);
     });
@@ -36,5 +40,22 @@ export class ContactDetail implements OnInit {
 
   protected primaryPhone(c: Contact): string {
     return c.phones?.find((p) => p.primary)?.value ?? c.phones?.[0]?.value ?? '';
+  }
+
+  protected archive(): void {
+    const prev = this.contact();
+    this.http
+      .patch<Contact>(`/api/v1/contacts/${this.contactId}`, { archived: true })
+      .subscribe((c) => {
+        this.contact.set(c);
+        this.snackbar.show('Contact archived', 'info', {
+          label: 'Undo',
+          onClick: () => {
+            this.http.patch<Contact>(`/api/v1/contacts/${this.contactId}`, { archived: false }).subscribe((restored) => {
+              this.contact.set(restored);
+            });
+          },
+        });
+      });
   }
 }
