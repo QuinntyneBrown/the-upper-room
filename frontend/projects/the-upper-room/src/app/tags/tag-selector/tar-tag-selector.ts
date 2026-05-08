@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output, computed, inject, si
 import { HttpClient } from '@angular/common/http';
 import { Subject, debounceTime, switchMap, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { PermissionsService } from '../../rbac/permissions.service';
+import { PERMISSIONS_SERVICE } from 'domain';
 import type { Tag } from '../tag-list/tag-list';
 
 @Component({
@@ -13,7 +13,7 @@ import type { Tag } from '../tag-list/tag-list';
 })
 export class TarTagSelector implements OnDestroy {
   private readonly http = inject(HttpClient);
-  private readonly perms = inject(PermissionsService);
+  private readonly perms = inject(PERMISSIONS_SERVICE);
   private readonly destroy$ = new Subject<void>();
   private readonly search$ = new Subject<string>();
 

@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, com
 import { HttpClient } from '@angular/common/http';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { PermissionsService } from '../../rbac/permissions.service';
+import { PERMISSIONS_SERVICE } from 'domain';
 import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
 import { TarAvatar } from '../../../../../components/src/lib/avatar/tar-avatar';
 
@@ -43,7 +43,7 @@ export class ContactList implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('scrollSentinel') scrollSentinel?: ElementRef<HTMLElement>;
 
   private readonly http = inject(HttpClient);
-  private readonly perms = inject(PermissionsService);
+  private readonly perms = inject(PERMISSIONS_SERVICE);
   private readonly destroy$ = new Subject<void>();
   private readonly search$ = new Subject<string>();
   private observer?: IntersectionObserver;

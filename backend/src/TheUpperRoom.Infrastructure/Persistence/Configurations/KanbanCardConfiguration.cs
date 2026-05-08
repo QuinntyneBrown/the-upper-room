@@ -17,6 +17,9 @@ internal sealed class KanbanCardConfiguration : IEntityTypeConfiguration<KanbanC
         builder.Property(e => e.AssigneeUserId).HasMaxLength(100);
         builder.Property(e => e.Archived).IsRequired();
 
+        builder.Ignore(e => e.Data);
+        builder.Ignore(e => e.TagIds);
+
         builder.Property<Dictionary<string, string?>>("_data")
             .HasField("_data").UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("Data").HasColumnType("nvarchar(max)")

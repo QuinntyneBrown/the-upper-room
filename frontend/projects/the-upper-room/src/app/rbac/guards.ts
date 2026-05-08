@@ -25,7 +25,7 @@ export const roleGuard: CanActivateFn = (route) => {
 };
 
 export const permissionGuard: CanActivateFn = (route) => {
-  const perms = inject(PermissionsService);
+  const perms = inject(PERMISSIONS_SERVICE);
   const router = inject(Router);
   const required = (route.data['permissions'] ?? []) as string[];
   if (required.length === 0 || required.every((p) => perms.hasPermission(p))) return true;
