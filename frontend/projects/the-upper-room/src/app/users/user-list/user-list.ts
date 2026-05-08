@@ -1,4 +1,4 @@
-// traces_to: L2-026, L2-027
+// traces_to: L2-026, L2-027, L2-028
 import {
   Component,
   computed,
@@ -10,7 +10,9 @@ import {
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
 import { InviteUserDialog, InvitePayload } from '../invite-user-dialog/invite-user-dialog';
+import { UserDetailDrawer } from '../user-detail-drawer/user-detail-drawer';
 
 export interface UserRow {
   readonly id: string;
@@ -32,13 +34,14 @@ type RoleFilter = (typeof ROLES)[number];
 
 @Component({
   selector: 'app-user-list',
-  imports: [TarEmptyState, InviteUserDialog],
+  imports: [TarEmptyState, InviteUserDialog, UserDetailDrawer],
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss',
 })
 export class UserList implements OnDestroy {
   private readonly http = inject(HttpClient);
   private readonly snackbar = inject(SnackbarService);
+  private readonly confirmer = inject(ConfirmService);
 
   protected readonly searchInput = signal('');
   protected readonly debouncedSearch = signal('');
@@ -53,6 +56,8 @@ export class UserList implements OnDestroy {
 
   protected readonly inviteOpen = signal(false);
   protected readonly inviteEmailError = signal<string | null>(null);
+
+  protected readonly selectedUser = signal<UserRow | null>(null);
 
   private debounceId: ReturnType<typeof setTimeout> | null = null;
 
@@ -103,6 +108,42 @@ export class UserList implements OnDestroy {
           this.inviteEmailError.set('This email already has a pending invitation.');
         }
       },
+    });
+  }
+
+  protected selectUser(user: UserRow): void {
+    this.selectedUser.set(user);
+  }
+
+  protected closeDrawer(): void {
+    this.selectedUser.set(null);
+  }
+
+  protected async onDisable(user: UserRow): Promise<void> {
+    const ok = await this.confirmer.confirm({
+      title: `Disable ${user.name}?`,
+      body: 'Disabled users cannot sign in.',
+      severity: 'warning',
+      confirmLabel: 'Disable',
+    });
+    if (!ok) return;
+    this.http.post(`/api/v1/users/${user.id}/disable`, {}).subscribe(() => {
+      this.users.update((list) =>
+        list.map((u) => (u.id === user.id ? { ...u, status: 'Disabled' } : u)),
+      );
+      this.selectedUser.update((u) => (u && u.id === user.id ? { ...u, status: 'Disabled' } : u));
+      this.snackbar.show('User disabled', 'info');
+    });
+  }
+
+  protected onRoleChange(payload: { user: UserRow; role: string }): void {
+    this.http.patch(`/api/v1/users/${payload.user.id}`, { role: payload.role }).subscribe(() => {
+      this.users.update((list) =>
+        list.map((u) => (u.id === payload.user.id ? { ...u, role: payload.role } : u)),
+      );
+      this.selectedUser.update((u) =>
+        u && u.id === payload.user.id ? { ...u, role: payload.role } : u,
+      );
     });
   }
 

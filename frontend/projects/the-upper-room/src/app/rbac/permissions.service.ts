@@ -4,6 +4,7 @@ import { Injectable, signal } from '@angular/core';
 export interface RbacSnapshot {
   readonly roles: readonly string[];
   readonly permissions: readonly string[];
+  readonly userId?: string;
 }
 
 const EMPTY: RbacSnapshot = { roles: [], permissions: [] };

@@ -1,0 +1,113 @@
+// traces_to: L2-028
+@use '../../../../../components/src/lib/breakpoints/mixins' as bp;
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
+  z-index: 60;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100dvh;
+  width: 100vw;
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  box-shadow: var(--md-sys-elevation-level-3);
+  z-index: 70;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: var(--md-sys-space-4);
+  padding: var(--md-sys-space-6);
+  overflow-y: auto;
+
+  @include bp.md {
+    width: 480px;
+  }
+}
+
+.drawer__header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--md-sys-space-3);
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-secondary-container);
+}
+
+h2 {
+  margin: 0;
+  font: var(--md-sys-typescale-headline-small);
+}
+
+p {
+  margin: 0;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.icon-btn {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 18px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--md-sys-shape-corner-full);
+}
+
+.meta {
+  display: grid;
+  gap: var(--md-sys-space-2);
+}
+
+.meta div {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+}
+
+dt {
+  font: var(--md-sys-typescale-label-large);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+dd {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--md-sys-space-2);
+  align-self: end;
+}
+
+.btn {
+  border: 0;
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: var(--md-sys-space-2) var(--md-sys-space-6);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-label-large);
+  cursor: pointer;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: inherit;
+  border: 1px solid var(--md-sys-color-outline);
+}
+
+.btn--danger {
+  background: var(--md-sys-color-error);
+  color: var(--md-sys-color-on-error);
+}

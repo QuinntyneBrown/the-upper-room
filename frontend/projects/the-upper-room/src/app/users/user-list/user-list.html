@@ -51,7 +51,11 @@
       </thead>
       <tbody>
         @for (u of users(); track u.id) {
-          <tr [attr.data-testid]="'user-row-' + u.email">
+          <tr
+            [attr.data-testid]="'user-row-' + u.email"
+            class="row"
+            (click)="selectUser(u)"
+          >
             <td>{{ u.name }}</td>
             <td>{{ u.email }}</td>
             <td><span class="role">{{ u.role }}</span></td>
@@ -83,6 +87,15 @@
       [emailError]="inviteEmailError()"
       (submitted)="onInviteSubmit($event)"
       (cancelled)="closeInvite()"
+    />
+  }
+
+  @if (selectedUser(); as su) {
+    <app-user-detail-drawer
+      [user]="su"
+      (closed)="closeDrawer()"
+      (disableRequested)="onDisable($event)"
+      (roleChanged)="onRoleChange($event)"
     />
   }
 </section>

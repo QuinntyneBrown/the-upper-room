@@ -1,0 +1,81 @@
+@let u = _user();
+
+@if (u) {
+  <div class="backdrop" (click)="closed.emit()"></div>
+  <aside data-testid="user-drawer" class="drawer" role="dialog" aria-label="User detail">
+    <header class="drawer__header">
+      <div class="avatar"></div>
+      <div>
+        <h2 data-testid="user-drawer-name">{{ u.name }}</h2>
+        <p>{{ u.email }}</p>
+      </div>
+      <button
+        data-testid="user-drawer-close"
+        type="button"
+        class="icon-btn"
+        aria-label="Close"
+        (click)="closed.emit()"
+      >
+        ×
+      </button>
+    </header>
+
+    <dl class="meta">
+      <div>
+        <dt>Status</dt>
+        <dd data-testid="user-drawer-status">{{ u.status }}</dd>
+      </div>
+      <div>
+        <dt>Role</dt>
+        <dd>
+          <select
+            data-testid="user-drawer-role-select"
+            [value]="u.role"
+            (change)="onRole($any($event.target).value)"
+          >
+            @for (r of roles; track r) {
+              <option [value]="r">{{ r }}</option>
+            }
+          </select>
+        </dd>
+      </div>
+      <div>
+        <dt>City</dt>
+        <dd>{{ u.city }}</dd>
+      </div>
+      <div>
+        <dt>Last sign-in</dt>
+        <dd>{{ u.lastSignIn }}</dd>
+      </div>
+    </dl>
+
+    <div class="actions">
+      <button
+        data-testid="user-drawer-reset-password"
+        type="button"
+        class="btn btn--ghost"
+        (click)="resetPasswordRequested.emit(u)"
+      >
+        Reset password
+      </button>
+      @if (!isSelf()) {
+        <button
+          data-testid="user-drawer-disable"
+          type="button"
+          class="btn btn--ghost"
+          (click)="disableRequested.emit(u)"
+        >
+          Disable
+        </button>
+        <button
+          data-testid="user-drawer-delete"
+          type="button"
+          class="btn btn--danger"
+          (click)="deleteRequested.emit(u)"
+        >
+          Delete
+        </button>
+      }
+    </div>
+  </aside>
+}
