@@ -12,6 +12,10 @@ export class StyleguidePage {
     this.seedChip = page.getByTestId('seed-chip');
   }
 
+  iconByAlias(alias: string): Locator {
+    return this.page.getByTestId(`icon-${alias}`);
+  }
+
   async goto(): Promise<void> {
     await this.page.goto('/styleguide');
   }
