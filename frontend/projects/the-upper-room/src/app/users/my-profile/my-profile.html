@@ -1,0 +1,111 @@
+<section class="page">
+  <h1>My profile</h1>
+  <form class="card" (submit)="onSave($event)" novalidate>
+    <div class="row">
+      <label class="field">
+        <span class="field__label">First name</span>
+        <input
+          data-testid="profile-first-name"
+          class="field__input"
+          type="text"
+          [value]="form().firstName"
+          (input)="update('firstName', $any($event.target).value)"
+        />
+      </label>
+      <label class="field">
+        <span class="field__label">Last name</span>
+        <input
+          data-testid="profile-last-name"
+          class="field__input"
+          type="text"
+          [value]="form().lastName"
+          (input)="update('lastName', $any($event.target).value)"
+        />
+      </label>
+    </div>
+
+    <label class="field">
+      <span class="field__label">Display name</span>
+      <input
+        data-testid="profile-display-name"
+        class="field__input"
+        type="text"
+        [value]="form().displayName"
+        (input)="update('displayName', $any($event.target).value)"
+      />
+    </label>
+
+    <div class="row">
+      <label class="field">
+        <span class="field__label">Pronouns</span>
+        <input
+          data-testid="profile-pronouns"
+          class="field__input"
+          type="text"
+          [value]="form().pronouns"
+          (input)="update('pronouns', $any($event.target).value)"
+        />
+      </label>
+      <label class="field">
+        <span class="field__label">Title</span>
+        <input
+          data-testid="profile-title"
+          class="field__input"
+          type="text"
+          [value]="form().title"
+          (input)="update('title', $any($event.target).value)"
+        />
+      </label>
+    </div>
+
+    <label class="field">
+      <span class="field__label">City</span>
+      <input
+        data-testid="profile-city"
+        class="field__input"
+        type="text"
+        [value]="form().city"
+        [readOnly]="!canEditCity()"
+        (input)="update('city', $any($event.target).value)"
+      />
+    </label>
+
+    <div class="row">
+      <label class="field">
+        <span class="field__label">Timezone</span>
+        <input
+          data-testid="profile-timezone"
+          class="field__input"
+          type="text"
+          [value]="form().timezone"
+          (input)="update('timezone', $any($event.target).value)"
+        />
+      </label>
+      <label class="field">
+        <span class="field__label">Locale</span>
+        <input
+          data-testid="profile-locale"
+          class="field__input"
+          type="text"
+          [value]="form().locale"
+          (input)="update('locale', $any($event.target).value)"
+        />
+      </label>
+    </div>
+
+    <div class="actions">
+      <button
+        data-testid="profile-cancel"
+        type="button"
+        class="btn btn--ghost"
+        [disabled]="!isDirty()"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+      <button data-testid="profile-save" type="submit" class="btn" [disabled]="!isDirty()">
+        Save changes
+      </button>
+    </div>
+  </form>
+</section>

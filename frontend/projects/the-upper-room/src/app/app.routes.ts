@@ -17,6 +17,7 @@ import { ResetPassword } from './auth/reset-password/reset-password';
 import { RbacDemo } from './rbac/rbac-demo/rbac-demo';
 import { authGuard, roleGuard } from './rbac/guards';
 import { UserList } from './users/user-list/user-list';
+import { MyProfile } from './users/my-profile/my-profile';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -49,6 +50,7 @@ export const routes: Routes = [
       { path: 'contacts/:id/edit', component: Stub },
       { path: 'partners', component: Stub },
       { path: 'partners/:id', component: Stub },
+      { path: 'profile', component: MyProfile },
       {
         path: 'admin/users',
         component: UserList,
