@@ -17,18 +17,12 @@ internal sealed class KanbanCardConfiguration : IEntityTypeConfiguration<KanbanC
         builder.Property(e => e.AssigneeUserId).HasMaxLength(100);
         builder.Property(e => e.Archived).IsRequired();
 
-        // Read-only CLR getters whose backing fields are mapped explicitly below.
-        builder.Ignore(e => e.Data);
-        builder.Ignore(e => e.TagIds);
-
-        // Metadata names match the constructor parameter names (data, tagIds) so
-        // EF Core's constructor binding can populate them on materialization.
-        builder.Property<Dictionary<string, string?>>("Data")
+        builder.Property<Dictionary<string, string?>>("_data")
             .HasField("_data").UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("Data").HasColumnType("nvarchar(max)")
             .HasConversion(JsonConverters.StringDictionaryConverter(), JsonConverters.StringDictionaryComparer());
 
-        builder.Property<List<string>>("TagIds")
+        builder.Property<List<string>>("_tagIds")
             .HasField("_tagIds").UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("TagIds").HasColumnType("nvarchar(max)")
             .HasConversion(JsonConverters.ListConverter<string>(), JsonConverters.ListComparer<string>());
