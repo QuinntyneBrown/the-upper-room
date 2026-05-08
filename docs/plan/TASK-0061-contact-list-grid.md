@@ -1,7 +1,7 @@
 ---
 id: TASK-0061
 title: Contact list responsive grid + filters/search
-status: Accepted
+status: Completed
 phase: C
 depends_on: [TASK-0060, TASK-0053]
 traces_to: [L2-030]

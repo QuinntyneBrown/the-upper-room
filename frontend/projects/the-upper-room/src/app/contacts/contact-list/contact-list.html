@@ -1,3 +1,28 @@
+<div class="toolbar">
+  <input
+    data-testid="contacts-search"
+    class="search-input"
+    type="search"
+    placeholder="Search contacts…"
+    [value]="searchQuery()"
+    (input)="onSearch($any($event.target).value)"
+  />
+  <button
+    data-testid="contacts-filter-archived"
+    type="button"
+    class="filter-chip"
+    [class.filter-chip--active]="showArchived()"
+    (click)="toggleArchived()"
+  >
+    Archived
+  </button>
+  @if (canCreate()) {
+    <button data-testid="contacts-new-button" type="button" class="btn-filled btn-filled--toolbar">
+      New contact
+    </button>
+  }
+</div>
+
 @if (isEmpty()) {
   <div data-testid="contacts-empty-state">
     <tar-empty-state
@@ -12,4 +37,40 @@
       }
     </tar-empty-state>
   </div>
+} @else {
+  <div data-testid="contacts-grid" class="contact-grid">
+    @for (contact of contacts(); track contact.id) {
+      <div [attr.data-testid]="'contact-card-' + contact.name" class="contact-card" [class.contact-card--archived]="contact.archived">
+        <tar-avatar [user]="avatarUser(contact)" [size]="48" />
+        <div class="contact-card__body">
+          <span class="contact-card__name">{{ contact.name }}</span>
+          @if (contact.title || contact.org) {
+            <span class="contact-card__subtitle">{{ contact.title }}{{ contact.title && contact.org ? ' @ ' : '' }}{{ contact.org }}</span>
+          }
+          @if (primaryPhone(contact)) {
+            <span class="contact-card__phone">{{ primaryPhone(contact) }}</span>
+          }
+          @if (primaryEmail(contact)) {
+            <span class="contact-card__email">{{ primaryEmail(contact) }}</span>
+          }
+          @if (visibleTags(contact).length > 0) {
+            <div class="contact-card__tags">
+              @for (tag of visibleTags(contact); track tag.id) {
+                <span class="tag-chip" [attr.data-color]="tag.color">{{ tag.name }}</span>
+              }
+              @if (extraTagCount(contact) > 0) {
+                <span class="tag-chip tag-chip--more">+{{ extraTagCount(contact) }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
+
+@if (canCreate()) {
+  <button data-testid="contacts-fab" type="button" class="fab" aria-label="New contact">
+    <span class="fab__icon">+</span>
+  </button>
 }

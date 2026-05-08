@@ -23,11 +23,16 @@ public static class ContactsEndpoints
             if (string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user))
                 return Results.Unauthorized();
 
-            var items = user.Role == Roles.SystemAdmin
+            var search = ctx.Request.Query["search"].ToString();
+            IEnumerable<Contact> items = user.Role == Roles.SystemAdmin
                 ? Seed
-                : Seed.Where(c => c.CityId == user.City).ToArray();
+                : Seed.Where(c => c.CityId == user.City);
 
-            return Results.Ok(new { items, total = items.Length });
+            if (!string.IsNullOrEmpty(search))
+                items = items.Where(c => c.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
+
+            var result = items.ToArray();
+            return Results.Ok(new { items = result, total = result.Length });
         });
 
         app.MapGet("/api/v1/contacts/{id}", (string id, HttpContext ctx) =>
