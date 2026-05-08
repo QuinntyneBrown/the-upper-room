@@ -10,12 +10,16 @@ import { TarEmptyState } from '../../../../components/src/lib/states/tar-empty-s
 import { TarSkeleton } from '../../../../components/src/lib/states/tar-skeleton';
 import { TarListError } from '../../../../components/src/lib/states/tar-list-error';
 import { TranslocoPipe } from '../i18n/transloco.pipe';
+import { TarTagSelector } from '../tags/tag-selector/tar-tag-selector';
+import type { Tag } from '../tags/tag-list/tag-list';
 
 @Component({
   selector: 'app-styleguide',
-  imports: [TarIcon, TarEmptyState, TarSkeleton, TarListError, TranslocoPipe],
+  imports: [TarIcon, TarEmptyState, TarSkeleton, TarListError, TranslocoPipe, TarTagSelector],
   template: `
     <h2 data-testid="greeting">{{ 'styleguide.greeting' | transloco }}</h2>
+
+    <tar-tag-selector [tags]="selectedTags()" (tagsChange)="selectedTags.set($event)" />
 
     <button data-testid="seed-button" class="seed-button" type="button">Action</button>
     <div data-testid="seed-card" class="seed-card">Card</div>
@@ -128,6 +132,7 @@ export class Styleguide {
   protected readonly undoCount = signal(0);
   protected readonly confirmResult = signal('');
   protected readonly retryCount = signal(0);
+  protected readonly selectedTags = signal<Tag[]>([]);
 
   protected show(severity: 'info' | 'success' | 'warning' | 'error'): void {
     this.snackbar.show(`${severity} message`, severity);

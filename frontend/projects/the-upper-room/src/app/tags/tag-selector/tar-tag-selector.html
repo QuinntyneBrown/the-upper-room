@@ -1,0 +1,52 @@
+<div data-testid="tag-selector" class="tag-selector">
+  <div class="selected-chips">
+    @for (tag of tags; track tag.id) {
+      <span [attr.data-testid]="'tag-selected-' + tag.id" class="chip" [attr.data-color]="tag.color">
+        <span class="chip__dot"></span>
+        {{ tag.name }}
+        <button
+          [attr.data-testid]="'tag-remove-' + tag.id"
+          type="button"
+          class="chip__remove"
+          aria-label="Remove {{ tag.name }}"
+          (click)="removeTag(tag)"
+        >×</button>
+      </span>
+    }
+  </div>
+
+  <div class="input-wrap">
+    <input
+      data-testid="tag-selector-input"
+      class="tag-selector__input"
+      type="text"
+      placeholder="Add tags…"
+      [value]="searchText()"
+      (input)="onInput($any($event.target).value)"
+      (keydown)="onKeydown($event)"
+    />
+    @if (showCreateHint) {
+      <span data-testid="tag-selector-create-hint" class="create-hint">Press Enter to create</span>
+    }
+  </div>
+
+  @if (suggestions().length > 0) {
+    <ul data-testid="tag-selector-suggestions" class="suggestions" role="listbox">
+      @for (tag of suggestions(); track tag.id) {
+        <li
+          [attr.data-testid]="'tag-suggestion-' + tag.id"
+          class="suggestion"
+          role="option"
+          (click)="addTag(tag)"
+        >
+          <span
+            [attr.data-testid]="'tag-suggestion-dot-' + tag.id"
+            class="suggestion__dot"
+            [attr.data-color]="tag.color"
+          ></span>
+          {{ tag.name }}
+        </li>
+      }
+    </ul>
+  }
+</div>
