@@ -1,7 +1,7 @@
 ---
 id: TASK-0066
 title: Contact edit form
-status: Draft
+status: Accepted
 phase: C
 depends_on: [TASK-0062]
 traces_to: [L2-032]
