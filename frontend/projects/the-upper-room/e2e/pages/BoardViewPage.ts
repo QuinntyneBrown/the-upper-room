@@ -32,6 +32,10 @@ export class BoardViewPage {
     await this.card(cardTitle).dragTo(this.column(targetColumn));
   }
 
+  showArchivedToggle(): Locator {
+    return this.page.getByTestId('board-show-archived');
+  }
+
   async reload(): Promise<void> {
     await this.page.reload();
   }

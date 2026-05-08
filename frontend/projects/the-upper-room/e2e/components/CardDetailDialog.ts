@@ -43,4 +43,12 @@ export class CardDetailDialog {
   closeButton(): Locator {
     return this.page.getByTestId('card-detail-close');
   }
+
+  archiveButton(): Locator {
+    return this.page.getByTestId('card-detail-archive');
+  }
+
+  deleteButton(): Locator {
+    return this.page.getByTestId('card-detail-delete');
+  }
 }
