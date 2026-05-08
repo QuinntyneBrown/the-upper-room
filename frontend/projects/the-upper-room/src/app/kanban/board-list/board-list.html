@@ -1,0 +1,45 @@
+<div class="toolbar">
+  <h1 class="page-title">Boards</h1>
+  @if (canCreate()) {
+    <button data-testid="boards-new-button" type="button" class="btn-filled" (click)="openWizard()">
+      New board
+    </button>
+  }
+</div>
+
+@if (isEmpty()) {
+  <div data-testid="boards-empty-state">
+    <tar-empty-state
+      icon="view_kanban"
+      heading="No boards yet"
+      body="Create a board to organize your work."
+    >
+      @if (canCreate()) {
+        <button data-testid="boards-new-button" type="button" class="btn-filled" (click)="openWizard()">
+          New board
+        </button>
+      }
+    </tar-empty-state>
+  </div>
+} @else {
+  <div data-testid="boards-grid" class="boards-grid">
+    @for (board of boards(); track board.id) {
+      <div [attr.data-testid]="'board-card-' + board.name" class="board-card">
+        <span class="board-card__name">{{ board.name }}</span>
+        @if (board.description) {
+          <span class="board-card__description">{{ board.description }}</span>
+        }
+        <span class="board-card__meta">
+          {{ board.columnCount }} columns · {{ board.cardCount }} cards
+        </span>
+        <span data-testid="board-card-last-activity" class="board-card__activity">
+          Last activity {{ formatDate(board.lastActivityAt) }}
+        </span>
+      </div>
+    }
+  </div>
+}
+
+@if (showWizard()) {
+  <app-create-board-wizard (submitted)="onCreate($event)" (cancelled)="closeWizard()" />
+}
