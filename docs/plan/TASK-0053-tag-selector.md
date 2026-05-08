@@ -1,7 +1,7 @@
 ---
 id: TASK-0053
 title: Reusable tag selector component
-status: Draft
+status: Accepted
 phase: CI
 depends_on: [TASK-0052]
 traces_to: [L2-040]
