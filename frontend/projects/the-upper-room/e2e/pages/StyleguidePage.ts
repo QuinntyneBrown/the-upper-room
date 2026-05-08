@@ -28,6 +28,10 @@ export class StyleguidePage {
     return this.page.getByTestId(`snackbar-trigger-${kind}`);
   }
 
+  confirmTrigger(kind: 'info' | 'warning' | 'danger-typed'): Locator {
+    return this.page.getByTestId(`confirm-trigger-${kind}`);
+  }
+
   async goto(): Promise<void> {
     await this.page.goto('/styleguide');
   }
