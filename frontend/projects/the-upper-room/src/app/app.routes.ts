@@ -1,4 +1,4 @@
-// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115
+// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016
 import { Routes } from '@angular/router';
 import { Landing } from './landing/landing';
 import { Stub } from './stub/stub';
@@ -8,6 +8,7 @@ import { NotFound } from './error/not-found/not-found';
 import { Forbidden } from './error/forbidden/forbidden';
 import { Throw } from './error/throw-route/throw-route';
 import { Appearance } from './settings/appearance/appearance';
+import { SignIn } from './auth/sign-in/sign-in';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -19,10 +20,12 @@ export const routes: Routes = [
   { path: 'forbidden', component: Forbidden },
   { path: '__throw', component: Throw },
   { path: 'settings/appearance', component: Appearance },
+  { path: 'sign-in', component: SignIn },
   {
     path: '',
     component: AppShell,
     children: [
+      { path: 'dashboard', component: Stub },
       { path: 'dashboard-stub', component: Stub },
       { path: 'contacts', component: Stub },
       { path: 'contacts/:id', component: Stub },

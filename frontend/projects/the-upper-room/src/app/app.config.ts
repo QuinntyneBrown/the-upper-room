@@ -1,4 +1,4 @@
-// traces_to: L2-084, L2-069, L2-115
+// traces_to: L2-084, L2-069, L2-115, L2-016
 import { ApplicationConfig, ErrorHandler, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -11,6 +11,8 @@ import { errorInterceptor } from './interceptors/error.interceptor';
 import { GlobalErrorHandler } from './error/global-error-handler';
 import { ACCESS_TOKEN_SOURCE } from './services/access-token.contract';
 import { TestTokenSource } from './services/test-token.source';
+import { AUTH_PROVIDER } from './auth/auth-provider.contract';
+import { MockAuthProvider } from './auth/mock-auth-provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,5 +28,6 @@ export const appConfig: ApplicationConfig = {
     ),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: ACCESS_TOKEN_SOURCE, useExisting: TestTokenSource },
+    { provide: AUTH_PROVIDER, useExisting: MockAuthProvider },
   ],
 };

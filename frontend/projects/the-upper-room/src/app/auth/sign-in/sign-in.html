@@ -1,0 +1,68 @@
+<section class="page">
+  <form
+    data-testid="sign-in-card"
+    class="card"
+    (submit)="onSubmit($event)"
+    novalidate
+    aria-labelledby="sign-in-title"
+  >
+    <h1 id="sign-in-title" class="card__title">Sign in</h1>
+
+    <label class="field">
+      <span class="field__label">Email</span>
+      <input
+        #emailRef
+        data-testid="sign-in-email"
+        class="field__input"
+        type="email"
+        autocomplete="email"
+        [value]="email()"
+        (input)="email.set($any($event.target).value)"
+      />
+      @if (emailError(); as msg) {
+        <span data-testid="sign-in-error-email" class="field__error">{{ msg }}</span>
+      }
+    </label>
+
+    <label class="field">
+      <span class="field__label">Password</span>
+      <span class="field__row">
+        <input
+          data-testid="sign-in-password"
+          class="field__input"
+          [attr.type]="showPassword() ? 'text' : 'password'"
+          autocomplete="current-password"
+          [value]="password()"
+          (input)="password.set($any($event.target).value)"
+        />
+        <button
+          data-testid="sign-in-toggle-visibility"
+          class="field__toggle"
+          type="button"
+          [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+          (click)="toggleVisibility()"
+        >
+          {{ showPassword() ? 'Hide' : 'Show' }}
+        </button>
+      </span>
+    </label>
+
+    @if (formError(); as msg) {
+      <p data-testid="sign-in-error-form" class="form-error" role="alert">{{ msg }}</p>
+    }
+
+    <button
+      data-testid="sign-in-submit"
+      class="card__submit"
+      type="submit"
+      [disabled]="submitting()"
+    >
+      Sign in
+    </button>
+
+    <div class="card__links">
+      <a data-testid="sign-in-forgot" routerLink="/forgot-password">Forgot password?</a>
+      <a data-testid="sign-in-signup" routerLink="/sign-up">Create account</a>
+    </div>
+  </form>
+</section>
