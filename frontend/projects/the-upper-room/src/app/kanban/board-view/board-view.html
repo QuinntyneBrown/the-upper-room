@@ -22,7 +22,7 @@
   </header>
 
   @if (swimlaneMode() === 'None') {
-    <div data-testid="board-view-columns" class="columns">
+    <div #columnsEl data-testid="board-view-columns" class="columns">
       @for (column of b.columns; track column.id) {
         <section
           [attr.data-testid]="'board-column-' + column.name"
@@ -49,6 +49,8 @@
                 class="card"
                 draggable="true"
                 (dragstart)="onDragStart($event, card)"
+                (pointermove)="onCardPointerMove($event, card)"
+                (pointerdown)="onCardPointerDown($event, card)"
                 (click)="openCard(card)"
               >
                 <span class="card__title">{{ card.title }}</span>
@@ -75,6 +77,19 @@
         </section>
       }
     </div>
+    @if (b.columns.length > 1) {
+      <div data-testid="board-column-indicators" class="column-indicators" role="tablist">
+        @for (column of b.columns; track column.id; let i = $index) {
+          <span
+            [attr.data-testid]="'board-column-dot-' + i"
+            class="column-dot"
+            [class.column-dot--active]="activeColumnIndex() === i"
+            [attr.aria-current]="activeColumnIndex() === i ? 'true' : null"
+            role="tab"
+          ></span>
+        }
+      </div>
+    }
   } @else {
     <div class="swimlanes">
       @for (lane of swimlanes(); track lane) {
@@ -124,6 +139,27 @@
           </div>
         </div>
       }
+    </div>
+  }
+
+  @if (moveSheetCard(); as mc) {
+    <div class="move-sheet-backdrop" (click)="closeMoveSheet()"></div>
+    <div data-testid="board-move-sheet" class="move-sheet" role="dialog" aria-modal="true">
+      <h2 class="move-sheet__title">Move to...</h2>
+      <ul class="move-sheet__options">
+        @for (col of otherColumns(mc); track col.id) {
+          <li>
+            <button
+              [attr.data-testid]="'board-move-sheet-option-' + col.name"
+              type="button"
+              class="move-sheet__option"
+              (click)="moveCardFromSheet(mc, col)"
+            >
+              {{ col.name }}
+            </button>
+          </li>
+        }
+      </ul>
     </div>
   }
 

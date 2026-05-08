@@ -1,5 +1,5 @@
 // traces_to: L2-045
-import { Component, computed, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { SnackbarService } from 'components';
@@ -45,14 +45,22 @@ export interface BoardDetail {
   templateUrl: './board-view.html',
   styleUrl: './board-view.scss',
 })
-export class BoardView {
+export class BoardView implements AfterViewInit, OnDestroy {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
   private readonly snackbar = inject(SnackbarService);
 
+  @ViewChild('columnsEl') readonly columnsEl?: ElementRef<HTMLElement>;
+
   protected readonly board = signal<BoardDetail | null>(null);
   protected readonly activeTagName = signal<string | null>(null);
   protected readonly selectedCardId = signal<string | null>(null);
+  protected readonly activeColumnIndex = signal(0);
+  protected readonly moveSheetCard = signal<BoardCard | null>(null);
+
+  private readonly scrollListener = () => this.onColumnsScroll();
+  private touchStartX = 0;
+  private touchStartY = 0;
 
   protected readonly selectedCard = computed(() => {
     const id = this.selectedCardId();
@@ -97,6 +105,21 @@ export class BoardView {
     if (id) {
       this.http.get<BoardDetail>(`/api/v1/boards/${id}`).subscribe((b) => this.board.set(b));
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.columnsEl?.nativeElement.addEventListener('scroll', this.scrollListener, { passive: true });
+  }
+
+  ngOnDestroy(): void {
+    this.columnsEl?.nativeElement.removeEventListener('scroll', this.scrollListener);
+  }
+
+  private onColumnsScroll(): void {
+    const el = this.columnsEl?.nativeElement;
+    if (!el || el.clientWidth === 0) return;
+    const index = Math.round(el.scrollLeft / el.clientWidth);
+    this.activeColumnIndex.set(index);
   }
 
   protected toggleTag(name: string): void {
@@ -180,6 +203,57 @@ export class BoardView {
 
   protected isOverLimit(column: BoardColumn): boolean {
     return column.wipLimit !== undefined && this.cardCount(column.id) >= column.wipLimit;
+  }
+
+  protected onCardTouchStart(event: TouchEvent, card: BoardCard): void {
+    this.touchStartX = event.touches[0].clientX;
+    this.touchStartY = event.touches[0].clientY;
+  }
+
+  protected onCardTouchMove(event: TouchEvent, card: BoardCard): void {
+    const dx = Math.abs(event.touches[0].clientX - this.touchStartX);
+    const dy = Math.abs(event.touches[0].clientY - this.touchStartY);
+    if (dx > 10 || dy > 10) {
+      event.preventDefault();
+      this.moveSheetCard.set(card);
+    }
+  }
+
+  protected onCardPointerDown(event: PointerEvent, card: BoardCard): void {
+    if (event.pointerType === 'touch') {
+      this.touchStartX = event.clientX;
+      this.touchStartY = event.clientY;
+    }
+  }
+
+  protected onCardPointerMove(event: PointerEvent, card: BoardCard): void {
+    if (event.pointerType !== 'touch' || !event.buttons) return;
+    const dx = Math.abs(event.clientX - this.touchStartX);
+    const dy = Math.abs(event.clientY - this.touchStartY);
+    if (dx > 12 || dy > 12) {
+      event.preventDefault();
+      this.moveSheetCard.set(card);
+    }
+  }
+
+  protected moveCardFromSheet(card: BoardCard, targetColumn: BoardColumn): void {
+    this.moveSheetCard.set(null);
+    const current = this.board();
+    if (!current || card.columnId === targetColumn.id) return;
+    const sourceColumnId = card.columnId;
+    this.board.set({
+      ...current,
+      cards: current.cards.map((c) => (c.id === card.id ? { ...c, columnId: targetColumn.id } : c)),
+    });
+    this.http.post(`/api/v1/cards/${card.id}/move`, { targetColumnId: targetColumn.id, sourceColumnId }).subscribe();
+  }
+
+  protected closeMoveSheet(): void {
+    this.moveSheetCard.set(null);
+  }
+
+  protected otherColumns(card: BoardCard): BoardColumn[] {
+    return (this.board()?.columns ?? []).filter((c) => c.id !== card.columnId);
   }
 
   protected openCard(card: BoardCard): void {
