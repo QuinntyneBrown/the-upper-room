@@ -27,6 +27,7 @@ export const routes: Routes = [
   { path: 'sign-up', component: SignUp },
   { path: 'invitations/accept', component: SignUp },
   { path: 'verify-email', component: VerifyEmail },
+  { path: 'verify-email/confirm', component: VerifyEmail },
   { path: 'auth/callback', component: AuthCallback },
   {
     path: '',

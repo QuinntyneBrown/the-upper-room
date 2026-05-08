@@ -1,7 +1,7 @@
 ---
 id: TASK-0023
 title: Email verification flow
-status: Accepted
+status: Completed
 phase: A
 depends_on: [TASK-0022]
 traces_to: [L2-018]
