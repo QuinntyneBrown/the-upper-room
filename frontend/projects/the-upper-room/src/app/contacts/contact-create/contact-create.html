@@ -95,6 +95,11 @@
     </div>
 
     <section class="methods-section">
+      <h2 class="methods-section__heading">Tags</h2>
+      <tar-tag-selector [tags]="tags()" (tagsChange)="tags.set($event)" />
+    </section>
+
+    <section class="methods-section">
       <h2 class="methods-section__heading">Phones</h2>
       @for (phone of phones(); track $index) {
         <div [attr.data-testid]="'contact-phone-row-' + $index" class="method-row">

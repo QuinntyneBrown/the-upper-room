@@ -1,7 +1,7 @@
 ---
 id: TASK-0064
 title: Contact tag assignment
-status: Accepted
+status: Completed
 phase: C
 depends_on: [TASK-0062, TASK-0053]
 traces_to: [L2-029]

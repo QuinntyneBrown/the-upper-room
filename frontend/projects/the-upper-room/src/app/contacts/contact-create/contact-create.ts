@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { TarTagSelector } from '../../tags/tag-selector/tar-tag-selector';
+import type { Tag } from '../../tags/tag-list/tag-list';
 
 export interface PhoneRow { value: string; label: string; primary: boolean; error: string | null }
 export interface EmailRow { value: string; label: string; primary: boolean }
@@ -13,7 +15,7 @@ const E164_RE = /^\+?[1-9]\d{1,14}$/;
 
 @Component({
   selector: 'app-contact-create',
-  imports: [],
+  imports: [TarTagSelector],
   templateUrl: './contact-create.html',
   styleUrl: './contact-create.scss',
 })
@@ -34,6 +36,7 @@ export class ContactCreate {
   protected readonly phones = signal<PhoneRow[]>([]);
   protected readonly emails = signal<EmailRow[]>([]);
   protected readonly addresses = signal<AddressRow[]>([]);
+  protected readonly tags = signal<Tag[]>([]);
 
   protected readonly firstNameError = signal<string | null>(null);
   protected readonly formBanner = signal<string | null>(null);
@@ -49,7 +52,8 @@ export class ContactCreate {
       this.displayName().length > 0 ||
       this.phones().length > 0 ||
       this.emails().length > 0 ||
-      this.addresses().length > 0,
+      this.addresses().length > 0 ||
+      this.tags().length > 0,
   );
 
   protected addPhone(): void {
@@ -126,6 +130,7 @@ export class ContactCreate {
         phones: this.phones().map((p) => ({ value: p.value, label: p.label, primary: p.primary })),
         emails: this.emails().map((e) => ({ value: e.value, label: e.label, primary: e.primary })),
         addresses: this.addresses(),
+        tags: this.tags().map((t) => t.id),
       })
       .subscribe({
         next: (contact) => {
