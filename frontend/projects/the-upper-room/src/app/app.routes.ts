@@ -16,6 +16,7 @@ import { ForgotPassword } from './auth/forgot-password/forgot-password';
 import { ResetPassword } from './auth/reset-password/reset-password';
 import { RbacDemo } from './rbac/rbac-demo/rbac-demo';
 import { authGuard, roleGuard } from './rbac/guards';
+import { UserList } from './users/user-list/user-list';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -50,7 +51,7 @@ export const routes: Routes = [
       { path: 'partners/:id', component: Stub },
       {
         path: 'admin/users',
-        component: Stub,
+        component: UserList,
         canActivate: [roleGuard],
         data: { roles: ['SystemAdmin'] },
       },

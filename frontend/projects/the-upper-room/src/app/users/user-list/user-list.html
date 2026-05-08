@@ -1,0 +1,78 @@
+<section class="page">
+  <header class="page__header">
+    <h1>Users</h1>
+    <button data-testid="user-invite" type="button" class="btn">Invite user</button>
+  </header>
+
+  <div class="toolbar">
+    <input
+      data-testid="user-search"
+      class="input"
+      type="search"
+      placeholder="Search users"
+      [value]="searchInput()"
+      (input)="onSearch($any($event.target).value)"
+    />
+    <div class="chips">
+      @for (r of roles; track r) {
+        <button
+          [attr.data-testid]="'user-filter-' + r"
+          type="button"
+          class="chip"
+          [class.chip--active]="roleFilter() === r"
+          (click)="onRole(r)"
+        >
+          {{ r }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (isEmpty()) {
+    <tar-empty-state
+      data-testid="user-empty"
+      icon="contacts"
+      heading="No users found"
+      body="Try adjusting your filters or invite a new user."
+    />
+  } @else {
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>City</th>
+          <th>Status</th>
+          <th>Last sign-in</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (u of users(); track u.id) {
+          <tr [attr.data-testid]="'user-row-' + u.email">
+            <td>{{ u.name }}</td>
+            <td>{{ u.email }}</td>
+            <td><span class="role">{{ u.role }}</span></td>
+            <td>{{ u.city }}</td>
+            <td>{{ u.status }}</td>
+            <td>{{ u.lastSignIn }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  <footer data-testid="user-paginator" class="paginator">
+    Page size:
+    <select
+      data-testid="user-page-size"
+      [value]="pageSize()"
+      (change)="onPageSize($any($event.target).value)"
+    >
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+    <span>{{ total() }} total</span>
+  </footer>
+</section>
