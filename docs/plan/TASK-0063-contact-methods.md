@@ -1,7 +1,7 @@
 ---
 id: TASK-0063
 title: Contact phones / emails / addresses sub-forms
-status: Draft
+status: Accepted
 phase: C
 depends_on: [TASK-0062]
 traces_to: [L2-029, L2-032]
