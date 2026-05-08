@@ -1,7 +1,7 @@
 ---
 id: TASK-0067
 title: Contact archive / restore
-status: Draft
+status: Accepted
 phase: C
 depends_on: [TASK-0066]
 traces_to: [L2-033]
