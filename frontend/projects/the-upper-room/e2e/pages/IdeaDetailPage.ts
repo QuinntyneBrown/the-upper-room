@@ -14,4 +14,7 @@ export class IdeaDetailPage {
   body(): Locator { return this.page.getByTestId('idea-detail-body'); }
   voteButton(): Locator { return this.page.getByTestId('idea-detail-vote'); }
   editButton(): Locator { return this.page.getByTestId('idea-detail-edit'); }
+  submitButton(): Locator { return this.page.getByTestId('idea-submit-button'); }
+  statusSelect(): Locator { return this.page.getByTestId('idea-status-select'); }
+  statusChip(): Locator { return this.page.getByTestId('idea-status-chip'); }
 }
