@@ -1,5 +1,6 @@
-// traces_to: L2-001..L2-006
+// traces_to: L2-001..L2-008
 @use '../../components/src/lib/tokens/tokens';
+@use '../../components/src/lib/breakpoints/grid';
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 
@@ -9,4 +10,10 @@ body {
   background: var(--md-sys-color-background);
   color: var(--md-sys-color-on-background);
   font: var(--md-sys-typescale-body-medium);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }

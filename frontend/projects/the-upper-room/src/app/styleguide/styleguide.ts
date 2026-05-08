@@ -1,4 +1,4 @@
-// traces_to: L2-001..L2-007
+// traces_to: L2-001..L2-008
 import { Component } from '@angular/core';
 import { TarIcon } from '../../../../components/src/lib/icon/icon';
 
@@ -11,6 +11,12 @@ import { TarIcon } from '../../../../components/src/lib/icon/icon';
     <span data-testid="seed-chip" class="seed-chip">Chip</span>
     <tar-icon name="contacts" />
     <tar-icon name="partners" size="lg" />
+
+    <div data-testid="grid-demo" class="u-grid">
+      @for (i of cards; track i) {
+        <div class="seed-card">{{ i }}</div>
+      }
+    </div>
   `,
   styles: [
     `
@@ -49,4 +55,6 @@ import { TarIcon } from '../../../../components/src/lib/icon/icon';
     `,
   ],
 })
-export class Styleguide {}
+export class Styleguide {
+  protected readonly cards = Array.from({ length: 12 }, (_, i) => i + 1);
+}

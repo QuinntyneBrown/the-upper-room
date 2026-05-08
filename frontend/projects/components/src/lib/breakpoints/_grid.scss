@@ -1,0 +1,24 @@
+// traces_to: L2-008, L2-014
+@use 'mixins' as bp;
+
+.u-grid {
+  display: grid;
+  gap: var(--md-sys-space-4);
+  grid-template-columns: 1fr;
+
+  @include bp.sm {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include bp.md {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include bp.lg {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @include bp.xl {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
