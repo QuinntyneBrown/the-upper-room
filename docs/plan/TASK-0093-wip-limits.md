@@ -1,7 +1,7 @@
 ---
 id: TASK-0093
 title: WIP limits enforced visually + on backend
-status: Accepted
+status: Completed
 phase: K
 depends_on: [TASK-0092]
 traces_to: [L2-043, L2-045]

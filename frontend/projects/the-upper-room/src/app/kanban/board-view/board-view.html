@@ -25,13 +25,21 @@
     @for (column of b.columns; track column.id) {
       <section
         [attr.data-testid]="'board-column-' + column.name"
+        [attr.data-over-limit]="isOverLimit(column) ? 'true' : null"
         class="column"
+        [class.column--over-limit]="isOverLimit(column)"
         (dragover)="onDragOver($event)"
         (drop)="onDrop($event, column)"
       >
         <header class="column__header">
           <span class="column__name">{{ column.name }}</span>
-          <span class="column__count">{{ cardsFor(column.id).length }}</span>
+          <span class="column__count">
+            @if (column.wipLimit !== undefined) {
+              {{ cardCount(column.id) }} / {{ column.wipLimit }}
+            } @else {
+              {{ cardCount(column.id) }}
+            }
+          </span>
         </header>
         <ul class="column__cards">
           @for (card of cardsFor(column.id); track card.id) {

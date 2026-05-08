@@ -65,6 +65,11 @@
   background: var(--md-sys-color-surface-container-low);
   border-radius: var(--md-sys-shape-corner-medium);
   padding: var(--md-sys-space-3);
+
+  &--over-limit {
+    background: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+  }
 }
 
 .column__header {

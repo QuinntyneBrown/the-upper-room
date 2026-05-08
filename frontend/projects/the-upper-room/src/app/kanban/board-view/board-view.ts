@@ -2,6 +2,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { SnackbarService } from 'components';
 
 export interface BoardCardTag {
   readonly id: string;
@@ -22,6 +23,7 @@ export interface BoardColumn {
   readonly id: string;
   readonly name: string;
   readonly color: string;
+  readonly wipLimit?: number;
 }
 
 export interface BoardDetail {
@@ -40,6 +42,7 @@ export interface BoardDetail {
 export class BoardView {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
+  private readonly snackbar = inject(SnackbarService);
 
   protected readonly board = signal<BoardDetail | null>(null);
   protected readonly activeTagName = signal<string | null>(null);
@@ -120,6 +123,10 @@ export class BoardView {
     if (!current) return;
     const card = current.cards.find((c) => c.id === cardId);
     if (!card || card.columnId === column.id) return;
+    if (this.isOverLimit(column)) {
+      this.snackbar.show(`WIP limit reached for ${column.name}`, 'error');
+      return;
+    }
     const sourceColumnId = card.columnId;
 
     this.board.set({
@@ -133,5 +140,13 @@ export class BoardView {
         sourceColumnId,
       })
       .subscribe();
+  }
+
+  protected cardCount(columnId: string): number {
+    return (this.board()?.cards ?? []).filter((c) => c.columnId === columnId).length;
+  }
+
+  protected isOverLimit(column: BoardColumn): boolean {
+    return column.wipLimit !== undefined && this.cardCount(column.id) >= column.wipLimit;
   }
 }
