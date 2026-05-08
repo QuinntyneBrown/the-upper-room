@@ -1,0 +1,58 @@
+@if (board(); as b) {
+  <header class="page-header">
+    <h1 class="page-header__title">Configure: {{ b.name }}</h1>
+  </header>
+
+  <ul class="column-list">
+    @for (column of columns(); track column.id) {
+      <li
+        [attr.data-testid]="'config-column-row-' + column.name"
+        class="column-row"
+        draggable="true"
+        (dragstart)="onDragStart($event, column)"
+        (dragover)="onDragOver($event)"
+        (drop)="onDrop($event, column)"
+      >
+        <span class="column-row__handle" aria-hidden="true">::</span>
+        <span class="column-row__name">{{ column.name }}</span>
+        <span class="column-row__count">
+          {{ cardCountByColumn().get(column.id) ?? 0 }} cards
+        </span>
+        <button
+          [attr.data-testid]="'config-column-delete-' + column.name"
+          type="button"
+          class="btn-text"
+          (click)="onDeleteColumn(column)"
+        >
+          Delete
+        </button>
+      </li>
+    }
+  </ul>
+
+  @if (deleteTarget(); as target) {
+    <div data-testid="config-move-cards-dialog" class="dialog-overlay" role="dialog" aria-modal="true">
+      <div class="dialog">
+        <h2 class="dialog__title">
+          Move {{ cardsInDeleteTarget() }} cards from "{{ target.name }}" to...
+        </h2>
+        <select
+          data-testid="config-move-cards-target"
+          class="dialog__input"
+          [value]="moveCardsTo()"
+          (change)="moveCardsTo.set($any($event.target).value)"
+        >
+          @for (col of otherColumns(); track col.id) {
+            <option [value]="col.id">{{ col.name }}</option>
+          }
+        </select>
+        <div class="dialog__actions">
+          <button type="button" class="btn-text" (click)="cancelMove()">Cancel</button>
+          <button data-testid="config-move-cards-confirm" type="button" class="btn-filled" (click)="confirmMove()">
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}

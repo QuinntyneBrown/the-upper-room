@@ -26,6 +26,7 @@ import { ContactDetail } from './contacts/contact-detail/contact-detail';
 import { ContactEdit } from './contacts/contact-edit/contact-edit';
 import { BoardList } from './kanban/board-list/board-list';
 import { BoardView } from './kanban/board-view/board-view';
+import { BoardConfigure } from './kanban/board-configure/board-configure';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -66,6 +67,12 @@ export const routes: Routes = [
       { path: 'partners/:id', component: Stub },
       { path: 'boards', component: BoardList },
       { path: 'boards/:id', component: BoardView },
+      {
+        path: 'boards/:id/configure',
+        component: BoardConfigure,
+        canActivate: [permissionGuard],
+        data: { permissions: ['KanbanBoard:Configure'] },
+      },
       { path: 'profile', component: MyProfile },
       {
         path: 'admin/users',
