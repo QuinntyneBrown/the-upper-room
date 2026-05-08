@@ -1,0 +1,146 @@
+// traces_to: L2-009..L2-014, L2-026
+@use '../../../../../components/src/lib/breakpoints/mixins' as bp;
+
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--md-sys-space-2);
+  left: var(--md-sys-space-2);
+  padding: var(--md-sys-space-2) var(--md-sys-space-4);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-radius: var(--md-sys-shape-corner-small);
+  transform: translateY(-200%);
+  z-index: 100;
+
+  &:focus {
+    transform: translateY(0);
+  }
+}
+
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--md-sys-space-2);
+  height: 56px;
+  padding: 0 var(--md-sys-space-4);
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  box-shadow: none;
+  transition: box-shadow var(--md-sys-motion-duration-medium2)
+    var(--md-sys-motion-easing-standard);
+
+  &.is-elevated {
+    box-shadow: var(--md-sys-elevation-level-2);
+  }
+
+  @include bp.md {
+    height: 64px;
+  }
+}
+
+.icon-btn {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--md-sys-shape-corner-full);
+  cursor: pointer;
+}
+
+.drawer-toggle {
+  @include bp.lg {
+    display: none;
+  }
+}
+
+.app-name {
+  font: var(--md-sys-typescale-title-large);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100dvh;
+  background: var(--md-sys-color-surface-container);
+  transform: translateX(-100%);
+  z-index: 20;
+  transition: transform var(--md-sys-motion-duration-medium2)
+    var(--md-sys-motion-easing-standard);
+
+  &.is-open {
+    transform: translateX(0);
+  }
+
+  @include bp.lg {
+    transform: translateX(0);
+    position: sticky;
+    top: 64px;
+    height: calc(100dvh - 64px);
+  }
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
+  z-index: 15;
+
+  @include bp.lg {
+    display: none;
+  }
+}
+
+.breadcrumbs {
+  display: none;
+  gap: var(--md-sys-space-2);
+  padding: var(--md-sys-space-3) var(--md-sys-space-4);
+  font: var(--md-sys-typescale-body-small);
+
+  a {
+    color: var(--md-sys-color-on-surface-variant);
+    text-decoration: none;
+
+    &[aria-current='page'] {
+      color: var(--md-sys-color-on-surface);
+      font-weight: 500;
+    }
+  }
+
+  @include bp.md {
+    display: flex;
+  }
+}
+
+main {
+  outline: none;
+  padding: var(--md-sys-space-4);
+
+  @include bp.md {
+    padding: var(--md-sys-space-6);
+  }
+}
+
+.footer {
+  padding: var(--md-sys-space-6) var(--md-sys-space-4);
+  text-align: center;
+  color: var(--md-sys-color-on-surface-variant);
+  font: var(--md-sys-typescale-body-small);
+}

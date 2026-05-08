@@ -11,10 +11,10 @@ describe('App', () => {
     }).compileComponents();
   });
 
-  it('renders the app name as h1', async () => {
+  it('hosts a router-outlet', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
-    const h1 = (fixture.nativeElement as HTMLElement).querySelector('h1');
-    expect(h1?.textContent?.trim()).toBe('The Upper Room');
+    const outlet = (fixture.nativeElement as HTMLElement).querySelector('router-outlet');
+    expect(outlet).not.toBeNull();
   });
 });

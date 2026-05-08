@@ -1,0 +1,55 @@
+@let isOpen = drawerOpen();
+@let didScroll = scrolled();
+
+<a data-testid="skip-link" class="skip-link" href="#main" (click)="skipToMain($event)"
+  >Skip to main content</a
+>
+
+<header data-testid="top-bar" class="top-bar" [class.is-elevated]="didScroll">
+  <button
+    data-testid="drawer-toggle"
+    class="icon-btn drawer-toggle"
+    type="button"
+    aria-label="Open navigation"
+    (click)="toggleDrawer()"
+  >
+    <tar-icon name="menu" />
+  </button>
+  <span class="app-name">The Upper Room</span>
+  <span class="spacer"></span>
+  <button
+    data-testid="avatar-trigger"
+    class="icon-btn"
+    type="button"
+    aria-label="Account menu"
+  >
+    <tar-icon name="profile" />
+  </button>
+</header>
+
+<nav
+  data-testid="drawer"
+  class="drawer"
+  [attr.aria-hidden]="!isOpen"
+  [class.is-open]="isOpen"
+  (keydown.escape)="closeDrawer()"
+></nav>
+
+@if (isOpen) {
+  <div data-testid="drawer-scrim" class="scrim" (click)="closeDrawer()"></div>
+}
+
+<nav data-testid="breadcrumbs" class="breadcrumbs" aria-label="Breadcrumb">
+  @for (c of crumbs(); track c.url; let last = $last) {
+    <a [attr.aria-current]="last ? 'page' : null" [href]="c.url">{{ c.label }}</a>
+    @if (!last) {
+      <span aria-hidden="true">/</span>
+    }
+  }
+</nav>
+
+<main id="main" tabindex="-1">
+  <router-outlet />
+</main>
+
+<footer data-testid="footer" class="footer">© The Upper Room</footer>

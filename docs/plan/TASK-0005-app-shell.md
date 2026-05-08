@@ -1,7 +1,7 @@
 ---
 id: TASK-0005
 title: Application shell — top bar, drawer, breadcrumbs, footer
-status: Accepted
+status: Completed
 phase: F
 depends_on: [TASK-0002, TASK-0003, TASK-0004]
 traces_to: [L2-009, L2-010, L2-011, L2-012, L2-013, L2-014, L2-026 (skip-to-content)]
