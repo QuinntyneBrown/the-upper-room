@@ -1,6 +1,7 @@
 // traces_to: L2-064, L2-063
 import { Component, OnInit, inject, signal, DOCUMENT } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 export interface PrefDto {
   readonly code: string;
@@ -31,40 +32,44 @@ export class NotificationPreferences implements OnInit {
     this.checkPushStatus();
   }
 
-  private async checkPushStatus(): Promise<void> {
+  private checkPushStatus(): void {
     const sw = this.doc.defaultView?.navigator?.serviceWorker;
     if (!sw) return;
-    const reg = await sw.ready;
-    const sub = await reg.pushManager.getSubscription();
-    this.pushSubscribed.set(!!sub);
+    sw.ready
+      .then((reg) => reg.pushManager.getSubscription())
+      .then((sub) => this.pushSubscribed.set(!!sub))
+      .catch(() => {});
   }
 
-  protected async enablePush(): Promise<void> {
-    const win = this.doc.defaultView;
-    if (!win) return;
-    const sw = win.navigator?.serviceWorker;
-    if (!sw) return;
-    const reg = await sw.ready;
-    const keyRes = await win.fetch('/api/v1/push/vapid-public-key');
-    const keyText = await keyRes.text();
-    const sub = await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: keyText,
-    });
-    this.http.post('/api/v1/push/subscribe', sub.toJSON()).subscribe(() => {
-      this.pushSubscribed.set(true);
-    });
-  }
-
-  protected async disablePush(): Promise<void> {
+  protected enablePush(): void {
     const sw = this.doc.defaultView?.navigator?.serviceWorker;
     if (!sw) return;
-    const reg = await sw.ready;
-    const sub = await reg.pushManager.getSubscription();
-    if (sub) await sub.unsubscribe();
-    this.http.delete('/api/v1/push/subscribe').subscribe(() => {
-      this.pushSubscribed.set(false);
-    });
+    firstValueFrom(this.http.get('/api/v1/push/vapid-public-key', { responseType: 'text' }))
+      .then((key) =>
+        sw.ready.then((reg) =>
+          reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key }),
+        ),
+      )
+      .then((sub) => {
+        this.http.post('/api/v1/push/subscribe', sub.toJSON()).subscribe(() => {
+          this.pushSubscribed.set(true);
+        });
+      })
+      .catch(() => {});
+  }
+
+  protected disablePush(): void {
+    const sw = this.doc.defaultView?.navigator?.serviceWorker;
+    if (!sw) return;
+    sw.ready
+      .then((reg) => reg.pushManager.getSubscription())
+      .then((sub) => (sub ? sub.unsubscribe() : Promise.resolve(true)))
+      .then(() => {
+        this.http.delete('/api/v1/push/subscribe').subscribe(() => {
+          this.pushSubscribed.set(false);
+        });
+      })
+      .catch(() => {});
   }
 
   protected onToggle(code: string, field: 'inApp' | 'email' | 'push'): void {
