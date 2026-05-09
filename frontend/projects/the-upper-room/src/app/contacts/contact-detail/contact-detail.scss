@@ -34,47 +34,6 @@
   gap: var(--md-sys-space-2);
 }
 
-.btn-outlined {
-  border: 1px solid var(--md-sys-color-outline);
-  border-radius: var(--md-sys-shape-corner-full);
-  padding: var(--md-sys-space-2) var(--md-sys-space-4);
-  background: transparent;
-  color: var(--md-sys-color-primary);
-  font: var(--md-sys-typescale-label-large);
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.btn-danger {
-  border: 1px solid var(--md-sys-color-error);
-  border-radius: var(--md-sys-shape-corner-full);
-  padding: var(--md-sys-space-2) var(--md-sys-space-4);
-  background: transparent;
-  color: var(--md-sys-color-error);
-  font: var(--md-sys-typescale-label-large);
-  cursor: pointer;
-}
-
-.tab-bar {
-  display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
-}
-
-.tab {
-  padding: var(--md-sys-space-2) var(--md-sys-space-4);
-  border: none;
-  border-bottom: 2px solid transparent;
-  background: none;
-  cursor: pointer;
-  font: var(--md-sys-typescale-label-large);
-  color: var(--md-sys-color-on-surface-variant);
-
-  &--active {
-    border-bottom-color: var(--md-sys-color-primary);
-    color: var(--md-sys-color-primary);
-  }
-}
 
 .overview-panel {
   display: grid;

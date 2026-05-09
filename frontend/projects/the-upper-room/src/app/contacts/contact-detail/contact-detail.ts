@@ -1,20 +1,21 @@
 // traces_to: L2-031, L2-033
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { TarAvatar } from '../../../../../components/src/lib/avatar/tar-avatar';
 import { TarShareButton } from '../../../../../components/src/lib/share-button/share-button';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
 import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
 import { TarNotes } from '../../../../../components/src/lib/notes/tar-notes';
+import { TarButton, TarTabs, TarTab } from 'components';
 import type { Contact } from '../contact-list/contact-list';
 
 type Tab = 'overview' | 'notes' | 'activity';
 
 @Component({
   selector: 'app-contact-detail',
-  imports: [TarAvatar, TarShareButton, TarNotes],
+  imports: [TarAvatar, TarShareButton, TarNotes, TarButton, TarTabs, RouterLink],
   templateUrl: './contact-detail.html',
   styleUrl: './contact-detail.scss',
 })
@@ -30,6 +31,18 @@ export class ContactDetail implements OnInit {
 
   protected readonly contact = signal<Contact | null>(null);
   protected readonly activeTab = signal<Tab>('overview');
+
+  protected readonly TABS: readonly TarTab[] = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'notes', label: 'Notes' },
+    { id: 'activity', label: 'Activity' },
+  ];
+
+  protected readonly tabIndex = computed(() => this.TABS.findIndex((t) => t.id === this.activeTab()));
+
+  protected onTabChange(index: number): void {
+    this.activeTab.set(this.TABS[index].id as Tab);
+  }
 
   ngOnInit(): void {
     this.contactId = this.route.snapshot.paramMap.get('id')!;

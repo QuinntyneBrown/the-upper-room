@@ -13,6 +13,6 @@ export class ContactDetailPage {
   emails(): Locator { return this.page.getByTestId('contact-detail-emails'); }
   tags(): Locator { return this.page.getByTestId('contact-detail-tags'); }
   linkedPartners(): Locator { return this.page.getByTestId('contact-detail-partners'); }
-  tab(name: string): Locator { return this.page.getByTestId(`contact-tab-${name.toLowerCase()}`); }
+  tab(name: string): Locator { return this.page.getByRole('tab', { name: name.charAt(0).toUpperCase() + name.slice(1) }); }
   overviewPanel(): Locator { return this.page.getByTestId('contact-panel-overview'); }
 }
