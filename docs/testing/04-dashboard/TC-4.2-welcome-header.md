@@ -1,7 +1,7 @@
 ---
 id: TASK-TC-4.2
 title: 'Run TC-4.2 - Welcome header'
-status: Idle
+status: Completed
 test_id: TC-4.2
 source: ../../test-plan/04-dashboard.md
 ---
@@ -19,7 +19,24 @@ Run `TC-4.2` from `docs/test-plan/04-dashboard.md` and record the result.
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.
+
+## Result
+
+| Field | Value |
+|---|---|
+| Result | **PASS** |
+| Browser | Chromium (Playwright) |
+| Viewport | 1280×720 |
+| Build SHA | 969d71f |
+| Tester | Claude (automated) |
+| Run at | 2026-05-09T17:20:00Z |
+
+### Evidence
+
+- `<h1 data-testid="dashboard-welcome">` text is "Welcome, Admin" ✅
+- firstName "Admin" matches API DTO firstName field ✅
+- Computed font-family: "Roboto, system-ui, sans-serif" ✅
 
