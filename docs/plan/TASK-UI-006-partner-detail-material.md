@@ -1,6 +1,6 @@
 # TASK-UI-006 — Migrate `partner-detail.html` to Angular Material / Component Library
 
-**Status:** Draft  
+**Status:** Accepted  
 **Priority:** P2  
 **Effort:** Medium (1–2 days)  
 **File:** `frontend/projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html`
