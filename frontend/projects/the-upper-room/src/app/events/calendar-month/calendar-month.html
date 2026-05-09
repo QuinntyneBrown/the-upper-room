@@ -1,44 +1,131 @@
 <div data-testid="calendar-month" class="calendar" (click)="closePopover()">
   <div class="calendar__nav">
-    <button data-testid="calendar-prev-month" type="button" class="calendar__nav-btn" (click)="prevMonth()">
-      <span class="material-symbols-outlined">chevron_left</span>
-    </button>
-    <span data-testid="calendar-month-label" class="calendar__month-label">{{ monthLabel() }}</span>
-    <button data-testid="calendar-next-month" type="button" class="calendar__nav-btn" (click)="nextMonth()">
-      <span class="material-symbols-outlined">chevron_right</span>
-    </button>
-    <button data-testid="calendar-today-button" type="button" class="calendar__today-btn" (click)="goToToday()">Today</button>
+    <div class="calendar__view-tabs">
+      @for (vt of viewTypes; track vt) {
+        <button
+          [attr.data-testid]="'calendar-view-tab-' + vt"
+          type="button"
+          class="calendar__view-tab"
+          [class.calendar__view-tab--active]="viewType() === vt"
+          (click)="setViewType(vt); $event.stopPropagation()"
+        >{{ capitalize(vt) }}</button>
+      }
+    </div>
+
+    <div class="calendar__nav-controls">
+      @if (viewType() !== 'agenda') {
+        <button data-testid="calendar-prev-month" type="button" class="calendar__nav-btn" (click)="prev()">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+      }
+      <span data-testid="calendar-month-label" class="calendar__month-label">{{ periodLabel() }}</span>
+      @if (viewType() !== 'agenda') {
+        <button data-testid="calendar-next-month" type="button" class="calendar__nav-btn" (click)="next()">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      }
+      <button data-testid="calendar-today-button" type="button" class="calendar__today-btn" (click)="goToToday()">Today</button>
+    </div>
   </div>
 
-  <div class="calendar__grid">
-    @for (wd of weekDays; track wd) {
-      <div class="calendar__weekday">{{ wd }}</div>
-    }
+  @if (viewType() === 'month') {
+    <div class="calendar__grid">
+      @for (wd of weekDays; track wd) {
+        <div class="calendar__weekday">{{ wd }}</div>
+      }
+      @for (day of days(); track day.dateStr) {
+        <div
+          [attr.data-testid]="'calendar-cell-' + day.dateStr"
+          class="calendar-cell"
+          [class.calendar-cell--today]="day.isToday"
+          [class.calendar-cell--selected]="selectedDate() === day.dateStr"
+          [class.calendar-cell--other-month]="!day.isCurrentMonth"
+          (click)="selectDay(day)"
+        >
+          <span class="calendar-cell__day">{{ day.date.getDate() }}</span>
+          @for (ev of day.visible; track ev.id) {
+            <div class="calendar-cell__event" [attr.data-status]="ev.status">{{ ev.title }}</div>
+          }
+          @if (day.overflow > 0) {
+            <button
+              [attr.data-testid]="'calendar-more-' + day.dateStr"
+              type="button"
+              class="calendar-cell__more"
+              (click)="openPopover(day, $event)"
+            >+{{ day.overflow }} more</button>
+          }
+        </div>
+      }
+    </div>
+  }
 
-    @for (day of days(); track day.dateStr) {
-      <div
-        [attr.data-testid]="'calendar-cell-' + day.dateStr"
-        class="calendar-cell"
-        [class.calendar-cell--today]="day.isToday"
-        [class.calendar-cell--selected]="selectedDate() === day.dateStr"
-        [class.calendar-cell--other-month]="!day.isCurrentMonth"
-        (click)="selectDay(day)"
-      >
-        <span class="calendar-cell__day">{{ day.date.getDate() }}</span>
-        @for (ev of day.visible; track ev.id) {
-          <div class="calendar-cell__event" [attr.data-status]="ev.status">{{ ev.title }}</div>
-        }
-        @if (day.overflow > 0) {
-          <button
-            [attr.data-testid]="'calendar-more-' + day.dateStr"
-            type="button"
-            class="calendar-cell__more"
-            (click)="openPopover(day, $event)"
-          >+{{ day.overflow }} more</button>
+  @if (viewType() === 'week') {
+    <div data-testid="calendar-week-view" class="calendar-week">
+      <div class="calendar-week__header">
+        <div class="calendar-week__gutter"></div>
+        @for (d of weekDates(); track d.getTime(); let i = $index) {
+          <div [attr.data-testid]="'calendar-week-col-' + i" class="calendar-week__day-header">
+            {{ d.toLocaleDateString('en', { weekday: 'short', month: 'short', day: 'numeric' }) }}
+          </div>
         }
       </div>
-    }
-  </div>
+      @for (row of weekEventsGrid(); track row.hour) {
+        <div [attr.data-testid]="'calendar-hour-row-' + row.hour" class="calendar-week__row">
+          <div class="calendar-week__time">{{ row.hour }}</div>
+          @for (slotEvents of row.slots; track $index) {
+            <div class="calendar-week__slot">
+              @for (ev of slotEvents; track ev.id) {
+                <div class="calendar-week__event" [attr.data-status]="ev.status">{{ ev.title }}</div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (viewType() === 'day') {
+    <div data-testid="calendar-day-view" class="calendar-day" (mouseup)="endDrag()">
+      @for (hour of hours; track hour) {
+        <div [attr.data-testid]="'calendar-hour-row-' + hour" class="calendar-day__row">
+          <div class="calendar-day__time">{{ hour }}</div>
+          <div
+            [attr.data-testid]="'calendar-day-slot-' + hour"
+            class="calendar-day__slot"
+            [class.calendar-day__slot--selected]="isInDragRange(hour)"
+            (mousedown)="startDrag(hour); $event.preventDefault()"
+            (mouseover)="onDragOver(hour)"
+          >
+            @for (ev of dayEvents(); track ev.id) {
+              @if (ev.startAt.includes('T' + hour.slice(0,2))) {
+                <div class="calendar-day__event" [attr.data-status]="ev.status">{{ ev.title }}</div>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (viewType() === 'agenda') {
+    <div data-testid="calendar-agenda-view" class="calendar-agenda">
+      @if (agendaItems().length === 0) {
+        <p class="calendar-agenda__empty">No upcoming events.</p>
+      } @else {
+        @for (group of agendaItems(); track group.dateStr) {
+          <div [attr.data-testid]="'calendar-agenda-date-' + group.dateStr" class="calendar-agenda__date-header">
+            {{ group.label }}
+          </div>
+          @for (ev of group.events; track ev.id) {
+            <div [attr.data-testid]="'agenda-event-' + ev.id" class="calendar-agenda__event" [attr.data-status]="ev.status">
+              <span class="calendar-agenda__event-time">{{ ev.startAt.substring(11, 16) }}</span>
+              <span class="calendar-agenda__event-title">{{ ev.title }}</span>
+            </div>
+          }
+        }
+      }
+    </div>
+  }
 
   @if (popoverDay()) {
     @let pd = popoverDay()!;
