@@ -1,7 +1,7 @@
 ---
 id: TASK-0154
 title: Push channel via PWA service worker
-status: Draft
+status: Accepted
 phase: No
 depends_on: [TASK-0150, TASK-0173]
 traces_to: [L2-063]
