@@ -1,7 +1,7 @@
 ---
 id: TASK-0183
 title: Server-side HTML sanitization for user input
-status: Draft
+status: Accepted
 phase: Z
 depends_on: [TASK-0080]
 traces_to: [L2-093]
