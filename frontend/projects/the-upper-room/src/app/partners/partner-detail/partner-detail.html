@@ -69,7 +69,7 @@
         </div>
       }
 
-      @if (p.addresses?.length > 0) {
+      @if ((p.addresses?.length ?? 0) > 0) {
         <section class="partner-section">
           <h2 class="partner-section__heading">Addresses</h2>
           @for (addr of p.addresses; track $index) {
@@ -82,7 +82,7 @@
         </section>
       }
 
-      @if (p.socialLinks?.length > 0) {
+      @if ((p.socialLinks?.length ?? 0) > 0) {
         <section class="partner-section">
           <h2 class="partner-section__heading">Social links</h2>
           @for (link of p.socialLinks; track $index) {
@@ -100,7 +100,7 @@
 
   @if (activeTab() === 'contacts') {
     <div data-testid="partner-panel-contacts" class="partner-panel" role="tabpanel">
-      <p class="partner-panel__placeholder">Linked contacts coming soon.</p>
+      <app-partner-contacts-tab [partnerId]="p.id" [partnerName]="p.name" />
     </div>
   }
 

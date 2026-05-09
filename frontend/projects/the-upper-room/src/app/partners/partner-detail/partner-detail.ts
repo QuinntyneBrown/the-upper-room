@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import type { Partner } from '../partner-list/partner-list';
+import { PartnerContactsTab } from '../partner-contacts-tab/partner-contacts-tab';
 
 type Tab = 'overview' | 'contacts' | 'activity';
 
@@ -15,7 +16,7 @@ interface PartnerDetailDto extends Partner {
 
 @Component({
   selector: 'app-partner-detail',
-  imports: [],
+  imports: [PartnerContactsTab],
   templateUrl: './partner-detail.html',
   styleUrl: './partner-detail.scss',
 })

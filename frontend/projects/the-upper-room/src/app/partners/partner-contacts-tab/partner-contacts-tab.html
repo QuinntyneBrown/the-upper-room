@@ -1,0 +1,56 @@
+<div class="contacts-tab">
+  <div class="contacts-tab__toolbar">
+    <button
+      data-testid="partner-link-contact-button"
+      type="button"
+      class="btn-filled"
+      (click)="openLinkDialog()"
+    >
+      <span class="material-symbols-outlined">person_add</span>
+      Link contact
+    </button>
+  </div>
+
+  @if (linked().length === 0) {
+    <p class="contacts-tab__empty">No contacts linked yet.</p>
+  } @else {
+    <table class="contacts-table">
+      <thead>
+        <tr>
+          <th class="contacts-table__th">Name</th>
+          <th class="contacts-table__th">Role</th>
+          <th class="contacts-table__th contacts-table__th--actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of linked(); track c.id) {
+          <tr [attr.data-testid]="'partner-linked-contact-' + c.id" class="contacts-table__row">
+            <td class="contacts-table__td">
+              <button type="button" class="link-btn" (click)="goToContact(c.id)">{{ c.name }}</button>
+            </td>
+            <td class="contacts-table__td">{{ c.role }}</td>
+            <td class="contacts-table__td contacts-table__td--actions">
+              <button
+                [attr.data-testid]="'partner-unlink-contact-' + c.id"
+                type="button"
+                class="btn-icon"
+                aria-label="Unlink"
+                (click)="unlinkContact(c)"
+              >
+                <span class="material-symbols-outlined">link_off</span>
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
+
+@if (showDialog()) {
+  <app-link-contact-dialog
+    [partnerId]="partnerId"
+    (linked)="onContactLinked($event)"
+    (cancelled)="onDialogClosed()"
+  />
+}

@@ -1,7 +1,7 @@
 ---
 id: TASK-0074
 title: Partner ↔ Contact link with role on link
-status: Draft
+status: Done
 phase: P
 depends_on: [TASK-0072, TASK-0065]
 traces_to: [L2-036]
