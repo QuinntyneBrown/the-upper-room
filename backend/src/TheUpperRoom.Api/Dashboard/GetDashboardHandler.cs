@@ -37,15 +37,19 @@ internal sealed class GetDashboardHandler : IRequestHandler<GetDashboardQuery, G
 
         var now = DateTimeOffset.UtcNow;
 
+        var allUpcoming = _eventsDb.Events
+            .AsEnumerable()
+            .Where(e => e.StartAt > now && e.Status != "Cancelled")
+            .OrderBy(e => e.StartAt)
+            .ToList();
+
         var stats = new DashboardStats(
             Contacts: ContactsController.StoreCount(user, _contactsDb),
             Partners: PartnersController.StoreCount(),
-            UpcomingEvents: _eventsDb.Events.Count(e => e.StartAt > now && e.Status != "Cancelled"),
+            UpcomingEvents: allUpcoming.Count,
             OpenIdeas: IdeasController.StoreCount(_ideasDb));
 
-        var upcomingEvents = _eventsDb.Events
-            .Where(e => e.StartAt > now && e.Status != "Cancelled")
-            .OrderBy(e => e.StartAt)
+        var upcomingEvents = allUpcoming
             .Take(5)
             .Select(e => new DashboardEventDto(e.Id, e.Title, e.StartAt.ToString("O"), e.Location))
             .ToList();
