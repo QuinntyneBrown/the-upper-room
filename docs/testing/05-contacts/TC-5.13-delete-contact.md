@@ -1,7 +1,7 @@
 ---
 id: TASK-TC-5.13
 title: 'Run TC-5.13 - Delete contact'
-status: Idle
+status: Completed
 test_id: TC-5.13
 source: ../../test-plan/05-contacts.md
 ---
@@ -19,7 +19,26 @@ Run `TC-5.13` from `docs/test-plan/05-contacts.md` and record the result.
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.
 
+## Result
+
+| Field | Value |
+|---|---|
+| Result | **PASS** |
+| Browser | Chromium (Playwright) |
+| Viewport | 1280×720 |
+| Build SHA | 51ae104 |
+| Tester | Claude (automated) |
+| Run at | 2026-05-09T17:50:30Z |
+
+### Evidence
+
+- Opened `/contacts/c1` (Alicia) and clicked `data-testid="contact-delete-button"` ✅
+- Confirm dialog appeared: "Delete contact? This will permanently remove the contact. Type the name to confirm." ✅
+- Typed "Alicia" in the confirmation input ✅
+- Clicked "Delete" in the dialog ✅
+- `DELETE /api/v1/contacts/c1` returned 204 ✅
+- Navigated to `/contacts` list ✅
