@@ -96,3 +96,6 @@ export * from './lib/i18n/transloco.pipe';
 
 // Breadcrumb
 export * from './lib/breadcrumb/breadcrumb.service';
+
+// HTTP Interceptors
+export * from './lib/interceptors/retry.interceptor';

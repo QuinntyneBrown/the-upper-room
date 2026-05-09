@@ -3,14 +3,13 @@ import { ApplicationConfig, ErrorHandler, provideBrowserGlobalErrorListeners } f
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideApi } from 'api';
-import { provideTarComponents } from 'components';
+import { provideTarComponents, retryInterceptor } from 'components';
 import { provideDomain } from 'domain';
 
 import { routes } from './app.routes';
 import { correlationIdInterceptor } from './interceptors/correlation-id.interceptor';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { csrfInterceptor } from './interceptors/csrf.interceptor';
-import { retryInterceptor } from './interceptors/retry.interceptor';
 import { errorInterceptor } from './interceptors/error.interceptor';
 import { GlobalErrorHandler } from './error/global-error-handler';
 import { ACCESS_TOKEN_SOURCE } from './services/access-token.contract';
