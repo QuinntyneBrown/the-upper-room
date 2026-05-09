@@ -1,7 +1,7 @@
 ---
 id: TASK-0222
 title: Remove X-Test-User-Id header reads from all controllers
-status: Draft
+status: Done
 phase: P
 depends_on: [TASK-0221]
 traces_to: []
