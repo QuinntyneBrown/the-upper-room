@@ -78,11 +78,11 @@ internal sealed class ListContactsHandler : IRequestHandler<ListContactsQuery, L
         if (allCities)
             items = _db.Contacts.AsEnumerable();
         else if (cityFilter != null && user.Role == Roles.SystemAdmin)
-            items = _db.Contacts.Where(c => c.CityId.Equals(cityFilter, StringComparison.OrdinalIgnoreCase)).AsEnumerable();
+            items = _db.Contacts.AsEnumerable().Where(c => c.CityId.Equals(cityFilter, StringComparison.OrdinalIgnoreCase));
         else if (user.Role == Roles.SystemAdmin)
             items = _db.Contacts.AsEnumerable();
         else
-            items = _db.Contacts.Where(c => c.CityId == user.City).AsEnumerable();
+            items = _db.Contacts.AsEnumerable().Where(c => c.CityId.Equals(user.City, StringComparison.OrdinalIgnoreCase));
 
         if (!string.IsNullOrEmpty(request.Search))
             items = items.Where(c => c.Name.Contains(request.Search, StringComparison.OrdinalIgnoreCase));
