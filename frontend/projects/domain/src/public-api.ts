@@ -26,6 +26,9 @@ export * from './lib/bootstrap/me-bootstrap';
 export * from './lib/users/invite-user-dialog/invite-user-dialog';
 export * from './lib/users/user-detail-drawer/user-detail-drawer';
 
+// Theme
+export * from './lib/theme/theme.service';
+
 // Tags
 export * from './lib/tags/tag.model';
 export * from './lib/tags/tag-selector/tar-tag-selector';

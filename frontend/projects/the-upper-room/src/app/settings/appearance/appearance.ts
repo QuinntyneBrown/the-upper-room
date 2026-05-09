@@ -1,6 +1,6 @@
 // traces_to: L2-115
 import { Component, inject } from '@angular/core';
-import { ThemeService, ThemeMode } from '../../theme/theme.service';
+import { ThemeService, ThemeMode } from 'domain';
 
 @Component({
   selector: 'app-appearance',
