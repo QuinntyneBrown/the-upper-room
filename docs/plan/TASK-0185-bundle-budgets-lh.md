@@ -1,7 +1,7 @@
 ---
 id: TASK-0185
 title: Bundle budgets + Lighthouse-CI
-status: Draft
+status: Accepted
 phase: Z
 depends_on: [TASK-0001]
 traces_to: [L2-089, L2-090]
