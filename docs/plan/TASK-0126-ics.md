@@ -1,7 +1,7 @@
 ---
 id: TASK-0126
 title: ICS download
-status: Draft
+status: Accepted
 phase: E
 depends_on: [TASK-0123]
 traces_to: [L2-055]
