@@ -28,3 +28,7 @@ export * from './lib/profile/profile-api.service';
 
 export * from './lib/users/users-api.contract';
 export * from './lib/users/users-api.service';
+
+export * from './lib/models/note';
+export * from './lib/notes/notes-api.contract';
+export * from './lib/notes/notes-api.service';

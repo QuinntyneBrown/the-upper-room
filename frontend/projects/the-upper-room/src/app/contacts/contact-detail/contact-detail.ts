@@ -7,7 +7,7 @@ import { TarAvatar } from '../../../../../components/src/lib/avatar/tar-avatar';
 import { TarShareButton } from '../../../../../components/src/lib/share-button/share-button';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
 import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
-import { TarNotes } from '../../notes/tar-notes';
+import { TarNotes } from '../../../../../components/src/lib/notes/tar-notes';
 import type { Contact } from '../contact-list/contact-list';
 
 type Tab = 'overview' | 'notes' | 'activity';

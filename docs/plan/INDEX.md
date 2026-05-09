@@ -268,6 +268,19 @@ A task is **Done** only when:
 | TASK-0174 | Print stylesheet | 0005 | L2-119 |
 | TASK-0175 | Browser support detection banner | 0005 | L2-120 |
 | TASK-0176 | Deep link share button + clipboard | 0008 | L2-118 |
+| TASK-0190 | Extract TarNotes to components library | 0081 | — |
+| TASK-0191 | Extract MarkdownEditor to components library | 0101 | — |
+| TASK-0192 | Extract NetworkService + OfflineBanner to components library | 0012 | — |
+| TASK-0193 | Extract TranslateService + transloco pipe to components library | 0013 | — |
+| TASK-0194 | Extract BreadcrumbService to components library | 0005 | — |
+| TASK-0195 | Extract retryInterceptor to components library | 0007 | — |
+| TASK-0196 | Extract tag-selector to domain library | 0053 | — |
+| TASK-0197 | Extract IdleService + InactivityDialog to domain library | 0027, 0198 | — |
+| TASK-0198 | Extract SignOutService to domain library | 0026 | — |
+| TASK-0199 | Extract route guards to domain library | 0031, 0032 | — |
+| TASK-0200 | Extract ThemeService to domain library | 0014 | — |
+| TASK-0201 | Extract CitySwitcher to domain library | 0051 | — |
+| TASK-0202 | Extract NotificationBell + NotificationPreferences to domain library | 0151, 0152 | — |
 
 ### Phase Z — Hardening
 

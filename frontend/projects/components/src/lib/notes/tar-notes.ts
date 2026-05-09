@@ -1,7 +1,7 @@
 // traces_to: L2-041, L2-042
-import { Component, ElementRef, Input, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject, input, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { SnackbarService } from '../snackbar/tar-snackbar.service';
 
 export interface NoteDto {
   id: string;
@@ -22,8 +22,8 @@ export interface NoteDto {
   styleUrl: './tar-notes.scss',
 })
 export class TarNotes implements OnInit {
-  @Input({ required: true }) subjectType!: string;
-  @Input({ required: true }) subjectId!: string;
+  readonly subjectType = input.required<string>();
+  readonly subjectId = input.required<string>();
 
   @ViewChild('composerEl') readonly composerEl?: ElementRef<HTMLTextAreaElement>;
 
@@ -46,7 +46,9 @@ export class TarNotes implements OnInit {
       this.isAdmin.set(me.roles.includes('SystemAdmin'));
     });
     this.http
-      .get<{ items: NoteDto[] }>(`/api/v1/notes?subjectType=${this.subjectType}&subjectId=${this.subjectId}`)
+      .get<{ items: NoteDto[] }>(
+        `/api/v1/notes?subjectType=${this.subjectType()}&subjectId=${this.subjectId()}`,
+      )
       .subscribe((r) => this.notes.set(r.items));
   }
 
@@ -59,7 +61,11 @@ export class TarNotes implements OnInit {
     }
     this.composerError.set(null);
     this.http
-      .post<NoteDto>('/api/v1/notes', { subjectType: this.subjectType, subjectId: this.subjectId, bodyMarkdown: body })
+      .post<NoteDto>('/api/v1/notes', {
+        subjectType: this.subjectType(),
+        subjectId: this.subjectId(),
+        bodyMarkdown: body,
+      })
       .subscribe((note) => {
         this.notes.set([note, ...this.notes()]);
         this.composerText.set('');
@@ -122,7 +128,12 @@ export class TarNotes implements OnInit {
   protected relativeTime(dateStr: string): string {
     const diffMs = Date.now() - new Date(dateStr).getTime();
     const diffDays = diffMs / 86_400_000;
-    if (diffDays > 7) return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    if (diffDays > 7)
+      return new Date(dateStr).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
     const diffMins = diffMs / 60_000;
     if (diffMins < 1) return 'just now';
     if (diffMins < 60) return `${Math.floor(diffMins)} min ago`;
