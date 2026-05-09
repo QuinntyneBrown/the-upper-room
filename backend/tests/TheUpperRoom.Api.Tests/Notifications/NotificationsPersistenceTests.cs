@@ -87,6 +87,7 @@ public sealed class NotificationsPersistenceTests : IDisposable
         await using var factory2 = Factory();
         var resp = await AuthedClient(factory2, "admin").GetAsync("/api/v1/notifications");
         var json = await resp.Content.ReadAsStringAsync();
+        Assert.True(resp.IsSuccessStatusCode, $"Status: {resp.StatusCode}, body: {json}");
         Assert.Contains("welcome", json);
     }
 
@@ -95,10 +96,10 @@ public sealed class NotificationsPersistenceTests : IDisposable
     {
         await using (var factory1 = Factory())
         {
-            var resp = await AuthedClient(factory1, "lead").PutAsJsonAsync(
+            var put = await AuthedClient(factory1, "lead").PutAsJsonAsync(
                 "/api/v1/notifications/preferences",
                 new { code = "welcome", inApp = false, email = false, push = false });
-            Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, put.StatusCode);
         }
 
         await using var factory2 = Factory();

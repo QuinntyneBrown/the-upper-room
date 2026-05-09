@@ -9,42 +9,17 @@ namespace TheUpperRoom.Api.Notifications;
 [ApiController]
 [Authorize]
 [Route("api/v1/notifications")]
-public sealed class NotificationsController : ControllerBase
+public sealed class NotificationsController(NotificationsDbContext db, MailStore mail) : ControllerBase
 {
-    private sealed class NotificationRecord
-    {
-        public string Id { get; } = Guid.NewGuid().ToString();
-        public string UserId { get; init; } = "";
-        public string Code { get; init; } = "";
-        public string Title { get; init; } = "";
-        public string Body { get; init; } = "";
-        public Dictionary<string, string> Data { get; init; } = [];
-        public bool Read { get; set; }
-        public DateTimeOffset CreatedAt { get; init; }
-        public string? DeepLink { get; init; }
-        public string Severity { get; init; } = "Info";
-    }
-
-    private sealed class PreferenceRecord
-    {
-        public string UserId { get; init; } = "";
-        public string Code { get; init; } = "";
-        public bool InApp { get; set; } = true;
-        public bool Email { get; set; } = true;
-        public bool Push { get; set; }
-    }
-
-    private static readonly List<NotificationRecord> _store = [];
-    private static readonly List<PreferenceRecord> _preferences = [];
-
     [HttpGet]
     public IActionResult List()
     {
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var items = _store
+        var items = db.Notifications
             .Where(n => n.UserId == user.Id)
+            .AsEnumerable()
             .OrderByDescending(n => n.CreatedAt)
             .Select(ToDto)
             .ToList();
@@ -58,10 +33,11 @@ public sealed class NotificationsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var n = _store.FirstOrDefault(x => x.Id == id && x.UserId == user.Id);
+        var n = db.Notifications.FirstOrDefault(x => x.Id == id && x.UserId == user.Id);
         if (n is null) return NotFound();
 
         n.Read = true;
+        db.SaveChanges();
         return Ok(ToDto(n));
     }
 
@@ -71,8 +47,9 @@ public sealed class NotificationsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        foreach (var n in _store.Where(x => x.UserId == user.Id && !x.Read))
+        foreach (var n in db.Notifications.Where(x => x.UserId == user.Id && !x.Read))
             n.Read = true;
+        db.SaveChanges();
 
         return NoContent();
     }
@@ -87,17 +64,17 @@ public sealed class NotificationsController : ControllerBase
         var type = NotificationCatalog.All.FirstOrDefault(t => t.Code == body.Code);
         if (type is null) return UnprocessableEntity(new { error = $"Unknown notification code '{body.Code}'." });
 
-        var data = body.Data ?? [];
+        var data = body.Data ?? new();
 
         foreach (var recipientId in body.RecipientIds)
         {
-            var pref = _preferences.FirstOrDefault(p => p.UserId == recipientId && p.Code == body.Code);
+            var pref = db.Preferences.Find(recipientId, body.Code);
             var subject = Render(type.Title, data);
             var bodyText = Render(type.BodyTemplate, data);
 
             if (pref is null || pref.InApp)
             {
-                _store.Add(new NotificationRecord
+                db.Notifications.Add(new NotificationRow
                 {
                     UserId = recipientId,
                     Code = body.Code,
@@ -112,7 +89,7 @@ public sealed class NotificationsController : ControllerBase
 
             if (pref is null || pref.Email)
             {
-                MailStore.Send(recipientId, subject, bodyText);
+                mail.Send(recipientId, subject, bodyText);
             }
 
             if (pref?.Push == true)
@@ -121,14 +98,17 @@ public sealed class NotificationsController : ControllerBase
             }
         }
 
+        db.SaveChanges();
         return NoContent();
     }
 
     [HttpGet("test/sent-mail")]
     public IActionResult ListSentMail([FromQuery] string? toUserId)
     {
-        var items = MailStore.Sent
+        var items = db.SentMail
             .Where(m => toUserId == null || m.ToUserId == toUserId)
+            .AsEnumerable()
+            .OrderBy(m => m.SentAt)
             .Select(m => new { m.ToUserId, m.Subject, m.Body, m.SentAt })
             .ToList();
         return Ok(items);
@@ -140,15 +120,16 @@ public sealed class NotificationsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
+        var stored = db.Preferences.Where(p => p.UserId == user.Id).ToList();
         var result = NotificationCatalog.All.Select(t =>
         {
-            var stored = _preferences.FirstOrDefault(p => p.UserId == user.Id && p.Code == t.Code);
+            var s = stored.FirstOrDefault(p => p.Code == t.Code);
             return new
             {
                 code = t.Code,
-                inApp = stored?.InApp ?? true,
-                email = stored?.Email ?? true,
-                push = stored?.Push ?? false,
+                inApp = s?.InApp ?? true,
+                email = s?.Email ?? true,
+                push = s?.Push ?? false,
             };
         }).ToList();
 
@@ -162,7 +143,7 @@ public sealed class NotificationsController : ControllerBase
         if (user is null) return Unauthorized();
         if (body is null) return BadRequest();
 
-        var existing = _preferences.FirstOrDefault(p => p.UserId == user.Id && p.Code == body.Code);
+        var existing = db.Preferences.Find(user.Id, body.Code);
         if (existing is not null)
         {
             existing.InApp = body.InApp;
@@ -171,7 +152,7 @@ public sealed class NotificationsController : ControllerBase
         }
         else
         {
-            _preferences.Add(new PreferenceRecord
+            db.Preferences.Add(new PreferenceRow
             {
                 UserId = user.Id,
                 Code = body.Code,
@@ -180,6 +161,7 @@ public sealed class NotificationsController : ControllerBase
                 Push = body.Push,
             });
         }
+        db.SaveChanges();
 
         return Ok(new { userId = user.Id, code = body.Code, inApp = body.InApp, email = body.Email, push = body.Push });
     }
@@ -187,7 +169,7 @@ public sealed class NotificationsController : ControllerBase
     private static string Render(string template, Dictionary<string, string> data) =>
         data.Aggregate(template, (t, kv) => t.Replace("{" + kv.Key + "}", kv.Value));
 
-    private static NotificationDto ToDto(NotificationRecord n) =>
+    private static NotificationDto ToDto(NotificationRow n) =>
         new(n.Id, n.Code, n.Title, n.Body, n.Data, n.Read, n.CreatedAt, n.DeepLink, n.Severity);
 
     private SeedUser? GetCurrentUser()

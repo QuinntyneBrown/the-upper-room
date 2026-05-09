@@ -1,15 +1,22 @@
 // traces_to: L2-063
 namespace TheUpperRoom.Api.Notifications;
 
-internal static class MailStore
+public sealed class MailStore(NotificationsDbContext db)
 {
-    internal static readonly List<MailRecord> Sent = [];
-
-    internal static void Send(string toUserId, string subject, string body)
+    public void Send(string toUserId, string subject, string body)
     {
-        Sent.Add(new MailRecord(toUserId, subject, body, DateTimeOffset.UtcNow));
+        db.SentMail.Add(new SentMailRow
+        {
+            ToUserId = toUserId,
+            Subject = subject,
+            Body = body,
+            SentAt = DateTimeOffset.UtcNow,
+        });
+        db.SaveChanges();
         WriteToFile(toUserId, subject, body);
     }
+
+    public IEnumerable<SentMailRow> Sent => db.SentMail.OrderBy(m => m.SentAt);
 
     private static void WriteToFile(string toUserId, string subject, string body)
     {
@@ -26,5 +33,3 @@ internal static class MailStore
         }
     }
 }
-
-internal sealed record MailRecord(string ToUserId, string Subject, string Body, DateTimeOffset SentAt);

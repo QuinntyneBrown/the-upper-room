@@ -13,6 +13,7 @@ using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Api.Logging;
 using TheUpperRoom.Api.Notes;
+using TheUpperRoom.Api.Notifications;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -86,6 +87,12 @@ var kanbanConn = builder.Configuration["KanbanDb:ConnectionString"]
 EnsureSqliteDirectoryExists(kanbanConn);
 builder.Services.AddDbContext<KanbanDbContext>(o => o.UseSqlite(kanbanConn));
 
+var notificationsConn = builder.Configuration["NotificationsDb:ConnectionString"]
+                        ?? "Data Source=Data/notifications.db";
+EnsureSqliteDirectoryExists(notificationsConn);
+builder.Services.AddDbContext<NotificationsDbContext>(o => o.UseSqlite(notificationsConn));
+builder.Services.AddScoped<MailStore>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -99,6 +106,7 @@ using (var scope = app.Services.CreateScope())
     scope.ServiceProvider.GetRequiredService<LocationsDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<NotesDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<KanbanDbContext>().Database.EnsureCreated();
+    scope.ServiceProvider.GetRequiredService<NotificationsDbContext>().Database.EnsureCreated();
 }
 
 static void SeedSeedContactsIfMissing(ContactsDbContext db)
