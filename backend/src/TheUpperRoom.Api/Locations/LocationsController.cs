@@ -2,15 +2,20 @@
 // Traces to: TASK-0227
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Events;
-using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Application.Users;
 
 namespace TheUpperRoom.Api.Locations;
 
 [ApiController]
 [Authorize]
 [Route("api/v1/locations")]
-public sealed class LocationsController(LocationsDbContext db, EventsDbContext eventsDb) : ControllerBase
+public sealed class LocationsController(
+    LocationsDbContext db,
+    EventsDbContext eventsDb,
+    ICurrentUser currentUser,
+    IUserDirectory userDirectory) : ControllerBase
 {
     private const long MaxPhotoBytes = 10L * 1024 * 1024;
 
@@ -128,11 +133,8 @@ public sealed class LocationsController(LocationsDbContext db, EventsDbContext e
         return NoContent();
     }
 
-    private SeedUser? GetCurrentUser()
-    {
-        var userId = User.FindFirst("sub")?.Value ?? "";
-        return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
-    }
+    private AppUser? GetCurrentUser() =>
+        userDirectory.GetById(currentUser.UserId ?? "");
 }
 
 public sealed record UpsertLocationRequest(

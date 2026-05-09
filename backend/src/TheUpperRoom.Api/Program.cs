@@ -2,6 +2,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Context;
@@ -14,6 +15,9 @@ using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Api.Logging;
 using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
+using TheUpperRoom.Application;
+using TheUpperRoom.Infrastructure;
+using TheUpperRoom.Infrastructure.Seeding;
 
 if (Log.Logger.GetType().Name == "SilentLogger")
 {
@@ -29,6 +33,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IPkceVerifier, PkceVerifier>();
+
+builder.Services.AddApplication(typeof(Program).Assembly);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>() ?? new JwtSettings();
 if (string.IsNullOrWhiteSpace(jwt.SigningKey))
@@ -64,6 +71,7 @@ var contactsConn = builder.Configuration["ContactsDb:ConnectionString"]
                    ?? "Data Source=Data/contacts.db";
 EnsureSqliteDirectoryExists(contactsConn);
 builder.Services.AddDbContext<ContactsDbContext>(o => o.UseSqlite(contactsConn));
+builder.Services.AddScoped<IDataSeeder, ContactsDataSeeder>();
 
 var eventsConn = builder.Configuration["EventsDb:ConnectionString"]
                  ?? "Data Source=Data/events.db";
@@ -111,14 +119,15 @@ if (string.IsNullOrWhiteSpace(pushSettings.VapidPublicKey))
 }
 builder.Services.AddSingleton(pushSettings);
 
+var usersConn = builder.Configuration["UsersDb:ConnectionString"]
+                ?? "Data Source=Data/users.db";
+EnsureSqliteDirectoryExists(usersConn);
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var contactsDb = scope.ServiceProvider.GetRequiredService<ContactsDbContext>();
-    contactsDb.Database.EnsureCreated();
-    SeedSeedContactsIfMissing(contactsDb);
-
+    scope.ServiceProvider.GetRequiredService<ContactsDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<EventsDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<IdeasDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<LocationsDbContext>().Database.EnsureCreated();
@@ -126,23 +135,6 @@ using (var scope = app.Services.CreateScope())
     scope.ServiceProvider.GetRequiredService<KanbanDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<NotificationsDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<PushDbContext>().Database.EnsureCreated();
-}
-
-static void SeedSeedContactsIfMissing(ContactsDbContext db)
-{
-    // Idempotent: ignore unique-key conflicts caused by parallel test hosts
-    // racing on the same connection string.
-    try
-    {
-        if (db.Contacts.Find("c1") is not null) return;
-        db.Contacts.Add(new ContactRow { Id = "c1", Name = "Alice", CityId = "Toronto" });
-        db.Contacts.Add(new ContactRow { Id = "c2", Name = "Bob", CityId = "Halifax" });
-        db.SaveChanges();
-    }
-    catch (Microsoft.EntityFrameworkCore.DbUpdateException)
-    {
-        // Another host instance won the race; the rows already exist.
-    }
 }
 
 static void EnsureSqliteDirectoryExists(string connectionString)

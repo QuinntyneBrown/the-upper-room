@@ -1,56 +1,40 @@
 // traces_to: L2-045
 // Traces to: TASK-0228
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Api.Auth;
 
 namespace TheUpperRoom.Api.Kanban;
 
 [ApiController]
 [Authorize]
 [Route("api/v1/cards")]
-public sealed class CardsController(KanbanDbContext db) : ControllerBase
+public sealed class CardsController(IMediator mediator, ICurrentUser currentUser) : ControllerBase
 {
     [HttpPatch("{id}")]
-    public IActionResult Patch(string id, [FromBody] Dictionary<string, object?>? body)
+    public async Task<IActionResult> Patch(string id, [FromBody] Dictionary<string, object?>? body, CancellationToken cancellationToken)
     {
-        var user = CurrentUser();
-        if (user is null) return Unauthorized();
-        if (body is null) return BadRequest();
-
-        var card = db.Cards.Find(id);
-        if (card is null) return NotFound();
-
-        if (body.TryGetValue("title", out var title) && title is string t) card.Title = t;
-        if (body.TryGetValue("assigneeName", out var assignee)) card.AssigneeName = assignee?.ToString();
-        if (body.TryGetValue("dueDate", out var due)) card.DueDate = due?.ToString();
-        db.SaveChanges();
-
-        return Ok(new { id, patched = body });
+        var result = await mediator.Send(new PatchCardCommand(currentUser.UserId ?? "", id, body), cancellationToken);
+        return Map(result.Outcome, result.Payload);
     }
 
     [HttpPost("{id}/move")]
-    public IActionResult Move(string id, [FromBody] MoveCardRequest? body)
+    public async Task<IActionResult> Move(string id, [FromBody] MoveCardRequest? body, CancellationToken cancellationToken)
     {
-        var user = CurrentUser();
-        if (user is null) return Unauthorized();
-        if (body is null || string.IsNullOrWhiteSpace(body.TargetColumnId))
-            return UnprocessableEntity(new { error = "targetColumnId is required." });
-
-        var card = db.Cards.Find(id);
-        if (card is null) return NotFound();
-
-        card.ColumnId = body.TargetColumnId;
-        db.SaveChanges();
-
-        return Ok(new { id, columnId = body.TargetColumnId });
+        var result = await mediator.Send(new MoveCardCommand(currentUser.UserId ?? "", id, body?.TargetColumnId), cancellationToken);
+        return Map(result.Outcome, result.Payload);
     }
 
-    private SeedUser? CurrentUser()
+    private IActionResult Map(KanbanOutcome outcome, object? payload) => outcome switch
     {
-        var userId = User.FindFirst("sub")?.Value ?? "";
-        return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
-    }
+        KanbanOutcome.Unauthorized => Unauthorized(),
+        KanbanOutcome.NotFound => NotFound(),
+        KanbanOutcome.BadRequest => BadRequest(),
+        KanbanOutcome.Unprocessable => UnprocessableEntity(payload),
+        KanbanOutcome.Ok => Ok(payload),
+        _ => StatusCode(500),
+    };
 }
 
 public sealed record MoveCardRequest(string? TargetColumnId, string? SourceColumnId);

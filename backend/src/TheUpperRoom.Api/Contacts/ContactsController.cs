@@ -1,10 +1,10 @@
 // traces_to: L2-079
-using System.Text.Json;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TheUpperRoom.Api.Audit;
+using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Rbac;
-using TheUpperRoom.Application.Cities;
+using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Cities;
 
 namespace TheUpperRoom.Api.Contacts;
@@ -12,14 +12,17 @@ namespace TheUpperRoom.Api.Contacts;
 [ApiController]
 [Authorize]
 [Route("api/v1/contacts")]
-public sealed class ContactsController(ContactsDbContext db) : ControllerBase
+public sealed class ContactsController(IMediator mediator, ICurrentUser currentUser) : ControllerBase
 {
-    internal static int StoreCount(SeedUser user, ContactsDbContext db) =>
+    // Helpers retained for cross-controller usage (Dashboard, Search). They
+    // are pure functions over an injected DbContext and an AppUser; they do
+    // not reach into the http context.
+    internal static int StoreCount(AppUser user, ContactsDbContext db) =>
         user.Role == Roles.SystemAdmin
             ? db.Contacts.Count()
             : db.Contacts.Count(c => c.CityId == user.City);
 
-    internal static IEnumerable<Contact> Search(string term, SeedUser user, ContactsDbContext db)
+    internal static IEnumerable<Contact> Search(string term, AppUser user, ContactsDbContext db)
     {
         var query = user.Role == Roles.SystemAdmin
             ? db.Contacts.AsEnumerable()
@@ -29,146 +32,85 @@ public sealed class ContactsController(ContactsDbContext db) : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult List(
+    public async Task<IActionResult> List(
         [FromQuery] string? search,
         [FromQuery] int? page,
         [FromQuery] int? size,
-        [FromQuery] string? scope)
+        [FromQuery] string? scope,
+        CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
+        var result = await mediator.Send(
+            new ListContactsQuery(currentUser.UserId ?? "", search, page, size, scope),
+            cancellationToken);
 
-        var allCities = scope == "all";
-        if (allCities && user.Role != Roles.SystemAdmin) return StatusCode(403, new { error = "Forbidden" });
-
-        IEnumerable<ContactRow> items = allCities || user.Role == Roles.SystemAdmin
-            ? db.Contacts.AsEnumerable()
-            : db.Contacts.Where(c => c.CityId == user.City).AsEnumerable();
-
-        if (!string.IsNullOrEmpty(search))
-            items = items.Where(c => c.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
-
-        var allItems = items.Select(c => c.ToContact()).ToArray();
-        var total = allItems.Length;
-
-        if (page.GetValueOrDefault() > 1 && size.GetValueOrDefault() > 0)
-            allItems = allItems.Skip((page!.Value - 1) * size!.Value).Take(size.Value).ToArray();
-        else if (size.GetValueOrDefault() > 0)
-            allItems = allItems.Take(size!.Value).ToArray();
-
-        return Ok(new { items = allItems, total });
+        return result.Outcome switch
+        {
+            ContactsOutcome.Unauthorized => Unauthorized(),
+            ContactsOutcome.Forbidden => StatusCode(403, new { error = "Forbidden" }),
+            ContactsOutcome.Ok => Ok(new { items = result.Items, total = result.Total }),
+            _ => StatusCode(500),
+        };
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Contact> GetById(string id, [FromQuery] string? scope)
+    public async Task<ActionResult<Contact>> GetById(string id, [FromQuery] string? scope, CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
-
-        var allCities = scope == "all";
-        if (allCities && user.Role != Roles.SystemAdmin) return StatusCode(403, new { error = "Forbidden" });
-
-        var c = db.Contacts.Find(id);
-        if (c is null) return NotFound();
-
-        if (allCities) return Ok(c.ToContact());
-
-        var visible = CityScope.VisibleOrNull(c, user.City);
-        return visible is null ? NotFound() : Ok(c.ToContact());
+        var result = await mediator.Send(new GetContactQuery(currentUser.UserId ?? "", id, scope), cancellationToken);
+        return result.Outcome switch
+        {
+            ContactsOutcome.Unauthorized => Unauthorized(),
+            ContactsOutcome.Forbidden => StatusCode(403, new { error = "Forbidden" }),
+            ContactsOutcome.NotFound => NotFound(),
+            ContactsOutcome.Ok => Ok(result.Contact),
+            _ => StatusCode(500),
+        };
     }
 
     [HttpPost]
-    public ActionResult<Contact> Create([FromBody] CreateContactRequest? body)
+    public async Task<ActionResult<Contact>> Create([FromBody] CreateContactRequest? body, CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
-        if (body is null) return BadRequest();
-        if (string.IsNullOrWhiteSpace(body.FirstName))
-            return UnprocessableEntity(new { error = "First name is required." });
-
-        var id = Guid.NewGuid().ToString("N")[..8];
-        var row = new ContactRow { Id = id, Name = DisplayName(body), CityId = user.City };
-        db.Contacts.Add(row);
-        db.SaveChanges();
-
-        var contact = row.ToContact();
-        AuditStore.Record(user.Id, "Contact", id, "Create", afterJson: JsonSerializer.Serialize(contact));
-        return Created($"/api/v1/contacts/{id}", contact);
+        var result = await mediator.Send(new CreateContactCommand(currentUser.UserId ?? "", body), cancellationToken);
+        return MapMutate(result, created: c => Created($"/api/v1/contacts/{c.Id}", c));
     }
 
     [HttpPut("{id}")]
-    public ActionResult<Contact> Update(string id, [FromBody] CreateContactRequest? body)
+    public async Task<ActionResult<Contact>> Update(string id, [FromBody] CreateContactRequest? body, CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
-        if (body is null) return BadRequest();
-        if (string.IsNullOrWhiteSpace(body.FirstName))
-            return UnprocessableEntity(new { error = "First name is required." });
-
-        var c = db.Contacts.Find(id);
-        if (c is null) return NotFound();
-        if (CityScope.VisibleOrNull(c, user.City) is null) return NotFound();
-
-        var before = JsonSerializer.Serialize(c.ToContact());
-        c.Name = DisplayName(body);
-        db.SaveChanges();
-        var after = JsonSerializer.Serialize(c.ToContact());
-        AuditStore.Record(user.Id, "Contact", id, "Update", before, after);
-        return Ok(c.ToContact());
+        var result = await mediator.Send(new UpdateContactCommand(currentUser.UserId ?? "", id, body), cancellationToken);
+        return MapMutate(result);
     }
 
     [HttpPatch("{id}")]
-    public ActionResult<Contact> Patch(string id, [FromBody] PatchContactRequest? body)
+    public async Task<ActionResult<Contact>> Patch(string id, [FromBody] PatchContactRequest? body, CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
-
-        var c = db.Contacts.Find(id);
-        if (c is null) return NotFound();
-        if (CityScope.VisibleOrNull(c, user.City) is null) return NotFound();
-
-        if (body?.Name is not null)
-        {
-            var before = JsonSerializer.Serialize(c.ToContact());
-            c.Name = body.Name;
-            db.SaveChanges();
-            var after = JsonSerializer.Serialize(c.ToContact());
-            AuditStore.Record(user.Id, "Contact", id, "Update", before, after);
-        }
-
-        return Ok(c.ToContact());
+        var result = await mediator.Send(new PatchContactCommand(currentUser.UserId ?? "", id, body), cancellationToken);
+        return MapMutate(result);
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(string id)
+    public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
-
-        var c = db.Contacts.Find(id);
-        if (c is null) return NotFound();
-        if (CityScope.VisibleOrNull(c, user.City) is null) return NotFound();
-
-        AuditStore.Record(user.Id, "Contact", id, "Delete", beforeJson: JsonSerializer.Serialize(c.ToContact()));
-        db.Contacts.Remove(c);
-        db.SaveChanges();
-        return NoContent();
+        var result = await mediator.Send(new DeleteContactCommand(currentUser.UserId ?? "", id), cancellationToken);
+        return result.Outcome switch
+        {
+            ContactsOutcome.Unauthorized => Unauthorized(),
+            ContactsOutcome.NotFound => NotFound(),
+            ContactsOutcome.NoContent => NoContent(),
+            _ => StatusCode(500),
+        };
     }
 
-    private SeedUser? GetCurrentUser()
+    private ActionResult<Contact> MapMutate(MutateContactResult result, Func<Contact, ActionResult>? created = null) => result.Outcome switch
     {
-        var userId = User.FindFirst("sub")?.Value ?? "";
-        return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
-    }
-
-    private static string DisplayName(CreateContactRequest body)
-    {
-        var name = string.Join(
-            ' ',
-            new[] { body.FirstName.Trim(), body.LastName?.Trim() }
-                .Where(s => !string.IsNullOrEmpty(s)));
-        return body.DisplayName ?? name;
-    }
+        ContactsOutcome.Unauthorized => Unauthorized(),
+        ContactsOutcome.BadRequest => BadRequest(),
+        ContactsOutcome.NotFound => NotFound(),
+        ContactsOutcome.Unprocessable => UnprocessableEntity(new { error = result.Error }),
+        ContactsOutcome.Created when created is not null => created(result.Contact!),
+        ContactsOutcome.Created => Created(string.Empty, result.Contact),
+        ContactsOutcome.Ok => Ok(result.Contact),
+        _ => StatusCode(500),
+    };
 }
 
 public sealed record PatchContactRequest(string? Name);

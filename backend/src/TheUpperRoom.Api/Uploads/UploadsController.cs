@@ -1,29 +1,30 @@
 // traces_to: L2-050, L2-051
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Api.Auth;
 
 namespace TheUpperRoom.Api.Uploads;
 
 [ApiController]
 [Authorize]
 [Route("api/v1/uploads")]
-public sealed class UploadsController : ControllerBase
+public sealed class UploadsController(IMediator mediator, ICurrentUser currentUser) : ControllerBase
 {
-    private const long MaxBoardBytes = 10L * 1024 * 1024;
-
     [HttpPost]
-    public IActionResult Upload([FromForm] IFormFile? file)
+    public async Task<IActionResult> Upload([FromForm] IFormFile? file, CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst("sub")?.Value ?? "";
-        if (string.IsNullOrEmpty(userId) || !SeedUsers.ById.ContainsKey(userId))
-            return Unauthorized();
+        var result = await mediator.Send(
+            new UploadFileCommand(currentUser.UserId ?? "", file),
+            cancellationToken);
 
-        if (file is null) return BadRequest(new { error = "No file provided." });
-        if (file.Length > MaxBoardBytes)
-            return UnprocessableEntity(new { error = "Image is too large (max 10MB). Try a smaller image." });
-
-        var url = $"https://uploads.example.com/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-        return Ok(new { url });
+        return result.Outcome switch
+        {
+            UploadFileOutcome.Unauthorized => Unauthorized(),
+            UploadFileOutcome.NoFile => BadRequest(new { error = result.Error }),
+            UploadFileOutcome.TooLarge => UnprocessableEntity(new { error = result.Error }),
+            UploadFileOutcome.Uploaded => Ok(new { url = result.Url }),
+            _ => StatusCode(500),
+        };
     }
 }

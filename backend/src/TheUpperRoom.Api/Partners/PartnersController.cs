@@ -1,14 +1,18 @@
 // traces_to: L2-034, L2-035, L2-077
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Application.Users;
 
 namespace TheUpperRoom.Api.Partners;
 
 [ApiController]
 [Authorize]
 [Route("api/v1/partners")]
-public sealed class PartnersController : ControllerBase
+public sealed class PartnersController(
+    ICurrentUser currentUser,
+    IUserDirectory userDirectory) : ControllerBase
 {
     private static readonly List<PartnerDto> _store =
     [
@@ -135,9 +139,6 @@ public sealed class PartnersController : ControllerBase
         return NoContent();
     }
 
-    private SeedUser? GetCurrentUser()
-    {
-        var userId = User.FindFirst("sub")?.Value ?? "";
-        return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
-    }
+    private AppUser? GetCurrentUser() =>
+        userDirectory.GetById(currentUser.UserId ?? "");
 }

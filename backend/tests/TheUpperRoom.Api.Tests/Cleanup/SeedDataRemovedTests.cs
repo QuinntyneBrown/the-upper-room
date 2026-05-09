@@ -1,18 +1,25 @@
 // Traces to: TASK-0234
-using System.IO;
-
 namespace TheUpperRoom.Api.Tests.Cleanup;
 
 public sealed class SeedDataRemovedTests
 {
     [Fact]
-    public void SeedUsers_source_does_not_hardcode_demo_identities()
+    public void Production_source_does_not_define_SeedUser_or_SeedUsers_symbols()
     {
-        var content = File.ReadAllText(Path.Combine(LocateSrcRoot(), "TheUpperRoom.Api", "Rbac", "SeedUsers.cs"));
-        Assert.DoesNotContain("admin@example.com", content);
-        Assert.DoesNotContain("lead@example.com", content);
-        Assert.DoesNotContain("member@example.com", content);
-        Assert.DoesNotContain("guest@example.com", content);
+        var srcRoot = LocateSrcRoot();
+        var matches = Directory
+            .EnumerateFiles(srcRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(p => !p.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}")
+                        && !p.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}"))
+            .Where(p =>
+            {
+                var c = File.ReadAllText(p);
+                return c.Contains("class SeedUsers")
+                       || c.Contains("record SeedUser")
+                       || c.Contains("SeedUsers.ById");
+            })
+            .ToList();
+        Assert.Empty(matches);
     }
 
     [Fact]

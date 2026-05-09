@@ -2,14 +2,19 @@
 using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Application.Users;
 
 namespace TheUpperRoom.Api.Ideas;
 
 [ApiController]
 [Authorize]
 [Route("api/v1/ideas")]
-public sealed class IdeasController(IdeasDbContext db) : ControllerBase
+public sealed class IdeasController(
+    IdeasDbContext db,
+    ICurrentUser currentUser,
+    IUserDirectory userDirectory) : ControllerBase
 {
     private static readonly HtmlSanitizer _sanitizer = BuildSanitizer();
 
@@ -226,13 +231,8 @@ public sealed class IdeasController(IdeasDbContext db) : ControllerBase
             .Select(p => new LinkedPartnerRefDto(p.PartnerId, p.PartnerName))
             .ToArray());
 
-    private SeedUser? GetCurrentUser()
-    {
-        var userId = User.FindFirst("sub")?.Value ?? "";
-        return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user)
-            ? null
-            : user;
-    }
+    private AppUser? GetCurrentUser() =>
+        userDirectory.GetById(currentUser.UserId ?? "");
 }
 
 public sealed record UpdateIdeaRequest(string? BodyMarkdown, string? CoverImageUrl);

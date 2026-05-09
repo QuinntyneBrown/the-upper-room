@@ -1,171 +1,97 @@
 // traces_to: L2-062, L2-063
 // Traces to: TASK-0229
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TheUpperRoom.Api.Rbac;
-using TheUpperRoom.Domain.Notifications;
+using TheUpperRoom.Api.Auth;
 
 namespace TheUpperRoom.Api.Notifications;
 
 [ApiController]
 [Authorize]
 [Route("api/v1/notifications")]
-public sealed class NotificationsController(NotificationsDbContext db, MailStore mail, PushDispatcher push) : ControllerBase
+public sealed class NotificationsController(IMediator mediator, ICurrentUser currentUser) : ControllerBase
 {
     [HttpGet]
-    public IActionResult List()
+    public async Task<IActionResult> List(CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
-
-        var items = db.Notifications
-            .Where(n => n.UserId == user.Id)
-            .AsEnumerable()
-            .OrderByDescending(n => n.CreatedAt)
-            .Select(ToDto)
-            .ToList();
-
-        return Ok(new { items, total = items.Count });
+        var result = await mediator.Send(new ListNotificationsQuery(currentUser.UserId ?? ""), cancellationToken);
+        return result.Outcome switch
+        {
+            NotificationsOutcome.Unauthorized => Unauthorized(),
+            NotificationsOutcome.Ok => Ok(new { items = result.Items, total = result.Items.Length }),
+            _ => StatusCode(500),
+        };
     }
 
     [HttpPost("{id}/read")]
-    public IActionResult MarkRead(string id)
+    public async Task<IActionResult> MarkRead(string id, CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
-
-        var n = db.Notifications.FirstOrDefault(x => x.Id == id && x.UserId == user.Id);
-        if (n is null) return NotFound();
-
-        n.Read = true;
-        db.SaveChanges();
-        return Ok(ToDto(n));
+        var result = await mediator.Send(new MarkNotificationReadCommand(currentUser.UserId ?? "", id), cancellationToken);
+        return result.Outcome switch
+        {
+            NotificationsOutcome.Unauthorized => Unauthorized(),
+            NotificationsOutcome.NotFound => NotFound(),
+            NotificationsOutcome.Ok => Ok(result.Notification),
+            _ => StatusCode(500),
+        };
     }
 
     [HttpPost("read-all")]
-    public IActionResult MarkAllRead()
+    public async Task<IActionResult> MarkAllRead(CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
-
-        foreach (var n in db.Notifications.Where(x => x.UserId == user.Id && !x.Read))
-            n.Read = true;
-        db.SaveChanges();
-
-        return NoContent();
+        var outcome = await mediator.Send(new MarkAllNotificationsReadCommand(currentUser.UserId ?? ""), cancellationToken);
+        return outcome switch
+        {
+            NotificationsOutcome.Unauthorized => Unauthorized(),
+            NotificationsOutcome.NoContent => NoContent(),
+            _ => StatusCode(500),
+        };
     }
 
     [HttpPost("dispatch")]
-    public IActionResult Dispatch([FromBody] DispatchRequest? body)
+    public async Task<IActionResult> Dispatch([FromBody] DispatchRequest? body, CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
-        if (body is null) return BadRequest();
-
-        var type = NotificationCatalog.All.FirstOrDefault(t => t.Code == body.Code);
-        if (type is null) return UnprocessableEntity(new { error = $"Unknown notification code '{body.Code}'." });
-
-        var data = body.Data ?? new();
-
-        foreach (var recipientId in body.RecipientIds)
+        var result = await mediator.Send(new DispatchNotificationCommand(currentUser.UserId ?? "", body), cancellationToken);
+        return result.Outcome switch
         {
-            var pref = db.Preferences.Find(recipientId, body.Code);
-            var subject = Render(type.Title, data);
-            var bodyText = Render(type.BodyTemplate, data);
-
-            if (pref is null || pref.InApp)
-            {
-                db.Notifications.Add(new NotificationRow
-                {
-                    UserId = recipientId,
-                    Code = body.Code,
-                    Title = subject,
-                    Body = bodyText,
-                    Data = data,
-                    Read = false,
-                    CreatedAt = DateTimeOffset.UtcNow,
-                    Severity = type.Severity.ToString(),
-                });
-            }
-
-            if (pref is null || pref.Email)
-            {
-                mail.Send(recipientId, subject, bodyText);
-            }
-
-            if (pref?.Push == true)
-            {
-                push.Enqueue(recipientId, subject, bodyText);
-            }
-        }
-
-        db.SaveChanges();
-        return NoContent();
+            NotificationsOutcome.Unauthorized => Unauthorized(),
+            NotificationsOutcome.BadRequest => BadRequest(),
+            NotificationsOutcome.Unprocessable => UnprocessableEntity(new { error = result.Error }),
+            NotificationsOutcome.NoContent => NoContent(),
+            _ => StatusCode(500),
+        };
     }
 
     [HttpGet("preferences")]
-    public IActionResult ListPreferences()
+    public async Task<IActionResult> ListPreferences(CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
-
-        var stored = db.Preferences.Where(p => p.UserId == user.Id).ToList();
-
-        var result = NotificationCatalog.All.Select(t =>
+        var result = await mediator.Send(new ListNotificationPreferencesQuery(currentUser.UserId ?? ""), cancellationToken);
+        return result.Outcome switch
         {
-            var s = stored.FirstOrDefault(p => p.Code == t.Code);
-            return new
+            NotificationsOutcome.Unauthorized => Unauthorized(),
+            NotificationsOutcome.Ok => Ok(result.Items.Select(p => new
             {
-                code = t.Code,
-                inApp = s?.InApp ?? true,
-                email = s?.Email ?? true,
-                push = s?.Push ?? false,
-            };
-        }).ToList();
-
-        return Ok(result);
+                code = p.Code,
+                inApp = p.InApp,
+                email = p.Email,
+                push = p.Push,
+            }).ToList()),
+            _ => StatusCode(500),
+        };
     }
 
     [HttpPut("preferences")]
-    public IActionResult UpsertPreference([FromBody] UpsertPreferenceRequest? body)
+    public async Task<IActionResult> UpsertPreference([FromBody] UpsertPreferenceRequest? body, CancellationToken cancellationToken)
     {
-        var user = GetCurrentUser();
-        if (user is null) return Unauthorized();
-        if (body is null) return BadRequest();
-
-        var existing = db.Preferences.Find(user.Id, body.Code);
-        if (existing is not null)
+        var result = await mediator.Send(new UpsertNotificationPreferenceCommand(currentUser.UserId ?? "", body), cancellationToken);
+        return result.Outcome switch
         {
-            existing.InApp = body.InApp;
-            existing.Email = body.Email;
-            existing.Push = body.Push;
-        }
-        else
-        {
-            db.Preferences.Add(new PreferenceRow
-            {
-                UserId = user.Id,
-                Code = body.Code,
-                InApp = body.InApp,
-                Email = body.Email,
-                Push = body.Push,
-            });
-        }
-        db.SaveChanges();
-
-        return Ok(new { userId = user.Id, code = body.Code, inApp = body.InApp, email = body.Email, push = body.Push });
-    }
-
-    private static string Render(string template, Dictionary<string, string> data) =>
-        data.Aggregate(template, (t, kv) => t.Replace("{" + kv.Key + "}", kv.Value));
-
-    private static NotificationDto ToDto(NotificationRow n) =>
-        new(n.Id, n.Code, n.Title, n.Body, n.Data, n.Read, n.CreatedAt, n.DeepLink, n.Severity);
-
-    private SeedUser? GetCurrentUser()
-    {
-        var userId = User.FindFirst("sub")?.Value ?? "";
-        return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
+            NotificationsOutcome.Unauthorized => Unauthorized(),
+            NotificationsOutcome.BadRequest => BadRequest(),
+            NotificationsOutcome.Ok => Ok(result.Payload),
+            _ => StatusCode(500),
+        };
     }
 }
 

@@ -1,28 +1,20 @@
 // traces_to: L2-023
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TheUpperRoom.Api.Auth;
 
 namespace TheUpperRoom.Api.Rbac;
 
 [ApiController]
 [Authorize]
 [Route("api/v1/users")]
-public sealed class UsersController : ControllerBase
+public sealed class UsersController(IMediator mediator, ICurrentUser currentUser) : ControllerBase
 {
     [HttpGet("me")]
-    public ActionResult<MeResponse> Me()
+    public async Task<ActionResult<MeResponse>> Me(CancellationToken cancellationToken)
     {
-        var userId = User.FindFirst("sub")?.Value ?? "";
-        if (string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user))
-        {
-            return Unauthorized();
-        }
-
-        return Ok(new MeResponse(
-            user.Id,
-            user.Email,
-            user.City,
-            new[] { user.Role },
-            Permissions.For(user.Role).ToArray()));
+        var response = await mediator.Send(new GetCurrentUserQuery(currentUser.UserId ?? ""), cancellationToken);
+        return response is null ? Unauthorized() : Ok(response);
     }
 }

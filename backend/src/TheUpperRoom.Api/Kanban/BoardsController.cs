@@ -2,14 +2,18 @@
 // Traces to: TASK-0228
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Api.Auth;
+using TheUpperRoom.Application.Users;
 
 namespace TheUpperRoom.Api.Kanban;
 
 [ApiController]
 [Authorize]
 [Route("api/v1/boards")]
-public sealed class BoardsController(KanbanDbContext db) : ControllerBase
+public sealed class BoardsController(
+    KanbanDbContext db,
+    ICurrentUser currentUser,
+    IUserDirectory userDirectory) : ControllerBase
 {
     internal static IReadOnlyList<(string BoardId, string BoardTitle, object[] Cards)> GetMyBoardGroups(string userId, KanbanDbContext db) =>
         db.Boards.Select(b => new { b.Id, b.Name }).AsEnumerable()
@@ -187,11 +191,8 @@ public sealed class BoardsController(KanbanDbContext db) : ControllerBase
         return NoContent();
     }
 
-    private SeedUser? CurrentUser()
-    {
-        var userId = User.FindFirst("sub")?.Value ?? "";
-        return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
-    }
+    private AppUser? CurrentUser() =>
+        userDirectory.GetById(currentUser.UserId ?? "");
 }
 
 public sealed record PatchBoardRequest(string? Name, string? SwimlaneMode);

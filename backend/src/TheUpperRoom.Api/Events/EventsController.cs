@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Api.Auth;
+using TheUpperRoom.Application.Users;
 
 namespace TheUpperRoom.Api.Events;
 
@@ -24,7 +25,10 @@ public sealed record CreateEventRequest(
 [ApiController]
 [Authorize]
 [Route("api/v1/events")]
-public sealed class EventsController(EventsDbContext db) : ControllerBase
+public sealed class EventsController(
+    EventsDbContext db,
+    ICurrentUser currentUser,
+    IUserDirectory userDirectory) : ControllerBase
 {
     [HttpGet]
     public IActionResult List(
@@ -215,9 +219,6 @@ public sealed class EventsController(EventsDbContext db) : ControllerBase
         return null;
     }
 
-    private SeedUser? GetCurrentUser()
-    {
-        var userId = User.FindFirst("sub")?.Value ?? "";
-        return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
-    }
+    private AppUser? GetCurrentUser() =>
+        userDirectory.GetById(currentUser.UserId ?? "");
 }

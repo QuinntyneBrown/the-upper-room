@@ -1,12 +1,13 @@
 // traces_to: L2-060, L2-077
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Contacts;
 using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Api.Partners;
-using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Application.Users;
 
 
 namespace TheUpperRoom.Api.Search;
@@ -16,7 +17,13 @@ public sealed record SearchResult(string Id, string Type, string Title, string? 
 [ApiController]
 [Authorize]
 [Route("api/v1/search")]
-public sealed class SearchController(ContactsDbContext contactsDb, EventsDbContext eventsDb, IdeasDbContext ideasDb, LocationsDbContext locationsDb) : ControllerBase
+public sealed class SearchController(
+    ContactsDbContext contactsDb,
+    EventsDbContext eventsDb,
+    IdeasDbContext ideasDb,
+    LocationsDbContext locationsDb,
+    ICurrentUser currentUser,
+    IUserDirectory userDirectory) : ControllerBase
 {
     private const int MaxPerGroup = 5;
 
@@ -62,9 +69,6 @@ public sealed class SearchController(ContactsDbContext contactsDb, EventsDbConte
     private static object EmptyResult() =>
         new { contacts = Array.Empty<object>(), partners = Array.Empty<object>(), events = Array.Empty<object>(), ideas = Array.Empty<object>(), locations = Array.Empty<object>() };
 
-    private SeedUser? GetCurrentUser()
-    {
-        var userId = User.FindFirst("sub")?.Value ?? "";
-        return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
-    }
+    private AppUser? GetCurrentUser() =>
+        userDirectory.GetById(currentUser.UserId ?? "");
 }
