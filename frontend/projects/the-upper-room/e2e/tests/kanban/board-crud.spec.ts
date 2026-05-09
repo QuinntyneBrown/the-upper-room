@@ -22,7 +22,7 @@ const board1: BoardListItem = {
 };
 
 async function seedLead(page: Page, permissions: string[] = ['KanbanBoard:Create']): Promise<void> {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate((perms) => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

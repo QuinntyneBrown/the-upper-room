@@ -7,7 +7,7 @@ test('unauthenticated /contacts redirects to /sign-in?returnUrl=%2Fcontacts', as
 });
 
 test('Member visiting /admin/users → /forbidden + warning snackbar', async ({ page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;
@@ -22,7 +22,7 @@ test('Member visiting /admin/users → /forbidden + warning snackbar', async ({ 
 });
 
 test('SystemAdmin visiting /admin/users loads', async ({ page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

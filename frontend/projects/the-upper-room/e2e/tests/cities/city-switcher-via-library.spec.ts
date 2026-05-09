@@ -5,7 +5,7 @@ import { CitySwitcher } from '../../components/CitySwitcher';
 
 async function seedAuthAdmin(page: import('@playwright/test').Page): Promise<void> {
   // First navigation bootstraps Angular and registers __setTestToken / __setRbac
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;
@@ -25,7 +25,7 @@ async function seedAuthAdmin(page: import('@playwright/test').Page): Promise<voi
   });
 
   // Second navigation — now authenticated, AppShell renders with TarCitySwitcher
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
 }
 
 test('city switcher renders in shell after library move', async ({ page }) => {

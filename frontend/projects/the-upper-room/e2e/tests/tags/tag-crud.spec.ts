@@ -5,7 +5,7 @@ import { TagsPage } from '../../pages/TagsPage';
 const VIP = { id: 't1', name: 'VIP', color: 'purple', usageCount: 0 };
 
 async function seedAdmin(page: import('@playwright/test').Page): Promise<void> {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

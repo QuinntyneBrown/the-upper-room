@@ -12,7 +12,7 @@ function makeContacts(n: number) {
 }
 
 async function seedLead(page: import('@playwright/test').Page): Promise<void> {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

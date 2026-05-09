@@ -10,7 +10,7 @@ test('missing XSRF cookie on sign-out returns 403 and shows error', async ({ pag
     });
   });
 
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;
@@ -20,7 +20,7 @@ test('missing XSRF cookie on sign-out returns 403 and shows error', async ({ pag
     win.__setRbac?.({ roles: ['Member'], permissions: [] });
   });
 
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.getByTestId('avatar-trigger').click();
   await page.getByTestId('avatar-menu-sign-out').click();
 

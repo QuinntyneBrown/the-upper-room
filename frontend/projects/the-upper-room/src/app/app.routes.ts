@@ -1,7 +1,6 @@
 // traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016, L2-015, L2-017, L2-024, L2-038, L2-029, L2-032, L2-048, L2-052
 import { Routes } from '@angular/router';
 import { Landing } from './landing/landing';
-import { Stub } from './stub/stub';
 import { AppShell } from './shell/app-shell/app-shell';
 import { NotFound } from './error/not-found/not-found';
 import { Forbidden } from './error/forbidden/forbidden';
@@ -62,7 +61,6 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: Dashboard },
-      { path: 'dashboard-stub', component: Stub },
       { path: 'contacts', component: ContactList },
       {
         path: 'contacts/new',

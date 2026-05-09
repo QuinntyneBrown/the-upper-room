@@ -7,7 +7,7 @@ async function seedUser(
   roles: string[],
   permissions: string[],
 ): Promise<void> {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(
     ({ roles, permissions }) => {
       const win = window as unknown as {

@@ -6,7 +6,7 @@ test.describe('theme toggle', () => {
   test('default System: dark OS adds [data-theme=dark]', async ({ browser }) => {
     const ctx = await browser.newContext({ colorScheme: 'dark' });
     const page = await ctx.newPage();
-    await page.goto('/dashboard-stub');
+    await page.goto('/sign-in');
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
     await ctx.close();
   });
@@ -14,7 +14,7 @@ test.describe('theme toggle', () => {
   test('default System: light OS leaves no theme override', async ({ browser }) => {
     const ctx = await browser.newContext({ colorScheme: 'light' });
     const page = await ctx.newPage();
-    await page.goto('/dashboard-stub');
+    await page.goto('/sign-in');
     const attr = await page.locator('html').getAttribute('data-theme');
     expect(attr === null || attr === 'light').toBe(true);
     await ctx.close();

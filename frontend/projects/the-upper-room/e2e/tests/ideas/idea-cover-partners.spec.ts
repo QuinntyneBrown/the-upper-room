@@ -23,7 +23,7 @@ const partner1 = { id: 'p1', name: 'Grace Church', website: 'https://grace.org',
 const partner2 = { id: 'p2', name: 'City Outreach', website: '', cityId: 'Toronto' };
 
 async function seedLead(page: import('@playwright/test').Page): Promise<void> {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

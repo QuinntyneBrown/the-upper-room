@@ -4,7 +4,7 @@ import { InactivityDialog } from '../../components/InactivityDialog';
 
 test('after 30 min of idle, dialog appears with countdown 60', async ({ page }) => {
   await page.clock.install();
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     (window as unknown as { __setTestToken?: (t: string) => void }).__setTestToken?.('t');
   });
@@ -16,7 +16,7 @@ test('after 30 min of idle, dialog appears with countdown 60', async ({ page }) 
 
 test('Stay signed in dismisses the dialog', async ({ page }) => {
   await page.clock.install();
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     (window as unknown as { __setTestToken?: (t: string) => void }).__setTestToken?.('t');
   });
@@ -29,7 +29,7 @@ test('Stay signed in dismisses the dialog', async ({ page }) => {
 test('after another 60s with no interaction, redirects to /sign-in', async ({ page }) => {
   await page.clock.install();
   await page.route('**/api/v1/auth/sign-out', (r) => r.fulfill({ status: 204, body: '' }));
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     (window as unknown as { __setTestToken?: (t: string) => void }).__setTestToken?.('t');
   });

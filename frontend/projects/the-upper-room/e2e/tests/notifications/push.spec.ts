@@ -11,7 +11,7 @@ const mockSubscription = {
 };
 
 async function seedUser(page: import('@playwright/test').Page): Promise<void> {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;
@@ -73,7 +73,7 @@ test('dispatch with push enabled fires push event handled by SW', async ({ page 
   });
 
   await seedUser(page);
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
 
   const pending = await page.evaluate(async () => {
     const r = await fetch('/api/v1/push/test/pending?userId=user-token');

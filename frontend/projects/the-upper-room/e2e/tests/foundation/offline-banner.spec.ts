@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 import { OfflineBanner } from '../../components/OfflineBanner';
 
 test('offline → banner; back online → "Back online"; auto-dismiss', async ({ context, page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   const banner = new OfflineBanner(page);
   await context.setOffline(true);
   await expect(banner.text()).toHaveText(
@@ -17,7 +17,7 @@ test('offline → banner; back online → "Back online"; auto-dismiss', async ({
 });
 
 test('manual close stays closed until next state change', async ({ context, page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   const banner = new OfflineBanner(page);
   await context.setOffline(true);
   await expect(banner.root()).toBeVisible();

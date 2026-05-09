@@ -24,7 +24,7 @@ async function seedProfile(page: import('@playwright/test').Page, role: 'SystemA
     }
     return route.continue();
   });
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate((r) => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

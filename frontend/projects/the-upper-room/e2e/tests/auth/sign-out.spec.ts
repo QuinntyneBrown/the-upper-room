@@ -4,7 +4,7 @@ import { AppShell } from '../../components/AppShell';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
 
 async function signInToken(page: import('@playwright/test').Page) {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as { __setTestToken?: (t: string) => void };
     win.__setTestToken?.('test-token');

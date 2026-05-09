@@ -60,7 +60,7 @@ async function seed(page: Page, initial: BoardCard[]): Promise<{ moveCalls: { ca
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: cardId, columnId: body.targetColumnId }) });
   });
 
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

@@ -17,7 +17,7 @@ function defaultPrefs(): PrefDto[] {
 }
 
 async function seedUser(page: Page): Promise<void> {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;
@@ -101,7 +101,7 @@ test('disabled event_reminder_24h skips dispatch delivery', async ({ page }) => 
 
   await expect(new NotificationPreferencesPage(page).toggle('event_reminder_24h', 'inApp')).not.toBeChecked();
 
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   const bell = new NotificationBell(page);
   await expect(bell.badge()).toBeHidden();
 });

@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 import { NotificationBell } from '../../components/NotificationBell';
 
 async function seedAuthUser(page: import('@playwright/test').Page): Promise<void> {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;
@@ -37,7 +37,7 @@ async function seedAuthUser(page: import('@playwright/test').Page): Promise<void
     });
   });
 
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
 }
 
 test('notification bell renders in shell after library move', async ({ page }) => {
@@ -56,7 +56,7 @@ test('unread badge count shows', async ({ page }) => {
 });
 
 test('notification preferences page renders', async ({ page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

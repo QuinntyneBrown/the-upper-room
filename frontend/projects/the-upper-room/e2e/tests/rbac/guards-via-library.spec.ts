@@ -10,7 +10,7 @@ test('authGuard redirects unauthenticated user to sign-in after library move', a
 });
 
 test('roleGuard redirects user without Admin role to forbidden after library move', async ({ page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;
@@ -26,7 +26,7 @@ test('roleGuard redirects user without Admin role to forbidden after library mov
 });
 
 test('permissionGuard redirects user without required permission to forbidden after library move', async ({ page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

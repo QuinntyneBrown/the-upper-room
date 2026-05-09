@@ -15,7 +15,7 @@ test('manifest returns correct name, short_name, display and start_url', async (
 });
 
 test('service worker registers on first load', async ({ page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => navigator.serviceWorker.ready);
 
   const registered = await page.evaluate(async (): Promise<boolean> => {
@@ -32,7 +32,7 @@ test('API responses are not cached by service worker', async ({ page }) => {
     route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ status: 'ok' }) });
   });
 
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => fetch('/api/v1/health'));
   await page.evaluate(() => fetch('/api/v1/health'));
 

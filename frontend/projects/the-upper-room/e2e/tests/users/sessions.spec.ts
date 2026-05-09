@@ -26,7 +26,7 @@ async function seed(page: import('@playwright/test').Page) {
       return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ items: seedSessions }) });
     return route.continue();
   });
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

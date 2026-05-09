@@ -5,7 +5,7 @@ import { AppShell } from '../../components/AppShell';
 test.describe('app shell', () => {
   test('XS: top bar 56px; drawer hidden until toggle', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 800 });
-    await page.goto('/dashboard-stub');
+    await page.goto('/sign-in');
     const shell = new AppShell(page);
     await expect(shell.topBar()).toHaveCSS('height', '56px');
     await expect(shell.drawer()).toBeHidden();
@@ -16,7 +16,7 @@ test.describe('app shell', () => {
 
   test('LG: drawer permanently visible 280px; toggle hidden', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto('/dashboard-stub');
+    await page.goto('/sign-in');
     const shell = new AppShell(page);
     await expect(shell.drawer()).toBeVisible();
     await expect(shell.drawer()).toHaveCSS('width', '280px');
@@ -40,7 +40,7 @@ test.describe('app shell', () => {
   });
 
   test('first Tab focuses skip link, activating it focuses <main>', async ({ page }) => {
-    await page.goto('/dashboard-stub');
+    await page.goto('/sign-in');
     const shell = new AppShell(page);
     await page.keyboard.press('Tab');
     await expect(shell.skipLink()).toBeFocused();
@@ -50,7 +50,7 @@ test.describe('app shell', () => {
 
   test('top bar gains elevation after scroll > 200px', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto('/dashboard-stub');
+    await page.goto('/sign-in');
     const shell = new AppShell(page);
     await expect(shell.topBar()).toHaveCSS('box-shadow', 'none');
     await page.evaluate(() => window.scrollTo(0, 250));

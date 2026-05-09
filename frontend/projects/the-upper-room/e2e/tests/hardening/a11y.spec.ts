@@ -42,7 +42,7 @@ for (const route of publicRoutes) {
 
 for (const route of protectedRoutes) {
   test(`axe: zero serious/critical violations on ${route}`, async ({ page }) => {
-    await page.goto('/dashboard-stub');
+    await page.goto('/sign-in');
     await seedAuth(page);
     await page.goto(route);
     await page.waitForLoadState('networkidle');
@@ -52,7 +52,7 @@ for (const route of protectedRoutes) {
 }
 
 test('skip-to-content is the first focusable element on shell pages', async ({ page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await seedAuth(page);
   await page.goto('/contacts');
   await page.keyboard.press('Tab');
@@ -61,7 +61,7 @@ test('skip-to-content is the first focusable element on shell pages', async ({ p
 });
 
 test('activating skip-to-content link lands focus on <main>', async ({ page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await seedAuth(page);
   await page.goto('/contacts');
   await page.keyboard.press('Tab');
@@ -71,7 +71,7 @@ test('activating skip-to-content link lands focus on <main>', async ({ page }) =
 });
 
 test('confirm-dialog: Esc closes dialog', async ({ page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await seedAuth(page);
   await page.goto('/contacts');
   await page.waitForLoadState('networkidle');
@@ -88,7 +88,7 @@ test('confirm-dialog: Esc closes dialog', async ({ page }) => {
 });
 
 test('confirm-dialog: Tab wraps within dialog focusable elements', async ({ page }) => {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await seedAuth(page);
   await page.goto('/contacts');
   await page.waitForLoadState('networkidle');

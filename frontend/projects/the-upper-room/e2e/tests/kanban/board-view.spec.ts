@@ -51,7 +51,7 @@ async function seedLeadAndRoute(page: Page): Promise<void> {
   await page.route('**/api/v1/boards/b1', (r) =>
     r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(detail) }),
   );
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

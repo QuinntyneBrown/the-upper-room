@@ -39,7 +39,7 @@ function makeIdea(overrides: Partial<IdeaDetailDto> = {}): IdeaDetailDto {
 }
 
 async function seedUser(page: Page, userId: string, roles: string[], permissions: string[]): Promise<void> {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(([id, r, p]) => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;

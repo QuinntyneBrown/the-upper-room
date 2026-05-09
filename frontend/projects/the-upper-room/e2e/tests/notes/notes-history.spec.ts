@@ -28,7 +28,7 @@ function makeNote(overrides = {}) {
 }
 
 async function seedUser(page: import('@playwright/test').Page, token: string): Promise<void> {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate((t) => {
     const win = window as unknown as { __setTestToken?: (t: string) => void };
     win.__setTestToken?.(t);

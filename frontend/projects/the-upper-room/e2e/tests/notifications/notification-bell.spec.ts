@@ -15,7 +15,7 @@ interface NotificationDto {
 }
 
 async function seedUser(page: Page): Promise<void> {
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {
       __setTestToken?: (t: string) => void;
@@ -35,7 +35,7 @@ test('zero unread: no badge, empty state shown', async ({ page }) => {
     }));
 
   await seedUser(page);
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
 
   const bell = new NotificationBell(page);
   await expect(bell.badge()).toBeHidden();
@@ -67,7 +67,7 @@ test('dispatch notification → badge shows 1, menu lists row', async ({ page })
     }));
 
   await seedUser(page);
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
 
   const bell = new NotificationBell(page);
   await expect(bell.badge()).toBeVisible();
@@ -105,7 +105,7 @@ test('click row marks read, badge decrements, navigates to deep link', async ({ 
   });
 
   await seedUser(page);
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
 
   const bell = new NotificationBell(page);
   await bell.open();
@@ -147,7 +147,7 @@ test('"Mark all as read" clears badge, rows still listed under All tab', async (
     }));
 
   await seedUser(page);
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
 
   const bell = new NotificationBell(page);
   await expect(bell.badge()).toBeVisible();

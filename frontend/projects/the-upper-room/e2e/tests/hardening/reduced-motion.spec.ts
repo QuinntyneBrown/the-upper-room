@@ -14,7 +14,7 @@ async function seedAuth(page: import('@playwright/test').Page): Promise<void> {
 
 test('drawer opens instantly under prefers-reduced-motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await seedAuth(page);
   await page.goto('/contacts');
 
@@ -30,7 +30,7 @@ test('drawer opens instantly under prefers-reduced-motion', async ({ page }) => 
 
 test('skeleton element has no shimmer animation under prefers-reduced-motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await seedAuth(page);
   await page.goto('/contacts');
 
@@ -50,7 +50,7 @@ test('skeleton element has no shimmer animation under prefers-reduced-motion', a
 
 test('snackbar appears instantly under prefers-reduced-motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await seedAuth(page);
   await page.goto('/contacts');
 
@@ -71,7 +71,7 @@ test('snackbar appears instantly under prefers-reduced-motion', async ({ page })
 
 test('idea vote button does not play scale animation under prefers-reduced-motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/dashboard-stub');
+  await page.goto('/sign-in');
   await seedAuth(page);
   await page.goto('/ideas');
   await page.waitForLoadState('networkidle');
