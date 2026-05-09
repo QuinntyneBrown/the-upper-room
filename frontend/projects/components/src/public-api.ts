@@ -71,3 +71,6 @@ export * from './lib/password-strength/password-policy';
 export * from './lib/avatar/tar-avatar';
 export * from './lib/avatar/tar-avatar-uploader';
 export * from './lib/avatar/initials';
+
+// Formatting
+export * from './lib/relative-time/relative-time';
