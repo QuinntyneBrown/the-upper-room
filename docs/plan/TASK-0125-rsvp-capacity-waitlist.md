@@ -1,7 +1,7 @@
 ---
 id: TASK-0125
 title: RSVP + capacity + waitlist
-status: Draft
+status: Accepted
 phase: E
 depends_on: [TASK-0123]
 traces_to: [L2-052, L2-055]
