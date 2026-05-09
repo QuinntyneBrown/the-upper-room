@@ -14,6 +14,8 @@ public sealed class PartnersController : ControllerBase
             [new("t-vip", "VIP", "purple")], false)
     ];
 
+    internal static int StoreCount() => _store.Count(p => !p.Archived);
+
     [HttpGet]
     public IActionResult List(
         [FromQuery] string? search,

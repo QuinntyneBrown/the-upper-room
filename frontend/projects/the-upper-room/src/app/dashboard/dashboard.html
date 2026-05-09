@@ -1,0 +1,60 @@
+@if (data(); as d) {
+  <div class="dashboard">
+    <header class="dashboard__header">
+      <h1 data-testid="dashboard-welcome" class="dashboard__welcome">Welcome, {{ d.firstName }}</h1>
+    </header>
+
+    <div class="dashboard__stats">
+      @for (def of statDefs; track def.id) {
+        <div [attr.data-testid]="'stat-card-' + def.id" class="stat-card">
+          <span class="material-symbols-outlined stat-card__icon">{{ def.icon }}</span>
+          <div>
+            <p [attr.data-testid]="'stat-count-' + def.id" class="stat-card__count">{{ d.stats[def.key] }}</p>
+            <p class="stat-card__label">{{ def.label }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="dashboard__widgets">
+      <div data-testid="dashboard-upcoming-events" class="dashboard-widget">
+        <div class="dashboard-widget__header">
+          <h2 class="dashboard-widget__title">Upcoming Events</h2>
+          <a data-testid="dashboard-view-calendar" routerLink="/events" class="dashboard-widget__link">View calendar</a>
+        </div>
+        @if (d.upcomingEvents.length === 0) {
+          <p class="dashboard-widget__empty">No upcoming events.</p>
+        } @else {
+          @for (ev of d.upcomingEvents; track ev.id) {
+            <a [attr.data-testid]="'upcoming-event-' + ev.id" [routerLink]="['/events', ev.id]" class="dashboard-event-item">
+              <span class="material-symbols-outlined dashboard-event-item__icon">calendar_month</span>
+              <div>
+                <p class="dashboard-event-item__title">{{ ev.title }}</p>
+                <p class="dashboard-event-item__meta">{{ formatDate(ev.startAt) }}{{ ev.location ? ' · ' + ev.location : '' }}</p>
+              </div>
+            </a>
+          }
+        }
+      </div>
+
+      <div data-testid="dashboard-my-boards" class="dashboard-widget">
+        <div class="dashboard-widget__header">
+          <h2 class="dashboard-widget__title">Tasks on My Boards</h2>
+          <a routerLink="/boards" class="dashboard-widget__link">View boards</a>
+        </div>
+        @if (d.tasksOnMyBoards.length === 0) {
+          <p class="dashboard-widget__empty">No assigned tasks.</p>
+        } @else {
+          @for (group of d.tasksOnMyBoards; track group.boardId) {
+            <div [attr.data-testid]="'board-group-' + group.boardId" class="dashboard-board-group">
+              <p class="dashboard-board-group__name">{{ group.boardTitle }}</p>
+              @for (card of group.cards; track card.id) {
+                <div class="dashboard-board-group__card">{{ card.title }}</div>
+              }
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+}

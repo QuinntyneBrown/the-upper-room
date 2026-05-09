@@ -10,6 +10,9 @@ public sealed class BoardsController : ControllerBase
 {
     private static readonly List<BoardListItem> Boards = new();
 
+    internal static IReadOnlyList<(string BoardId, string BoardTitle, object[] Cards)> GetMyBoardGroups(string userId) =>
+        Boards.Select(b => (b.Id, b.Name, Array.Empty<object>())).ToList();
+
     [HttpGet]
     public IActionResult List()
     {

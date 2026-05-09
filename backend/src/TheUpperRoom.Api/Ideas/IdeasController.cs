@@ -32,6 +32,9 @@ public sealed class IdeasController : ControllerBase
     private static readonly List<(string IdeaId, string UserId)> _votes = [];
     private static readonly List<(string IdeaId, string PartnerId, string PartnerName)> _ideaPartners = [];
 
+    internal static int StoreCount() =>
+        _store.Count(i => i.Status != "Archived" && i.Status != "Completed");
+
     private static readonly Dictionary<string, string[]> _proposerTransitions = new()
     {
         ["Draft"] = ["Submitted"],

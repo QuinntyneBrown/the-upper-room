@@ -42,6 +42,7 @@ import { EventList } from './events/event-list/event-list';
 import { EventDetail } from './events/event-detail/event-detail';
 import { EventForm } from './events/event-form/event-form';
 import { DateFormattingTest } from './date-formatting-test/date-formatting-test';
+import { Dashboard } from './dashboard/dashboard';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -67,7 +68,7 @@ export const routes: Routes = [
     component: AppShell,
     canActivate: [authGuard],
     children: [
-      { path: 'dashboard', component: Stub },
+      { path: 'dashboard', component: Dashboard },
       { path: 'dashboard-stub', component: Stub },
       { path: 'contacts', component: ContactList },
       {

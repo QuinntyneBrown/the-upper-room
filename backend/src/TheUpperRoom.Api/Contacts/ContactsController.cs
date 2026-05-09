@@ -26,6 +26,11 @@ public sealed class ContactsController : ControllerBase
         ["c2"] = new() { Id = "c2", Name = "Bob", CityId = "Halifax" },
     };
 
+    internal static int StoreCount(SeedUser user) =>
+        user.Role == Roles.SystemAdmin
+            ? _store.Count
+            : _store.Values.Count(c => c.CityId == user.City);
+
     [HttpGet]
     public IActionResult List([FromQuery] string? search, [FromQuery] int? page, [FromQuery] int? size)
     {
