@@ -1,6 +1,6 @@
 # TASK-UI-009 — Migrate `board-configure.html` to Angular Material / Component Library
 
-**Status:** Accepted  
+**Status:** Complete  
 **Priority:** P2  
 **Effort:** Small (< 1 day)  
 **File:** `frontend/projects/the-upper-room/src/app/kanban/board-configure/board-configure.html`
