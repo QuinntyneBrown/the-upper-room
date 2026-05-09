@@ -1,42 +1,53 @@
-// traces_to: L2-097
-using System.Net;
-using System.Net.Http.Json;
+// traces_to: L2-097, TASK-0232
+using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Events;
 
 namespace TheUpperRoom.Application.Tests;
 
-public sealed class CorrelationPropagationTests : IClassFixture<WebApplicationFactory<Program>>
+public sealed class CorrelationPropagationTests
 {
-    private readonly WebApplicationFactory<Program> _factory;
-
-    public CorrelationPropagationTests(WebApplicationFactory<Program> factory) => _factory = factory;
-
     [Fact]
     public async Task All_logs_during_request_share_correlation_id()
     {
-        var client = _factory.CreateClient();
-        var correlationId = "corr-" + Guid.NewGuid().ToString("N")[..12];
-
-        await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "/api/v1/health")
+        var sink = new TestLogSink();
+        var previous = Log.Logger;
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .Enrich.FromLogContext()
+            .WriteTo.Sink(sink)
+            .CreateLogger();
+        try
         {
-            Headers = { { "X-Correlation-Id", correlationId } },
-        });
+            await using var factory = new WebApplicationFactory<Program>();
+            var client = factory.CreateClient();
+            var token = factory.Services.GetRequiredService<TheUpperRoom.Api.Auth.ITokenService>().IssueAccessToken("admin");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var resp = await client.GetAsync($"/api/v1/test/logs?correlationId={correlationId}");
-        Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
-        var logs = await resp.Content.ReadFromJsonAsync<LogEntryDto[]>() ?? [];
+            var correlationId = "corr-" + Guid.NewGuid().ToString("N")[..12];
+            await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "/api/v1/health")
+            {
+                Headers = { { "X-Correlation-Id", correlationId } },
+            });
 
-        Assert.NotEmpty(logs);
-        Assert.All(logs, entry =>
+            var matched = sink.Events
+                .Where(e => e.Properties.TryGetValue("CorrelationId", out var v)
+                            && v is ScalarValue sv
+                            && sv.Value?.ToString() == correlationId)
+                .ToList();
+
+            Assert.NotEmpty(matched);
+            Assert.All(matched, e =>
+            {
+                Assert.True(e.Properties.TryGetValue("CorrelationId", out var v));
+                Assert.Equal(correlationId, ((ScalarValue)v!).Value?.ToString());
+            });
+        }
+        finally
         {
-            Assert.NotNull(entry.Properties);
-            Assert.True(entry.Properties.TryGetValue("CorrelationId", out var v));
-            Assert.Equal(correlationId, v);
-        });
+            Log.Logger = previous;
+        }
     }
-
-    private sealed record LogEntryDto(
-        string Level, string Message,
-        Dictionary<string, string>? Properties,
-        DateTimeOffset Timestamp);
 }

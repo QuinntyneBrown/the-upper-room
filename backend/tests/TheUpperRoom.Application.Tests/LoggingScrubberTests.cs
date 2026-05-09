@@ -1,52 +1,60 @@
-// traces_to: L2-097
-using System.Net;
-using System.Net.Http.Json;
+// traces_to: L2-097, TASK-0232
 using Microsoft.AspNetCore.Mvc.Testing;
+using Serilog;
+using Serilog.Events;
+using TheUpperRoom.Api.Logging;
 
 namespace TheUpperRoom.Application.Tests;
 
-public sealed class LoggingScrubberTests : IClassFixture<WebApplicationFactory<Program>>
+public sealed class LoggingScrubberTests
 {
-    private readonly WebApplicationFactory<Program> _factory;
     private static readonly string[] SensitiveWords =
         ["password", "secret", "code_verifier", "Authorization", "Cookie", "test-token-do-not-log"];
-
-    public LoggingScrubberTests(WebApplicationFactory<Program> factory) => _factory = factory;
 
     [Fact]
     public async Task Log_entries_do_not_contain_sensitive_field_names_or_values()
     {
-        var client = _factory.CreateClient();
-        var correlationId = "scrub-test-" + Guid.NewGuid().ToString("N")[..8];
-
-        await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "/api/v1/health")
+        var sink = new TestLogSink();
+        var previous = Log.Logger;
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .Enrich.With<SensitiveFieldScrubber>()
+            .Enrich.FromLogContext()
+            .WriteTo.Sink(sink)
+            .CreateLogger();
+        try
         {
-            Headers =
-            {
-                { "X-Correlation-Id", correlationId },
-                { "Authorization", "Bearer test-token-do-not-log" },
-                { "Cookie", "session=abc123" },
-            },
-        });
+            await using var factory = new WebApplicationFactory<Program>();
+            var client = factory.CreateClient();
+            var correlationId = "scrub-test-" + Guid.NewGuid().ToString("N")[..8];
 
-        var resp = await client.GetAsync($"/api/v1/test/logs?correlationId={correlationId}");
-        Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
-        var logs = await resp.Content.ReadFromJsonAsync<LogEntryDto[]>() ?? [];
-
-        foreach (var entry in logs)
-        {
-            foreach (var word in SensitiveWords)
+            await client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "/api/v1/health")
             {
-                Assert.DoesNotContain(word, entry.Message, StringComparison.OrdinalIgnoreCase);
-                if (entry.Properties is not null)
-                    Assert.All(entry.Properties.Values,
-                        v => Assert.DoesNotContain(word, v, StringComparison.OrdinalIgnoreCase));
+                Headers =
+                {
+                    { "X-Correlation-Id", correlationId },
+                    { "Authorization", "Bearer test-token-do-not-log" },
+                    { "Cookie", "session=abc123" },
+                },
+            });
+
+            foreach (var entry in sink.Events)
+            {
+                var rendered = entry.RenderMessage();
+                foreach (var word in SensitiveWords)
+                {
+                    Assert.DoesNotContain(word, rendered, StringComparison.OrdinalIgnoreCase);
+                    foreach (var p in entry.Properties.Values)
+                    {
+                        if (p is ScalarValue sv && sv.Value is string s)
+                            Assert.DoesNotContain(word, s, StringComparison.OrdinalIgnoreCase);
+                    }
+                }
             }
         }
+        finally
+        {
+            Log.Logger = previous;
+        }
     }
-
-    private sealed record LogEntryDto(
-        string Level, string Message,
-        Dictionary<string, string>? Properties,
-        DateTimeOffset Timestamp);
 }

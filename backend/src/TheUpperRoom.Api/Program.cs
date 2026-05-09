@@ -15,12 +15,15 @@ using TheUpperRoom.Api.Logging;
 using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .Enrich.With<SensitiveFieldScrubber>()
-    .Enrich.FromLogContext()
-    .WriteTo.Sink(new InMemorySink())
-    .CreateLogger();
+if (Log.Logger.GetType().Name == "SilentLogger")
+{
+    Log.Logger = new LoggerConfiguration()
+        .MinimumLevel.Information()
+        .Enrich.With<SensitiveFieldScrubber>()
+        .Enrich.FromLogContext()
+        .WriteTo.Console(formatter: new Serilog.Formatting.Compact.CompactJsonFormatter())
+        .CreateLogger();
+}
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
