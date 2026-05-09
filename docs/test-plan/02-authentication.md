@@ -2,11 +2,26 @@
 
 > Mirrors `docs/user-guide.md` §2.
 
+Last aligned with code: 2026-05-09.
+
+## Current implementation map
+
+- Frontend sign-in form: `frontend/projects/the-upper-room/src/app/auth/sign-in/`
+- Frontend PKCE flow: `pkce-auth-provider.ts`, `pkce.service.ts`, `auth-callback/auth-callback.ts`
+- Backend auth endpoints: `backend/src/TheUpperRoom.Api/Auth/AuthController.cs`
+- Token issuance: `backend/src/TheUpperRoom.Api/Auth/TokenService.cs`
+- Current-user claim reader: `backend/src/TheUpperRoom.Api/Auth/CurrentUser.cs`
+- Runtime users: `backend/src/TheUpperRoom.Infrastructure/Users/UsersDbContext.cs`
+
+The UI submit path starts PKCE and redirects to `/__idp/authorize`. The direct `POST /api/v1/auth/sign-in` endpoint is currently only a credential-failure/rate-limit endpoint. The `/auth/exchange` endpoint validates a provided PKCE challenge and issues a JWT plus refresh cookie, but currently issues the JWT subject as `anonymous`; protected feature APIs require a seeded user id such as `admin`, `lead`, `member`, or `guest`.
+
+Sign-up, invitation lookup, verify-email, and reset-password UI screens exist. Their backend endpoints are not currently implemented in `AuthController`; tests for those flows should mark backend integration as blocked unless the endpoint is stubbed by the test harness.
+
 ## Pre-conditions
 
-- Backend running with the in-memory mock auth provider.
-- Frontend at `http://localhost:4200`.
-- Cleared cookies and `localStorage` for the host between sub-flows where noted.
+- Backend and frontend running per `00-overview.md`.
+- Browser storage cleared between auth sub-flows where noted.
+- For API-level authorized requests, use a bearer token issued for one of the seeded user ids.
 
 ## Tests
 
@@ -14,126 +29,105 @@
 
 **Steps**
 
-1. Navigate to `/sign-in` (or click **Sign in** from `/`).
+1. Navigate to `/sign-in`.
 
-**UI verification**
+**Verification**
 
-- Component: `frontend/projects/the-upper-room/src/app/auth/sign-in/sign-in.html:1`.
-- Heading: `<h1 id="sign-in-title" class="sign-in__title">Sign in</h1>` (line 9).
-- Email field: `<tar-text-field label="Email" type="email" autocomplete="email" testId="sign-in-email">` (line 11-20). Label visible: **"Email"**.
-- Password field: `<tar-password-field label="Password" autocomplete="current-password" testId="sign-in-password" toggleTestId="sign-in-toggle-visibility">` (line 22-29). Label visible: **"Password"**.
-- Eye toggle button rendered by `tar-password-field`, `data-testid="sign-in-toggle-visibility"`.
-- Submit button: text **"Sign in"** (line 42), `tar-button variant="filled"`, full width (`[fullWidth]="true"`).
-- Two links below: **"Forgot password?"** → `/forgot-password` (line 46), **"Create account"** → `/sign-up` (line 47).
-- Form has `aria-labelledby="sign-in-title"` (line 7).
-- Typescale: heading uses `--md-sys-typescale-headline-small` (24px/32px Roboto 400) per `_tokens.scss:115` — confirm via Computed.
+- `data-testid="sign-in-card"` form renders.
+- Heading is **"Sign in"**.
+- Email field is labelled **"Email"** with `testId="sign-in-email"`.
+- Password field is labelled **"Password"** with `testId="sign-in-password"` and `toggleTestId="sign-in-toggle-visibility"`.
+- Submit button is **"Sign in"** with `testId="sign-in-submit"`.
+- Links route to `/forgot-password` and `/sign-up`.
+- Initial render makes no auth API call.
 
-**Behavior verification**
-
-- No network calls on initial render.
-
-**Database verification**: N/A.
-
-**Pass criteria**: every label/placeholder/button exactly matches; both links route correctly.
+**Pass criteria**: labels, controls, links, and form accessibility match the template.
 
 **Severity if failing**: High.
 
 ---
 
-### TC-2.2 — Sign-in success → redirect to dashboard
+### TC-2.2 — Sign-in submit starts PKCE authorization
 
 **Steps**
 
-1. On `/sign-in`, type `test@example.com` and `Password!23456`.
-2. Click **Sign in**.
+1. Route or stub `**/__idp/authorize**` so the browser does not leave the test.
+2. On `/sign-in`, type any email/password.
+3. Click **Sign in**.
 
-**UI verification**
+**Verification**
 
-- Submit button briefly disables (`[disabled]="submitting()"`, `sign-in.html:40`).
-- After success URL becomes `/dashboard` (per `sign-in.ts:36`, `router.navigateByUrl('/dashboard')`).
+- `PkceAuthProvider.signIn()` calls `PkceService.beginSignIn()`.
+- Session storage contains transient PKCE `pkce.verifier`, `pkce.state`, and `pkce.nonce` values before redirect.
+- Redirect URL is `/__idp/authorize` with `response_type=code`, `client_id=the-upper-room`, `redirect_uri=<origin>/auth/callback`, `code_challenge_method=S256`, `code_challenge`, `state`, and `nonce`.
+- No password is sent to `/api/v1/auth/sign-in` from the UI path.
 
-**Behavior verification**
-
-- API: `POST /api/v1/auth/sign-in` body `{ "email": "test@example.com", "password": "Password!23456" }`. With the mock provider this returns success and the access-token store is populated.
-- (Note: the live `AuthController.SignIn` in `backend/src/TheUpperRoom.Api/Auth/AuthController.cs:24-51` always returns `401` with `{ "code": "auth.invalid_credentials" }` because the mock auth provider on the frontend short-circuits — verify the success path through the frontend `AUTH_PROVIDER` injection at `frontend/projects/the-upper-room/src/app/auth/sign-in/sign-in.ts:15`.)
-
-**Database verification**
-
-- `AuditStore.Entries` (`backend/src/TheUpperRoom.Api/Audit/AuditStore.cs:6`) contains an entry with `EntityType="Session"`, `Action="Login"` only when going through `POST /api/v1/auth/exchange` (PKCE flow, `AuthController.cs:90`). For the mock-provider path, no audit row is written client-side; this is acceptable.
-
-**Pass criteria**: lands on `/dashboard`; access token present in memory (verify `frontend/projects/the-upper-room/src/app/auth/access-token-store.ts`).
+**Pass criteria**: submit starts PKCE and redirects to the IdP authorize URL with the required parameters.
 
 **Severity if failing**: Critical.
 
 ---
 
-### TC-2.3 — Sign-in failure shows `auth.invalid_credentials` message
+### TC-2.3 — Auth callback exchanges code and stores token
 
 **Steps**
 
-1. On `/sign-in`, type `wrong@example.com` and any password.
-2. Click **Sign in**.
+1. In the browser, seed `sessionStorage.pkce.state` and `sessionStorage.pkce.verifier`.
+2. Stub `POST /api/v1/auth/exchange` to return `{ "accessToken": "real-access-token" }`.
+3. Navigate to `/auth/callback?code=auth-code-123&state=<matching-state>`.
 
-**UI verification**
+**Verification**
 
-- Inline error appears: `<p data-testid="sign-in-error-form" class="sign-in__form-error" role="alert">` (`sign-in.html:32`).
-- Message text: **"The email or password is incorrect."** (mapped from `auth.invalid_credentials` via `frontend/projects/the-upper-room/src/app/interceptors/error-catalog.ts:5`).
+- Callback consumes the stored verifier/state.
+- Request body contains `code` and `codeVerifier`.
+- Access token is stored through `AccessTokenStore`.
+- Browser navigates to `/dashboard`.
+- No JWT-like access token is written to `localStorage`.
 
-**Behavior verification**
+**Backend note**
 
-- API: `POST /api/v1/auth/sign-in` returns `401` body `{ "code": "auth.invalid_credentials" }` (`AuthController.cs:50`).
-- `mapErrorToMessage(401, 'auth.invalid_credentials')` → "The email or password is incorrect." (`error-catalog.ts:34`).
+The live backend exchange contract also expects `expectedChallenge`; the current frontend callback does not send it. Use a route stub for this UI test or test the backend exchange directly with `code`, `codeVerifier`, and `expectedChallenge`.
 
-**Database verification**: N/A (failed sign-in does not persist).
+**Pass criteria**: callback success path stores token in memory and lands on `/dashboard` when the exchange is stubbed successfully.
 
-**Pass criteria**: exact message displays; user remains on `/sign-in`.
-
-**Severity if failing**: High.
+**Severity if failing**: Critical.
 
 ---
 
-### TC-2.4 — Empty email shows "Email is required"
+### TC-2.4 — Auth callback rejects missing or mismatched state
 
 **Steps**
 
-1. Leave email blank, type any password.
-2. Click **Sign in**.
+1. Seed `sessionStorage.pkce.state` with `expected`.
+2. Navigate to `/auth/callback?code=auth-code&state=wrong`.
 
-**UI verification**
+**Verification**
 
-- Email field error slot shows **"Email is required"** (`sign-in.ts:29`, `emailError.set('Email is required')`).
-- Form-level error not shown.
+- Snackbar shows **"Sign-in failed. Please try again."**
+- Browser returns to `/sign-in`.
+- No exchange request is made.
 
-**Behavior verification**: no API call.
+**Pass criteria**: state mismatch cannot exchange a code.
 
-**Pass criteria**: client-side guard fires before HTTP.
-
-**Severity if failing**: Medium.
+**Severity if failing**: Critical.
 
 ---
 
-### TC-2.5 — Sign-in rate limit: 5 attempts → 429
+### TC-2.5 — Direct sign-in rate limit: 5 attempts returns 429
 
 **Steps**
 
-1. POST 5 times in quick succession to `/api/v1/auth/sign-in` with `{"email":"x@example.com","password":"x"}` (e.g. via `curl` or DevTools fetch).
+1. POST five times to `/api/v1/auth/sign-in` with the same email.
 
-**Behavior verification**
+**Verification**
 
-- Attempts 1–4 return `401` with `{ "code": "auth.invalid_credentials" }`.
-- Attempt 5 returns `429` with body `{ "error": "rate_limit_exceeded" }` and header `Retry-After: 1800` (`AuthController.cs:43-47`).
-- Bucket logic in `AuthController.cs:103-116` — window 15 minutes, lock 30 minutes.
-- Subsequent attempts within 30 min continue to return `429` (`IsLocked` check at `AuthController.cs:34-38`).
+- Attempts 1-4 return `401` with `{ "code": "auth.invalid_credentials" }`.
+- Attempt 5 returns `429`, body `{ "error": "rate_limit_exceeded" }`, and header `Retry-After: 1800`.
+- The bucket is an in-memory dictionary in `AuthController`; restart the API to reset it.
 
-**UI verification (frontend rendition)**
+**Pass criteria**: 5th attempt is rate-limited.
 
-- Frontend maps `429 → "Too many requests."` per `error-catalog.ts:18, 29` (no specific code = fallback by status).
-
-**Database verification**: bucket is in-memory `_signInBuckets` dictionary (`AuthController.cs:12`). Restart API to reset.
-
-**Pass criteria**: 5th attempt returns 429 with `Retry-After: 1800`.
-
-**Severity if failing**: Critical (auth abuse).
+**Severity if failing**: Critical.
 
 ---
 
@@ -141,13 +135,13 @@
 
 **Steps**
 
-1. On `/sign-in` type `Password!23456`.
-2. Click the eye icon (`data-testid="sign-in-toggle-visibility"`).
+1. Type a password on `/sign-in`.
+2. Click `data-testid="sign-in-toggle-visibility"`.
 
-**UI verification**
+**Verification**
 
-- Input `type` flips from `password` to `text`. Plaintext visible.
-- Click again → back to `password`. Behavior implemented in `frontend/projects/components/src/lib/password-field/`.
+- Input type flips from `password` to `text`.
+- Clicking again restores `password`.
 
 **Pass criteria**: toggle works both ways.
 
@@ -161,17 +155,20 @@
 
 1. Navigate to `/sign-up`.
 
-**UI verification**
+**Verification**
 
-- Heading: **"Create your account"** (`frontend/projects/the-upper-room/src/app/auth/sign-up/sign-up.html:12`).
-- Email field: label **"Email"**, `data-testid="sign-up-email"` (line 15-25).
-- Password field: label **"Password"**, autocomplete `new-password` (line 34-40).
-- Password strength meter component `<tar-password-strength>` immediately under password (line 41).
-- City field: label **"City"**, `data-testid="sign-up-city"` (line 44-50).
-- Checkbox: text **"I accept the terms and privacy policy"**, `data-testid="sign-up-terms"` (line 52-58).
-- Submit button: text **"Create account"**, `data-testid="sign-up-submit"` (line 60-68), disabled when `canSubmit()` is false.
+- Heading is **"Create your account"**.
+- Email field has `testId="sign-up-email"`.
+- Password field has `testId="sign-up-password"` and shows `<tar-password-strength>`.
+- City field has `testId="sign-up-city"`.
+- Terms checkbox has `testId="sign-up-terms"`.
+- Submit button has `testId="sign-up-submit"` and is disabled until the computed `canSubmit()` rules are satisfied.
 
-**Pass criteria**: every field/label exactly matches.
+**State/API verification**
+
+- `POST /api/v1/auth/sign-up` is not implemented by the current backend. A real integration run should file/block this as backend-missing unless the endpoint is intentionally stubbed.
+
+**Pass criteria**: form UI and client-side enablement match current code.
 
 **Severity if failing**: High.
 
@@ -181,24 +178,20 @@
 
 **Steps**
 
-1. On `/sign-up` enter password values and observe the strength meter (5 bars + label).
+1. On `/sign-up`, enter password samples and observe the meter.
 
-| Input | Expected score | Label | Bar color token |
-| --- | --- | --- | --- |
-| (empty) | 0 | (no label) | n/a |
-| `abc` | 1 | **"Weak"** | `--md-sys-color-error` |
-| `Password1` | 3 | **"Okay"** | `--md-sys-color-secondary` |
-| `Password!23456` | 5 | **"Strong"** | `--md-sys-color-tertiary` |
+| Input | Expected label |
+| --- | --- |
+| `abc` | **"Weak"** |
+| `Hello123!` | **"Okay"** |
+| `Password!23456` | **"Strong"** |
 
-(See evaluator and color logic in `frontend/projects/components/src/lib/password-strength/password-strength.ts:17-30`.)
+**Verification**
 
-**UI verification**
+- The password strength component renders five bars.
+- Labels and filled bar colors follow `evaluatePassword(...)` from the components library.
 
-- 5 bars rendered (`password-strength.html:2`, `[0,1,2,3,4]`).
-- Filled bars use the correct token color.
-- Label text matches.
-
-**Pass criteria**: at least one weak/okay/strong sample evaluates to the expected label.
+**Pass criteria**: weak/okay/strong samples evaluate as expected.
 
 **Severity if failing**: Medium.
 
@@ -208,20 +201,21 @@
 
 **Steps**
 
-1. Navigate to `/invitations/accept?email=invited@example.com&city=Toronto&token=abc` (or whatever query params the link uses).
+1. Navigate to `/invitations/accept?token=<token>`.
+2. Stub `GET /api/v1/invitations?token=<token>` to return `{ "email": "invited@example.com", "city": "Toronto" }`.
 
-**UI verification**
+**Verification**
 
-- Same form as `/sign-up` (route shares the `SignUp` component, see `frontend/projects/the-upper-room/src/app/app.routes.ts:52`).
-- Email field has `[readonly]="fromInvitation()"` (`sign-up.html:23`) — input not editable.
-- City field has `[readonly]="fromInvitation()"` (line 48).
-- The "Sign in" link shown only when there's a duplicate-email error and not from invitation (line 26-30) — hidden in invitation mode.
+- Route uses the `SignUp` component.
+- Email and city fields are populated from the response.
+- Email and city fields are readonly when `fromInvitation()` is true.
+- Duplicate-email sign-in link is hidden in invitation mode.
 
-**Behavior verification**
+**State/API verification**
 
-- Clicking **"Create account"** submits with the prefilled email/city.
+- `GET /api/v1/invitations` is not currently implemented by the backend; use a UI route stub or mark backend integration blocked.
 
-**Pass criteria**: email and city are read-only; submission works.
+**Pass criteria**: invitation UI branch reflects the fetched email/city.
 
 **Severity if failing**: High.
 
@@ -231,16 +225,16 @@
 
 **Steps**
 
-1. Navigate to `/invitations/accept` with an expired/invalid token.
+1. Navigate to `/invitations/accept?token=<expired-token>`.
+2. Stub the invitation lookup to fail.
 
-**UI verification**
+**Verification**
 
-- Component renders the **expired** branch (`sign-up.html:2-9`):
-  - Heading **"This invitation has expired."**
-  - Body **"Ask your city lead to send you a new one."**
-  - Link **"Request a new invite"** routing to `/sign-in`, `data-testid="invitation-request-new"`.
+- Expired branch renders `data-testid="invitation-expired"`.
+- Text includes **"This invitation has expired."**
+- Link `data-testid="invitation-request-new"` routes to `/sign-in`.
 
-**Pass criteria**: full text matches.
+**Pass criteria**: invalid invitation renders the expired branch.
 
 **Severity if failing**: Medium.
 
@@ -251,40 +245,36 @@
 **Steps**
 
 1. Navigate to `/forgot-password`.
+2. Enter an email and submit.
 
-**UI verification**
+**Verification**
 
-- Heading **"Forgot password"** (`frontend/projects/the-upper-room/src/app/auth/forgot-password/forgot-password.html:3`).
-- Email field: label **"Email"**, placeholder **"Email"**, `data-testid="forgot-email"` (line 4-12).
-- Button **"Send reset link"**, `data-testid="forgot-submit"` (line 13-15).
+- Email field has `data-testid="forgot-email"`.
+- Submit button has `data-testid="forgot-submit"` and text **"Send reset link"**.
+- `POST /api/v1/auth/forgot-password` returns `204 No Content` for the first three attempts.
+- UI shows the generic sent confirmation even if the request fails, because errors are caught and converted to success display.
 
-**Behavior verification**
-
-- After submit, confirmation message appears: **"If an account exists for {email}, a reset link has been sent."** (`forgot-password.html:18`).
-- API: `POST /api/v1/auth/forgot-password` returns `204 No Content` on first 3 attempts (`AuthController.cs:53-72`).
-
-**Database verification**: per-email bucket in `_forgotBuckets` (`AuthController.cs:13`).
-
-**Pass criteria**: confirmation shown; 204 returned.
+**Pass criteria**: confirmation appears and the first backend call returns 204.
 
 **Severity if failing**: High.
 
 ---
 
-### TC-2.12 — Forgot-password rate limit: 3 attempts/hour → 429
+### TC-2.12 — Forgot-password rate limit: 3 attempts/hour returns 429
 
 **Steps**
 
-1. POST 4 times to `/api/v1/auth/forgot-password` with the same email within an hour.
+1. POST four times to `/api/v1/auth/forgot-password` with the same email.
 
-**Behavior verification**
+**Verification**
 
-- Attempts 1–3 → `204 No Content`.
-- Attempt 4 → `429` with body `{ "error": "rate_limit_exceeded" }` (`AuthController.cs:65-66`).
+- Attempts 1-3 return `204 No Content`.
+- Attempt 4 returns `429` with `{ "error": "rate_limit_exceeded" }`.
+- Bucket is in-memory in `AuthController`.
 
 **Pass criteria**: 4th call returns 429.
 
-**Severity if failing**: Critical (abuse vector).
+**Severity if failing**: Critical.
 
 ---
 
@@ -292,20 +282,20 @@
 
 **Steps**
 
-1. Navigate to `/reset-password?token=valid` (mock).
+1. Navigate to `/reset-password?token=valid`.
 
-**UI verification**
+**Verification**
 
-- Heading **"Reset password"** (`frontend/projects/the-upper-room/src/app/auth/reset-password/reset-password.html:10`).
-- Field 1: label **"New password"**, `data-testid="reset-new-password"` (line 11-17).
-- Field 2: label **"Confirm password"**, `data-testid="reset-confirm-password"` (line 18-26).
-- Submit button text: **"Reset password"**, `data-testid="reset-submit"` (line 27-29).
+- Heading is **"Reset password"**.
+- New password field has `data-testid="reset-new-password"`.
+- Confirm password field has `data-testid="reset-confirm-password"`.
+- Submit button has `data-testid="reset-submit"`.
 
-**With expired token** (e.g. `?token=expired`):
+**State/API verification**
 
-- Renders heading **"This reset link has expired."**, body **"Please request a new one."**, link **"Forgot password"** routing to `/forgot-password` (`reset-password.html:3-7`).
+- `POST /api/v1/auth/reset-password` is not currently implemented by the backend; mark backend integration blocked unless stubbed.
 
-**Pass criteria**: both branches render correctly.
+**Pass criteria**: reset form renders and submits the documented body when stubbed.
 
 **Severity if failing**: High.
 
@@ -318,11 +308,12 @@
 1. Enter different values in **New password** and **Confirm password**.
 2. Click **Reset password**.
 
-**UI verification**
+**Verification**
 
-- Confirm field error slot (`errorTestId="reset-error-confirm"`, `reset-password.html:23`) shows the mismatch message defined by `confirmError()` in `reset-password.ts`.
+- Confirm field shows **"Passwords do not match."**
+- No backend request is made.
 
-**Pass criteria**: error displays; submit blocked.
+**Pass criteria**: client-side mismatch guard blocks submit.
 
 **Severity if failing**: High.
 
@@ -332,24 +323,17 @@
 
 **Steps**
 
-1. Sign in successfully (`TC-2.2`).
-2. In the top bar click the avatar button (`data-testid="avatar-trigger"`, `frontend/projects/the-upper-room/src/app/shell/app-shell/app-shell.html:25`).
-3. Click **Sign out** (`data-testid="avatar-menu-sign-out"`, line 33).
+1. Enter the app shell with a valid access token.
+2. Click `data-testid="avatar-trigger"`.
+3. Click `data-testid="avatar-menu-sign-out"`.
 
-**UI verification**
+**Verification**
 
-- Menu opens (`role="menu"`, line 32).
-- Item visible: **"Sign out"** (line 41).
-- After click, navigates to `/sign-in` (or `/`).
+- Avatar menu uses `role="menu"` and contains **"Sign out"**.
+- Frontend calls the sign-out service.
+- Backend endpoint is `POST /api/v1/auth/sign-out`, guarded by `[RequireXsrf]`.
+- Refresh cookie `tar.refresh` is deleted from path `/api/v1/auth`.
 
-**Behavior verification**
-
-- API: `POST /api/v1/auth/sign-out` → `204 No Content` (`AuthController.cs:74-80`).
-- Cookie `tar.refresh` deleted from path `/api/v1/auth` (`AuthController.cs:78`).
-- Endpoint requires the `X-XSRF-TOKEN` header (attribute `[RequireXsrf]`, `AuthController.cs:75`). Verify the frontend sends the matching XSRF cookie value.
-
-**Database verification**: N/A.
-
-**Pass criteria**: cookie cleared, redirected to public route.
+**Pass criteria**: sign-out closes the menu, clears refresh cookie state, and returns to a public route.
 
 **Severity if failing**: Critical.

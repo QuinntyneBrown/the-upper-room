@@ -1,8 +1,9 @@
 // traces_to: L2-017
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
+import { SKIP_ERROR_SNACKBAR } from 'api';
 import {
   evaluatePassword,
   SnackbarService,
@@ -58,7 +59,9 @@ export class SignUp implements OnInit {
     const token = this.route.snapshot.queryParamMap.get('token');
     if (!token) return;
     this.http
-      .get<{ email: string; city: string }>(`/api/v1/invitations?token=${encodeURIComponent(token)}`)
+      .get<{ email: string; city: string }>(`/api/v1/invitations?token=${encodeURIComponent(token)}`, {
+        context: new HttpContext().set(SKIP_ERROR_SNACKBAR, true),
+      })
       .pipe(catchError(() => of(null)))
       .subscribe((res) => {
         if (!res) {
