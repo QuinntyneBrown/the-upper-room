@@ -9,24 +9,13 @@ export class TranslateService {
 
   readonly locale = signal(this.detectLocale());
 
-  constructor() {
-    if (typeof window !== 'undefined') {
-      (window as unknown as { __translate: TranslateService }).__translate = this;
-    }
-  }
-
   setLocale(locale: string): void {
     this.locale.set(locale);
   }
 
   translate(key: string): string {
     const dict = this.dicts[this.locale()] ?? this.dicts[this.defaultLocale] ?? {};
-    const value = dict[key];
-    if (value === undefined) {
-      console.warn(`[i18n] missing key: ${key}`);
-      return key;
-    }
-    return value;
+    return dict[key] ?? key;
   }
 
   private detectLocale(): string {
