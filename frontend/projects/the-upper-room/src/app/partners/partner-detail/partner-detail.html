@@ -1,0 +1,112 @@
+@if (partner()) {
+  @let p = partner()!;
+
+  <header data-testid="partner-detail-header" class="partner-header">
+    <div class="partner-header__avatar">
+      @if (p.logo) {
+        <img data-testid="partner-logo" class="partner-header__logo" [src]="p.logo" [alt]="p.name" />
+      } @else {
+        <span data-testid="partner-letter-avatar" class="partner-header__initial">{{ p.name.charAt(0) }}</span>
+      }
+    </div>
+
+    <div class="partner-header__info">
+      <h1 data-testid="partner-detail-name" class="partner-header__name">{{ p.name }}</h1>
+      @if (p.website) {
+        <a
+          data-testid="partner-website-link"
+          class="partner-header__website"
+          [href]="p.website"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="material-symbols-outlined">open_in_new</span>
+          {{ websiteDomain(p.website) }}
+        </a>
+      }
+    </div>
+  </header>
+
+  <nav class="partner-tabs" role="tablist">
+    <button
+      data-testid="partner-tab-overview"
+      type="button"
+      class="partner-tabs__tab"
+      [class.partner-tabs__tab--active]="activeTab() === 'overview'"
+      role="tab"
+      [attr.aria-selected]="activeTab() === 'overview'"
+      (click)="activeTab.set('overview')"
+    >Overview</button>
+    <button
+      data-testid="partner-tab-contacts"
+      type="button"
+      class="partner-tabs__tab"
+      [class.partner-tabs__tab--active]="activeTab() === 'contacts'"
+      role="tab"
+      [attr.aria-selected]="activeTab() === 'contacts'"
+      (click)="activeTab.set('contacts')"
+    >Contacts</button>
+    <button
+      data-testid="partner-tab-activity"
+      type="button"
+      class="partner-tabs__tab"
+      [class.partner-tabs__tab--active]="activeTab() === 'activity'"
+      role="tab"
+      [attr.aria-selected]="activeTab() === 'activity'"
+      (click)="activeTab.set('activity')"
+    >Activity</button>
+  </nav>
+
+  @if (activeTab() === 'overview') {
+    <div data-testid="partner-panel-overview" class="partner-panel" role="tabpanel">
+      @if (p.descriptionMarkdown) {
+        <section class="partner-section">
+          <div data-testid="partner-description" class="partner-description">{{ p.descriptionMarkdown }}</div>
+        </section>
+      } @else {
+        <div data-testid="partner-description" class="partner-description partner-description--empty">
+          No description yet.
+        </div>
+      }
+
+      @if (p.addresses?.length > 0) {
+        <section class="partner-section">
+          <h2 class="partner-section__heading">Addresses</h2>
+          @for (addr of p.addresses; track $index) {
+            <div class="partner-address">
+              @if (addr.street) { <span>{{ addr.street }}</span> }
+              @if (addr.city) { <span>{{ addr.city }}</span> }
+              @if (addr.country) { <span>{{ addr.country }}</span> }
+            </div>
+          }
+        </section>
+      }
+
+      @if (p.socialLinks?.length > 0) {
+        <section class="partner-section">
+          <h2 class="partner-section__heading">Social links</h2>
+          @for (link of p.socialLinks; track $index) {
+            <a
+              [href]="link.url"
+              class="partner-social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >{{ link.platform }}</a>
+          }
+        </section>
+      }
+    </div>
+  }
+
+  @if (activeTab() === 'contacts') {
+    <div data-testid="partner-panel-contacts" class="partner-panel" role="tabpanel">
+      <p class="partner-panel__placeholder">Linked contacts coming soon.</p>
+    </div>
+  }
+
+  @if (activeTab() === 'activity') {
+    <div data-testid="partner-panel-activity" class="partner-panel" role="tabpanel">
+      <p class="partner-panel__placeholder">Activity log coming soon.</p>
+    </div>
+  }
+}

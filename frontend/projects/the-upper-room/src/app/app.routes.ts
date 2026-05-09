@@ -36,6 +36,7 @@ import { AuditLog } from './admin/audit-log/audit-log';
 import { TarNotificationPreferences } from 'domain';
 import { PartnerList } from './partners/partner-list/partner-list';
 import { PartnerCreate } from './partners/partner-create/partner-create';
+import { PartnerDetail } from './partners/partner-detail/partner-detail';
 import { DateFormattingTest } from './date-formatting-test/date-formatting-test';
 
 export const routes: Routes = [
@@ -80,7 +81,7 @@ export const routes: Routes = [
       { path: 'locations/:id', component: LocationDetail },
       { path: 'partners', component: PartnerList },
       { path: 'partners/new', component: PartnerCreate },
-      { path: 'partners/:id', component: Stub },
+      { path: 'partners/:id', component: PartnerDetail },
       { path: 'boards', component: BoardList },
       { path: 'boards/:id', component: BoardView },
       {

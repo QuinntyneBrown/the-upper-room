@@ -1,7 +1,7 @@
 ---
 id: TASK-0072
 title: Partner detail Overview tab
-status: Draft
+status: Done
 phase: P
 depends_on: [TASK-0071]
 traces_to: [L2-036]
