@@ -1,43 +1,27 @@
-<div data-testid="create-board-wizard" class="wizard-overlay" role="dialog" aria-modal="true" aria-labelledby="create-board-title">
-  <form class="wizard" (submit)="onSubmit($event)">
-    <h2 id="create-board-title" class="wizard__title">New board</h2>
-    <label class="wizard__field">
-      <span class="wizard__label">Name</span>
-      <input
-        data-testid="create-board-name"
-        type="text"
-        class="wizard__input"
-        required
-        [value]="name()"
-        (input)="name.set($any($event.target).value)"
-      />
-    </label>
-    <label class="wizard__field">
-      <span class="wizard__label">Description</span>
-      <textarea
-        data-testid="create-board-description"
-        class="wizard__input"
-        rows="3"
-        [value]="description()"
-        (input)="description.set($any($event.target).value)"
-      ></textarea>
-    </label>
-    <label class="wizard__field wizard__field--inline">
-      <input
-        data-testid="create-board-default-columns"
-        type="checkbox"
-        [checked]="defaultColumns()"
-        (change)="defaultColumns.set($any($event.target).checked)"
-      />
-      <span>Create with default columns (To do, In progress, Done)</span>
-    </label>
+<tar-dialog [open]="true" title="New board" testId="create-board-wizard" [showActions]="false" (closed)="onCancel()">
+  <form (submit)="onSubmit($event)" novalidate>
+    <tar-text-field
+      label="Name"
+      testId="create-board-name"
+      [required]="true"
+      [value]="name()"
+      (valueChange)="name.set($event)"
+    />
+    <tar-textarea
+      label="Description"
+      testId="create-board-description"
+      [rows]="3"
+      [value]="description()"
+      (valueChange)="description.set($event)"
+    />
+    <tar-checkbox
+      testId="create-board-default-columns"
+      [checked]="defaultColumns()"
+      (checkedChange)="defaultColumns.set($event)"
+    >Create with default columns (To do, In progress, Done)</tar-checkbox>
     <div class="wizard__actions">
-      <button data-testid="create-board-cancel" type="button" class="btn-text" (click)="onCancel()">
-        Cancel
-      </button>
-      <button data-testid="create-board-submit" type="submit" class="btn-filled">
-        Create
-      </button>
+      <tar-button variant="text" testId="create-board-cancel" type="button" (clicked)="onCancel()">Cancel</tar-button>
+      <tar-button variant="filled" testId="create-board-submit" type="submit">Create</tar-button>
     </div>
   </form>
-</div>
+</tar-dialog>

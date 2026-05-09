@@ -1,5 +1,6 @@
 // traces_to: L2-043, L2-044
 import { Component, EventEmitter, Output, signal } from '@angular/core';
+import { TarButton, TarCheckbox, TarDialog, TarTextarea, TarTextField } from 'components';
 
 export interface CreateBoardForm {
   readonly name: string;
@@ -9,6 +10,7 @@ export interface CreateBoardForm {
 
 @Component({
   selector: 'app-create-board-wizard',
+  imports: [TarButton, TarCheckbox, TarDialog, TarTextarea, TarTextField],
   templateUrl: './create-board-wizard.html',
   styleUrl: './create-board-wizard.scss',
 })
