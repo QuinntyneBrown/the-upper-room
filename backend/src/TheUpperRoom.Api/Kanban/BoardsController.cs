@@ -51,7 +51,7 @@ public sealed class BoardsController(
         var cards = db.Cards.Where(c => c.BoardId == id).OrderBy(c => c.CardOrder)
             .Select(c => new BoardCardDto(c.Id, c.ColumnId, c.Title, Array.Empty<BoardCardTagDto>(), c.AssigneeName, c.DueDate)).ToArray();
 
-        return Ok(new BoardDetailDto(board.Id, board.Name, board.Description, columns, cards));
+        return Ok(new BoardDetailDto(board.Id, board.Name, board.Description, columns, cards, board.SwimlaneMode));
     }
 
     [HttpPost]

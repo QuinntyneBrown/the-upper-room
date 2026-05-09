@@ -18,4 +18,5 @@ public sealed record BoardDetailDto(
     string Name,
     string? Description,
     BoardColumnDto[] Columns,
-    BoardCardDto[] Cards);
+    BoardCardDto[] Cards,
+    string? SwimlaneMode = null);
