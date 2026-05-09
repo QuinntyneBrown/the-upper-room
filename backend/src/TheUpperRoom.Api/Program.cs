@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Context;
 using TheUpperRoom.Api.Auth;
+using TheUpperRoom.Api.Cities;
 using TheUpperRoom.Api.Contacts;
 using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.Ideas;
@@ -66,6 +67,12 @@ builder.Services
         };
     });
 builder.Services.AddAuthorization();
+
+var citiesConn = builder.Configuration["CitiesDb:ConnectionString"]
+                 ?? "Data Source=Data/cities.db";
+EnsureSqliteDirectoryExists(citiesConn);
+builder.Services.AddDbContext<CitiesDbContext>(o => o.UseSqlite(citiesConn));
+builder.Services.AddScoped<IDataSeeder, CitiesDataSeeder>();
 
 var contactsConn = builder.Configuration["ContactsDb:ConnectionString"]
                    ?? "Data Source=Data/contacts.db";
@@ -127,6 +134,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
+    scope.ServiceProvider.GetRequiredService<CitiesDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<ContactsDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<EventsDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<IdeasDbContext>().Database.EnsureCreated();
