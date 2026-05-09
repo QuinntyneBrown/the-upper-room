@@ -1,7 +1,7 @@
 ---
 id: TASK-0195
 title: Extract retryInterceptor to components library
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0007]
 traces_to: []
