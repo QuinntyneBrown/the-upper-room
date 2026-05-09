@@ -18,4 +18,9 @@ export class AuditLogPage {
 
   prevButton(): Locator { return this.page.getByTestId('audit-page-prev'); }
   nextButton(): Locator { return this.page.getByTestId('audit-page-next'); }
+
+  async selectAction(value: string): Promise<void> {
+    await this.actionFilter().click();
+    await this.page.locator('mat-option').filter({ hasText: value }).click();
+  }
 }

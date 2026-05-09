@@ -3,81 +3,60 @@
 </header>
 
 <section class="audit-log__filters">
-  <input
-    data-testid="audit-filter-actor"
-    type="text"
-    class="audit-log__filter-input"
+  <tar-text-field
+    testId="audit-filter-actor"
     placeholder="Actor"
     [value]="filterActor()"
-    (input)="filterActor.set($any($event.target).value)"
+    (valueChange)="filterActor.set($event)"
   />
-  <input
-    data-testid="audit-filter-entity-type"
-    type="text"
-    class="audit-log__filter-input"
+  <tar-text-field
+    testId="audit-filter-entity-type"
     placeholder="Entity type"
     [value]="filterEntityType()"
-    (input)="filterEntityType.set($any($event.target).value)"
+    (valueChange)="filterEntityType.set($event)"
   />
-  <select
-    data-testid="audit-filter-action"
-    class="audit-log__filter-select"
+  <tar-select
+    testId="audit-filter-action"
+    placeholder="All actions"
     [value]="filterAction()"
-    (change)="filterAction.set($any($event.target).value)"
-  >
-    @for (a of actions; track a) {
-      <option [value]="a">{{ a || 'All actions' }}</option>
-    }
-  </select>
-  <button
-    data-testid="audit-filter-apply"
-    type="button"
-    class="btn-primary"
-    (click)="applyFilters()"
-  >Apply</button>
+    [options]="actionOptions"
+    (valueChange)="filterAction.set($event)"
+  />
+  <tar-button variant="filled" testId="audit-filter-apply" (clicked)="applyFilters()">Apply</tar-button>
 </section>
 
 @if (entries().length === 0) {
   <p data-testid="audit-log-empty" class="audit-log__empty">No audit entries found.</p>
 } @else {
-  <table data-testid="audit-log-table" class="audit-log__table">
-    <thead>
-      <tr>
-        <th>Timestamp</th>
-        <th>Actor</th>
-        <th>Entity Type</th>
-        <th>Entity ID</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (entry of entries(); track entry.id) {
-        <tr data-testid="audit-log-row">
-          <td>{{ entry.timestamp | date:'short' }}</td>
-          <td>{{ entry.actorUserId }}</td>
-          <td>{{ entry.entityType }}</td>
-          <td>{{ entry.entityId }}</td>
-          <td>{{ entry.action }}</td>
-        </tr>
-      }
-    </tbody>
+  <table mat-table [dataSource]="entries()" data-testid="audit-log-table" class="audit-log__table">
+    <ng-container matColumnDef="timestamp">
+      <th mat-header-cell *matHeaderCellDef>Timestamp</th>
+      <td mat-cell *matCellDef="let entry">{{ entry.timestamp | date:'short' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="actor">
+      <th mat-header-cell *matHeaderCellDef>Actor</th>
+      <td mat-cell *matCellDef="let entry">{{ entry.actorUserId }}</td>
+    </ng-container>
+    <ng-container matColumnDef="entityType">
+      <th mat-header-cell *matHeaderCellDef>Entity Type</th>
+      <td mat-cell *matCellDef="let entry">{{ entry.entityType }}</td>
+    </ng-container>
+    <ng-container matColumnDef="entityId">
+      <th mat-header-cell *matHeaderCellDef>Entity ID</th>
+      <td mat-cell *matCellDef="let entry">{{ entry.entityId }}</td>
+    </ng-container>
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>Action</th>
+      <td mat-cell *matCellDef="let entry">{{ entry.action }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" data-testid="audit-log-row"></tr>
   </table>
 
   <div class="audit-log__pagination">
-    <button
-      data-testid="audit-page-prev"
-      type="button"
-      class="btn-secondary"
-      [disabled]="page() === 1"
-      (click)="prevPage()"
-    >Previous</button>
+    <tar-button variant="outlined" testId="audit-page-prev" [disabled]="page() === 1" (clicked)="prevPage()">Previous</tar-button>
     <span class="audit-log__page-info">Page {{ page() }}</span>
-    <button
-      data-testid="audit-page-next"
-      type="button"
-      class="btn-secondary"
-      [disabled]="page() * pageSize >= total()"
-      (click)="nextPage()"
-    >Next</button>
+    <tar-button variant="outlined" testId="audit-page-next" [disabled]="page() * pageSize >= total()" (clicked)="nextPage()">Next</tar-button>
   </div>
 }

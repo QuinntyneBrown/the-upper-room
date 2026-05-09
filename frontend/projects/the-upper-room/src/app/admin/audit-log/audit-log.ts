@@ -3,6 +3,8 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { TarButton, TarSelect, TarTextField } from 'components';
 
 export interface AuditEntryDto {
   readonly id: string;
@@ -19,7 +21,7 @@ const ACTIONS = ['', 'Create', 'Update', 'Delete', 'Login', 'PermissionDenied'] 
 
 @Component({
   selector: 'app-audit-log',
-  imports: [DatePipe],
+  imports: [DatePipe, MatTableModule, TarButton, TarSelect, TarTextField],
   templateUrl: './audit-log.html',
   styleUrl: './audit-log.scss',
 })
@@ -36,7 +38,8 @@ export class AuditLog implements OnInit {
   protected readonly filterEntityType = signal('');
   protected readonly filterAction = signal('');
 
-  protected readonly actions = ACTIONS;
+  protected readonly displayedColumns = ['timestamp', 'actor', 'entityType', 'entityId', 'action'];
+  protected readonly actionOptions = ACTIONS.map((a) => ({ label: a || 'All actions', value: a }));
 
   ngOnInit(): void {
     this.fetch();

@@ -123,7 +123,7 @@ test('filter by Action=Delete returns only deletes', async ({ page }) => {
   const auditPage = new AuditLogPage(page);
   await auditPage.goto();
 
-  await auditPage.actionFilter().selectOption('Delete');
+  await auditPage.selectAction('Delete');
   await auditPage.applyButton().click();
 
   const rowCount = await auditPage.rows().count();
