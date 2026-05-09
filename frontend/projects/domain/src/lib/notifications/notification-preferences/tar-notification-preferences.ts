@@ -2,6 +2,8 @@
 import { Component, OnInit, inject, signal, DOCUMENT } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { MatTableModule } from '@angular/material/table';
+import { TarButton, TarCheckbox } from 'components';
 
 export interface PrefDto {
   readonly code: string;
@@ -12,6 +14,7 @@ export interface PrefDto {
 
 @Component({
   selector: 'tar-notification-preferences',
+  imports: [TarButton, TarCheckbox, MatTableModule],
   templateUrl: './tar-notification-preferences.html',
   styleUrl: './tar-notification-preferences.scss',
 })
@@ -22,6 +25,7 @@ export class TarNotificationPreferences implements OnInit {
   protected readonly prefs = signal<PrefDto[]>([]);
   protected readonly savedCode = signal<string | null>(null);
   protected readonly pushSubscribed = signal(false);
+  protected readonly displayedColumns = ['notification', 'inApp', 'email', 'push', 'saved'];
 
   private readonly debounces = new Map<string, ReturnType<typeof setTimeout>>();
 

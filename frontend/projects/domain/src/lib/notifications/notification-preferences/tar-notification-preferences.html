@@ -2,60 +2,55 @@
 
 <div class="np__push-section">
   @if (!pushSubscribed()) {
-    <button type="button" data-testid="push-enable-button" class="btn-outlined" (click)="enablePush()">
-      Enable push notifications
-    </button>
+    <tar-button variant="outlined" testId="push-enable-button" type="button" (clicked)="enablePush()">Enable push notifications</tar-button>
   } @else {
-    <button type="button" data-testid="push-disable-button" class="btn-outlined" (click)="disablePush()">
-      Disable push notifications
-    </button>
+    <tar-button variant="outlined" testId="push-disable-button" type="button" (clicked)="disablePush()">Disable push notifications</tar-button>
   }
 </div>
 
-<table class="np__table">
-  <thead>
-    <tr>
-      <th>Notification</th>
-      <th>In-app</th>
-      <th>Email</th>
-      <th>Push</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (pref of prefs(); track pref.code) {
-      <tr [attr.data-testid]="'pref-row-' + pref.code">
-        <td class="np__code">{{ pref.code }}</td>
-        <td>
-          <input
-            type="checkbox"
-            data-testid="pref-toggle-inApp"
-            [checked]="pref.inApp"
-            (change)="onToggle(pref.code, 'inApp')"
-          />
-        </td>
-        <td>
-          <input
-            type="checkbox"
-            data-testid="pref-toggle-email"
-            [checked]="pref.email"
-            (change)="onToggle(pref.code, 'email')"
-          />
-        </td>
-        <td>
-          <input
-            type="checkbox"
-            data-testid="pref-toggle-push"
-            [checked]="pref.push"
-            (change)="onToggle(pref.code, 'push')"
-          />
-        </td>
-        <td>
-          @if (savedCode() === pref.code) {
-            <span data-testid="pref-saved" class="np__saved">Saved</span>
-          }
-        </td>
-      </tr>
-    }
-  </tbody>
+<table mat-table [dataSource]="prefs()" class="np__table">
+  <ng-container matColumnDef="notification">
+    <th mat-header-cell *matHeaderCellDef>Notification</th>
+    <td mat-cell *matCellDef="let pref" class="np__code">{{ pref.code }}</td>
+  </ng-container>
+  <ng-container matColumnDef="inApp">
+    <th mat-header-cell *matHeaderCellDef>In-app</th>
+    <td mat-cell *matCellDef="let pref">
+      <tar-checkbox
+        testId="pref-toggle-inApp"
+        [checked]="pref.inApp"
+        (checkedChange)="onToggle(pref.code, 'inApp')"
+      />
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef>Email</th>
+    <td mat-cell *matCellDef="let pref">
+      <tar-checkbox
+        testId="pref-toggle-email"
+        [checked]="pref.email"
+        (checkedChange)="onToggle(pref.code, 'email')"
+      />
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="push">
+    <th mat-header-cell *matHeaderCellDef>Push</th>
+    <td mat-cell *matCellDef="let pref">
+      <tar-checkbox
+        testId="pref-toggle-push"
+        [checked]="pref.push"
+        (checkedChange)="onToggle(pref.code, 'push')"
+      />
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="saved">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let pref">
+      @if (savedCode() === pref.code) {
+        <span data-testid="pref-saved" class="np__saved">Saved</span>
+      }
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;" [attr.data-testid]="'pref-row-' + row.code"></tr>
 </table>

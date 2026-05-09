@@ -1,6 +1,6 @@
 # TASK-UI-015 — Migrate `tar-notification-preferences.html` (domain) to Angular Material / Component Library
 
-**Status:** Accepted  
+**Status:** Complete  
 **Priority:** P3  
 **Effort:** Medium (1–2 days)  
 **File:** `frontend/projects/domain/src/lib/notifications/notification-preferences/tar-notification-preferences.html`
@@ -96,14 +96,14 @@
 
 ## Acceptance Criteria
 
-- [ ] Enable/Disable push buttons → `tar-button variant="outlined"` with `testId`
-- [ ] Raw `<table>` → `mat-table` with 5 named column definitions
-- [ ] `<input type="checkbox">` in cells → `tar-checkbox` with `(checkedChange)` output
-- [ ] `data-testid="pref-row-{code}"` preserved on `mat-row`
-- [ ] `data-testid="pref-toggle-inApp/email/push"` preserved via `testId` on `tar-checkbox`
-- [ ] `data-testid="pref-saved"` preserved on saved indicator span
-- [ ] `MatTableModule` and `MatCheckboxModule` imported in the domain module
-- [ ] `onToggle()` still fires correctly on checkbox change
+- [x] Enable/Disable push buttons → `tar-button variant="outlined"` with `testId`
+- [x] Raw `<table>` → `mat-table` with 5 named column definitions
+- [x] `<input type="checkbox">` in cells → `tar-checkbox` with `(checkedChange)` output
+- [x] `data-testid="pref-row-{code}"` preserved on `mat-row`
+- [x] `data-testid="pref-toggle-inApp/email/push"` preserved via `testId` on `tar-checkbox`
+- [x] `data-testid="pref-saved"` preserved on saved indicator span
+- [x] `MatTableModule` and `MatCheckboxModule` imported in the domain module
+- [x] `onToggle()` still fires correctly on checkbox change
 
 ## Notes
 
