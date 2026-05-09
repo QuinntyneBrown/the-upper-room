@@ -2,6 +2,7 @@
 namespace TheUpperRoom.Api.Partners;
 
 public sealed record TagRef(string Id, string Name, string Color);
+public sealed record SocialLinkDto(string Platform, string Url, string? Label = null);
 
 public sealed record PartnerDto(
     string Id,
@@ -11,4 +12,5 @@ public sealed record PartnerDto(
     int ContactCount,
     IReadOnlyList<TagRef> Tags,
     bool Archived,
-    string? Logo = null);
+    string? Logo = null,
+    IReadOnlyList<SocialLinkDto>? SocialLinks = null);

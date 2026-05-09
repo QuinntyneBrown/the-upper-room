@@ -63,6 +63,71 @@
           }
         </div>
       </section>
+
+      <section class="form-section">
+        <h2 class="form-section__heading">Social links</h2>
+
+        @for (link of socialLinks(); track $index; let i = $index) {
+          <div [attr.data-testid]="'social-link-' + i" class="social-link-row">
+            <select
+              [attr.data-testid]="'social-platform-' + i"
+              class="field__select"
+              [value]="link.platform"
+              (change)="updatePlatform(i, $any($event.target).value)"
+            >
+              @for (p of platforms; track p) {
+                <option [value]="p">{{ p }}</option>
+              }
+            </select>
+
+            <div class="field social-link-row__url">
+              <input
+                [attr.data-testid]="'social-url-' + i"
+                class="field__input"
+                [class.field__input--error]="socialErrors()[i]?.urlError"
+                type="url"
+                placeholder="https://..."
+                [value]="link.url"
+                (input)="updateUrl(i, $any($event.target).value)"
+              />
+              @if (socialErrors()[i]?.urlError) {
+                <span [attr.data-testid]="'social-url-error-' + i" class="field__error">{{ socialErrors()[i]?.urlError }}</span>
+              }
+            </div>
+
+            @if (link.platform === 'Other') {
+              <div class="field social-link-row__label">
+                <input
+                  [attr.data-testid]="'social-label-' + i"
+                  class="field__input"
+                  [class.field__input--error]="socialErrors()[i]?.labelError"
+                  type="text"
+                  placeholder="Custom label"
+                  [value]="link.label"
+                  (input)="updateLabel(i, $any($event.target).value)"
+                />
+                @if (socialErrors()[i]?.labelError) {
+                  <span [attr.data-testid]="'social-label-error-' + i" class="field__error">{{ socialErrors()[i]?.labelError }}</span>
+                }
+              </div>
+            }
+
+            <button
+              [attr.data-testid]="'social-remove-' + i"
+              type="button"
+              class="btn-icon"
+              aria-label="Remove link"
+              (click)="removeLink(i)"
+            >
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        }
+
+        <button data-testid="social-add-button" type="button" class="btn-outlined btn-sm" (click)="addLink()">
+          Add link
+        </button>
+      </section>
     </div>
   </form>
 }

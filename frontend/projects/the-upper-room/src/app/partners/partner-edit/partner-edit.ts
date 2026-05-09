@@ -6,6 +6,19 @@ import { ConfirmService, SnackbarService } from 'components';
 
 const URL_RE = /^https?:\/\//i;
 
+export const SOCIAL_PLATFORMS = ['Facebook', 'X', 'LinkedIn', 'Instagram', 'YouTube', 'TikTok', 'Other'] as const;
+
+interface SocialLinkEntry {
+  platform: string;
+  url: string;
+  label: string;
+}
+
+interface SocialLinkError {
+  urlError: string | null;
+  labelError: string | null;
+}
+
 @Component({
   selector: 'app-partner-edit',
   imports: [],
@@ -25,6 +38,11 @@ export class PartnerEdit implements OnInit {
   protected readonly website = signal('');
   protected readonly originalName = signal('');
   protected readonly originalWebsite = signal('');
+  protected readonly socialLinks = signal<SocialLinkEntry[]>([]);
+  protected readonly originalSocialLinks = signal('[]');
+  protected readonly socialErrors = signal<SocialLinkError[]>([]);
+
+  protected readonly platforms = SOCIAL_PLATFORMS;
 
   protected readonly nameError = signal<string | null>(null);
   protected readonly websiteError = signal<string | null>(null);
@@ -34,19 +52,50 @@ export class PartnerEdit implements OnInit {
 
   protected readonly websiteValid = computed(() => !this.website() || URL_RE.test(this.website()));
   protected readonly isDirty = computed(
-    () => this.name() !== this.originalName() || this.website() !== this.originalWebsite(),
+    () =>
+      this.name() !== this.originalName() ||
+      this.website() !== this.originalWebsite() ||
+      JSON.stringify(this.socialLinks()) !== this.originalSocialLinks(),
   );
 
   ngOnInit(): void {
     this.partnerId = this.route.snapshot.paramMap.get('id')!;
-    this.http.get<{ id: string; name: string; website?: string | null }>(`/api/v1/partners/${this.partnerId}`)
+    this.http
+      .get<{ id: string; name: string; website?: string | null; socialLinks?: { platform: string; url: string; label?: string }[] }>
+      (`/api/v1/partners/${this.partnerId}`)
       .subscribe((p) => {
         this.name.set(p.name);
         this.website.set(p.website ?? '');
         this.originalName.set(p.name);
         this.originalWebsite.set(p.website ?? '');
+        const links = (p.socialLinks ?? []).map((l) => ({ platform: l.platform, url: l.url, label: l.label ?? '' }));
+        this.socialLinks.set(links);
+        this.originalSocialLinks.set(JSON.stringify(links));
+        this.socialErrors.set(links.map(() => ({ urlError: null, labelError: null })));
         this.loading.set(false);
       });
+  }
+
+  protected addLink(): void {
+    this.socialLinks.update((links) => [...links, { platform: 'LinkedIn', url: '', label: '' }]);
+    this.socialErrors.update((errs) => [...errs, { urlError: null, labelError: null }]);
+  }
+
+  protected removeLink(i: number): void {
+    this.socialLinks.update((links) => links.filter((_, idx) => idx !== i));
+    this.socialErrors.update((errs) => errs.filter((_, idx) => idx !== i));
+  }
+
+  protected updatePlatform(i: number, platform: string): void {
+    this.socialLinks.update((links) => links.map((l, idx) => idx === i ? { ...l, platform } : l));
+  }
+
+  protected updateUrl(i: number, url: string): void {
+    this.socialLinks.update((links) => links.map((l, idx) => idx === i ? { ...l, url } : l));
+  }
+
+  protected updateLabel(i: number, label: string): void {
+    this.socialLinks.update((links) => links.map((l, idx) => idx === i ? { ...l, label } : l));
   }
 
   protected onSubmit(event: Event): void {
@@ -68,9 +117,33 @@ export class PartnerEdit implements OnInit {
       return;
     }
 
+    let hasLinkError = false;
+    const linkErrors = this.socialLinks().map((l) => {
+      const urlError = !l.url.trim()
+        ? 'URL is required.'
+        : !URL_RE.test(l.url.trim())
+          ? 'URL must start with http:// or https://'
+          : null;
+      const labelError = l.platform === 'Other' && !l.label.trim() ? 'Label is required for Other platform.' : null;
+      if (urlError || labelError) hasLinkError = true;
+      return { urlError, labelError };
+    });
+    this.socialErrors.set(linkErrors);
+    if (hasLinkError) return;
+
     this.submitting.set(true);
+    const socialLinks = this.socialLinks().map((l) => ({
+      platform: l.platform,
+      url: l.url.trim(),
+      ...(l.label.trim() ? { label: l.label.trim() } : {}),
+    }));
+
     this.http
-      .put<{ id: string }>(`/api/v1/partners/${this.partnerId}`, { name: nameVal, website: websiteVal || null })
+      .put<{ id: string }>(`/api/v1/partners/${this.partnerId}`, {
+        name: nameVal,
+        website: websiteVal || null,
+        socialLinks,
+      })
       .subscribe({
         next: () => {
           this.submitting.set(false);

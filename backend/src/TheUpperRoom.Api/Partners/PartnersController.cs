@@ -91,7 +91,7 @@ public sealed class PartnersController : ControllerBase
         if (sameCityName)
             return Conflict(new { error = "A partner with this name already exists in your city." });
 
-        var updated = partner with { Name = body.Name, Website = body.Website };
+        var updated = partner with { Name = body.Name, Website = body.Website, SocialLinks = body.SocialLinks };
         var idx = _store.IndexOf(partner);
         _store[idx] = updated;
         return Ok(updated);

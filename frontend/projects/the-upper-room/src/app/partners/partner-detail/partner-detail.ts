@@ -11,7 +11,7 @@ type Tab = 'overview' | 'contacts' | 'activity';
 interface PartnerDetailDto extends Partner {
   readonly descriptionMarkdown?: string | null;
   readonly addresses: { street?: string; city?: string; country?: string }[];
-  readonly socialLinks: { platform: string; url: string }[];
+  readonly socialLinks: { platform: string; url: string; label?: string }[];
 }
 
 @Component({

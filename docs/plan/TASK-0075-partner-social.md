@@ -1,7 +1,7 @@
 ---
 id: TASK-0075
 title: Partner social links sub-form
-status: Draft
+status: Done
 phase: P
 depends_on: [TASK-0073]
 traces_to: [L2-034, L2-037]

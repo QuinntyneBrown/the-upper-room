@@ -87,11 +87,12 @@
           <h2 class="partner-section__heading">Social links</h2>
           @for (link of p.socialLinks; track $index) {
             <a
+              [attr.data-testid]="'social-chip-' + link.platform"
               [href]="link.url"
               class="partner-social-link"
               target="_blank"
               rel="noopener noreferrer"
-            >{{ link.platform }}</a>
+            >{{ link.label || link.platform }}</a>
           }
         </section>
       }
