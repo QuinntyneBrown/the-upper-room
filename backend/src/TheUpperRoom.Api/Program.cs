@@ -1,4 +1,7 @@
 // traces_to: L2-080, L2-015, L2-023, L2-079, L2-097
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Context;
 using TheUpperRoom.Api.Auth;
@@ -25,6 +28,25 @@ if (string.IsNullOrWhiteSpace(jwt.SigningKey))
 }
 builder.Services.AddSingleton(jwt);
 builder.Services.AddSingleton<ITokenService, TokenService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwt.Issuer,
+            ValidAudience = jwt.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.SigningKey)),
+            ClockSkew = TimeSpan.Zero,
+        };
+    });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -62,6 +84,8 @@ app.Use(async (ctx, next) =>
 });
 
 app.UseSerilogRequestLogging();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
