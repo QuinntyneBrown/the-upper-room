@@ -1,7 +1,7 @@
 ---
 id: TASK-0170
 title: Date / number formatting (en-CA) + relative time
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0013]
 traces_to: [L2-110]
