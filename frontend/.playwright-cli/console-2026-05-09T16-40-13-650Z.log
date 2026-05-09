@@ -1,0 +1,25 @@
+[    9112ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/notifications:0
+[    9121ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/dashboard:0
+[    9122ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[    9123ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[    9124ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[   49353ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[   49354ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/notifications:0
+[   49354ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/dashboard:0
+[   49359ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[   49359ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[  105103ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/v1/dashboard:0
+[  105108ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[  731283ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/v1/dashboard:0
+[  731286ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[  755487ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/v1/dashboard:0
+[  755491ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[ 1529706ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[ 1529708ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/notifications:0
+[ 1529715ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/contacts?page=1&size=25:0
+[ 1529717ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[ 1529717ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[ 1578483ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/v1/contacts?page=1&size=25&scope=toronto:0
+[ 1578488ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[ 1580825ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/v1/contacts?page=1&size=25&scope=halifax:0
+[ 1580826ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110

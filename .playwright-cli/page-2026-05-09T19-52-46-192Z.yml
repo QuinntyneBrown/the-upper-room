@@ -1,0 +1,79 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - link [ref=e65] [cursor=pointer]:
+      - /url: "#main"
+      - text: Skip to main content
+    - banner [ref=e5]:
+      - link [ref=e66] [cursor=pointer]:
+        - /url: /dashboard
+        - text: The Upper Room
+      - generic [ref=e7]:
+        - button [ref=e67] [cursor=pointer]: All cities
+        - status [ref=e11]:
+          - generic [ref=e12]: Switch to a single city to make changes.
+      - button [ref=e68] [cursor=pointer]:
+        - img [ref=e18]: notifications
+      - button [ref=e69] [cursor=pointer]:
+        - img [ref=e24]: account_circle
+    - navigation [ref=e27]
+    - navigation [ref=e70]:
+      - link [ref=e71] [cursor=pointer]:
+        - /url: /
+        - text: Dashboard
+      - generic [ref=e30]: /
+      - link [ref=e72] [cursor=pointer]:
+        - /url: /boards
+        - text: Boards
+      - generic [ref=e32]: /
+      - link [ref=e73] [cursor=pointer]:
+        - /url: /boards/4d608a4e
+        - text: 4d608a4e
+    - main [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - heading [level=1] [ref=e74]: Sprint 1
+          - button [ref=e75] [cursor=pointer]: Show archived
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - generic [ref=e42]:
+              - generic [ref=e43]: To Do
+              - generic [ref=e44]: "2"
+            - list [ref=e45]:
+              - listitem [ref=e46]:
+                - generic [ref=e47]: Card Alpha
+              - listitem [ref=e48]:
+                - generic [ref=e49]: Card Beta
+          - generic [ref=e51]:
+            - generic [ref=e52]: In Progress
+            - generic [ref=e53]: "0"
+          - generic [ref=e57]:
+            - generic [ref=e58]:
+              - generic [ref=e59]: Done
+              - generic [ref=e60]: "1"
+            - list [ref=e62]:
+              - listitem [ref=e63]:
+                - generic [ref=e64]: Card Gamma
+    - contentinfo [ref=e61]: © The Upper Room
+  - dialog [ref=e79]:
+    - generic [ref=e82]:
+      - banner [ref=e83]:
+        - textbox [active] [ref=e89]: Card Gamma
+        - generic [ref=e90]:
+          - button "Archive" [ref=e92]:
+            - generic [ref=e93]: Archive
+          - button "Delete" [ref=e97]:
+            - generic [ref=e98]: Delete
+          - button "Close" [ref=e102] [cursor=pointer]:
+            - img [ref=e103]: close
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - heading "Comments" [level=3] [ref=e108]
+          - list
+          - generic [ref=e109]:
+            - textbox [ref=e115]
+            - button "Add" [ref=e118]:
+              - generic [ref=e119]: Add
+        - generic [ref=e122]:
+          - heading "Attachments" [level=3] [ref=e123]
+          - list
+          - button "Attach file" [ref=e124]

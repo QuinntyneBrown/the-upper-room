@@ -1,0 +1,11 @@
+<label class="uploader">
+  <tar-avatar [user]="user" [size]="size" />
+  <input
+    data-testid="avatar-file-input"
+    type="file"
+    accept="image/*"
+    class="uploader__input"
+    (change)="onChange($any($event.target))"
+  />
+  <span class="uploader__cta">Change avatar</span>
+</label>

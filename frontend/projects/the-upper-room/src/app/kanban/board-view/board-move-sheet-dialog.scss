@@ -1,0 +1,31 @@
+.move-sheet__title {
+  font: var(--md-sys-typescale-title-medium);
+  margin: 0 0 var(--md-sys-space-3);
+  color: var(--md-sys-color-on-surface);
+}
+
+.move-sheet__options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--md-sys-space-1);
+}
+
+.move-sheet__option {
+  display: block;
+  width: 100%;
+  padding: var(--md-sys-space-3) var(--md-sys-space-4);
+  border: none;
+  border-radius: var(--md-sys-shape-corner-small);
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  font: var(--md-sys-typescale-body-large);
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--md-sys-color-surface-container);
+  }
+}

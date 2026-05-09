@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TheUpperRoom.Application.Data;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Infrastructure.Data;
 using TheUpperRoom.Infrastructure.Seeding;
@@ -49,6 +50,7 @@ public static class DependencyInjection
                 $"Connection string '{SqlServerConnectionStringName}' is not configured.");
 
         services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+        services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
         return services;
     }
 }

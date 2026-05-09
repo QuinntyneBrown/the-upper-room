@@ -1,0 +1,20 @@
+- generic [ref=e2]:
+  - main [ref=e4]:
+    - generic [ref=e5]:
+      - heading "Reset password" [level=1] [ref=e6]
+      - generic [ref=e10]:
+        - generic [ref=e11]: New password
+        - textbox "New password" [ref=e13]: Password!23456
+        - button "Show password" [ref=e15] [cursor=pointer]:
+          - img [ref=e16]: visibility
+      - generic [ref=e23]:
+        - generic [ref=e24]: Confirm password
+        - textbox "Confirm password" [ref=e26]: Password!23456
+        - button "Show password" [ref=e28] [cursor=pointer]:
+          - img [ref=e29]: visibility
+      - button "Reset password" [active] [ref=e34] [cursor=pointer]:
+        - generic [ref=e35]: Reset password
+  - alert [ref=e38]:
+    - generic [ref=e39]: We couldn't find what you're looking for.
+    - button "Dismiss" [ref=e40] [cursor=pointer]:
+      - img [ref=e41]: close

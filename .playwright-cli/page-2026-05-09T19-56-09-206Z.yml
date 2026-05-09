@@ -1,0 +1,7 @@
+- main [ref=e4]:
+  - generic [ref=e5]:
+    - img [ref=e7]: block
+    - heading "You don't have permission" [level=2] [ref=e8]
+    - paragraph [ref=e9]: Ask your city lead if you think this is a mistake.
+    - link "Go to dashboard" [ref=e11] [cursor=pointer]:
+      - /url: /dashboard

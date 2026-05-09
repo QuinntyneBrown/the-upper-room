@@ -1,0 +1,8 @@
+- main [ref=e4]:
+  - generic [ref=e5]:
+    - heading "Forgot password" [level=1] [ref=e6]
+    - generic [ref=e10]:
+      - generic [ref=e11]: Email
+      - textbox "Email" [ref=e13]
+    - button "Send reset link" [ref=e16]:
+      - generic [ref=e17]: Send reset link

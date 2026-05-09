@@ -1,0 +1,46 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - link "Skip to main content" [ref=e4] [cursor=pointer]:
+      - /url: "#main"
+    - banner [ref=e5]:
+      - link "The Upper Room" [ref=e6] [cursor=pointer]:
+        - /url: /dashboard
+      - button "Halifax" [ref=e9] [cursor=pointer]
+      - button "Notifications" [ref=e14] [cursor=pointer]:
+        - img [ref=e15]: notifications
+      - button "Account menu" [ref=e20] [cursor=pointer]:
+        - img [ref=e21]: account_circle
+    - navigation [ref=e24]
+    - navigation "Breadcrumb" [ref=e25]:
+      - link "Dashboard" [ref=e26] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e27]: /
+      - link "Contacts" [ref=e28] [cursor=pointer]:
+        - /url: /contacts
+    - main [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - searchbox "Search contacts…" [ref=e32]
+          - button "Archived" [ref=e33] [cursor=pointer]
+          - button "New contact" [ref=e34] [cursor=pointer]
+        - generic [ref=e36]:
+          - img [ref=e38]: person_add
+          - heading "No contacts yet" [level=2] [ref=e39]
+          - paragraph [ref=e40]: Add your first contact to get started.
+          - button "New contact" [ref=e42] [cursor=pointer]
+    - contentinfo [ref=e43]: © The Upper Room
+  - alert [ref=e44]:
+    - generic [ref=e45]: Something went wrong on our end.
+    - button "Dismiss" [ref=e46] [cursor=pointer]:
+      - img [ref=e47]: close
+  - alert [ref=e51]:
+    - heading "Something went wrong" [level=1] [ref=e52]
+    - paragraph [ref=e53]: We've been notified. Please try again.
+    - paragraph [ref=e54]:
+      - text: "Reference:"
+      - code [ref=e55]: 07f46cf7-300f-4360-ac15-e8e6dbefa2a3
+    - generic [ref=e56]:
+      - button "Copy reference" [ref=e58]:
+        - generic [ref=e59]: Copy reference
+      - button "Reload page" [ref=e63]:
+        - generic [ref=e64]: Reload page

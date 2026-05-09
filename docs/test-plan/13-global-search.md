@@ -19,8 +19,8 @@
 
 - Overlay appears: `<div data-testid="global-search-dialog" class="global-search-backdrop">` (`frontend/projects/the-upper-room/src/app/search/global-search.html:1`).
 - Mounted from `app-shell.html:5` (`@if (searchOpen()) { <app-global-search …/> }`).
-- Search box `<input data-testid="global-search-input" type="text">` placeholder **"Search contacts, partners, events…"** (lines 6-15).
-- Search icon `search` to the left of the input (line 4).
+- Search box `<input data-testid="global-search-input" type="text">` placeholder **"Search contacts, partners, events…"**.
+- Search icon `search` to the left of the input.
 
 **Pass criteria**: overlay opens on shortcut from any route.
 
@@ -37,7 +37,7 @@
 **UI verification**
 
 - Result list `<ul class="global-search__results" role="listbox">` (`global-search.html:19`).
-- Each item `<li data-testid="search-result-{id}" role="option">` (line 21) with type icon (`typeIcon(result.type)`, line 28), title, optional subtitle, and a type label badge (line 35).
+- Each item `<li data-testid="search-result-{id}" role="option">` with type icon (`typeIcon(result.type)`), title, optional subtitle, and a type label badge.
 
 **Behavior verification**
 
@@ -112,9 +112,9 @@
 **UI verification**
 
 - `<div data-testid="global-search-empty">` (`global-search.html:42`).
-- Icon `search_off` (line 43).
-- Title **"No matches"** (line 44).
-- Sub text **"Try different keywords or check your filters."** (line 45).
+- Icon `search_off`.
+- Title **"No matches"**.
+- Sub text **"Try different keywords or check your filters."**.
 
 **Pass criteria**: copy and icon exact.
 

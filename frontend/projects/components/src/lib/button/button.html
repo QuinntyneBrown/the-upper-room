@@ -1,3 +1,10 @@
+<ng-template #slot>
+  @if (icon) {
+    <mat-icon class="tar-button__icon">{{ icon }}</mat-icon>
+  }
+  <ng-content />
+</ng-template>
+
 @switch (variant) {
   @case ('filled') {
     <button
@@ -10,10 +17,7 @@
       [attr.data-testid]="testId"
       (click)="clicked.emit($event)"
     >
-      @if (icon) {
-        <mat-icon class="tar-button__icon">{{ icon }}</mat-icon>
-      }
-      <ng-content />
+      <ng-container [ngTemplateOutlet]="slot" />
     </button>
   }
   @case ('tonal') {
@@ -26,10 +30,7 @@
       [attr.data-testid]="testId"
       (click)="clicked.emit($event)"
     >
-      @if (icon) {
-        <mat-icon class="tar-button__icon">{{ icon }}</mat-icon>
-      }
-      <ng-content />
+      <ng-container [ngTemplateOutlet]="slot" />
     </button>
   }
   @case ('outlined') {
@@ -43,10 +44,7 @@
       [attr.data-testid]="testId"
       (click)="clicked.emit($event)"
     >
-      @if (icon) {
-        <mat-icon class="tar-button__icon">{{ icon }}</mat-icon>
-      }
-      <ng-content />
+      <ng-container [ngTemplateOutlet]="slot" />
     </button>
   }
   @case ('elevated') {
@@ -60,10 +58,7 @@
       [attr.data-testid]="testId"
       (click)="clicked.emit($event)"
     >
-      @if (icon) {
-        <mat-icon class="tar-button__icon">{{ icon }}</mat-icon>
-      }
-      <ng-content />
+      <ng-container [ngTemplateOutlet]="slot" />
     </button>
   }
   @default {
@@ -77,10 +72,7 @@
       [attr.data-testid]="testId"
       (click)="clicked.emit($event)"
     >
-      @if (icon) {
-        <mat-icon class="tar-button__icon">{{ icon }}</mat-icon>
-      }
-      <ng-content />
+      <ng-container [ngTemplateOutlet]="slot" />
     </button>
   }
 }

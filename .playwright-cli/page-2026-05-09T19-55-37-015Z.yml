@@ -1,0 +1,66 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - link "Skip to main content" [ref=e149] [cursor=pointer]:
+      - /url: "#main"
+    - banner [ref=e5]:
+      - link "The Upper Room" [ref=e150] [cursor=pointer]:
+        - /url: /dashboard
+      - generic [ref=e7]:
+        - button "All cities" [ref=e151] [cursor=pointer]
+        - status [ref=e11]:
+          - generic [ref=e12]: Switch to a single city to make changes.
+      - button "Notifications" [ref=e152] [cursor=pointer]:
+        - img [ref=e18]: notifications
+      - button "Account menu" [ref=e153] [cursor=pointer]:
+        - img [ref=e24]: account_circle
+    - navigation [ref=e27]
+    - navigation "Breadcrumb" [ref=e154]:
+      - link "Dashboard" [ref=e155] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e30]: /
+      - link "Boards" [ref=e156] [cursor=pointer]:
+        - /url: /boards
+      - generic [ref=e32]: /
+      - link "4d608a4e" [ref=e157] [cursor=pointer]:
+        - /url: /boards/4d608a4e
+    - main [active] [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - heading "Sprint 1" [level=1] [ref=e158]
+          - button "Show archived" [ref=e159] [cursor=pointer]
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - generic [ref=e42]:
+              - generic [ref=e43]: To Do
+              - generic [ref=e44]: "2"
+            - list [ref=e45]:
+              - listitem [ref=e46]:
+                - generic [ref=e47]: Card Alpha
+              - listitem [ref=e48]:
+                - generic [ref=e49]: Card Beta
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - generic [ref=e52]: In Progress
+              - generic [ref=e53]: "0"
+            - list
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - generic [ref=e56]: Done
+              - generic [ref=e57]: "0"
+            - list
+    - contentinfo [ref=e61]: © The Upper Room
+  - status [ref=e160]:
+    - generic [ref=e161]: Card deleted
+    - button "Dismiss" [ref=e162] [cursor=pointer]:
+      - img [ref=e163]: close
+  - alert [ref=e167]:
+    - heading "Something went wrong" [level=1] [ref=e168]
+    - paragraph [ref=e169]: We've been notified. Please try again.
+    - paragraph [ref=e170]:
+      - text: "Reference:"
+      - code [ref=e171]: a1305250-a465-4dba-a375-bcb704620159
+    - generic [ref=e172]:
+      - button "Copy reference" [ref=e174]:
+        - generic [ref=e175]: Copy reference
+      - button "Reload page" [ref=e179]:
+        - generic [ref=e180]: Reload page

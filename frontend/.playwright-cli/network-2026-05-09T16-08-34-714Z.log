@@ -1,0 +1,3 @@
+[POST] http://localhost:4200/api/v1/auth/exchange => [200] OK
+[GET] http://localhost:4200/api/v1/notifications => [200] OK
+[GET] http://localhost:4200/api/v1/dashboard => [200] OK

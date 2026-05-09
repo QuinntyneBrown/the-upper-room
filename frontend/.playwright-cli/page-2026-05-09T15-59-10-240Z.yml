@@ -1,0 +1,23 @@
+- generic [ref=e2]:
+  - main [ref=e81]:
+    - form "Sign in" [ref=e82]:
+      - heading "Sign in" [level=1] [ref=e83]
+      - generic [ref=e87]:
+        - generic [ref=e88]: Email
+        - textbox "Email" [ref=e90]
+      - generic [ref=e94]:
+        - generic [ref=e95]: Password
+        - textbox "Password" [ref=e97]
+        - button "Show password" [ref=e99] [cursor=pointer]:
+          - img [ref=e100]: visibility
+      - button "Sign in" [ref=e104]:
+        - generic [ref=e105]: Sign in
+      - generic [ref=e108]:
+        - link "Forgot password?" [ref=e109] [cursor=pointer]:
+          - /url: /forgot-password
+        - link "Create account" [ref=e110] [cursor=pointer]:
+          - /url: /sign-up
+  - alert [ref=e28]:
+    - generic [ref=e29]: The email or password is incorrect.
+    - button "Dismiss" [ref=e111] [cursor=pointer]:
+      - img [ref=e31]: close

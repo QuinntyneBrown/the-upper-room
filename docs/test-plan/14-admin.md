@@ -4,8 +4,9 @@
 
 ## Pre-conditions
 
-- Two test users: one `SystemAdmin` (e.g. header `X-Test-User-Id: admin`) and one regular user.
+- Two bearer-token subjects: one `SystemAdmin` (`admin`) and one regular user (`member` or `guest`) from `UsersDbContext` seeding.
 - Admin pages are guarded by `roleGuard` (`frontend/projects/the-upper-room/src/app/app.routes.ts:96-119`).
+- Current backend only implements `GET /api/v1/users/me` for users and `GET /api/v1/admin/audit` for audit. Tags, cities, user list, invitations, user updates, and city/tag mutations are frontend routes without matching backend controllers in the current code.
 
 ## Tests
 
@@ -37,13 +38,13 @@
 **UI verification**
 
 - Component: `frontend/projects/the-upper-room/src/app/tags/tag-list/tag-list.html`.
-- Heading **"Tags"** (line 4).
-- Create form (lines 6-23):
+- Heading **"Tags"**.
+- Create form:
   - **Tag name** field, `data-testid="tag-name"`, error slot `data-testid="tag-error-name"`.
   - **Color** select, `data-testid="tag-color"`.
   - **Add tag** button, `data-testid="tag-create"`, `tar-button variant="filled"`.
-- Tag groups: `<section data-testid="tag-group-{color}">` with the color label as heading (lines 26-28).
-- Each chip `<div data-testid="tag-chip-{id}" data-color="{color}">` containing label, **Edit** (`data-testid="tag-edit-{id}"`) and **Delete** (`data-testid="tag-delete-{id}"`, `color="warn"`) buttons (lines 30-67).
+- Tag groups: `<section data-testid="tag-group-{color}">` with the color label as heading.
+- Each chip `<div data-testid="tag-chip-{id}" data-color="{color}">` containing label, **Edit** (`data-testid="tag-edit-{id}"`) and **Delete** (`data-testid="tag-delete-{id}"`, `color="warn"`) buttons.
 
 **Pass criteria**: structure and copy exact.
 
@@ -60,14 +61,13 @@
 **Behavior verification**
 
 - API: `POST /api/v1/tags` body `{ name, color }`.
-- Response includes new tag with id.
+- Current backend has no `api/v1/tags` controller.
 
-**Database verification**
+**State/API verification**
 
-- Tag added to in-memory tag store.
-- Audit row: `EntityType="Tag"`, `Action="Create"`.
+- Mark backend integration blocked/failed unless the endpoint is intentionally stubbed.
 
-**Pass criteria**: chip appears under correct color group.
+**Pass criteria**: UI submission path is wired; backend integration is currently blocked.
 
 **Severity if failing**: High.
 
@@ -78,13 +78,12 @@
 **Steps**
 
 1. Click **Edit** on any tag.
-2. Change color via the inline select `data-testid="tag-edit-color-{id}"` (line 38).
+2. Change color via the inline select `data-testid="tag-edit-color-{id}"`.
 3. Click **Save** (`data-testid="tag-save-edit-{id}"`).
 
 **Behavior verification**
 
-- API: `PATCH /api/v1/tags/{id}` body `{ color }`.
-- Audit row: `Action="Update"`.
+- Current backend has no `PATCH /api/v1/tags/{id}` endpoint.
 
 **Pass criteria**: chip moves to the new color group.
 
@@ -101,14 +100,12 @@
 
 **Behavior verification**
 
-- API: `DELETE /api/v1/tags/{id}` returns `204`.
-- Per user guide §14.1: tag is also removed from every entity referencing it.
+- Current backend has no `DELETE /api/v1/tags/{id}` endpoint.
+- Per user guide §14.1: tag deletion should remove the tag from every entity referencing it when implemented.
 
-**Database verification**
+**State/API verification**
 
-- Tag gone from store.
-- Affected Contact/Partner/Card no longer reference the tag id (verify by GET on those entities).
-- Audit row: `EntityType="Tag"`, `Action="Delete"` (and arguably one Update per affected entity).
+- Mark backend integration blocked/failed unless the endpoint is intentionally stubbed.
 
 **Pass criteria**: tag removed everywhere.
 
@@ -125,14 +122,14 @@
 **UI verification**
 
 - Component: `frontend/projects/the-upper-room/src/app/cities/cities-admin/cities-admin.html`.
-- Heading **"Cities"** (line 3).
-- **New city** button `data-testid="cities-new"` with `add` icon, `tar-button variant="filled"` (lines 4-6).
-- Create form (when `creating()`, lines 9-36):
-  - **Name** field `data-testid="cities-name"` with hint **"Slug preview: {slug}"** (line 13).
-  - **Country** field `data-testid="cities-country"` (lines 18-23).
-  - Form error `<p data-testid="cities-form-error">` (line 25).
+- Heading **"Cities"**.
+- **New city** button `data-testid="cities-new"` with `add` icon, `tar-button variant="filled"`.
+- Create form (when `creating()`):
+  - **Name** field `data-testid="cities-name"` with hint **"Slug preview: {slug}"**.
+  - **Country** field `data-testid="cities-country"`.
+  - Form error `<p data-testid="cities-form-error">`.
   - Form actions with Save (`saveTestId="cities-save"`).
-- Table `<table class="cities-admin__table">` with headers **Name | Slug | Country | Status | (actions)** (lines 38-46).
+- Table `<table class="cities-admin__table">` with headers **Name | Slug | Country | Status | (actions)**.
 - Each row `<tr data-testid="city-row-{slug}">` with archive button `data-testid="city-archive-{slug}"` when active.
 
 **Pass criteria**: structure and copy exact.
@@ -166,12 +163,11 @@
 
 **Behavior verification**
 
-- API: `POST /api/v1/cities`.
-- Audit row `EntityType="City"`, `Action="Create"`.
+- Current backend has no `POST /api/v1/cities` endpoint.
 
-**Database verification**
+**State/API verification**
 
-- New city in `Cities` collection (verify in `backend/src/TheUpperRoom.Api/Cities/`).
+- Mark backend integration blocked/failed unless the endpoint is intentionally stubbed.
 
 **Pass criteria**: row appears in table; available in city pickers.
 
@@ -187,13 +183,13 @@
 
 **UI verification**
 
-- Status column flips to **"Archived"** (line 53).
+- Status column flips to **"Archived"**.
 - Per user guide §14.2: archived cities no longer appear in city pickers — verify by opening any place that has a city dropdown (sign-up, profile).
 
 **Behavior verification**
 
-- API: `POST /api/v1/cities/{id}/archive` (or PATCH).
-- Audit row `Action="Archive"`.
+- Current frontend calls `POST /api/v1/cities/{slug}/archive`.
+- Current backend has no cities controller.
 
 **Pass criteria**: status reflects; pickers exclude.
 
@@ -210,15 +206,19 @@
 **UI verification**
 
 - Component: `frontend/projects/the-upper-room/src/app/users/user-list/user-list.html`.
-- Heading **"Users"** (line 3).
-- Toolbar (lines 9-29): search field `data-testid="user-search"` (placeholder **"Search users"**) and role-filter chips `data-testid="user-filter-{role}"`.
-- **Invite user** button `data-testid="user-invite"` with `person_add` icon (lines 4-6).
-- Empty state `data-testid="user-empty"` icon `contacts`, heading **"No users found"**, body **"Try adjusting your filters or invite a new user."** (lines 32-37).
-- Table headers: **Name | Email | Role | City | Status | Last sign-in** (lines 41-48).
-- Each row `<tr data-testid="user-row-{email}">` (line 53).
-- Paginator `<footer data-testid="user-paginator">` with **Page size:** label, select `data-testid="user-page-size"` options 25/50/100, plus **{total} total** (lines 69-82).
+- Heading **"Users"**.
+- Toolbar: search field `data-testid="user-search"` (placeholder **"Search users"**) and role-filter chips `data-testid="user-filter-{role}"`.
+- **Invite user** button `data-testid="user-invite"` with `person_add` icon.
+- Empty state `data-testid="user-empty"` icon `contacts`, heading **"No users found"**, body **"Try adjusting your filters or invite a new user."**.
+- Table headers: **Name | Email | Role | City | Status | Last sign-in**.
+- Each row `<tr data-testid="user-row-{email}">`.
+- Paginator `<footer data-testid="user-paginator">` with **Page size:** label, select `data-testid="user-page-size"` options 25/50/100, plus **{total} total**.
 
 **Pass criteria**: every header and label exact.
+
+**State/API verification**
+
+- Current backend has no `GET /api/v1/users` list endpoint. The current UI will empty the table on API error.
 
 **Severity if failing**: High.
 
@@ -251,13 +251,13 @@
 
 **Behavior verification**
 
-- API: `POST /api/v1/users/invitations` body `{ email, role, city }`.
+- Current frontend posts `POST /api/v1/invitations` with `{ email, role, city }`.
+- Current backend has no invitations controller.
 - Inline `inviteEmailError()` (`user-list.html:86`) renders if API returns validation error (e.g. duplicate).
-- Email enqueued in `MailStore` (`backend/src/TheUpperRoom.Api/Notifications/MailStore.cs`).
 
-**Database verification**
+**State/API verification**
 
-- New `Invitation` record (in-memory or via `InvitationConfiguration` entity).
+- Mark backend integration blocked/failed unless the endpoint is intentionally stubbed.
 
 **Pass criteria**: invitation persists; recipient can use the link to land on `/invitations/accept`.
 
@@ -274,15 +274,15 @@
 **UI verification**
 
 - Component: `frontend/projects/the-upper-room/src/app/admin/audit-log/audit-log.html`.
-- Heading **"Audit Log"** (line 2).
-- Filter row (lines 5-38):
+- Heading **"Audit Log"**.
+- Filter row:
   - **Actor** input `data-testid="audit-filter-actor"`, placeholder **"Actor"**.
   - **Entity type** input `data-testid="audit-filter-entity-type"`, placeholder **"Entity type"**.
-  - **Action** select `data-testid="audit-filter-action"` with options including **"All actions"** when value is empty (line 29).
-  - **Apply** button `data-testid="audit-filter-apply"`, `btn-primary` (lines 32-37).
-- Empty state `<p data-testid="audit-log-empty">No audit entries found.</p>` (line 41).
-- Table `<table data-testid="audit-log-table">` with headers **Timestamp | Actor | Entity Type | Entity ID | Action** (lines 45-51).
-- Pagination footer with **Previous** (`data-testid="audit-page-prev"`), **Page {n}**, and **Next** (`data-testid="audit-page-next"`) (lines 66-83).
+  - **Action** select `data-testid="audit-filter-action"` with options including **"All actions"** when value is empty.
+  - **Apply** button `data-testid="audit-filter-apply"`, `btn-primary`.
+- Empty state `<p data-testid="audit-log-empty">No audit entries found.</p>`.
+- Table `<table data-testid="audit-log-table">` with headers **Timestamp | Actor | Entity Type | Entity ID | Action**.
+- Pagination footer with **Previous** (`data-testid="audit-page-prev"`), **Page {n}**, and **Next** (`data-testid="audit-page-next"`).
 
 **Pass criteria**: layout exact.
 
@@ -298,10 +298,10 @@
 
 **Behavior verification**
 
-- API: `GET /api/v1/admin/audit?actor=…&entityType=…&action=…&page=…&size=…` (verify in `backend/src/TheUpperRoom.Api/Audit/AuditController.cs`).
-- Underlying source is the static list `AuditStore.Entries` (`backend/src/TheUpperRoom.Api/Audit/AuditStore.cs:6`) populated by `AuditStore.Record(...)` calls throughout other controllers.
+- API: `GET /api/v1/admin/audit?actor=…&entityType=…&action=…&page=…&pageSize=…`.
+- Underlying source is the in-memory `AuditStore.Entries` list populated by `AuditStore.Record(...)` calls.
 
-**Database verification**
+**State/API verification**
 
 - After performing some mutations elsewhere (e.g. creating a contact) the corresponding row appears here with `EntityType="Contact"`, `Action="Create"` etc.
 

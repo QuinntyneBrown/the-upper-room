@@ -1,6 +1,8 @@
 using System.Reflection;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using TheUpperRoom.Application.Common;
 
 namespace TheUpperRoom.Application;
 
@@ -17,6 +19,7 @@ public static class DependencyInjection
         params Assembly[] additionalAssemblies)
     {
         var applicationAssembly = typeof(DependencyInjection).Assembly;
+        services.AddValidatorsFromAssembly(applicationAssembly);
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(applicationAssembly);
@@ -25,6 +28,13 @@ public static class DependencyInjection
                 cfg.RegisterServicesFromAssembly(assembly);
             }
         });
+
+        foreach (var assembly in additionalAssemblies)
+        {
+            services.AddValidatorsFromAssembly(assembly);
+        }
+
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         return services;
     }
 }

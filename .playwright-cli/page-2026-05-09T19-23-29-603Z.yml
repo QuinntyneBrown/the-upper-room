@@ -1,0 +1,17 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - alert [ref=e2]:
+      - generic [ref=e3]: The email or password is incorrect.
+      - button "Dismiss" [ref=e4] [cursor=pointer]:
+        - img [ref=e5]: close
+    - alert [ref=e9]:
+      - heading "Something went wrong" [level=1] [ref=e10]
+      - paragraph [ref=e11]: We've been notified. Please try again.
+      - paragraph [ref=e12]:
+        - text: "Reference:"
+        - code [ref=e13]: a35448e7-b6c1-494e-b906-0c73357e1b01
+      - generic [ref=e14]:
+        - button "Copy reference" [ref=e16]:
+          - generic [ref=e17]: Copy reference
+        - button "Reload page" [ref=e21]:
+          - generic [ref=e22]: Reload page

@@ -18,9 +18,9 @@
 **UI verification**
 
 - Component: `frontend/projects/the-upper-room/src/app/users/my-profile/my-profile.html`.
-- Heading **"My profile"** (line 3).
-- Avatar uploader: `<tar-avatar-uploader [user]="form()" (fileSelected)="onAvatarSelected($event)" />` (line 5) — clicking the avatar triggers a file picker; file uploads automatically.
-- Field rows (lines 7-66):
+- Heading **"My profile"**.
+- Avatar uploader: `<tar-avatar-uploader [user]="form()" (fileSelected)="onAvatarSelected($event)" />` — clicking the avatar triggers a file picker; file uploads automatically.
+- Field rows:
   - **First name** `data-testid="profile-first-name"`
   - **Last name** `data-testid="profile-last-name"`
   - **Display name** `data-testid="profile-display-name"`
@@ -29,8 +29,8 @@
   - **City** `data-testid="profile-city"` (readonly when `!canEditCity()`)
   - **Timezone** `data-testid="profile-timezone"`
   - **Locale** `data-testid="profile-locale"`
-- Form actions: `<tar-form-actions saveLabel="Save changes" cancelLabel="Cancel" saveTestId="profile-save" cancelTestId="profile-cancel">` (lines 67-75). Save disabled until `isDirty()`.
-- Sessions card `<app-sessions-card>` (line 78).
+- Form actions: `<tar-form-actions saveLabel="Save changes" cancelLabel="Cancel" saveTestId="profile-save" cancelTestId="profile-cancel">`. Save disabled until `isDirty()`.
+- Sessions card `<app-sessions-card>`.
 
 **Pass criteria**: all field labels exact; testIds present.
 
@@ -64,14 +64,15 @@
 
 **Behavior verification**
 
-- API: `PUT /api/v1/users/me` (or equivalent). Status `200`.
-- Snackbar confirms save.
+- Current frontend calls `PATCH /api/v1/users/me/profile`.
+- Current backend only implements `GET /api/v1/users/me`; there is no profile read/update endpoint yet.
+- Snackbar confirms save when the endpoint is stubbed or implemented.
 
-**Database verification**
+**State/API verification**
 
-- User record updated; audit entry `EntityType="User"`, `Action="Update"`.
+- Mark backend integration blocked/failed unless the profile endpoint is intentionally stubbed.
 
-**Pass criteria**: persisted; snackbar shown.
+**Pass criteria**: UI dirty/save state works; backend persistence is currently blocked.
 
 **Severity if failing**: High.
 
@@ -91,7 +92,7 @@
 
 **Behavior verification**
 
-- API: `POST /api/v1/users/me/avatar` (verify in `backend/src/TheUpperRoom.Api/Uploads/`).
+- API: `POST /api/v1/uploads` with multipart form field `file`.
 
 **Pass criteria**: upload succeeds; avatar persists across reload.
 
@@ -108,12 +109,12 @@
 **UI verification**
 
 - Section `<section data-testid="sessions-card">` (`frontend/projects/the-upper-room/src/app/users/sessions-card/sessions-card.html:1`).
-- Heading **"Active sessions"** (line 3).
+- Heading **"Active sessions"**.
 - Each row `<li data-testid="session-row-{id}">` showing:
   - Device name `<strong>{device}</strong>`.
-  - Chip **"This device"** (`class="sessions-card__chip"`) when `s.current` is true (line 20).
-  - Meta line: **`{location} · last seen {lastSeen}`** (line 23).
-- When other sessions exist, `<tar-button testId="sessions-sign-out-others" variant="outlined">` shows text **"Sign out other sessions"** (lines 5-12).
+  - Chip **"This device"** (`class="sessions-card__chip"`) when `s.current` is true.
+  - Meta line: **`{location} · last seen {lastSeen}`**.
+- When other sessions exist, `<tar-button testId="sessions-sign-out-others" variant="outlined">` shows text **"Sign out other sessions"**.
 
 **Pass criteria**: rows match user's session set.
 
@@ -130,12 +131,12 @@
 
 **Behavior verification**
 
-- API: `DELETE /api/v1/users/me/sessions/others` (or equivalent).
-- Other session(s) become invalid; they receive 401 on next request and are redirected to `/sign-in`.
+- Current frontend calls `POST /api/v1/users/me/sessions/revoke-others`.
+- Current backend has no user sessions endpoints.
 
-**Database verification**
+**State/API verification**
 
-- `UserSessions` collection: rows for non-current sessions removed (or marked revoked).
+- Mark backend integration blocked/failed unless the sessions endpoints are intentionally stubbed.
 
 **Pass criteria**: only current session remains; other browser is signed out on next interaction.
 
@@ -152,10 +153,10 @@
 **UI verification**
 
 - Component: `frontend/projects/the-upper-room/src/app/settings/appearance/appearance.html`.
-- Heading **"Appearance"** (line 1).
-- Radiogroup `<div class="appearance__options" role="radiogroup" aria-label="Theme mode">` (line 2).
+- Heading **"Appearance"**.
+- Radiogroup `<div class="appearance__options" role="radiogroup" aria-label="Theme mode">`.
 - Three options in this order: **system | light | dark** (`appearance.ts:12`, `modes: ThemeMode[] = ['system', 'light', 'dark']`).
-- Each button: `data-testid="theme-option-{m}"`, `role="radio"`, `aria-checked` true for the active mode (lines 4-15).
+- Each button: `data-testid="theme-option-{m}"`, `role="radio"`, `aria-checked` true for the active mode.
 
 **Behavior verification**
 
@@ -194,10 +195,10 @@
 **UI verification**
 
 - Component: `frontend/projects/domain/src/lib/notifications/notification-preferences/tar-notification-preferences.html`.
-- Heading `<h1>Notification Preferences</h1>` (line 1).
-- Push enable/disable button (lines 3-13): when not subscribed, button text **"Enable push notifications"** (`data-testid="push-enable-button"`); when subscribed, **"Disable push notifications"** (`data-testid="push-disable-button"`). Both `btn-outlined`.
+- Heading `<h1>Notification Preferences</h1>`.
+- Push enable/disable button: when not subscribed, button text **"Enable push notifications"** (`data-testid="push-enable-button"`); when subscribed, **"Disable push notifications"** (`data-testid="push-disable-button"`). Both `btn-outlined`.
 - Table `<table class="np__table">`:
-  - Headers: **Notification | In-app | Email | Push | (blank)** (lines 17-23).
+  - Headers: **Notification | In-app | Email | Push | (blank)**.
   - Each row `<tr data-testid="pref-row-{code}">` with checkbox per channel (`data-testid="pref-toggle-inApp|email|push"`) and a **Saved** indicator (`data-testid="pref-saved"`) shown briefly after a change.
 
 **Behavior verification**
@@ -236,7 +237,14 @@
 
 **Steps**
 
-1. On `/settings/notifications`, look for a digest-frequency control. **[unverified — `tar-notification-preferences.html` does not include a digest-frequency control. The user guide §11.4 mentions "Pick a digest frequency if available." Verify intent before failing.]**
+1. On `/settings/notifications`, look for a digest-frequency control.
+
+**Current code verification**
+
+- `tar-notification-preferences.html` does not include a digest-frequency control.
+- Notification preferences currently expose in-app, email, and push toggles per notification code.
+
+**Pass criteria**: current implementation has no digest-frequency picker. Mark blocked/failed if digest frequency is required.
 
 **Pass criteria (when implemented)**: choice persists and reflects in subsequent emails.
 

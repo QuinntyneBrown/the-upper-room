@@ -3,7 +3,7 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TarBanner } from 'components';
 import { PERMISSIONS_SERVICE } from '../../rbac/permissions.contract';
-import { ALL_CITIES, CityScopeService } from '../city-scope.service';
+import { ALL_CITIES, CITY_SCOPE_SERVICE } from '../city-scope.service.contract';
 
 interface CityRow {
   id: string;
@@ -21,7 +21,7 @@ interface CityRow {
 export class TarCitySwitcher {
   private readonly http = inject(HttpClient);
   private readonly perms = inject(PERMISSIONS_SERVICE);
-  protected readonly scope = inject(CityScopeService);
+  protected readonly scope = inject(CITY_SCOPE_SERVICE);
 
   protected readonly canSwitch = computed(() => this.perms.hasPermission('City:Switch'));
   protected readonly cities = signal<CityRow[]>([]);

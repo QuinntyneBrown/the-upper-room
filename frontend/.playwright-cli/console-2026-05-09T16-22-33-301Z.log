@@ -1,0 +1,7 @@
+Total messages: 10 (Errors: 1, Warnings: 0)
+Returning 4 messages for level "info"
+
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0

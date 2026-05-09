@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { CityScopeService, PERMISSIONS_SERVICE } from 'domain';
+import { CITY_SCOPE_SERVICE, PERMISSIONS_SERVICE } from 'domain';
 import { TarEmptyState, TarAvatar } from 'components';
 
 export interface ContactPhone {
@@ -44,7 +44,7 @@ export class ContactList implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly http = inject(HttpClient);
   private readonly perms = inject(PERMISSIONS_SERVICE);
-  private readonly cityScope = inject(CityScopeService);
+  private readonly cityScope = inject(CITY_SCOPE_SERVICE);
   private readonly destroy$ = new Subject<void>();
   private readonly search$ = new Subject<string>();
   private observer?: IntersectionObserver;

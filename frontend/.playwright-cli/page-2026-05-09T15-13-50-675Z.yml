@@ -1,0 +1,5 @@
+- main [ref=e4]:
+  - generic [ref=e5]:
+    - img [ref=e7]: search-off
+    - heading "Page not found" [level=2] [ref=e8]
+    - paragraph [ref=e9]: The page you were looking for doesn't exist.

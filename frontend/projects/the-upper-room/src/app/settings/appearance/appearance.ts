@@ -1,6 +1,6 @@
 // traces_to: L2-115
 import { Component, inject } from '@angular/core';
-import { ThemeService, ThemeMode } from 'domain';
+import { THEME_SERVICE, ThemeMode } from 'domain';
 
 @Component({
   selector: 'app-appearance',
@@ -8,6 +8,6 @@ import { ThemeService, ThemeMode } from 'domain';
   styleUrl: './appearance.scss',
 })
 export class Appearance {
-  protected readonly theme = inject(ThemeService);
+  protected readonly theme = inject(THEME_SERVICE);
   protected readonly modes: ThemeMode[] = ['system', 'light', 'dark'];
 }

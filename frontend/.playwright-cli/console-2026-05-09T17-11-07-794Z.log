@@ -1,0 +1,46 @@
+Total messages: 79 (Errors: 25, Warnings: 0)
+Returning 43 messages for level "info"
+
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/notifications:0
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/dashboard:0
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/notifications:0
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/dashboard:0
+[ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/v1/dashboard:0
+[ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/v1/dashboard:0
+[ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/v1/dashboard:0
+[ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/notifications:0
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/contacts?page=1&size=25:0
+[ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/v1/contacts?page=1&size=25&scope=toronto:0
+[ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110
+[ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:4200/api/v1/contacts?page=1&size=25&scope=halifax:0
+[ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15110

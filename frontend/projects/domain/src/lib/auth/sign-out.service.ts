@@ -4,10 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
 import { ConfirmService, SnackbarService } from 'components';
+import { ISignOutService } from './sign-out.service.contract';
 import { TOKEN_STORE } from './token-store.contract';
 
 @Injectable({ providedIn: 'root' })
-export class SignOutService {
+export class SignOutService implements ISignOutService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
   private readonly confirm = inject(ConfirmService);

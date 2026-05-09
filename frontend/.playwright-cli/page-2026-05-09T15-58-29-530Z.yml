@@ -1,0 +1,26 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - link "Skip to main content" [ref=e4] [cursor=pointer]:
+      - /url: "#main"
+    - banner [ref=e5]:
+      - generic [ref=e6]: The Upper Room
+      - button "Notifications" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]: notifications
+      - generic [ref=e15]:
+        - button "Account menu" [active] [ref=e17] [cursor=pointer]:
+          - img [ref=e18]: account_circle
+        - menu [ref=e51]:
+          - menuitem "Sign out" [ref=e52] [cursor=pointer]
+    - navigation [ref=e21]
+    - navigation "Breadcrumb" [ref=e22]:
+      - link "Dashboard" [ref=e23] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e24]: /
+      - link "Dashboard" [ref=e25] [cursor=pointer]:
+        - /url: /dashboard
+    - main [ref=e26]
+    - contentinfo [ref=e27]: © The Upper Room
+  - alert [ref=e28]:
+    - generic [ref=e29]: The email or password is incorrect.
+    - button "Dismiss" [ref=e30] [cursor=pointer]:
+      - img [ref=e31]: close

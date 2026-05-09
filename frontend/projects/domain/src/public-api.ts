@@ -27,6 +27,7 @@ export * from './lib/users/invite-user-dialog/invite-user-dialog';
 export * from './lib/users/user-detail-drawer/user-detail-drawer';
 
 // Theme
+export * from './lib/theme/theme.service.contract';
 export * from './lib/theme/theme.service';
 
 // Tags
@@ -36,11 +37,14 @@ export * from './lib/tags/tag-selector/tar-tag-selector';
 // Auth
 export * from './lib/auth/access-token-source.contract';
 export * from './lib/auth/token-store.contract';
+export * from './lib/auth/sign-out.service.contract';
 export * from './lib/auth/sign-out.service';
+export * from './lib/auth/idle.service.contract';
 export * from './lib/auth/idle.service';
 export * from './lib/auth/inactivity-dialog/inactivity-dialog';
 
 // Cities
+export * from './lib/cities/city-scope.service.contract';
 export * from './lib/cities/city-scope.service';
 export * from './lib/cities/city-switcher/tar-city-switcher';
 

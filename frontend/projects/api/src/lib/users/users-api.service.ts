@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from '../api-base-url.token';
 import { Me } from '../models/me';
@@ -13,8 +13,8 @@ export class UsersApiService implements IUsersApi {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = inject(API_BASE_URL);
 
-  getMe(): Observable<Me> {
-    return this.http.get<Me>(`${this.baseUrl}/api/v1/users/me`);
+  getMe(context?: HttpContext): Observable<Me> {
+    return this.http.get<Me>(`${this.baseUrl}/api/v1/users/me`, { context });
   }
 
   list(query: UserListQuery): Observable<PagedList<UserRow>> {

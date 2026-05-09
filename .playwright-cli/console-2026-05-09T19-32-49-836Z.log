@@ -1,0 +1,2 @@
+[ 1365329ms] [ERROR] Failed to load resource: the server responded with a status of 405 (Method Not Allowed) @ http://localhost:4200/api/v1/cards/8ab0e041:0
+[ 1365330ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15126

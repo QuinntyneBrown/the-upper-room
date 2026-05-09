@@ -1,0 +1,5 @@
+[     224ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[     225ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/notifications:0
+[     226ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/boards:0
+[     230ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15117
+[     230ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15117

@@ -11,25 +11,8 @@ export interface BoardMoveSheetDialogData {
 @Component({
   selector: 'app-board-move-sheet-dialog',
   imports: [MatDialogModule],
-  template: `
-    <h2 mat-dialog-title class="move-sheet__title">Move to...</h2>
-    <mat-dialog-content>
-      <ul class="move-sheet__options">
-        @for (col of data.options; track col.id) {
-          <li>
-            <button
-              [attr.data-testid]="'board-move-sheet-option-' + col.name"
-              type="button"
-              class="move-sheet__option"
-              (click)="choose(col)"
-            >
-              {{ col.name }}
-            </button>
-          </li>
-        }
-      </ul>
-    </mat-dialog-content>
-  `,
+  templateUrl: './board-move-sheet-dialog.html',
+  styleUrl: './board-move-sheet-dialog.scss',
   host: {
     'data-testid': 'board-move-sheet',
     role: 'dialog',

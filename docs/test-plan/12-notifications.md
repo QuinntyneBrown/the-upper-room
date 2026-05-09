@@ -18,8 +18,8 @@
 **UI verification**
 
 - Container `<div class="notification-bell">` (`frontend/projects/domain/src/lib/notifications/notification-bell/tar-notification-bell.html:1`).
-- Trigger `<button data-testid="notification-bell" aria-label="Notifications">` (lines 2-13) with `notifications` Material icon.
-- When `unreadCount() > 0`, `<span data-testid="notification-badge">` shows `badgeLabel()` (line 11) — typically the unread count or `9+` if capped.
+- Trigger `<button data-testid="notification-bell" aria-label="Notifications">` with `notifications` Material icon.
+- When `unreadCount() > 0`, `<span data-testid="notification-badge">` shows `badgeLabel()` — typically the unread count or `9+` if capped.
 
 **Pass criteria**: bell visible; badge present iff unread count > 0.
 
@@ -36,10 +36,10 @@
 **UI verification**
 
 - Menu opens: `<div data-testid="notification-menu" role="dialog" aria-label="Notifications">` (`tar-notification-bell.html:16`).
-- Header **"Notifications"** (line 18).
-- Tabs `role="tablist"` (line 21):
-  - **Unread** `data-testid="notification-tab-unread"` (lines 22-30).
-  - **All** `data-testid="notification-tab-all"` (lines 31-39).
+- Header **"Notifications"**.
+- Tabs `role="tablist"`:
+  - **Unread** `data-testid="notification-tab-unread"`.
+  - **All** `data-testid="notification-tab-all"`.
   - Active tab carries `aria-selected="true"`.
 
 **Pass criteria**: menu opens with tabs and exact labels.
@@ -57,7 +57,7 @@
 **UI verification**
 
 - `<div data-testid="notification-empty">` (`tar-notification-bell.html:44`).
-- Icon `notifications_off`, text **"You're all caught up"** (line 46).
+- Icon `notifications_off`, text **"You're all caught up"**.
 
 **Pass criteria**: copy and icon exact.
 
@@ -74,11 +74,11 @@
 **UI verification**
 
 - Each row `<button data-testid="notification-row">` (`tar-notification-bell.html:51`).
-- Unread rows have `notification-bell__row--unread` modifier (line 53).
+- Unread rows have `notification-bell__row--unread` modifier.
 - Severity icon `notification-bell__row-icon--{severity}`:
   - **Warning** → `warning` icon.
   - **Success** → `check_circle`.
-  - default (Info) → `info` (line 58).
+  - default (Info) → `info`.
 - Title, body, and time (`{createdAt | date:'shortTime'}`) visible.
 
 **Pass criteria**: each row matches its severity icon and read state.
@@ -136,7 +136,7 @@
 
 **UI verification**
 
-- Routes to `/settings/notifications` (line 81). See §11.9 for verification of the destination page.
+- Routes to `/settings/notifications`. See §11.9 for verification of the destination page.
 
 **Pass criteria**: navigation succeeds.
 

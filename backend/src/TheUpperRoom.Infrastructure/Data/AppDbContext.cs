@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TheUpperRoom.Application.Data;
 using TheUpperRoom.Domain.Audit;
 using TheUpperRoom.Domain.Cities;
 using TheUpperRoom.Domain.Common.ValueObjects;
@@ -15,7 +16,7 @@ using TheUpperRoom.Domain.Users;
 
 namespace TheUpperRoom.Infrastructure.Data;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options), IAppDbContext
 {
     public DbSet<City> Cities => Set<City>();
     public DbSet<Tag> Tags => Set<Tag>();

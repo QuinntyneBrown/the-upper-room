@@ -6,45 +6,8 @@ export type AvatarSize = 24 | 32 | 40 | 48 | 64 | 96;
 
 @Component({
   selector: 'tar-avatar',
-  template: `
-    @if (avatarUrl()) {
-      <img
-        data-testid="avatar-image"
-        class="avatar avatar--image"
-        [style.width.px]="size"
-        [style.height.px]="size"
-        [src]="avatarUrl()"
-        alt=""
-      />
-    } @else {
-      <span
-        data-testid="avatar-initials"
-        class="avatar avatar--initials"
-        [style.width.px]="size"
-        [style.height.px]="size"
-        [style.background]="background()"
-        [style.fontSize.px]="size * 0.4"
-      >
-        {{ label() }}
-      </span>
-    }
-  `,
-  styles: [
-    `
-      .avatar {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: var(--md-sys-shape-corner-full);
-        color: var(--md-sys-color-on-secondary-container);
-        font-weight: 500;
-        flex-shrink: 0;
-      }
-      .avatar--image {
-        object-fit: cover;
-      }
-    `,
-  ],
+  templateUrl: './tar-avatar.html',
+  styleUrl: './tar-avatar.scss',
 })
 export class TarAvatar {
   @Input({ required: true }) user!: AvatarUser & { avatarUrl?: string | null };

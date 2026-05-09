@@ -1,0 +1,76 @@
+- generic [ref=e1]:
+  - generic [ref=e6]:
+    - link [ref=e87] [cursor=pointer]:
+      - /url: "#main"
+      - text: Skip to main content
+    - banner [ref=e8]:
+      - link [ref=e88] [cursor=pointer]:
+        - /url: /dashboard
+        - text: The Upper Room
+      - button [ref=e89] [cursor=pointer]: Toronto
+      - button [ref=e90] [cursor=pointer]:
+        - img [ref=e18]: notifications
+      - button [ref=e91] [cursor=pointer]:
+        - img [ref=e24]: account_circle
+    - navigation [ref=e27]
+    - navigation [ref=e92]:
+      - link [ref=e93] [cursor=pointer]:
+        - /url: /
+        - text: Dashboard
+      - generic [ref=e30]: /
+      - link [ref=e94] [cursor=pointer]:
+        - /url: /boards
+        - text: Boards
+      - generic [ref=e32]: /
+      - link [ref=e95] [cursor=pointer]:
+        - /url: /boards/4d608a4e
+        - text: 4d608a4e
+      - generic [ref=e34]: /
+      - link [ref=e96] [cursor=pointer]:
+        - /url: /boards/4d608a4e/configure
+        - text: Configure
+    - main [ref=e36]:
+      - generic [ref=e37]:
+        - heading [level=1] [ref=e97]: "Configure: Sprint 1"
+        - generic [ref=e40]:
+          - heading [level=2] [ref=e98]: Swimlanes
+          - generic [ref=e45] [cursor=pointer]:
+            - generic [ref=e46]: Group by
+            - combobox [ref=e99]:
+              - generic [ref=e49]:
+                - generic [ref=e51]: None
+                - img [ref=e54]
+        - list [ref=e57]:
+          - listitem [ref=e58]:
+            - generic [ref=e59]: "::"
+            - generic [ref=e60]: To Do
+            - generic [ref=e61]: 2 cards
+            - button [ref=e100]:
+              - generic [ref=e64]: Delete
+          - listitem [ref=e67]:
+            - generic [ref=e68]: "::"
+            - generic [ref=e69]: In Progress
+            - generic [ref=e70]: 0 cards
+            - button [ref=e101]:
+              - generic [ref=e73]: Delete
+          - listitem [ref=e76]:
+            - generic [ref=e77]: "::"
+            - generic [ref=e78]: Done
+            - generic [ref=e79]: 1 cards
+            - button [ref=e102]:
+              - generic [ref=e82]: Delete
+    - contentinfo [ref=e85]: © The Upper Room
+  - dialog "Move 2 cards from 'To Do' to..." [ref=e106]:
+    - generic [ref=e109]:
+      - heading "Move 2 cards from 'To Do' to..." [level=2] [ref=e110]
+      - generic [ref=e115] [cursor=pointer]:
+        - generic [ref=e116]: Move to column
+        - combobox "Move to column" [active] [ref=e118]:
+          - generic [ref=e119]:
+            - generic [ref=e121]: In Progress
+            - img [ref=e124]
+      - generic [ref=e127]:
+        - button "Cancel" [ref=e129]:
+          - generic [ref=e130]: Cancel
+        - button "Confirm" [ref=e134]:
+          - generic [ref=e135]: Confirm

@@ -7,7 +7,7 @@ import { NgZone } from '@angular/core';
 
 @Component({
   selector: 'tar-relative-time',
-  template: '{{ text() }}',
+  templateUrl: './relative-time.html',
 })
 export class TarRelativeTime implements OnInit, OnDestroy {
   readonly timestamp = input.required<Date | string>();

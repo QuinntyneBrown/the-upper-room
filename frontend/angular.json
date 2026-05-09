@@ -107,7 +107,9 @@
                 "input": "projects/the-upper-room/public"
               }
             ],
-            "styles": ["projects/the-upper-room/src/styles.scss"]
+            "styles": [
+              "projects/the-upper-room/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -143,7 +145,10 @@
               "buildTarget": "the-upper-room:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"

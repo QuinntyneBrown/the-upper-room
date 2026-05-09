@@ -1,0 +1,42 @@
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e5]:
+    - button "Open navigation" [active] [ref=e48] [cursor=pointer]:
+      - img [ref=e49]: menu
+    - generic [ref=e6]: The Upper Room
+    - button "Notifications" [ref=e11] [cursor=pointer]:
+      - img [ref=e12]: notifications
+    - button "Account menu" [ref=e17] [cursor=pointer]:
+      - img [ref=e18]: account_circle
+  - navigation [ref=e21]
+  - main [ref=e26]:
+    - generic [ref=e28]:
+      - heading "Welcome," [level=1] [ref=e30]
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - generic:
+            - paragraph
+            - paragraph
+        - generic [ref=e33]:
+          - generic:
+            - paragraph
+            - paragraph
+        - generic [ref=e34]:
+          - generic:
+            - paragraph
+            - paragraph
+        - generic [ref=e35]:
+          - generic:
+            - paragraph
+            - paragraph
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - heading "Upcoming Events" [level=2] [ref=e39]
+            - generic [ref=e40]: View calendar
+          - paragraph [ref=e41]: No upcoming events.
+        - generic [ref=e43]:
+          - heading "Tasks on My Boards" [level=2] [ref=e44]
+          - generic [ref=e45]: View boards
+  - contentinfo [ref=e46]: © The Upper Room

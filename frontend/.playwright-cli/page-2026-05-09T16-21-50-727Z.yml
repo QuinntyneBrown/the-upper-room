@@ -1,0 +1,55 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - link "Skip to main content" [ref=e4] [cursor=pointer]:
+      - /url: "#main"
+    - banner [ref=e5]:
+      - button "Open navigation" [ref=e71] [cursor=pointer]:
+        - img [ref=e72]: menu
+      - generic [ref=e6]: The Upper Room
+      - button "Notifications" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]: notifications
+      - button "Account menu" [ref=e17] [cursor=pointer]:
+        - img [ref=e18]: account_circle
+    - navigation [ref=e21]
+    - main [ref=e26]:
+      - generic [ref=e28]:
+        - heading "Welcome, Admin" [level=1] [ref=e30]
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - generic [ref=e33]: contacts
+            - generic [ref=e34]:
+              - paragraph [ref=e35]: "5"
+              - paragraph [ref=e36]: Contacts
+          - generic [ref=e37]:
+            - generic [ref=e38]: handshake
+            - generic [ref=e39]:
+              - paragraph [ref=e40]: "3"
+              - paragraph [ref=e41]: Partners
+          - generic [ref=e42]:
+            - generic [ref=e43]: event
+            - generic [ref=e44]:
+              - paragraph [ref=e45]: "2"
+              - paragraph [ref=e46]: Upcoming Events
+          - generic [ref=e47]:
+            - generic [ref=e48]: lightbulb
+            - generic [ref=e49]:
+              - paragraph [ref=e50]: "4"
+              - paragraph [ref=e51]: Open Ideas
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - generic [ref=e54]:
+              - heading "Upcoming Events" [level=2] [ref=e55]
+              - link "View calendar" [ref=e56] [cursor=pointer]:
+                - /url: /events
+            - paragraph [ref=e57]: No upcoming events.
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - heading "Tasks on My Boards" [level=2] [ref=e60]
+              - link "View boards" [ref=e61] [cursor=pointer]:
+                - /url: /boards
+            - paragraph [ref=e62]: No assigned tasks.
+    - contentinfo [ref=e63]: © The Upper Room
+  - alert [ref=e64]:
+    - generic [ref=e65]: The email or password is incorrect.
+    - button "Dismiss" [ref=e66] [cursor=pointer]:
+      - img [ref=e67]: close

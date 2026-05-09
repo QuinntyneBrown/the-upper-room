@@ -1,0 +1,59 @@
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e5]:
+    - link "The Upper Room" [ref=e6] [cursor=pointer]:
+      - /url: /dashboard
+    - generic [ref=e7]:
+      - button "All cities" [ref=e9] [cursor=pointer]
+      - status [ref=e11]:
+        - generic [ref=e12]: Switch to a single city to make changes.
+    - button "Notifications" [ref=e17] [cursor=pointer]:
+      - img [ref=e18]: notifications
+    - button "Account menu" [ref=e23] [cursor=pointer]:
+      - img [ref=e24]: account_circle
+  - navigation [ref=e27]
+  - navigation "Breadcrumb" [ref=e28]:
+    - link "Dashboard" [ref=e29] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e30]: /
+    - link "Dashboard" [ref=e31] [cursor=pointer]:
+      - /url: /dashboard
+  - main [ref=e32]:
+    - generic [ref=e34]:
+      - heading "Welcome, Admin" [level=1] [ref=e36]
+      - generic [ref=e37]:
+        - generic [ref=e38]:
+          - generic [ref=e39]: contacts
+          - generic [ref=e40]:
+            - paragraph [ref=e41]: "2"
+            - paragraph [ref=e42]: Contacts
+        - generic [ref=e43]:
+          - generic [ref=e44]: handshake
+          - generic [ref=e45]:
+            - paragraph [ref=e46]: "1"
+            - paragraph [ref=e47]: Partners
+        - generic [ref=e48]:
+          - generic [ref=e49]: event
+          - generic [ref=e50]:
+            - paragraph [ref=e51]: "0"
+            - paragraph [ref=e52]: Upcoming Events
+        - generic [ref=e53]:
+          - generic [ref=e54]: lightbulb
+          - generic [ref=e55]:
+            - paragraph [ref=e56]: "0"
+            - paragraph [ref=e57]: Open Ideas
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - generic [ref=e60]:
+            - heading "Upcoming Events" [level=2] [ref=e61]
+            - link "View calendar" [ref=e62] [cursor=pointer]:
+              - /url: /events
+          - paragraph [ref=e63]: No upcoming events.
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - heading "Tasks on My Boards" [level=2] [ref=e66]
+            - link "View boards" [ref=e67] [cursor=pointer]:
+              - /url: /boards
+          - paragraph [ref=e68]: No assigned tasks.
+  - contentinfo [ref=e69]: © The Upper Room

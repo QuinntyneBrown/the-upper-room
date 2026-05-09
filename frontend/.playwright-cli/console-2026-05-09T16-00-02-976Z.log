@@ -1,0 +1,4 @@
+[   10738ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/dashboard:0
+[   10741ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15099
+[   10759ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/notifications:0
+[   10761ms] [ERROR] HttpErrorResponse @ http://localhost:4200/main.js:15099

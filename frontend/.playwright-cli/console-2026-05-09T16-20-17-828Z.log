@@ -1,0 +1,82 @@
+[   86268ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  176942ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  185387ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  222459ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  304033ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  320344ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  341486ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  373160ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  396818ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  482188ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  628919ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  644655ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  650775ms] [ERROR] RuntimeError: NG0203: effect() can only be used within an injection context such as a constructor, a factory function, a field initializer, or a function used with `runInInjectionContext`. Find more at https://v21.angular.dev/errors/NG0203
+    at assertInInjectionContext (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:2067:11)
+    at effect (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:3405:5)
+    at _ContactList.ngOnInit (http://localhost:4200/main.js:3885:5)
+    at callHookInternal (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:4077:10)
+    at callHook (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:4092:7)
+    at callHooks (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:4066:9)
+    at executeInitAndCheckHooks (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:4035:5)
+    at refreshView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9226:11)
+    at detectChangesInView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9354:5)
+    at detectChangesInViewIfAttached (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9337:3) @ http://localhost:4200/main.js:15104
+[  650840ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  650904ms] [ERROR] RuntimeError: NG0100: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: 'undefined'. Current value: ''. Expression location: _ContactList component It seems like the view has been created after its parent and its children have been dirty checked. Has it been created in a change detection hook? Find more at https://v21.angular.dev/errors/NG0100
+    at throwErrorIfNoChangesMode (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:7032:9)
+    at bindingUpdated (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:11641:9)
+    at Module.ɵɵproperty (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:17537:7)
+    at ContactList_Template (http://localhost:4200/main.js:4006:12)
+    at executeTemplate (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:8554:5)
+    at refreshView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9214:7)
+    at detectChangesInView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9354:5)
+    at detectChangesInViewIfAttached (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9337:3)
+    at detectChangesInComponent (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9328:5)
+    at detectChangesInChildComponents (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9376:5) @ http://localhost:4200/main.js:15104
+[  650932ms] [ERROR] RuntimeError: NG0100: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: 'undefined'. Current value: ''. Expression location: _ContactList component It seems like the view has been created after its parent and its children have been dirty checked. Has it been created in a change detection hook? Find more at https://v21.angular.dev/errors/NG0100
+    at throwErrorIfNoChangesMode (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:7032:9)
+    at bindingUpdated (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:11641:9)
+    at Module.ɵɵproperty (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:17537:7)
+    at ContactList_Template (http://localhost:4200/main.js:4006:12)
+    at executeTemplate (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:8554:5)
+    at refreshView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9214:7)
+    at detectChangesInView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9354:5)
+    at detectChangesInViewIfAttached (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9337:3)
+    at detectChangesInComponent (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9328:5)
+    at detectChangesInChildComponents (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9376:5) @ http://localhost:4200/main.js:15104
+[  658291ms] [ERROR] RuntimeError: NG0203: effect() can only be used within an injection context such as a constructor, a factory function, a field initializer, or a function used with `runInInjectionContext`. Find more at https://v21.angular.dev/errors/NG0203
+    at assertInInjectionContext (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:2067:11)
+    at effect (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:3405:5)
+    at _ContactList.ngOnInit (http://localhost:4200/main.js:3885:5)
+    at callHookInternal (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:4077:10)
+    at callHook (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:4092:7)
+    at callHooks (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:4066:9)
+    at executeInitAndCheckHooks (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:4035:5)
+    at refreshView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9226:11)
+    at detectChangesInView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9354:5)
+    at detectChangesInViewIfAttached (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9337:3) @ http://localhost:4200/main.js:15107
+[  658352ms] [ERROR] RuntimeError: NG0100: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: 'undefined'. Current value: ''. Expression location: _ContactList component It seems like the view has been created after its parent and its children have been dirty checked. Has it been created in a change detection hook? Find more at https://v21.angular.dev/errors/NG0100
+    at throwErrorIfNoChangesMode (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:7032:9)
+    at bindingUpdated (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:11641:9)
+    at Module.ɵɵproperty (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:17537:7)
+    at ContactList_Template (http://localhost:4200/main.js:4009:12)
+    at executeTemplate (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:8554:5)
+    at refreshView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9214:7)
+    at detectChangesInView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9354:5)
+    at detectChangesInViewIfAttached (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9337:3)
+    at detectChangesInComponent (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9328:5)
+    at detectChangesInChildComponents (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9376:5) @ http://localhost:4200/main.js:15107
+[  658370ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[  658375ms] [ERROR] RuntimeError: NG0100: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. Previous value: 'undefined'. Current value: ''. Expression location: _ContactList component It seems like the view has been created after its parent and its children have been dirty checked. Has it been created in a change detection hook? Find more at https://v21.angular.dev/errors/NG0100
+    at throwErrorIfNoChangesMode (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:7032:9)
+    at bindingUpdated (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:11641:9)
+    at Module.ɵɵproperty (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:17537:7)
+    at ContactList_Template (http://localhost:4200/main.js:4009:12)
+    at executeTemplate (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:8554:5)
+    at refreshView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9214:7)
+    at detectChangesInView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9354:5)
+    at detectChangesInViewIfAttached (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9337:3)
+    at detectChangesInComponent (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9328:5)
+    at detectChangesInChildComponents (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9376:5) @ http://localhost:4200/main.js:15107
+[  793752ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0
+[ 1021653ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0

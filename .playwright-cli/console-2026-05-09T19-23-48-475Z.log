@@ -1,0 +1,16 @@
+Total messages: 5 (Errors: 2, Warnings: 0)
+Returning 3 messages for level "info"
+
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:14435
+[ERROR] TypeError: Cannot read properties of undefined (reading 'cityId')
+    at new _CityScopeService (http://localhost:4200/chunk-PNMHGSPC.js:8916:41)
+    at Object.CityScopeService_Factory [as factory] (http://localhost:4200/chunk-PNMHGSPC.js:8923:12)
+    at http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1909:35
+    at runInInjectorProfilerContext (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1053:5)
+    at R3Injector.hydrate (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1907:11)
+    at R3Injector.get (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1796:23)
+    at R3Injector.get (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1801:27)
+    at ChainedInjector.get (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:11223:32)
+    at lookupTokenUsingModuleInjector (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:4408:31)
+    at getOrCreateInjectable (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:4431:10) @ http://localhost:4200/main.js:15117
+[ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:4200/api/v1/users/me:0

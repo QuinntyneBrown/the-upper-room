@@ -4,7 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TarSnackbar } from 'components';
 import { ErrorBoundary } from './error/error-boundary/error-boundary';
-import { IdleService, InactivityDialog } from 'domain';
+import { IDLE_SERVICE, InactivityDialog } from 'domain';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +13,7 @@ import { IdleService, InactivityDialog } from 'domain';
   styleUrl: './app.scss',
 })
 export class App {
-  private readonly idle = inject(IdleService);
+  private readonly idle = inject(IDLE_SERVICE);
   private readonly dialog = inject(MatDialog);
   private inactivityRef: MatDialogRef<InactivityDialog> | null = null;
 

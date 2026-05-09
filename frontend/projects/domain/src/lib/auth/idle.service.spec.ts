@@ -2,7 +2,7 @@
 import { TestBed } from '@angular/core/testing';
 import { IdleService } from './idle.service';
 import { ACCESS_TOKEN_SOURCE } from './access-token-source.contract';
-import { SignOutService } from './sign-out.service';
+import { SIGN_OUT_SERVICE } from './sign-out.service.contract';
 
 const IDLE_MS = 30 * 60 * 1000;
 
@@ -20,7 +20,7 @@ function setup({ hasToken = true }: { hasToken?: boolean } = {}) {
     providers: [
       { provide: IdleService, useClass: TestIdleService },
       { provide: ACCESS_TOKEN_SOURCE, useValue: { current: () => hasToken ? 'tok' : null } },
-      { provide: SignOutService, useValue: { forceSignOut: () => { forcedOut = true; } } },
+      { provide: SIGN_OUT_SERVICE, useValue: { forceSignOut: () => { forcedOut = true; } } },
     ],
   });
   const svc = TestBed.inject(IdleService) as TestIdleService;

@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Cancel event</h2>
+<mat-dialog-content>
+  <div class="form-field">
+    <label class="form-field__label" for="cancel-msg">Message to attendees (optional)</label>
+    <textarea
+      data-testid="event-cancel-message"
+      id="cancel-msg"
+      class="form-field__textarea"
+      rows="3"
+      [value]="message()"
+      (input)="message.set($any($event.target).value)"
+      placeholder="Let attendees know why..."
+    ></textarea>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button type="button" class="btn-outlined" (click)="cancel()">Keep event</button>
+  <button
+    data-testid="event-cancel-confirm"
+    type="button"
+    class="btn-filled event-cancel-dialog__danger"
+    (click)="confirm()"
+  >
+    Yes, cancel
+  </button>
+</mat-dialog-actions>

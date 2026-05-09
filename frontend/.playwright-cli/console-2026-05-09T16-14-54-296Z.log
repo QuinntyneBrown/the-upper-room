@@ -1,0 +1,11 @@
+[   18945ms] [ERROR] TypeError: Cannot read properties of undefined (reading 'length')
+    at Dashboard_Conditional_0_Template (http://localhost:4200/main.js:14807:55)
+    at executeTemplate (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:8554:5)
+    at refreshView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9214:7)
+    at detectChangesInView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9354:5)
+    at detectChangesInViewIfAttached (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9337:3)
+    at detectChangesInEmbeddedViews (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9308:7)
+    at refreshView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9235:5)
+    at detectChangesInView (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9354:5)
+    at detectChangesInViewIfAttached (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9337:3)
+    at detectChangesInComponent (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:9328:5) @ http://localhost:4200/main.js:15099

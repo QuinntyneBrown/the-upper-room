@@ -4,6 +4,7 @@
 
 export * from './lib/api-base-url.token';
 export * from './lib/api.providers';
+export * from './lib/http-context-tokens';
 
 export * from './lib/models/contact';
 export * from './lib/models/exchange';

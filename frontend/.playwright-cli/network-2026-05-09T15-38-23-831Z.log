@@ -1,0 +1,1 @@
+[POST] http://localhost:4200/api/v1/auth/reset-password => [404] Not Found

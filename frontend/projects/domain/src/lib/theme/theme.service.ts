@@ -2,11 +2,10 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ACCESS_TOKEN_SOURCE } from '../auth/access-token-source.contract';
-
-export type ThemeMode = 'system' | 'light' | 'dark';
+import { IThemeService, ThemeMode } from './theme.service.contract';
 
 @Injectable({ providedIn: 'root' })
-export class ThemeService {
+export class ThemeService implements IThemeService {
   private readonly http = inject(HttpClient);
   private readonly tokenSource = inject(ACCESS_TOKEN_SOURCE);
 

@@ -1,0 +1,41 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - link "Skip to main content" [ref=e4] [cursor=pointer]:
+      - /url: "#main"
+    - banner [ref=e5]:
+      - link "The Upper Room" [ref=e6] [cursor=pointer]:
+        - /url: /dashboard
+      - button "Notifications" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]: notifications
+      - button "Account menu" [ref=e17] [cursor=pointer]:
+        - img [ref=e18]: account_circle
+    - navigation [ref=e21]
+    - navigation "Breadcrumb" [ref=e22]:
+      - link "Dashboard" [ref=e23] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e24]: /
+      - link "Boards" [ref=e25] [cursor=pointer]:
+        - /url: /boards
+    - main [ref=e26]:
+      - generic [ref=e27]:
+        - heading "Boards" [level=1] [ref=e29]
+        - generic [ref=e31]:
+          - img [ref=e33]: view_kanban
+          - heading "No boards yet" [level=2] [ref=e34]
+          - paragraph [ref=e35]: Create a board to organize your work.
+    - contentinfo [ref=e36]: © The Upper Room
+  - alert [ref=e37]:
+    - generic [ref=e38]: The email or password is incorrect.
+    - button "Dismiss" [ref=e39] [cursor=pointer]:
+      - img [ref=e40]: close
+  - alert [ref=e44]:
+    - heading "Something went wrong" [level=1] [ref=e45]
+    - paragraph [ref=e46]: We've been notified. Please try again.
+    - paragraph [ref=e47]:
+      - text: "Reference:"
+      - code [ref=e48]: 3aa66d80-4dea-44b9-a5a4-5487a78fc80b
+    - generic [ref=e49]:
+      - button "Copy reference" [ref=e51]:
+        - generic [ref=e52]: Copy reference
+      - button "Reload page" [ref=e56]:
+        - generic [ref=e57]: Reload page

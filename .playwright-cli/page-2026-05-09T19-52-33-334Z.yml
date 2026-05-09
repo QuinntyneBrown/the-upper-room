@@ -1,0 +1,52 @@
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e5]:
+    - link "The Upper Room" [ref=e6] [cursor=pointer]:
+      - /url: /dashboard
+    - generic [ref=e7]:
+      - button "All cities" [ref=e9] [cursor=pointer]
+      - status [ref=e11]:
+        - generic [ref=e12]: Switch to a single city to make changes.
+    - button "Notifications" [ref=e17] [cursor=pointer]:
+      - img [ref=e18]: notifications
+    - button "Account menu" [ref=e23] [cursor=pointer]:
+      - img [ref=e24]: account_circle
+  - navigation [ref=e27]
+  - navigation "Breadcrumb" [ref=e28]:
+    - link "Dashboard" [ref=e29] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e30]: /
+    - link "Boards" [ref=e31] [cursor=pointer]:
+      - /url: /boards
+    - generic [ref=e32]: /
+    - link "4d608a4e" [ref=e33] [cursor=pointer]:
+      - /url: /boards/4d608a4e
+  - main [active] [ref=e34]:
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - heading "Sprint 1" [level=1] [ref=e37]
+        - button "Show archived" [ref=e39] [cursor=pointer]
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - generic [ref=e43]: To Do
+            - generic [ref=e44]: "2"
+          - list [ref=e45]:
+            - listitem [ref=e46]:
+              - generic [ref=e47]: Card Alpha
+            - listitem [ref=e48]:
+              - generic [ref=e49]: Card Beta
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - generic [ref=e52]: In Progress
+            - generic [ref=e53]: "0"
+          - list
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - generic [ref=e59]: Done
+            - generic [ref=e60]: "1"
+          - list [ref=e62]:
+            - listitem [ref=e63]:
+              - generic [ref=e64]: Card Gamma
+  - contentinfo [ref=e61]: © The Upper Room

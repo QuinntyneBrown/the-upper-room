@@ -1,0 +1,5 @@
+Total messages: 4 (Errors: 1, Warnings: 0)
+Returning 2 messages for level "info"
+
+[LOG] Angular is running in development mode. @ http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=8e1845ff:14435
+[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4200/api/v1/invitations?token=expired-token:0

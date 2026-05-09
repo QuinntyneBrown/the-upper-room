@@ -10,6 +10,7 @@ using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Cities;
 using TheUpperRoom.Api.Contacts;
 using TheUpperRoom.Api.Events;
+using TheUpperRoom.Api.ExceptionHandling;
 using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
@@ -33,6 +34,8 @@ if (Log.Logger.GetType().Name == "SilentLogger")
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 builder.Services.AddControllers();
+builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+builder.Services.AddProblemDetails();
 builder.Services.AddSingleton<IPkceVerifier, PkceVerifier>();
 
 builder.Services.AddApplication(typeof(Program).Assembly);
@@ -131,6 +134,7 @@ var usersConn = builder.Configuration["UsersDb:ConnectionString"]
 EnsureSqliteDirectoryExists(usersConn);
 
 var app = builder.Build();
+app.UseExceptionHandler();
 
 using (var scope = app.Services.CreateScope())
 {

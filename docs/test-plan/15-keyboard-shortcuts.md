@@ -140,7 +140,7 @@
 **UI verification**
 
 - The skip link `<a data-testid="skip-link" href="#main">Skip to main content</a>` (`app-shell.html:8`) becomes visible (off-screen unless focused).
-- Activating it focuses `<main id="main" tabindex="-1">` (line 70). The handler `skipToMain($event)` prevents the default anchor jump.
+- Activating it focuses `<main id="main" tabindex="-1">`. The handler `skipToMain($event)` prevents the default anchor jump.
 
 **Pass criteria**: link visible on focus and works.
 

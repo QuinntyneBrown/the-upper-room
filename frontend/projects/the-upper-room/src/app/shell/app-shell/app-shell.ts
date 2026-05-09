@@ -4,7 +4,7 @@ import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router
 import { filter } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TarIconButton, OfflineBanner, breadcrumbsFromUrl, Crumb } from 'components';
-import { SignOutService, TarCitySwitcher, TarNotificationBell } from 'domain';
+import { SIGN_OUT_SERVICE, TarCitySwitcher, TarNotificationBell } from 'domain';
 import { GlobalSearch } from '../../search/global-search';
 
 @Component({
@@ -15,7 +15,7 @@ import { GlobalSearch } from '../../search/global-search';
 })
 export class AppShell {
   private readonly router = inject(Router);
-  private readonly signOutService = inject(SignOutService);
+  private readonly signOutService = inject(SIGN_OUT_SERVICE);
   private readonly dialog = inject(MatDialog);
   private searchRef: MatDialogRef<GlobalSearch> | null = null;
 

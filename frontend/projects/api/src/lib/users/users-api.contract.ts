@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import { HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Me } from '../models/me';
 import { PagedList, UserListQuery } from '../models/paged-list';
@@ -6,7 +7,7 @@ import { UserRow } from '../models/user-row';
 import { UserUpdate } from '../models/user-update';
 
 export interface IUsersApi {
-  getMe(): Observable<Me>;
+  getMe(context?: HttpContext): Observable<Me>;
   list(query: UserListQuery): Observable<PagedList<UserRow>>;
   update(id: string, patch: UserUpdate): Observable<void>;
   disable(id: string): Observable<void>;

@@ -1,0 +1,6 @@
+- main [ref=e4]:
+  - generic [ref=e5]:
+    - heading "This invitation has expired." [level=1] [ref=e6]
+    - paragraph [ref=e7]: Ask your city lead to send you a new one.
+    - link "Request a new invite" [ref=e8] [cursor=pointer]:
+      - /url: /sign-in

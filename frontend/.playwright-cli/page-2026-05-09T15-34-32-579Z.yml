@@ -1,0 +1,9 @@
+- main [ref=e4]:
+  - generic [ref=e5]:
+    - heading "Forgot password" [level=1] [ref=e6]
+    - generic [ref=e10]:
+      - generic [ref=e11]: Email
+      - textbox "Email" [ref=e13]: test@example.com
+    - button "Send reset link" [active] [ref=e16]:
+      - generic [ref=e17]: Send reset link
+    - paragraph [ref=e20]: If an account exists for test@example.com, a reset link has been sent.

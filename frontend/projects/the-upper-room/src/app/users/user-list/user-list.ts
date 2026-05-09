@@ -101,7 +101,7 @@ export class UserList implements OnDestroy {
     const emailError = signal<string | null>(null);
     const data: InviteUserDialogData = {
       emailError,
-      onSubmit: (payload) => this.submitInvite(payload, emailError, ref),
+      onSubmit: (payload: InvitePayload) => this.submitInvite(payload, emailError, ref),
     };
     const ref = this.dialog.open<InviteUserDialog, InviteUserDialogData>(InviteUserDialog, { data });
   }

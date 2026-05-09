@@ -18,15 +18,15 @@
 **UI verification**
 
 - Header `<header class="locations-header">` with `<h1>Locations</h1>` (`frontend/projects/the-upper-room/src/app/locations/location-list/location-list.html:1-3`).
-- **New location** button `data-testid="locations-new-button"`, class `btn-primary` (lines 4-9).
-- Empty state: `tar-empty-state` with `data-testid="locations-empty-state"`, `icon="location_off"`, `heading="No locations yet"`, `body="Add your first venue or location."` (lines 12-17).
-- Grid `<div data-testid="locations-grid">` (line 19).
-- Each card `<article data-testid="location-card">` (line 21):
-  - Name `<h2 class="location-card__name">` (line 23).
-  - Archived badge `<span class="location-card__archived-badge">Archived</span>` (line 25) when `loc.archived`.
-  - Address line `{street}, {city}` when present (line 29).
-  - Capacity line `Capacity: {capacity}` when present (line 32).
-  - **Delete** button `data-testid="location-delete"`, `btn-danger-text` (lines 35-40).
+- **New location** button `data-testid="locations-new-button"`, class `btn-primary`.
+- Empty state: `tar-empty-state` with `data-testid="locations-empty-state"`, `icon="location_off"`, `heading="No locations yet"`, `body="Add your first venue or location."`.
+- Grid `<div data-testid="locations-grid">`.
+- Each card `<article data-testid="location-card">`:
+  - Name `<h2 class="location-card__name">`.
+  - Archived badge `<span class="location-card__archived-badge">Archived</span>` when `loc.archived`.
+  - Address line `{street}, {city}` when present.
+  - Capacity line `Capacity: {capacity}` when present.
+  - **Delete** button `data-testid="location-delete"`, `btn-danger-text`.
 
 **Behavior verification**
 
@@ -49,26 +49,25 @@
 **UI verification**
 
 - Component: `frontend/projects/the-upper-room/src/app/locations/location-form/location-form.html`.
-- Heading **"New Location"** (line 2).
+- Heading **"New Location"**.
 - Fields with labels and `data-testid`s:
-  - **Name *** required, `data-testid="location-name"` (lines 7-21).
-  - **Street**, `data-testid="location-street"` (lines 24-32).
-  - **City**, `data-testid="location-city"` (lines 37-45).
-  - **State / Province**, `data-testid="location-state"` (lines 47-56).
-  - **Country**, `data-testid="location-country"` (lines 62-70).
-  - **Postal Code**, `data-testid="location-postal-code"` (lines 72-81).
-  - **Capacity** number `min="1"`, `data-testid="location-capacity"` (lines 86-99). Inline error `data-testid="location-capacity-error"` (line 98).
-- Buttons: **Cancel** `data-testid="location-cancel"` (`btn-outlined`) and **Create location** `data-testid="location-submit"` (`btn-primary`) (lines 102-114).
+  - **Name *** required, `data-testid="location-name"`.
+  - **Street**, `data-testid="location-street"`.
+  - **City**, `data-testid="location-city"`.
+  - **State / Province**, `data-testid="location-state"`.
+  - **Country**, `data-testid="location-country"`.
+  - **Postal Code**, `data-testid="location-postal-code"`.
+  - **Capacity** number `min="1"`, `data-testid="location-capacity"`. Inline error `data-testid="location-capacity-error"`.
+- Buttons: **Cancel** `data-testid="location-cancel"` (`btn-outlined`) and **Create location** `data-testid="location-submit"` (`btn-primary`).
 
 **Behavior verification**
 
 - API: `POST /api/v1/locations` with the form payload.
 - Returns `201 Created` with location body.
 
-**Database verification**
+**State/API verification**
 
-- New entry in the locations static store.
-- Audit row: `EntityType="Location"`, `Action="Create"`.
+- New row in `LocationsDbContext.Locations`.
 
 **Pass criteria**: 201 response; record persists; navigation to list or detail.
 
@@ -118,13 +117,13 @@
 **UI verification**
 
 - Component: `frontend/projects/the-upper-room/src/app/locations/location-detail/location-detail.html`.
-- Header: name `<h1 class="location-detail__name">` and optional **Archived** chip (lines 4-7).
-- Map area: `<img data-testid="location-map-image">` when coordinates resolve to a map URL, otherwise `<div data-testid="location-map-placeholder">` with icon `map` and text **"No coordinates available"** (lines 11-22).
-- Address paragraph (lines 27-32).
-- Capacity paragraph (line 34).
-- Events link: `<button data-testid="location-events-link">{n} events</button>` when count > 0, otherwise span with text **"0 events"** and `--none` modifier (lines 37-44).
-- Photos carousel: `<div class="location-detail__carousel">` with prev/next chevron buttons `data-testid="location-carousel-prev|next"` and image `data-testid="location-carousel-image"` (lines 50-71).
-- Photo upload label with `add_photo_alternate` icon and **"Add photo"** text; hidden input `data-testid="location-photo-input"` accepting `image/*` (lines 73-83).
+- Header: name `<h1 class="location-detail__name">` and optional **Archived** chip.
+- Map area: `<img data-testid="location-map-image">` when coordinates resolve to a map URL, otherwise `<div data-testid="location-map-placeholder">` with icon `map` and text **"No coordinates available"**.
+- Address paragraph.
+- Capacity paragraph.
+- Events link: `<button data-testid="location-events-link">{n} events</button>` when count > 0, otherwise span with text **"0 events"** and `--none` modifier.
+- Photos carousel: `<div class="location-detail__carousel">` with prev/next chevron buttons `data-testid="location-carousel-prev|next"` and image `data-testid="location-carousel-image"`.
+- Photo upload label with `add_photo_alternate` icon and **"Add photo"** text; hidden input `data-testid="location-photo-input"` accepting `image/*`.
 
 **Pass criteria**: structure and copy exact.
 
@@ -146,12 +145,11 @@
 
 - API: `DELETE /api/v1/locations/{id}` returns `204`.
 
-**Database verification**
+**State/API verification**
 
-- Location removed from store.
-- Audit row `EntityType="Location"`, `Action="Delete"`.
+- Location removed from `LocationsDbContext.Locations`.
 
-**Pass criteria**: card disappears; audit row written.
+**Pass criteria**: card disappears and `GET /api/v1/locations/{id}` returns `404`.
 
 **Severity if failing**: Critical (data loss without confirmation).
 

@@ -1,0 +1,7 @@
+- generic [ref=e2]:
+  - main [ref=e4]:
+    - heading "The Upper Room" [level=1] [ref=e5]
+  - alert [ref=e6]:
+    - generic [ref=e7]: The email or password is incorrect.
+    - button "Dismiss" [ref=e8] [cursor=pointer]:
+      - img [ref=e9]: close

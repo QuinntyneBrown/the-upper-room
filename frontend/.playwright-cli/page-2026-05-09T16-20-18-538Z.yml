@@ -1,0 +1,18 @@
+- main [ref=e4]:
+  - form "Sign in" [ref=e5]:
+    - heading "Sign in" [level=1] [ref=e6]
+    - generic [ref=e10]:
+      - generic [ref=e11]: Email
+      - textbox "Email" [ref=e13]
+    - generic [ref=e17]:
+      - generic [ref=e18]: Password
+      - textbox "Password" [ref=e20]
+      - button "Show password" [ref=e22] [cursor=pointer]:
+        - img [ref=e23]: visibility
+    - button "Sign in" [ref=e27]:
+      - generic [ref=e28]: Sign in
+    - generic [ref=e31]:
+      - link "Forgot password?" [ref=e32] [cursor=pointer]:
+        - /url: /forgot-password
+      - link "Create account" [ref=e33] [cursor=pointer]:
+        - /url: /sign-up

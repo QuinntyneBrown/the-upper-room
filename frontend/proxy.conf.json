@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "http://localhost:5255",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "warn"
+  },
+  "/__idp": {
+    "target": "http://localhost:5255",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "warn"
+  }
+}

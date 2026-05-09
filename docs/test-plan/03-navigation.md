@@ -18,13 +18,13 @@
 **UI verification**
 
 - Children in order:
-  1. `tar-icon-button` with `icon="menu"`, `ariaLabel="Open navigation"`, `data-testid="drawer-toggle"` (lines 13-19).
-  2. App name span: text **"The Upper Room"**, class `app-shell__app-name` (line 20).
-  3. Spacer `<span class="app-shell__spacer">` (line 21).
-  4. `<tar-city-switcher />` (line 22).
-  5. `<tar-notification-bell />` (line 23).
-  6. Avatar wrapper containing `tar-icon-button` with `icon="account_circle"`, `ariaLabel="Account menu"`, `data-testid="avatar-trigger"` (lines 25-30).
-- On scroll, header gains class `app-shell__top-bar--elevated` (line 12, `[class.…]="didScroll"`).
+  1. `tar-icon-button` with `icon="menu"`, `ariaLabel="Open navigation"`, `data-testid="drawer-toggle"`.
+  2. App name span: text **"The Upper Room"**, class `app-shell__app-name`.
+  3. Spacer `<span class="app-shell__spacer">`.
+  4. `<tar-city-switcher />`.
+  5. `<tar-notification-bell />`.
+  6. Avatar wrapper containing `tar-icon-button` with `icon="account_circle"`, `ariaLabel="Account menu"`, `data-testid="avatar-trigger"`.
+- On scroll, header gains class `app-shell__top-bar--elevated`.
 
 **Behavior verification**
 
@@ -46,9 +46,9 @@
 
 **UI verification**
 
-- `<nav data-testid="drawer">` toggles class `app-shell__drawer--open` (line 53).
-- `aria-hidden` flips: `false` when open, `true` when closed (line 52).
-- Pressing **Esc** while drawer focused also closes it (line 54).
+- `<nav data-testid="drawer">` toggles class `app-shell__drawer--open`.
+- `aria-hidden` flips: `false` when open, `true` when closed.
+- Pressing **Esc** while drawer focused also closes it.
 
 **Pass criteria**: drawer opens and closes via every documented mechanism.
 
@@ -66,7 +66,7 @@
 **UI verification**
 
 - Container `<div class="app-shell__avatar-menu" role="menu">` (`app-shell.html:32`).
-- Single item: button text **"Sign out"** with `role="menuitem"` and `data-testid="avatar-menu-sign-out"` (lines 33-41).
+- Single item: button text **"Sign out"** with `role="menuitem"` and `data-testid="avatar-menu-sign-out"`.
 
 **Behavior verification**: see `TC-2.15`.
 
@@ -85,9 +85,9 @@
 
 **UI verification**
 
-- `aria-label="Breadcrumb"` (line 61).
-- Each crumb is an `<a>` with `aria-current="page"` on the last item only (line 63).
-- Slash separator `<span aria-hidden="true">/</span>` between crumbs (line 65).
+- `aria-label="Breadcrumb"`.
+- Each crumb is an `<a>` with `aria-current="page"` on the last item only.
+- Slash separator `<span aria-hidden="true">/</span>` between crumbs.
 - Example expected for `/contacts`: links **Home** › **Contacts** (or whatever `crumbs()` returns from the route data — verify from the breadcrumb signal in `app-shell.ts`).
 
 **Pass criteria**: visible chain matches the URL; `aria-current` only on the last.
@@ -105,7 +105,7 @@
 **UI verification**
 
 - Anchor `<a data-testid="skip-link" class="app-shell__skip-link" href="#main">` (`app-shell.html:8`) becomes visible (it is `position: absolute` off-screen until focused per the SCSS).
-- Activating it (Enter) calls `skipToMain($event)` and focuses `<main id="main" tabindex="-1">` (line 70).
+- Activating it (Enter) calls `skipToMain($event)` and focuses `<main id="main" tabindex="-1">`.
 - Text: **"Skip to main content"**.
 
 **Pass criteria**: visible on focus; activates focus on `<main>`.
@@ -123,7 +123,8 @@
 
 **UI verification**
 
-- The current code has the title as a plain `<span class="app-shell__app-name">` (`app-shell.html:20`) — not a link. **[unverified — user guide §3.1 says "click it to return to the dashboard" but the rendered element has no click handler / routerLink. Either the implementation needs to add navigation, or the user guide needs adjustment. File a defect.]**
+- Current code renders the app name as a plain `<span class="app-shell__app-name">` with no click handler or `routerLink`.
+- Mark this test blocked/failed if the product requirement remains that the app name returns to the dashboard.
 
 **Pass criteria**: clicking should navigate to `/dashboard` per the user guide.
 
@@ -139,11 +140,11 @@
 
 **UI verification**
 
-- Trigger shows the current city name `currentLabel()` (line 4).
-- Menu opens: `<ul data-testid="city-switcher-menu" role="menu">` (line 7).
-- Each city is `<li data-testid="city-switcher-option-{slug}" role="menuitem">` with the city `name` and a checkmark when current (lines 8-13).
-- Final item **"All cities (read-only)"** (`data-testid="city-switcher-option-all"`, line 14-16).
-- Switcher hides entirely when `canSwitch()` is false (line 1).
+- Trigger shows the current city name `currentLabel()`.
+- Menu opens: `<ul data-testid="city-switcher-menu" role="menu">`.
+- Each city is `<li data-testid="city-switcher-option-{slug}" role="menuitem">` with the city `name` and a checkmark when current.
+- Final item **"All cities (read-only)"** (`data-testid="city-switcher-option-all"`).
+- Switcher hides entirely when `canSwitch()` is false.
 
 **Pass criteria**: menu structure and labels match.
 
@@ -168,7 +169,7 @@
 
 - API: `GET /api/v1/contacts` is re-issued. Server-side filtering by `user.City` happens at `ContactsController.cs:50-51`.
 
-**Database verification**
+**State/API verification**
 
 - `_store` (`ContactsController.cs:23-27`): two seeded contacts. The list reflects only the active-city subset for non-admin users.
 

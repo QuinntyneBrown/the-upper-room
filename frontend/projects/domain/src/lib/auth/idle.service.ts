@@ -1,19 +1,18 @@
 // traces_to: L2-022
 import { Injectable, inject, signal } from '@angular/core';
 import { ACCESS_TOKEN_SOURCE } from './access-token-source.contract';
-import { SignOutService } from './sign-out.service';
+import { IIdleService, IdleState } from './idle.service.contract';
+import { SIGN_OUT_SERVICE } from './sign-out.service.contract';
 
 const IDLE_THRESHOLD_MS = 30 * 60 * 1000;
 const COUNTDOWN_SECONDS = 60;
 
-type State = 'active' | 'warning';
-
 @Injectable({ providedIn: 'root' })
-export class IdleService {
+export class IdleService implements IIdleService {
   private readonly tokenSource = inject(ACCESS_TOKEN_SOURCE);
-  private readonly signOutService = inject(SignOutService);
+  private readonly signOutService = inject(SIGN_OUT_SERVICE);
 
-  readonly state = signal<State>('active');
+  readonly state = signal<IdleState>('active');
   readonly countdown = signal(COUNTDOWN_SECONDS);
 
   private lastActivity = Date.now();

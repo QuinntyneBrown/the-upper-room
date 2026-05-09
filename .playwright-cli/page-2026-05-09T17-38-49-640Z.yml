@@ -1,0 +1,55 @@
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e5]:
+    - link "The Upper Room" [ref=e6] [cursor=pointer]:
+      - /url: /dashboard
+    - generic [ref=e7]:
+      - button "All cities" [ref=e9] [cursor=pointer]
+      - status [ref=e11]:
+        - generic [ref=e12]: Switch to a single city to make changes.
+    - button "Notifications" [ref=e17] [cursor=pointer]:
+      - img [ref=e18]: notifications
+    - button "Account menu" [ref=e23] [cursor=pointer]:
+      - img [ref=e24]: account_circle
+  - navigation [ref=e27]
+  - navigation "Breadcrumb" [ref=e28]:
+    - link "Dashboard" [ref=e29] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e30]: /
+    - link "Contacts" [ref=e31] [cursor=pointer]:
+      - /url: /contacts
+    - generic [ref=e32]: /
+    - link "C1" [ref=e33] [cursor=pointer]:
+      - /url: /contacts/c1
+  - main [ref=e34]:
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - generic [ref=e38]: AL
+        - heading "Alice" [level=1] [ref=e40]
+        - generic [ref=e41]:
+          - button "Share" [ref=e43] [cursor=pointer]:
+            - generic [ref=e44]: share
+          - button "Edit" [ref=e46]:
+            - generic [ref=e47]: Edit
+          - button "Archive" [ref=e51]:
+            - generic [ref=e52]: Archive
+          - button "Delete" [ref=e56]:
+            - generic [ref=e57]: Delete
+      - generic [ref=e61]:
+        - tablist [ref=e64]:
+          - generic [ref=e65]:
+            - tab "Overview" [selected] [ref=e66] [cursor=pointer]:
+              - generic [ref=e68]: Overview
+            - tab "Notes" [ref=e69] [cursor=pointer]:
+              - generic [ref=e71]: Notes
+            - tab "Activity" [ref=e72] [cursor=pointer]:
+              - generic [ref=e74]: Activity
+        - generic [ref=e75]:
+          - tabpanel "Overview" [ref=e76]:
+            - generic [ref=e82]:
+              - heading "Linked Partners" [level=2] [ref=e83]
+              - paragraph [ref=e84]: No partners linked yet.
+          - tabpanel [ref=e85]
+          - tabpanel [ref=e86]
+  - contentinfo [ref=e87]: © The Upper Room

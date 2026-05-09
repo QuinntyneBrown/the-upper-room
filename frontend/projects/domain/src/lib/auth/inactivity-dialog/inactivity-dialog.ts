@@ -2,7 +2,7 @@
 import { Component, inject } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TarButton } from 'components';
-import { IdleService } from '../idle.service';
+import { IDLE_SERVICE } from '../idle.service.contract';
 
 @Component({
   selector: 'app-inactivity-dialog',
@@ -14,5 +14,5 @@ import { IdleService } from '../idle.service';
   },
 })
 export class InactivityDialog {
-  protected readonly idle = inject(IdleService);
+  protected readonly idle = inject(IDLE_SERVICE);
 }

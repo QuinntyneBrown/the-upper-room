@@ -1,0 +1,40 @@
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e5]:
+    - link "The Upper Room" [ref=e6] [cursor=pointer]:
+      - /url: /dashboard
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - button "All cities" [active] [ref=e9] [cursor=pointer]
+        - menu [ref=e10]:
+          - menuitem "All cities (read-only) current" [ref=e11] [cursor=pointer]:
+            - text: All cities (read-only)
+            - generic "current" [ref=e12]: ✓
+      - status [ref=e14]:
+        - generic [ref=e15]: Switch to a single city to make changes.
+    - button "Notifications" [ref=e20] [cursor=pointer]:
+      - img [ref=e21]: notifications
+    - button "Account menu" [ref=e26] [cursor=pointer]:
+      - img [ref=e27]: account_circle
+  - navigation [ref=e30]
+  - navigation "Breadcrumb" [ref=e31]:
+    - link "Dashboard" [ref=e32] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e33]: /
+    - link "Contacts" [ref=e34] [cursor=pointer]:
+      - /url: /contacts
+  - main [ref=e35]:
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - searchbox "Search contacts…" [ref=e38]
+        - button "Archived" [ref=e39] [cursor=pointer]
+        - button "New contact" [ref=e40] [cursor=pointer]
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e44]: AL
+          - generic [ref=e46]: Alice
+        - generic [ref=e47]:
+          - generic [ref=e49]: BO
+          - generic [ref=e51]: Bob
+  - contentinfo [ref=e52]: © The Upper Room

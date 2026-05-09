@@ -1,0 +1,7 @@
+- generic [ref=e6]:
+  - heading "This site can’t be reached" [level=1] [ref=e7]
+  - paragraph [ref=e8]:
+    - text: The webpage at
+    - strong [ref=e9]: http://localhost:4200/__idp/authorize?response_type=code&code_challenge_method=S256&code_challenge=A0zvfgSI7RJ6-876j0OHefjcB3ID5hpO2GWbcQbiJ2Q&state=_uxLl4xG_UTxKtp3Eacds9x_aQ-gHhVh0_5EAmVw6Tc&nonce=flg8xMN34KftCifYlPy8az04m-h77QOaI6tPlzSW5Q8&client_id=the-upper-room&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Fauth%2Fcallback
+    - text: might be temporarily down or it may have moved permanently to a new web address.
+  - generic [ref=e10]: ERR_INVALID_RESPONSE

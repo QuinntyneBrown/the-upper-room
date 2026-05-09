@@ -5,7 +5,7 @@
 ## Pre-conditions
 
 - Signed in as a user with at least `Contact:Read`. For create/edit/delete tests use a user with `Contact:Create` (per route guard at `frontend/projects/the-upper-room/src/app/app.routes.ts:65-70`).
-- Backend `_store` (`backend/src/TheUpperRoom.Api/Contacts/ContactsController.cs:23`) seeded with `c1=Alice (Toronto)` and `c2=Bob (Halifax)`.
+- `ContactsDbContext` is available. Development seeding inserts `c1=Alice (Toronto)` and `c2=Bob (Halifax)` via `ContactsDataSeeder`.
 
 ## Tests
 
@@ -19,18 +19,18 @@
 
 - Toolbar:
   - Search input: `<input data-testid="contacts-search" type="search" placeholder="Search contacts…">` (`frontend/projects/the-upper-room/src/app/contacts/contact-list/contact-list.html:2-9`). Note the placeholder uses an ellipsis `…` not three dots.
-  - Filter chip: `<button data-testid="contacts-filter-archived">` text **"Archived"** (lines 10-18).
-  - Create button (when `canCreate()`): text **"New contact"**, `data-testid="contacts-new-button"` (lines 19-23).
-- Grid: `<div data-testid="contacts-grid" class="contact-grid">` (line 41) when not empty.
-- Each card: `<div data-testid="contact-card-{name}">` showing avatar (`<tar-avatar [size]="48">`), name, optional title/org, primary phone/email, tag chips, plus an "extra tag count" pill `+N` when more than the visible limit (lines 43-65).
+  - Filter chip: `<button data-testid="contacts-filter-archived">` text **"Archived"**.
+  - Create button (when `canCreate()`): text **"New contact"**, `data-testid="contacts-new-button"`.
+- Grid: `<div data-testid="contacts-grid" class="contact-grid">` when not empty.
+- Each card: `<div data-testid="contact-card-{name}">` showing avatar (`<tar-avatar [size]="48">`), name, optional title/org, primary phone/email, tag chips, plus an "extra tag count" pill `+N` when more than the visible limit.
 
 **Behavior verification**
 
-- API: `GET /api/v1/contacts?search=&page=&size=` (`ContactsController.cs:43-65`).
+- API: `GET /api/v1/contacts?search=&page=&size=` handled through `ContactsController` and `ContactsCqrs`.
 
-**Database verification**
+**State/API verification**
 
-- Active-city contacts visible. As admin (`X-Test-User-Id: admin`), all contacts visible (`ContactsController.cs:49-51`).
+- Active-city contacts are visible for city-scoped users. A bearer token with subject `admin` sees all contacts.
 
 **Pass criteria**: at least the active-city contacts shown; toolbar and grid markup match.
 
@@ -42,13 +42,13 @@
 
 **Steps**
 
-1. Sign in as a user whose city has no contacts (or temporarily clear the dictionary via API restart).
+1. Sign in as a user whose city has no contacts, or use a temporary contacts database with no rows.
 
 **UI verification**
 
 - Wrapper `<div data-testid="contacts-empty-state">` (`contact-list.html:27`).
-- `tar-empty-state` props: `icon="person_add"`, `heading="No contacts yet"`, `body="Add your first contact to get started."` (lines 28-32).
-- Slot button **"New contact"** when `canCreate()` (lines 33-37).
+- `tar-empty-state` props: `icon="person_add"`, `heading="No contacts yet"`, `body="Add your first contact to get started."`.
+- Slot button **"New contact"** when `canCreate()`.
 
 **Pass criteria**: exact icon, heading, body text.
 
@@ -69,11 +69,11 @@
 
 **Behavior verification**
 
-- API: `GET /api/v1/contacts?search=Ali` returns `Alice`. Server filtering at `ContactsController.cs:53-54`.
+- API: `GET /api/v1/contacts?search=Ali` returns `Alice`.
 
-**Database verification**
+**State/API verification**
 
-- `Alice` is in the active city (Toronto) — confirm `_store` (`ContactsController.cs:25`).
+- `Alice` is in the active city (Toronto) in `ContactsDbContext`.
 
 **Pass criteria**: only matches displayed.
 
@@ -90,13 +90,15 @@
 **UI verification**
 
 - Chip gains `filter-chip--active` class (`contact-list.html:14`).
-- Cards include those with `archived=true`. Each archived card has `contact-card--archived` styling (line 43).
+- Cards include those with `archived=true`. Each archived card has `contact-card--archived` styling.
 
 **Behavior verification**
 
-- The current `ContactsController` does **not** persist an `Archived` flag. **[unverified — store has no archived field; archive endpoint is presumably TODO. Verify against backlog before failing.]**
+- Current backend `ContactRow` has only `Id`, `Name`, and `CityId`.
+- `GET /api/v1/contacts?archived=true` is currently ignored by the backend query.
+- `PATCH /api/v1/contacts/{id}` supports `name` only; `archived=true` is ignored.
 
-**Pass criteria (when implemented)**: archived contacts visible only when chip active.
+**Pass criteria**: current implementation does not support persisted contact archival. Mark this test blocked/failed against the product requirement if archived contacts are expected to work.
 
 **Severity if failing**: High.
 
@@ -131,7 +133,7 @@
 **UI verification**
 
 - Sentinel `<div #scrollSentinel class="scroll-sentinel">` for IntersectionObserver (`contact-list.html:72`).
-- Button `<button data-testid="contacts-load-more">Load more</button>` (line 74).
+- Button `<button data-testid="contacts-load-more">Load more</button>`.
 
 **Behavior verification**
 
@@ -152,7 +154,7 @@
 
 **UI verification**
 
-- FAB renders with a `+` glyph in `<span class="fab__icon">+</span>` (line 99).
+- FAB renders with a `+` glyph in `<span class="fab__icon">+</span>`.
 - Position: fixed bottom-right per `.fab` SCSS.
 
 **Pass criteria**: FAB visible; aria-label correct.
@@ -172,22 +174,22 @@
 **UI verification**
 
 - Component: `frontend/projects/the-upper-room/src/app/contacts/contact-create/contact-create.html`.
-- Save bar: heading **"New Contact"** (line 4), buttons **Cancel** (line 5) and **Save** (line 6) using `tar-button variant="filled"`.
+- Save bar: heading **"New Contact"**, buttons **Cancel** and **Save** using `tar-button variant="filled"`.
 - Field rows include First name (required, `testId="contact-first-name"`), Last name, Pronouns, Title, Organization, Display name override.
-- Sections: **Tags** (`tar-tag-selector`), **Phones**, **Emails**, **Addresses** with `Add phone` / `Add email` / `Add address` buttons (lines 100, 127, 139). Each Add button has `variant="outlined"`, `icon="add"`.
-- Phone placeholder: **"+1 416 555 0100"** (line 78). Email placeholder: **"email@example.com"** (line 110).
-- Unsaved-dot indicator `<span data-testid="contact-unsaved-dot">` toggles `unsaved-dot--visible` when `isDirty()` true (line 3).
+- Sections: **Tags** (`tar-tag-selector`), **Phones**, **Emails**, **Addresses** with `Add phone` / `Add email` / `Add address` buttons. Each Add button has `variant="outlined"`, `icon="add"`.
+- Phone placeholder: **"+1 416 555 0100"**. Email placeholder: **"email@example.com"**.
+- Unsaved-dot indicator `<span data-testid="contact-unsaved-dot">` toggles `unsaved-dot--visible` when `isDirty()` true.
 
 **Behavior verification**
 
-- API: `POST /api/v1/contacts` body `{ firstName: "Charlie", … }` (`ContactsController.cs:82-97`).
-- Returns `201 Created` with `Location: /api/v1/contacts/{id}` and the contact body (line 96).
+- API: `POST /api/v1/contacts` body `{ firstName: "Charlie", … }`.
+- Returns `201 Created` with `Location: /api/v1/contacts/{id}` and the contact body.
 - Frontend navigates to `/contacts/{id}`.
 
-**Database verification**
+**State/API verification**
 
-- `_store[id]` (`ContactsController.cs:94`) populated with id (8-char Guid prefix), name (joined first+last unless DisplayName provided), city = current user's city.
-- `AuditStore.Entries` (`AuditStore.cs:6`) has new entry: `EntityType="Contact"`, `EntityId=<new id>`, `Action="Create"`, `AfterJson` populated (line 95 of `ContactsController.cs`).
+- `ContactsDbContext.Contacts` contains a new `ContactRow` with id (8-character Guid prefix), display name, and current user's city.
+- `AuditStore.Entries` has a new entry: `EntityType="Contact"`, `EntityId=<new id>`, `Action="Create"`, `AfterJson` populated.
 
 **Pass criteria**: 201 response, store mutation, audit row, navigation.
 
@@ -205,11 +207,11 @@
 
 **UI verification**
 
-- Inline error visible at `data-testid="contact-error-first-name"` (line 19).
+- Inline error visible at `data-testid="contact-error-first-name"`.
 
 **Behavior verification**
 
-- API: `POST /api/v1/contacts` with empty `firstName` returns `422 Unprocessable Entity` with body `{ "error": "First name is required." }` (`ContactsController.cs:88-89`).
+- API: `POST /api/v1/contacts` with empty `firstName` returns `422 Unprocessable Entity` with body `{ "error": "First name is required." }`.
 
 **Pass criteria**: 422 response handled with inline error; submit re-enabled.
 
@@ -226,14 +228,14 @@
 **UI verification**
 
 - Header: avatar (`<tar-avatar [size]="96">`), name `<h1>`, optional subtitle `{title} @ {org}` (`contact-detail.html:2-9`).
-- Action buttons in `<div class="contact-header__actions">` (lines 10-19): `<tar-share-button />`, **Edit** anchor (`/contacts/{id}/edit`), **Archive** OR **Restore**, **Delete** (`btn-danger`).
-- Tab bar with three tabs: **Overview**, **Notes**, **Activity** (`data-testid="contact-tab-overview|notes|activity"`, lines 22-26).
+- Action buttons in `<div class="contact-header__actions">`: `<tar-share-button />`, **Edit** anchor (`/contacts/{id}/edit`), **Archive** OR **Restore**, **Delete** (`btn-danger`).
+- Tab bar with three tabs: **Overview**, **Notes**, **Activity** (`data-testid="contact-tab-overview|notes|activity"`).
 - Overview panel:
   - Phones section heading **"Phones"** with `tel:` links per phone, optional **Primary** badge.
   - Emails section heading **"Emails"** with `mailto:` links.
   - Sidebar: **"Tags"** card (when tags present), **"Linked Partners"** card (placeholder "No partners linked yet.").
 - Notes tab loads `<tar-notes [subjectType]="'Contact'" [subjectId]="contactId" />`.
-- Activity tab placeholder text: **"Activity coming soon."** (line 82).
+- Activity tab placeholder text: **"Activity coming soon."**.
 
 **Pass criteria**: every visible string matches.
 
@@ -250,13 +252,13 @@
 
 **Behavior verification**
 
-- API: `PUT /api/v1/contacts/{id}` (`ContactsController.cs:99-117`) returns `200 OK` with updated `Contact`.
-- Or `PATCH /api/v1/contacts/{id}` for partial update (`ContactsController.cs:119-138`).
+- API: `PUT /api/v1/contacts/{id}` returns `200 OK` with updated `Contact`.
+- Or `PATCH /api/v1/contacts/{id}` for partial name update.
 
-**Database verification**
+**State/API verification**
 
-- `_store[id].Name` mutated (`ContactsController.cs:113`).
-- Audit row added with `Action="Update"`, both `BeforeJson` and `AfterJson` populated (line 115).
+- `ContactsDbContext.Contacts.Name` is updated.
+- Audit row added with `Action="Update"`, both `BeforeJson` and `AfterJson` populated.
 
 **Pass criteria**: detail page shows new name; audit entry present.
 
@@ -278,9 +280,10 @@
 
 **Behavior verification**
 
-- The frontend calls a PATCH to set `archived=true`. **[unverified — backend `Contact` entity has no Archived field in the in-memory `ContactMutable` (`ContactsController.cs:15-21`); confirm whether archival is wired before validating server side.]**
+- The frontend calls `PATCH /api/v1/contacts/{id}` with `{ archived: true }`.
+- Current backend ignores `archived` because `PatchContactRequest` only accepts `Name`.
 
-**Pass criteria**: button toggles label; entity reachable via Archived filter.
+**Pass criteria**: current implementation does not persist archival. Mark blocked/failed against the product requirement if the Archive button must change server state.
 
 **Severity if failing**: High.
 
@@ -295,12 +298,12 @@
 
 **Behavior verification**
 
-- API: `DELETE /api/v1/contacts/{id}` returns `204 No Content` (`ContactsController.cs:140-153`).
+- API: `DELETE /api/v1/contacts/{id}` returns `204 No Content`.
 
-**Database verification**
+**State/API verification**
 
-- `_store` no longer contains the id (`ContactsController.cs:151`).
-- Audit row: `Action="Delete"`, `BeforeJson` is the contact JSON (line 150).
+- `ContactsDbContext.Contacts` no longer contains the id.
+- Audit row: `Action="Delete"`, `BeforeJson` is the contact JSON.
 
 **Pass criteria**: contact gone from list; audit row present.
 

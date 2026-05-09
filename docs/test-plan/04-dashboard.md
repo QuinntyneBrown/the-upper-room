@@ -83,10 +83,10 @@
 
 **UI verification**
 
-- Heading **"Upcoming Events"** (line 22).
-- Link **"View calendar"** routes to `/events`, `data-testid="dashboard-view-calendar"` (line 23).
-- When `upcomingEvents.length === 0`: text **"No upcoming events."** (line 26).
-- Otherwise list of `<a data-testid="upcoming-event-{id}" routerLink="/events/{id}">` items (line 29) with:
+- Heading **"Upcoming Events"**.
+- Link **"View calendar"** routes to `/events`, `data-testid="dashboard-view-calendar"`.
+- When `upcomingEvents.length === 0`: text **"No upcoming events."**.
+- Otherwise list of `<a data-testid="upcoming-event-{id}" routerLink="/events/{id}">` items with:
   - Calendar icon `calendar_month`.
   - Title from `ev.title`.
   - Meta: `formatDate(ev.startAt)` and (if location) ` · {location}`.
@@ -106,10 +106,10 @@
 
 **UI verification**
 
-- Heading **"Tasks on My Boards"** (line 42).
-- Link **"View boards"** routes to `/boards` (line 43).
-- Empty state text **"No assigned tasks."** (line 46).
-- Each board group: `<div data-testid="board-group-{boardId}">` containing the board title and a list of card titles (lines 49-54).
+- Heading **"Tasks on My Boards"**.
+- Link **"View boards"** routes to `/boards`.
+- Empty state text **"No assigned tasks."**.
+- Each board group: `<div data-testid="board-group-{boardId}">` containing the board title and a list of card titles.
 
 **Pass criteria**: structure and copy exact.
 
@@ -124,7 +124,7 @@
 1. Capture the response of `GET /api/v1/dashboard` in DevTools › Network.
 2. Compare each rendered count to `stats.contacts`, `stats.partners`, `stats.upcomingEvents`, `stats.openIdeas`.
 
-**Database verification**
+**State/API verification**
 
 - The DTO is computed server-side; counts derive from `_store` lengths in the various controllers (e.g. `ContactsController.StoreCount(user)` at `ContactsController.cs:29-32`).
 - For non-admin users, counts should reflect only the user's `City`.

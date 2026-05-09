@@ -29,7 +29,7 @@
 - Service worker registers: in DevTools › Application › Service Workers, `/sw.js` is "activated and is running" (`index.html:82-84`).
 - No console errors.
 
-**Database verification**
+**State/API verification**
 
 - N/A (read-only landing).
 
@@ -57,7 +57,7 @@
 
 - CSP allows the font origins: response `Content-Security-Policy` header includes `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com` and `font-src 'self' https://fonts.gstatic.com` (`backend/src/TheUpperRoom.Api/Program.cs:46-48`).
 
-**Database verification**: N/A.
+**State/API verification**: N/A.
 
 **Pass criteria**: CSS file and at least one woff2 load with status `200`; computed `font-family` includes `Roboto`.
 

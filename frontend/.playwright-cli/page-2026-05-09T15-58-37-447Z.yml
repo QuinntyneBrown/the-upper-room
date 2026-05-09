@@ -1,0 +1,36 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - link [ref=e53] [cursor=pointer]:
+        - /url: "#main"
+        - text: Skip to main content
+      - banner [ref=e5]:
+        - generic [ref=e6]: The Upper Room
+        - button [ref=e54] [cursor=pointer]:
+          - img [ref=e12]: notifications
+        - button [ref=e55] [cursor=pointer]:
+          - img [ref=e18]: account_circle
+      - navigation [ref=e21]
+      - navigation [ref=e56]:
+        - link [ref=e57] [cursor=pointer]:
+          - /url: /
+          - text: Dashboard
+        - generic [ref=e24]: /
+        - link [ref=e58] [cursor=pointer]:
+          - /url: /dashboard
+          - text: Dashboard
+      - main [ref=e26]
+      - contentinfo [ref=e27]: © The Upper Room
+    - alert [ref=e28]:
+      - generic [ref=e29]: The email or password is incorrect.
+      - button [ref=e59] [cursor=pointer]:
+        - img [ref=e31]: close
+  - dialog "Sign out?" [ref=e63]:
+    - generic [ref=e66]:
+      - heading "Sign out?" [level=2] [ref=e67]
+      - paragraph [ref=e69]: You can sign back in any time.
+      - generic [ref=e70]:
+        - button "Cancel" [active] [ref=e71]:
+          - generic [ref=e72]: Cancel
+        - button "Sign out" [ref=e75]:
+          - generic [ref=e76]: Sign out

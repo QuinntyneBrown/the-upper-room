@@ -18,22 +18,22 @@
 **UI verification**
 
 - Toolbar (`frontend/projects/the-upper-room/src/app/events/event-list/event-list.html:1-25`):
-  - Heading **"Events"** (line 3).
-  - Status select `data-testid="events-filter-status"` (lines 5-14) with options:
+  - Heading **"Events"**.
+  - Status select `data-testid="events-filter-status"` with options:
     - **"All statuses"** (value `""`)
     - **"Scheduled"**
     - **"Cancelled"**
     - **"Completed"**
-  - View toggle button `data-testid="events-view-toggle"` (lines 15-23). When in list mode, button shows `calendar_month` icon and `aria-label="Switch to calendar view"`. When in calendar mode, shows `list` icon and `aria-label="Switch to list view"`.
-- Empty state: `tar-empty-state` with `data-testid="event-list-empty"`, `icon="event"`, `heading="No events yet"`, `body="Events will appear here once scheduled."` (lines 28-34).
-- Each event card `<article data-testid="event-card-{id}">` (line 39):
+  - View toggle button `data-testid="events-view-toggle"`. When in list mode, button shows `calendar_month` icon and `aria-label="Switch to calendar view"`. When in calendar mode, shows `list` icon and `aria-label="Switch to list view"`.
+- Empty state: `tar-empty-state` with `data-testid="event-list-empty"`, `icon="event"`, `heading="No events yet"`, `body="Events will appear here once scheduled."`.
+- Each event card `<article data-testid="event-card-{id}">`:
   - `event-card--cancelled` modifier when status is **Cancelled**.
-  - Cancelled ribbon `<div data-testid="event-cancelled-ribbon">Cancelled</div>` (line 44).
-  - Status chip `<span data-testid="event-status-chip-{id}" data-status="{status}">{status}</span>` (lines 53-57).
-  - Virtual or location indicator with appropriate Material icon `videocam` or `location_on` (lines 58-66).
-  - Title `<h2 data-testid="event-card-title">` (line 69).
-  - Date string formatted via `formatDate(event.startAt)` (line 71).
-  - RSVP line: `{count} / {capacity} RSVPs` if capacity, else `{count} RSVPs` (lines 73-77).
+  - Cancelled ribbon `<div data-testid="event-cancelled-ribbon">Cancelled</div>`.
+  - Status chip `<span data-testid="event-status-chip-{id}" data-status="{status}">{status}</span>`.
+  - Virtual or location indicator with appropriate Material icon `videocam` or `location_on`.
+  - Title `<h2 data-testid="event-card-title">`.
+  - Date string formatted via `formatDate(event.startAt)`.
+  - RSVP line: `{count} / {capacity} RSVPs` if capacity, else `{count} RSVPs`.
 
 **Behavior verification**
 
@@ -74,7 +74,7 @@
 **UI verification**
 
 - View flips: list → calendar.
-- Calendar wrapper `<div data-testid="events-calendar-view">` (`event-list.html:84`) renders `<app-calendar-month [events]="events()" (monthChange)="onCalendarMonthChange($event)" />` (line 85).
+- Calendar wrapper `<div data-testid="events-calendar-view">` (`event-list.html:84`) renders `<app-calendar-month [events]="events()" (monthChange)="onCalendarMonthChange($event)" />`.
 
 **Pass criteria**: toggle switches both ways.
 
@@ -130,27 +130,27 @@
 **UI verification**
 
 - Component: `frontend/projects/the-upper-room/src/app/events/event-form/event-form.html`.
-- Heading: **"New Event"** when `eventId()` falsy, **"Edit Event"** otherwise (line 17).
-- Section **"Basics"** (line 21):
-  - **Title \*** required (lines 22-31), placeholder **"Event title"**.
-  - **Description** textarea (lines 33-43), placeholder **"What's this event about?"**.
-- Section **"When"** (line 47):
-  - **Start \*** datetime-local input (lines 51-59).
-  - **End \*** datetime-local input (lines 61-75); error **"End time must be after start time."** (line 73) when invalid.
-  - **Timezone** select listing `timezones` array (lines 78-90).
-- Section **"Where"** (line 94):
-  - **Location** search `data-testid="event-form-location-search"`, placeholder **"Search venues…"** (lines 95-106).
-  - Dropdown of results `data-testid="event-form-location-result-{id}"` (line 111).
-  - Checkbox **"Virtual event"** (lines 120-123).
-  - When virtual, label **"Virtual URL"** with input type `url`, placeholder **"https://…"** (lines 125-135).
-- Section **"Who"** (line 140):
-  - **Capacity** number input, min 1, placeholder **"Unlimited"** (lines 141-153).
-  - Checkbox **"Requires approval"** (lines 154-157).
-- Section **"Recurrence"** (line 161):
-  - Repeat select with options **None | Daily | Weekly | Monthly** (lines 164-175).
-- Section **"Tags"** (line 180): chips with × removal and an inline add input placeholder **"Add tag…"** (lines 182-196).
-- Submit button: text **"Create Event"** (or **"Save Changes"** when editing), `data-testid="event-form-submit"` (lines 200-208), disabled when `!canSubmit()`.
-- Sidebar preview `<aside data-testid="event-form-preview">` showing live title, start/end times, timezone, location (or "Virtual" / "Location TBD") (lines 212-230).
+- Heading: **"New Event"** when `eventId()` falsy, **"Edit Event"** otherwise.
+- Section **"Basics"**:
+  - **Title \*** required, placeholder **"Event title"**.
+  - **Description** textarea, placeholder **"What's this event about?"**.
+- Section **"When"**:
+  - **Start \*** datetime-local input.
+  - **End \*** datetime-local input; error **"End time must be after start time."** when invalid.
+  - **Timezone** select listing `timezones` array.
+- Section **"Where"**:
+  - **Location** search `data-testid="event-form-location-search"`, placeholder **"Search venues…"**.
+  - Dropdown of results `data-testid="event-form-location-result-{id}"`.
+  - Checkbox **"Virtual event"**.
+  - When virtual, label **"Virtual URL"** with input type `url`, placeholder **"https://…"**.
+- Section **"Who"**:
+  - **Capacity** number input, min 1, placeholder **"Unlimited"**.
+  - Checkbox **"Requires approval"**.
+- Section **"Recurrence"**:
+  - Repeat select with options **None | Daily | Weekly | Monthly**.
+- Section **"Tags"**: chips with × removal and an inline add input placeholder **"Add tag…"**.
+- Submit button: text **"Create Event"** (or **"Save Changes"** when editing), `data-testid="event-form-submit"`, disabled when `!canSubmit()`.
+- Sidebar preview `<aside data-testid="event-form-preview">` showing live title, start/end times, timezone, location (or "Virtual" / "Location TBD").
 
 **Behavior verification**
 
@@ -171,7 +171,7 @@
 **UI verification**
 
 - End field gains `form-field__input--error` class (`event-form.html:69`).
-- Error text **"End time must be after start time."** (line 73).
+- Error text **"End time must be after start time."**.
 - Submit disabled.
 
 **Pass criteria**: error displays and submit blocked.
@@ -190,9 +190,9 @@
 **UI verification**
 
 - Dialog `<div data-testid="recurrence-edit-dialog">` (`event-form.html:2-13`).
-- Title: **"Edit recurring event"** (line 4).
-- Body: **"Which events do you want to change?"** (line 5).
-- Three buttons (lines 7-9):
+- Title: **"Edit recurring event"**.
+- Body: **"Which events do you want to change?"**.
+- Three buttons:
   - **"This event only"** (`data-testid="recurrence-edit-single"`, `btn-filled`).
   - **"This and following events"** (`data-testid="recurrence-edit-following"`, `btn-tonal`).
   - **"Entire series"** (`data-testid="recurrence-edit-series"`, `btn-outlined`).
@@ -213,22 +213,22 @@
 
 - Hero (`event-detail.html:2-31`):
   - Cover image when set; gradient overlay.
-  - Status chip `<span data-testid="event-status-chip">` (line 11).
-  - Virtual indicator with `videocam` icon (lines 14-18).
-  - Title `<h1 data-testid="event-detail-title">` (line 20).
-  - Share button `<button data-testid="event-share-button" aria-label="Share event">` with `share` icon (lines 22-29).
-- Body (lines 33-184):
-  - **About** section if description present (lines 36-40), text in `<p data-testid="event-description">`.
-  - **Location** section if location present, with `location_on` icon (lines 42-50).
-  - Sidebar `event-detail-card` with start/end and optional timezone label `data-testid="event-timezone-label"` (lines 54-67).
-  - RSVP card `data-testid="event-rsvp-card"` (line 69):
+  - Status chip `<span data-testid="event-status-chip">`.
+  - Virtual indicator with `videocam` icon.
+  - Title `<h1 data-testid="event-detail-title">`.
+  - Share button `<button data-testid="event-share-button" aria-label="Share event">` with `share` icon.
+- Body:
+  - **About** section if description present, text in `<p data-testid="event-description">`.
+  - **Location** section if location present, with `location_on` icon.
+  - Sidebar `event-detail-card` with start/end and optional timezone label `data-testid="event-timezone-label"`.
+  - RSVP card `data-testid="event-rsvp-card"`:
     - Display **"{count} / {capacity} RSVPs"** or **"{count} RSVPs"**.
     - Status text `data-testid="rsvp-status"` when user has RSVPed; if **Waitlisted** show **`(#{position})`**.
-    - Three buttons (lines 86-105): **Going** (`btn-filled`, `data-testid="rsvp-button-yes"`), **Maybe** (`btn-tonal`, `data-testid="rsvp-button-maybe"`), **Can't go** (`btn-outlined`, `data-testid="rsvp-button-no"`).
-  - Pending approvals panel for organizers `data-testid="rsvp-panel"` with **Pending Approvals** heading (lines 110-133); each row has **Approve** (`btn-filled`) and **Deny** (`btn-outlined`) buttons.
-  - Attendees grid `data-testid="event-attendees-grid"` (line 137) with avatars and an overflow **+N** button (`data-testid="event-attendees-more"`).
-  - **Add to calendar** button `data-testid="event-add-to-calendar"` with `calendar_add_on` icon (lines 162-170).
-  - **Cancel event** button when organizer and not yet cancelled, `data-testid="event-cancel-button"`, with `cancel` icon (lines 173-181).
+    - Three buttons: **Going** (`btn-filled`, `data-testid="rsvp-button-yes"`), **Maybe** (`btn-tonal`, `data-testid="rsvp-button-maybe"`), **Can't go** (`btn-outlined`, `data-testid="rsvp-button-no"`).
+  - Pending approvals panel for organizers `data-testid="rsvp-panel"` with **Pending Approvals** heading; each row has **Approve** (`btn-filled`) and **Deny** (`btn-outlined`) buttons.
+  - Attendees grid `data-testid="event-attendees-grid"` with avatars and an overflow **+N** button (`data-testid="event-attendees-more"`).
+  - **Add to calendar** button `data-testid="event-add-to-calendar"` with `calendar_add_on` icon.
+  - **Cancel event** button when organizer and not yet cancelled, `data-testid="event-cancel-button"`, with `cancel` icon.
 
 **Pass criteria**: every label, icon, and conditional block matches.
 
@@ -252,9 +252,9 @@
 
 - API: `POST /api/v1/events/{id}/rsvp` (see `EventRsvpController.cs`).
 
-**Database verification**
+**State/API verification**
 
-- `EventAttendees` collection (in-memory) updated.
+- `EventsDbContext.Rsvps` row for the event/current user is created or updated.
 
 **Pass criteria**: state toggles, count updates.
 
@@ -271,17 +271,17 @@
 **UI verification**
 
 - Dialog `<div data-testid="event-cancel-dialog">` (`event-detail.html:188`).
-- Title **"Cancel event"** (line 195).
-- Close `×` icon button (line 196-198).
-- Textarea label **"Message to attendees (optional)"**, `data-testid="event-cancel-message"`, placeholder **"Let attendees know why…"** (lines 201-211).
-- Buttons (lines 213-220): **"Keep event"** (`btn-outlined`) and **"Yes, cancel"** (`data-testid="event-cancel-confirm"`, `btn-filled`, error-color background).
+- Title **"Cancel event"**.
+- Close `×` icon button.
+- Textarea label **"Message to attendees (optional)"**, `data-testid="event-cancel-message"`, placeholder **"Let attendees know why…"**.
+- Buttons: **"Keep event"** (`btn-outlined`) and **"Yes, cancel"** (`data-testid="event-cancel-confirm"`, `btn-filled`, error-color background).
 
 **Behavior verification**
 
 - API: `POST /api/v1/events/{id}/cancel` (`EventCancelController.cs`).
 - Per user guide: attendees with RSVPs are notified.
 
-**Database verification**
+**State/API verification**
 
 - Event status set to `Cancelled`. Notifications enqueued (verify in `MailStore` and `Notifications`).
 
@@ -319,8 +319,8 @@
 
 **UI verification**
 
-- Dialog `<div data-testid="event-attendees-dialog">` (`event-detail.html:229`) with title **"Attendees"** (line 235).
-- Each entry `<div data-testid="attendee-list-{id}">` shows avatar, name, RSVP status (lines 241-254).
+- Dialog `<div data-testid="event-attendees-dialog">` (`event-detail.html:229`) with title **"Attendees"**.
+- Each entry `<div data-testid="attendee-list-{id}">` shows avatar, name, RSVP status.
 
 **Pass criteria**: full list visible; close `×` works.
 
@@ -359,9 +359,9 @@
 
 **UI verification**
 
-- Preview title updates immediately (`data-testid="event-preview-title"`, `event-form.html:214`); empty title shows **"Untitled Event"** (line 215).
-- Start time updates `data-testid="event-preview-start-time"` (line 218).
-- Location preview shows `locationName()` or **"Virtual"** or **"Location TBD"** (line 227).
+- Preview title updates immediately (`data-testid="event-preview-title"`, `event-form.html:214`); empty title shows **"Untitled Event"**.
+- Start time updates `data-testid="event-preview-start-time"`.
+- Location preview shows `locationName()` or **"Virtual"** or **"Location TBD"**.
 
 **Pass criteria**: preview is reactive.
 

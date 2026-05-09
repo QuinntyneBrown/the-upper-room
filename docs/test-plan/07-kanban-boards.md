@@ -6,7 +6,7 @@
 
 - Signed in.
 - For configure tests: user has `KanbanBoard:Configure` (route guard at `frontend/projects/the-upper-room/src/app/app.routes.ts:88-93`).
-- Backend `Boards` list (`backend/src/TheUpperRoom.Api/Kanban/BoardsController.cs:11`) initially empty.
+- Kanban data is stored in `KanbanDbContext` (`Data/kanban.db`) with `Boards`, `BoardColumns`, and `Cards` tables.
 
 ## Tests
 
@@ -19,7 +19,7 @@
 **UI verification**
 
 - Toolbar `<div class="toolbar">` with `<h1 class="page-title">Boards</h1>` (`board-list.html:1-3`).
-- Empty state `<div data-testid="boards-empty-state">` rendering `tar-empty-state` with `icon="view_kanban"`, `heading="No boards yet"`, `body="Create a board to organize your work."` (lines 11-23).
+- Empty state `<div data-testid="boards-empty-state">` rendering `tar-empty-state` with `icon="view_kanban"`, `heading="No boards yet"`, `body="Create a board to organize your work."`.
 - **New board** button (`data-testid="boards-new-button"`) shown both in empty-state slot and toolbar when there are boards.
 
 **Pass criteria**: copy and icon match exactly.
@@ -38,21 +38,22 @@
 **UI verification**
 
 - Wizard backdrop `<div data-testid="create-board-wizard" role="dialog" aria-modal="true" aria-labelledby="create-board-title">` (`frontend/projects/the-upper-room/src/app/kanban/create-board-wizard/create-board-wizard.html:1`).
-- Heading **"New board"** (line 3).
-- Field 1: label **"Name"**, `data-testid="create-board-name"`, required (lines 4-14).
-- Field 2: label **"Description"**, textarea, `data-testid="create-board-description"` (lines 15-24).
-- Checkbox: text **"Create with default columns (To do, In progress, Done)"**, `data-testid="create-board-default-columns"` (lines 25-33).
-- Buttons: **Cancel** (`data-testid="create-board-cancel"`, `btn-text`) and **Create** (`data-testid="create-board-submit"`, `btn-filled`) (lines 34-41).
+- Heading **"New board"**.
+- Field 1: label **"Name"**, `data-testid="create-board-name"`, required.
+- Field 2: label **"Description"**, textarea, `data-testid="create-board-description"`.
+- Checkbox: text **"Create with default columns (To do, In progress, Done)"**, `data-testid="create-board-default-columns"`.
+- Buttons: **Cancel** (`data-testid="create-board-cancel"`, `btn-text`) and **Create** (`data-testid="create-board-submit"`, `btn-filled`).
 
 **Behavior verification**
 
 - API: `POST /api/v1/boards` body `{ "name": "Sprint 1", "description": "...", "defaultColumns": true }` (`BoardsController.cs:42-62`).
-- Returns `201 Created` with `{ id, name, description, columnCount, cardCount, lastActivityAt }`. With `defaultColumns=true`, `columnCount` is **3** (line 56). Otherwise **0**.
+- Returns `201 Created` with `{ id, name, description, columnCount, cardCount, lastActivityAt }`. With `defaultColumns=true`, `columnCount` is **3**. Otherwise **0**.
 - Frontend transitions into the new board view.
 
-**Database verification**
+**State/API verification**
 
-- `Boards` static list (`BoardsController.cs:11`) has the new entry.
+- `KanbanDbContext.Boards` has the new board row.
+- When `defaultColumns=true`, `KanbanDbContext.Columns` has To Do, In Progress, and Done rows for that board.
 
 **Pass criteria**: wizard submits; new board appears in list.
 
@@ -86,8 +87,8 @@
 **UI verification**
 
 - Header `<header data-testid="board-view-header">` with `<h1>{name}</h1>` and optional description (`board-view.html:2-6`).
-- Toolbar contains tag-filter chips: each `<button class="filter-chip" [data-testid]="board-tag-filter-{name}">` shows text **`Tag={tag.name}`** (lines 11-21). When active, gets `filter-chip--active`.
-- **Show archived** toggle: `<button data-testid="board-show-archived" class="filter-chip">Show archived</button>` (lines 23-31).
+- Toolbar contains tag-filter chips: each `<button class="filter-chip" [data-testid]="board-tag-filter-{name}">` shows text **`Tag={tag.name}`**. When active, gets `filter-chip--active`.
+- **Show archived** toggle: `<button data-testid="board-show-archived" class="filter-chip">Show archived</button>`.
 
 **Pass criteria**: chips render with the `Tag={name}` literal prefix exactly.
 
@@ -104,11 +105,11 @@
 **UI verification**
 
 - Columns container `<div data-testid="board-view-columns" class="columns">` (`board-view.html:36`) when `swimlaneMode() === 'None'`.
-- Each column `<section data-testid="board-column-{name}">` (line 39) with header showing **name** and a count.
-- Count format: `{n} / {wipLimit}` if WIP set; else just `{n}` (lines 49-53).
-- Over-limit columns get `column--over-limit` class and `data-over-limit="true"` attribute (lines 41-44).
-- Each card `<li data-testid="board-card-{title}" draggable="true">` (line 58) with title, tag chips (`data-testid="card-tag"`), assignee initials (`data-testid="card-assignee"`), due date (`data-testid="card-due-date"`).
-- Pagination dots `<div data-testid="board-column-indicators">` shown when `b.columns.length > 1` (lines 91-103).
+- Each column `<section data-testid="board-column-{name}">` with header showing **name** and a count.
+- Count format: `{n} / {wipLimit}` if WIP set; else just `{n}`.
+- Over-limit columns get `column--over-limit` class and `data-over-limit="true"` attribute.
+- Each card `<li data-testid="board-card-{title}" draggable="true">` with title, tag chips (`data-testid="card-tag"`), assignee initials (`data-testid="card-assignee"`), due date (`data-testid="card-due-date"`).
+- Pagination dots `<div data-testid="board-column-indicators">` shown when `b.columns.length > 1`.
 
 **Pass criteria**: structure exact.
 
@@ -120,9 +121,14 @@
 
 **Steps**
 
-1. In any column click **+ Add card** (per user guide §7.4 — verify in `board-view.html` for the actual control; **[unverified — no `+ Add card` button is currently rendered in `board-view.html`. The user guide §7.4 promises it. File a defect or update the guide.]**)
+1. In any column click **+ Add card** if the control is present.
 
-**Pass criteria (when implemented)**: card created, appears in column, audit entry added.
+**Current code verification**
+
+- Backend supports `POST /api/v1/boards/{id}/cards`.
+- `board-view.html` currently does not render a visible Add Card control.
+
+**Pass criteria**: current UI has no Add Card entry point. Mark blocked/failed against the product requirement if adding cards from the board is required.
 
 **Severity if failing**: High.
 
@@ -139,16 +145,16 @@
 **UI verification**
 
 - Cards have `draggable="true"` (`board-view.html:62`).
-- Columns handle `(dragover)`, `(drop)` (lines 43-44).
+- Columns handle `(dragover)`, `(drop)`.
 
 **Behavior verification**
 
-- API: `PATCH /api/v1/cards/{id}` (or equivalent in `backend/src/TheUpperRoom.Api/Kanban/CardsController.cs`) with new `columnId`.
+- API: `POST /api/v1/cards/{id}/move` with `{ targetColumnId }`.
 - Optimistic UI: card moves immediately; on error rolls back (verify via toast).
 
-**Database verification**
+**State/API verification**
 
-- Card's `ColumnId` field updated in the static store (file: `CardsController.cs`).
+- `KanbanDbContext.Cards.ColumnId` is updated.
 
 **Pass criteria**: drop succeeds; persists.
 
@@ -161,13 +167,18 @@
 **Steps**
 
 1. On xs viewport tap a card.
-2. The card detail dialog opens; tap **Move** (per user guide §7.5). **[unverified — `card-detail-dialog.html` does not contain a Move button; on the board, a long-press triggers `onCardPointerDown` which presumably opens the sheet (`board-view.html:64`). Verify the open-trigger.]**
+2. Open the move sheet using the board's mobile long-press/tap behavior.
+
+**Current code verification**
+
+- `card-detail-dialog.html` does not contain a Move button.
+- `board-view.ts` opens `BoardMoveSheetDialog` from card pointer interactions.
 
 **UI verification**
 
 - Backdrop `<div class="move-sheet-backdrop">` (`board-view.html:157`).
-- Sheet `<div data-testid="board-move-sheet" role="dialog" aria-modal="true">` (line 158) with title **"Move to..."** (line 159).
-- Each option `<button data-testid="board-move-sheet-option-{name}">{name}</button>` (lines 163-167).
+- Sheet `<div data-testid="board-move-sheet" role="dialog" aria-modal="true">` with title **"Move to..."**.
+- Each option `<button data-testid="board-move-sheet-option-{name}">{name}</button>`.
 
 **Pass criteria**: sheet shows columns other than current; tapping moves card.
 
@@ -203,11 +214,11 @@
 **UI verification**
 
 - `<div data-testid="card-detail-dialog" role="dialog" aria-modal="true">` (`card-detail-dialog.html:1`).
-- Header has an editable title `<input data-testid="card-detail-title">` (line 4-11) — saves on blur.
-- Header actions (lines 13-16): **Archive** (`data-testid="card-detail-archive"`, `btn-text`), **Delete** (`data-testid="card-detail-delete"`, `btn-text--danger`), **Close** (`data-testid="card-detail-close"`, `btn-icon`, glyph `×`, `aria-label="Close"`).
-- Details section heading **"Details"** (line 21) with one input per schema field (`data-testid="card-detail-field-{key}"`). Required fields show `*`.
-- Comments section heading **"Comments"** (line 43) with list and a textarea + **Add** button (`data-testid="card-detail-comment-add"`, `btn-filled`).
-- Attachments section heading **"Attachments"** (line 64) with file input `data-testid="card-detail-attachment-input"` accepting `application/pdf,image/*`.
+- Header has an editable title `<input data-testid="card-detail-title">` — saves on blur.
+- Header actions: **Archive** (`data-testid="card-detail-archive"`, `btn-text`), **Delete** (`data-testid="card-detail-delete"`, `btn-text--danger`), **Close** (`data-testid="card-detail-close"`, `btn-icon`, glyph `×`, `aria-label="Close"`).
+- Details section heading **"Details"** with one input per schema field (`data-testid="card-detail-field-{key}"`). Required fields show `*`.
+- Comments section heading **"Comments"** with list and a textarea + **Add** button (`data-testid="card-detail-comment-add"`, `btn-filled`).
+- Attachments section heading **"Attachments"** with file input `data-testid="card-detail-attachment-input"` accepting `application/pdf,image/*`.
 
 **Pass criteria**: structure and copy exact.
 
@@ -226,7 +237,12 @@
 
 - Dialog closes; card disappears from default board view; reappears with **Show archived** toggle on.
 
-**Pass criteria**: archival reflected.
+**Behavior verification**
+
+- Current frontend sends `PATCH /api/v1/cards/{id}` with `{ archived: true }`.
+- Current backend `PatchCardHandler` updates `title`, `assigneeName`, and `dueDate`; it does not persist `archived`.
+
+**Pass criteria**: current implementation does not persist card archival. Mark blocked/failed if archived cards are required.
 
 **Severity if failing**: High.
 
@@ -244,9 +260,12 @@
 - Confirmation via `tar-confirm-dialog` (rendered from `app.html:3`).
 - Card removed permanently.
 
-**Behavior verification**: `DELETE /api/v1/cards/{id}` returns `204`.
+**Behavior verification**
 
-**Pass criteria**: deletion irreversible.
+- Current backend has no `DELETE /api/v1/cards/{id}` endpoint in `CardsController`.
+- Current frontend calls `DELETE /api/v1/cards/{id}` after removing the card optimistically.
+
+**Pass criteria**: current implementation is incomplete. Mark blocked/failed until the backend delete endpoint is implemented.
 
 **Severity if failing**: Critical.
 
@@ -262,8 +281,8 @@
 **UI verification**
 
 - Heading **`Configure: {name}`** (`board-configure.html:3`).
-- Section **"Swimlanes"** with a `Group by` select (`data-testid="board-configure-swimlane-select"`) options: **None**, **Assignee**, **Priority** (lines 6-21).
-- Column rows `<li data-testid="config-column-row-{name}" draggable="true">` (lines 24-32) with handle glyph `::`, name, **`{n} cards`** count, **Delete** button (`data-testid="config-column-delete-{name}"`, `btn-text`).
+- Section **"Swimlanes"** with a `Group by` select (`data-testid="board-configure-swimlane-select"`) options: **None**, **Assignee**, **Priority**.
+- Column rows `<li data-testid="config-column-row-{name}" draggable="true">` with handle glyph `::`, name, **`{n} cards`** count, **Delete** button (`data-testid="config-column-delete-{name}"`, `btn-text`).
 
 **Pass criteria**: drag reorders persistently.
 
@@ -280,9 +299,9 @@
 **UI verification**
 
 - Dialog `<div data-testid="config-move-cards-dialog" role="dialog" aria-modal="true">` (`board-configure.html:51-74`).
-- Title: **`Move {n} cards from "{name}" to...`** (line 53-54).
-- Select `data-testid="config-move-cards-target"` lists other columns (line 57-65).
-- Buttons: **Cancel** (`btn-text`) and **Confirm** (`data-testid="config-move-cards-confirm"`, `btn-filled`) (lines 67-72).
+- Title: **`Move {n} cards from "{name}" to...`**.
+- Select `data-testid="config-move-cards-target"` lists other columns.
+- Buttons: **Cancel** (`btn-text`) and **Confirm** (`data-testid="config-move-cards-confirm"`, `btn-filled`).
 
 **Pass criteria**: dialog opens, cards moved on Confirm, source column removed.
 
@@ -300,9 +319,9 @@
 **UI verification**
 
 - Container `<div class="swimlanes">` (`board-view.html:105`).
-- Each lane `<div data-testid="board-swimlane-{lane}">` (line 107) with header label (or **Unassigned** if empty, line 109).
+- Each lane `<div data-testid="board-swimlane-{lane}">` with header label (or **Unassigned** if empty).
 - Cards live inside `<section data-testid="board-column-{name}">` per lane.
-- Drop target binds `(drop)="onDrop($event, column, lane)"` (line 117) so dragging into a lane updates assignee.
+- Drop target binds `(drop)="onDrop($event, column, lane)"` so dragging into a lane updates assignee.
 
 **Pass criteria**: cards grouped correctly; dragging into a lane reassigns.
 

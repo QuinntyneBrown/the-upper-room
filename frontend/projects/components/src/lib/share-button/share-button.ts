@@ -4,30 +4,8 @@ import { SnackbarService } from '../snackbar/tar-snackbar.service';
 
 @Component({
   selector: 'tar-share-button',
-  template: `
-    <button
-      type="button"
-      class="tar-share-button"
-      aria-label="Share"
-      data-testid="share-button"
-      (click)="share()"
-    >
-      <span class="material-icons">share</span>
-    </button>
-  `,
-  styles: [`
-    .tar-share-button {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px;
-      border-radius: 50%;
-    }
-    .tar-share-button:hover { background: rgba(0,0,0,.08); }
-  `],
+  templateUrl: './share-button.html',
+  styleUrl: './share-button.scss',
 })
 export class TarShareButton {
   private readonly snackbar = inject(SnackbarService);

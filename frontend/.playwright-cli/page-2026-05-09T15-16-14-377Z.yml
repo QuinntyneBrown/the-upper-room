@@ -1,0 +1,25 @@
+- main [ref=e4]:
+  - generic [ref=e5]:
+    - heading "Create your account" [level=1] [ref=e6]
+    - generic [ref=e11]:
+      - generic [ref=e12]: Email
+      - textbox "Email" [ref=e14]
+    - generic [ref=e16]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Password
+        - textbox "Password" [ref=e23]
+        - button "Show password" [ref=e25] [cursor=pointer]:
+          - img [ref=e26]: visibility
+      - generic [ref=e36]: Use 12+ characters with upper, lower, digit, and symbol.
+    - generic [ref=e40]:
+      - generic [ref=e41]: City
+      - textbox "City" [ref=e43]
+    - generic [ref=e47]:
+      - generic [ref=e48] [cursor=pointer]:
+        - checkbox "I accept the terms and privacy policy" [ref=e50]
+        - generic:
+          - img
+      - generic [ref=e51] [cursor=pointer]: I accept the terms and privacy policy
+    - generic [ref=e52]:
+      - button "Create account" [disabled]:
+        - generic: Create account

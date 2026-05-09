@@ -1,0 +1,1191 @@
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: RouterLink is not used within the template of AppShell[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:12:26:
+[37m      12 │   imports: [RouterOutlet, [32mRouterLink[37m, TarIconButton, OfflineBanner...
+         ╵                           [32m~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/app.config.ts:7:64:
+[37m      7 │ ... { provideDomain, TOKEN_STORE, ACCESS_TOKEN_SOURCE } from [32m'domain'[37m;
+        ╵                                                              [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/app.routes.ts:14:54:
+[37m      14 │ import { authGuard, permissionGuard, roleGuard } from [32m'domain'[37m;
+         ╵                                                       [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/app.routes.ts:32:43:
+[37m      32 │ import { TarNotificationPreferences } from [32m'domain'[37m;
+         ╵                                            [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/app.ts:7:46:
+[37m      7 │ import { IdleService, InactivityDialog } from [32m'domain'[37m;
+        ╵                                               [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/app.ts:22:20:
+[37m      22 │       const state = [32mthis.idle[37m.state();
+         ╵                     [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-create/contact-create.ts:6:36:
+[37m      6 │ import { TarTagSelector, Tag } from [32m'domain'[37m;
+        ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-create/contact-create.ts:16:65:
+[37m      16 │ ...Button, TarTextField, TarIconButton, TarCheckbox, [32mTarTagSelector[37m],
+         ╵                                                      [32m~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/contacts/contact-create/contact-create.ts:16:65:
+[37m      16 │ ...Button, TarTextField, TarIconButton, TarCheckbox, [32mTarTagSelector[37m],
+         ╵                                                      [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-edit/contact-edit.ts:6:36:
+[37m      6 │ import { TarTagSelector, Tag } from [32m'domain'[37m;
+        ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-edit/contact-edit.ts:13:37:
+[37m      13 │   imports: [TarButton, TarTextField, [32mTarTagSelector[37m],
+         ╵                                      [32m~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/contacts/contact-edit/contact-edit.ts:13:37:
+[37m      13 │   imports: [TarButton, TarTextField, [32mTarTagSelector[37m],
+         ╵                                      [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-list/contact-list.ts:6:54:
+[37m      6 │ import { CityScopeService, PERMISSIONS_SERVICE } from [32m'domain'[37m;
+        ╵                                                       [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-list/contact-list.ts:58:48:
+[37m      58 │ ...canCreate = computed(() => [32mthis.perms[37m.hasPermission('Contact:Cr...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-list/contact-list.ts:70:6:
+[37m      70 │       [32mthis.cityScope[37m.current();
+         ╵       [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-list/contact-list.ts:115:8:
+[37m      115 │     if ([32mthis.perms[37m.hasPermission('City:Switch')) {
+          ╵         [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-list/contact-list.ts:116:20:
+[37m      116 │       const scope = [32mthis.cityScope[37m.current();
+          ╵                     [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/events/event-detail/event-detail.ts:7:35:
+[37m      7 │ import { PermissionsService } from [32m'domain'[37m;
+        ╵                                    [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/events/event-detail/event-detail.ts:81:4:
+[37m      81 │     [32mthis.permissions[37m.hasAnyRole(['CityLead', 'SystemAdmin'])
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/interceptors/auth.interceptor.ts:4:36:
+[37m      4 │ import { ACCESS_TOKEN_SOURCE } from [32m'domain'[37m;
+        ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/interceptors/auth.interceptor.ts:7:16:
+[37m      7 │   const token = [32minject(ACCESS_TOKEN_SOURCE)[37m.current();
+        ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/board-list/board-list.ts:5:36:
+[37m      5 │ import { PERMISSIONS_SERVICE } from [32m'domain'[37m;
+        ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/board-list/board-list.ts:30:48:
+[37m      30 │ ...canCreate = computed(() => [32mthis.perms[37m.hasPermission('KanbanBoar...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-list/partner-list.ts:6:36:
+[37m      6 │ import { PERMISSIONS_SERVICE } from [32m'domain'[37m;
+        ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-list/partner-list.ts:36:48:
+[37m      36 │ ...canCreate = computed(() => [32mthis.perms[37m.hasPermission('Partner:Cr...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.html:8:48:
+[37m      8 │       [class.appearance__option--active]="theme.[32mmode[37m() === m"
+        ╵                                                 [32m~~~~[0m
+
+  Error occurs in the template of component Appearance.
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.ts:7:15:
+[37m      7 │   templateUrl: [32m'./appearance.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.html:10:33:
+[37m      10 │       [attr.aria-checked]="theme.[32mmode[37m() === m"
+         ╵                                  [32m~~~~[0m
+
+  Error occurs in the template of component Appearance.
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.ts:7:15:
+[37m      7 │   templateUrl: [32m'./appearance.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.html:11:21:
+[37m      11 │       (click)="theme.[32msetMode[37m(m)"
+         ╵                      [32m~~~~~~~[0m
+
+  Error occurs in the template of component Appearance.
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.ts:7:15:
+[37m      7 │   templateUrl: [32m'./appearance.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.ts:3:40:
+[37m      3 │ import { ThemeService, ThemeMode } from [32m'domain'[37m;
+        ╵                                         [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:7:69:
+[37m      7 │ ...gnOutService, TarCitySwitcher, TarNotificationBell } from [32m'domain'[37m;
+        ╵                                                              [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:12:68:
+[37m      12 │ ...rIconButton, OfflineBanner, [32mTarCitySwitcher[37m, TarNotificationBell],
+         ╵                                [32m~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:12:68:
+[37m      12 │ ...rIconButton, OfflineBanner, [32mTarCitySwitcher[37m, TarNotificationBell],
+         ╵                                [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:12:85:
+[37m      12 │ ...rIconButton, OfflineBanner, TarCitySwitcher, [32mTarNotificationBell[37m],
+         ╵                                                 [32m~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:12:85:
+[37m      12 │ ...rIconButton, OfflineBanner, TarCitySwitcher, [32mTarNotificationBell[37m],
+         ╵                                                 [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:79:9:
+[37m      79 │     void [32mthis.signOutService[37m.signOut();
+         ╵          [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/styleguide/styleguide.ts:14:36:
+[37m      14 │ import { TarTagSelector, Tag } from [32m'domain'[37m;
+         ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/styleguide/styleguide.ts:25:4:
+[37m      25 │     [32mTarTagSelector[37m,
+         ╵     [32m~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/styleguide/styleguide.ts:25:4:
+[37m      25 │     [32mTarTagSelector[37m,
+         ╵     [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/tags/tag-list/tag-list.ts:12:25:
+[37m      12 │ import type { Tag } from [32m'domain'[37m;
+         ╵                          [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/users/my-profile/my-profile.ts:10:36:
+[37m      10 │ import { PERMISSIONS_SERVICE } from [32m'domain'[37m;
+         ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/users/my-profile/my-profile.ts:58:4:
+[37m      58 │     [32mthis.perms[37m.snapshot().roles.includes('SystemAdmin'),
+         ╵     [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/users/user-list/user-list.ts:23:73:
+[37m      23 │ ...serDialog, InviteUserDialogData, UserDetailDrawer } from [32m'domain'[37m;
+         ╵                                                             [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/users/user-list/user-list.ts:44:4:
+[37m      44 │     [32mUserDetailDrawer[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/users/user-list/user-list.ts:44:4:
+[37m      44 │     [32mUserDetailDrawer[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8102: NG8102: The left side of this nullish coalescing operation does not include 'null' or 'undefined' in its type, therefore the '??' operator can be safely removed. Find more at https://v21.angular.dev/extended-diagnostics/NG8102[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html:26:19:
+[37m      26 │           [error]="[32mfieldErrors()[field.key] ?? null[37m"
+         ╵                    [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  Warning occurs in the template of component CardDetailDialog.
+
+    projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.ts:33:15:
+[37m      33 │   templateUrl: [32m'./card-detail-dialog.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:54:29:
+[37m      54 │           @if ((p.addresses?.[32mlength[37m ?? 0) > 0) {
+         ╵                              [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: NG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator. Find more at https://v21.angular.dev/extended-diagnostics/NG8107[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.html:67:31:
+[37m      67 │           @if ((p.socialLinks?.[32mlength[37m ?? 0) > 0) {
+         ╵                                [32m~~~~~~[0m
+
+  Warning occurs in the template of component PartnerDetail.
+
+    projects/the-upper-room/src/app/partners/partner-detail/partner-detail.ts:22:15:
+[37m      22 │   templateUrl: [32m'./partner-detail.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/app.config.ts:7:64:
+[37m      7 │ ... { provideDomain, TOKEN_STORE, ACCESS_TOKEN_SOURCE } from [32m'domain'[37m;
+        ╵                                                              [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/app.routes.ts:14:54:
+[37m      14 │ import { authGuard, permissionGuard, roleGuard } from [32m'domain'[37m;
+         ╵                                                       [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/app.routes.ts:32:43:
+[37m      32 │ import { TarNotificationPreferences } from [32m'domain'[37m;
+         ╵                                            [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/app.ts:7:46:
+[37m      7 │ import { IdleService, InactivityDialog } from [32m'domain'[37m;
+        ╵                                               [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/app.ts:22:20:
+[37m      22 │       const state = [32mthis.idle[37m.state();
+         ╵                     [32m~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-create/contact-create.ts:6:36:
+[37m      6 │ import { TarTagSelector, Tag } from [32m'domain'[37m;
+        ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-create/contact-create.ts:16:65:
+[37m      16 │ ...Button, TarTextField, TarIconButton, TarCheckbox, [32mTarTagSelector[37m],
+         ╵                                                      [32m~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/contacts/contact-create/contact-create.ts:16:65:
+[37m      16 │ ...Button, TarTextField, TarIconButton, TarCheckbox, [32mTarTagSelector[37m],
+         ╵                                                      [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-edit/contact-edit.ts:6:36:
+[37m      6 │ import { TarTagSelector, Tag } from [32m'domain'[37m;
+        ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-edit/contact-edit.ts:13:37:
+[37m      13 │   imports: [TarButton, TarTextField, [32mTarTagSelector[37m],
+         ╵                                      [32m~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/contacts/contact-edit/contact-edit.ts:13:37:
+[37m      13 │   imports: [TarButton, TarTextField, [32mTarTagSelector[37m],
+         ╵                                      [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-list/contact-list.ts:6:54:
+[37m      6 │ import { CityScopeService, PERMISSIONS_SERVICE } from [32m'domain'[37m;
+        ╵                                                       [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-list/contact-list.ts:58:48:
+[37m      58 │ ...canCreate = computed(() => [32mthis.perms[37m.hasPermission('Contact:Cr...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-list/contact-list.ts:70:6:
+[37m      70 │       [32mthis.cityScope[37m.current();
+         ╵       [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-list/contact-list.ts:115:8:
+[37m      115 │     if ([32mthis.perms[37m.hasPermission('City:Switch')) {
+          ╵         [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/contacts/contact-list/contact-list.ts:116:20:
+[37m      116 │       const scope = [32mthis.cityScope[37m.current();
+          ╵                     [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/events/event-detail/event-detail.ts:7:35:
+[37m      7 │ import { PermissionsService } from [32m'domain'[37m;
+        ╵                                    [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/events/event-detail/event-detail.ts:81:4:
+[37m      81 │     [32mthis.permissions[37m.hasAnyRole(['CityLead', 'SystemAdmin'])
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/interceptors/auth.interceptor.ts:4:36:
+[37m      4 │ import { ACCESS_TOKEN_SOURCE } from [32m'domain'[37m;
+        ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/interceptors/auth.interceptor.ts:7:16:
+[37m      7 │   const token = [32minject(ACCESS_TOKEN_SOURCE)[37m.current();
+        ╵                 [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/board-list/board-list.ts:5:36:
+[37m      5 │ import { PERMISSIONS_SERVICE } from [32m'domain'[37m;
+        ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/kanban/board-list/board-list.ts:30:48:
+[37m      30 │ ...canCreate = computed(() => [32mthis.perms[37m.hasPermission('KanbanBoar...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-list/partner-list.ts:6:36:
+[37m      6 │ import { PERMISSIONS_SERVICE } from [32m'domain'[37m;
+        ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/partners/partner-list/partner-list.ts:36:48:
+[37m      36 │ ...canCreate = computed(() => [32mthis.perms[37m.hasPermission('Partner:Cr...
+         ╵                               [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.html:8:48:
+[37m      8 │       [class.appearance__option--active]="theme.[32mmode[37m() === m"
+        ╵                                                 [32m~~~~[0m
+
+  Error occurs in the template of component Appearance.
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.ts:7:15:
+[37m      7 │   templateUrl: [32m'./appearance.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.html:10:33:
+[37m      10 │       [attr.aria-checked]="theme.[32mmode[37m() === m"
+         ╵                                  [32m~~~~[0m
+
+  Error occurs in the template of component Appearance.
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.ts:7:15:
+[37m      7 │   templateUrl: [32m'./appearance.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.html:11:21:
+[37m      11 │       (click)="theme.[32msetMode[37m(m)"
+         ╵                      [32m~~~~~~~[0m
+
+  Error occurs in the template of component Appearance.
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.ts:7:15:
+[37m      7 │   templateUrl: [32m'./appearance.html'[37m,
+        ╵                [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/settings/appearance/appearance.ts:3:40:
+[37m      3 │ import { ThemeService, ThemeMode } from [32m'domain'[37m;
+        ╵                                         [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:7:69:
+[37m      7 │ ...gnOutService, TarCitySwitcher, TarNotificationBell } from [32m'domain'[37m;
+        ╵                                                              [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:12:68:
+[37m      12 │ ...rIconButton, OfflineBanner, [32mTarCitySwitcher[37m, TarNotificationBell],
+         ╵                                [32m~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:12:68:
+[37m      12 │ ...rIconButton, OfflineBanner, [32mTarCitySwitcher[37m, TarNotificationBell],
+         ╵                                [32m~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:12:85:
+[37m      12 │ ...rIconButton, OfflineBanner, TarCitySwitcher, [32mTarNotificationBell[37m],
+         ╵                                                 [32m~~~~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:12:85:
+[37m      12 │ ...rIconButton, OfflineBanner, TarCitySwitcher, [32mTarNotificationBell[37m],
+         ╵                                                 [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/shell/app-shell/app-shell.ts:79:9:
+[37m      79 │     void [32mthis.signOutService[37m.signOut();
+         ╵          [32m~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/styleguide/styleguide.ts:14:36:
+[37m      14 │ import { TarTagSelector, Tag } from [32m'domain'[37m;
+         ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/styleguide/styleguide.ts:25:4:
+[37m      25 │     [32mTarTagSelector[37m,
+         ╵     [32m~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/styleguide/styleguide.ts:25:4:
+[37m      25 │     [32mTarTagSelector[37m,
+         ╵     [32m~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/tags/tag-list/tag-list.ts:12:25:
+[37m      12 │ import type { Tag } from [32m'domain'[37m;
+         ╵                          [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/users/my-profile/my-profile.ts:10:36:
+[37m      10 │ import { PERMISSIONS_SERVICE } from [32m'domain'[37m;
+         ╵                                     [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2571: Object is of type 'unknown'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/users/my-profile/my-profile.ts:58:4:
+[37m      58 │     [32mthis.perms[37m.snapshot().roles.includes('SystemAdmin'),
+         ╵     [32m~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2307: Cannot find module 'domain' or its corresponding type declarations.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/users/user-list/user-list.ts:23:73:
+[37m      23 │ ...serDialog, InviteUserDialogData, UserDetailDrawer } from [32m'domain'[37m;
+         ╵                                                             [32m~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mNG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/the-upper-room/src/app/users/user-list/user-list.ts:44:4:
+[37m      44 │     [32mUserDetailDrawer[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+  Unknown reference.
+
+    projects/the-upper-room/src/app/users/user-list/user-list.ts:44:4:
+[37m      44 │     [32mUserDetailDrawer[37m,
+         ╵     [32m~~~~~~~~~~~~~~~~[0m
+
+[39m[22m

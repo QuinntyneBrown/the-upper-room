@@ -1,0 +1,21 @@
+@if (avatarUrl()) {
+  <img
+    data-testid="avatar-image"
+    class="avatar avatar--image"
+    [style.width.px]="size"
+    [style.height.px]="size"
+    [src]="avatarUrl()"
+    alt=""
+  />
+} @else {
+  <span
+    data-testid="avatar-initials"
+    class="avatar avatar--initials"
+    [style.width.px]="size"
+    [style.height.px]="size"
+    [style.background]="background()"
+    [style.fontSize.px]="size * 0.4"
+  >
+    {{ label() }}
+  </span>
+}

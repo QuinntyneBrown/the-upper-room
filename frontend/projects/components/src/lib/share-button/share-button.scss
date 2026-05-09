@@ -1,0 +1,14 @@
+.tar-share-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--md-sys-space-2);
+  border-radius: 50%;
+}
+
+.tar-share-button:hover {
+  background: rgba(0, 0, 0, 0.08);
+}

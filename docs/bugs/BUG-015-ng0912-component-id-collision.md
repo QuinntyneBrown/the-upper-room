@@ -2,7 +2,7 @@
 id: BUG-015
 title: NG0912 Component ID Collision — 9 components registered twice
 severity: Medium
-status: Open
+status: Fixed
 suite: TC-01 Getting Started
 discovered_at: 2026-05-09T14:52:00Z
 ---

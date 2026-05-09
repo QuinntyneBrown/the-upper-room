@@ -1,0 +1,1 @@
+[GET] http://localhost:4200/api/v1/users/me => [200] OK

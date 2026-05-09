@@ -1,0 +1,49 @@
+- generic [ref=e6]:
+  - link "Skip to main content" [ref=e139] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e8]:
+    - link "The Upper Room" [ref=e140] [cursor=pointer]:
+      - /url: /dashboard
+    - button "Toronto" [ref=e141] [cursor=pointer]
+    - button "Notifications" [ref=e142] [cursor=pointer]:
+      - img [ref=e18]: notifications
+    - button "Account menu" [ref=e143] [cursor=pointer]:
+      - img [ref=e24]: account_circle
+  - navigation [ref=e27]
+  - navigation "Breadcrumb" [ref=e144]:
+    - link "Dashboard" [ref=e145] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e30]: /
+    - link "Boards" [ref=e146] [cursor=pointer]:
+      - /url: /boards
+    - generic [ref=e32]: /
+    - link "4d608a4e" [ref=e147] [cursor=pointer]:
+      - /url: /boards/4d608a4e
+  - main [ref=e36]:
+    - generic [ref=e165]:
+      - generic [ref=e166]:
+        - heading "Sprint 1" [level=1] [ref=e167]
+        - button "Show archived" [ref=e169] [cursor=pointer]
+      - generic [ref=e170]:
+        - generic [ref=e171]:
+          - generic [ref=e172]:
+            - generic [ref=e173]: To Do
+            - generic [ref=e174]: "2"
+          - list [ref=e175]:
+            - listitem [ref=e176]:
+              - generic [ref=e177]: Card Alpha
+            - listitem [ref=e178]:
+              - generic [ref=e179]: Card Beta
+        - generic [ref=e180]:
+          - generic [ref=e181]:
+            - generic [ref=e182]: In Progress
+            - generic [ref=e183]: "0"
+          - list
+        - generic [ref=e184]:
+          - generic [ref=e185]:
+            - generic [ref=e186]: Done
+            - generic [ref=e187]: "1"
+          - list [ref=e188]:
+            - listitem [ref=e189]:
+              - generic [ref=e190]: Card Gamma
+  - contentinfo [ref=e85]: © The Upper Room

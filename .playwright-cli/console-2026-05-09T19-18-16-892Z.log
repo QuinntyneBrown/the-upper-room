@@ -1,0 +1,47 @@
+Total messages: 8 (Errors: 4, Warnings: 0)
+Returning 4 messages for level "info"
+
+[ERROR] TypeError: Cannot set property __setTestToken of #<Window> which has only a getter
+    at new _AccessTokenStore (http://localhost:4200/main.js:1085:29)
+    at Object.AccessTokenStore_Factory [as factory] (http://localhost:4200/main.js:1095:12)
+    at http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1909:35
+    at runInInjectorProfilerContext (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1053:5)
+    at R3Injector.hydrate (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1907:11)
+    at R3Injector.get (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1796:23)
+    at R3Injector.retrieve (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1711:19)
+    at injectInjectorOnly (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1274:35)
+    at ɵɵinject (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1286:59)
+    at Object.factory (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1990:31) @ http://localhost:4200/main.js:15117
+[ERROR] TypeError: Cannot set property __setTestToken of #<Window> which has only a getter
+    at new _AccessTokenStore (http://localhost:4200/main.js:1085:29)
+    at Object.AccessTokenStore_Factory [as factory] (http://localhost:4200/main.js:1095:12)
+    at http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1909:35
+    at runInInjectorProfilerContext (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1053:5)
+    at R3Injector.hydrate (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1907:11)
+    at R3Injector.get (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1796:23)
+    at R3Injector.retrieve (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1711:19)
+    at injectInjectorOnly (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1274:35)
+    at ɵɵinject (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1286:59)
+    at Object.factory (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1990:31) @ http://localhost:4200/main.js:15363
+[ERROR] TypeError: Cannot set property __setTestToken of #<Window> which has only a getter
+    at new _AccessTokenStore (http://localhost:4200/main.js:1085:29)
+    at Object.AccessTokenStore_Factory [as factory] (http://localhost:4200/main.js:1095:12)
+    at http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1909:35
+    at runInInjectorProfilerContext (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1053:5)
+    at R3Injector.hydrate (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1907:11)
+    at R3Injector.get (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1796:23)
+    at R3Injector.retrieve (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1711:19)
+    at injectInjectorOnly (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1274:35)
+    at ɵɵinject (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1286:59)
+    at Object.factory (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1990:31) @ http://localhost:4200/main.js:15117
+[ERROR] TypeError: Cannot set property __setTestToken of #<Window> which has only a getter
+    at new _AccessTokenStore (http://localhost:4200/main.js:1085:29)
+    at Object.AccessTokenStore_Factory [as factory] (http://localhost:4200/main.js:1095:12)
+    at http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1909:35
+    at runInInjectorProfilerContext (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1053:5)
+    at R3Injector.hydrate (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1907:11)
+    at R3Injector.get (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1796:23)
+    at R3Injector.retrieve (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1711:19)
+    at injectInjectorOnly (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1274:35)
+    at ɵɵinject (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1286:59)
+    at Object.factory (http://localhost:4200/@fs/C:/projects/the-upper-room/frontend/.angular/cache/21.2.10/the-upper-room/vite/deps/chunk-R7AJGQHG.js?v=1102e43f:1990:31) @ http://localhost:4200/main.js:15363

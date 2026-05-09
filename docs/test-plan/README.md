@@ -2,6 +2,8 @@
 
 A page-by-page, test-case-by-test-case verification plan for The Upper Room. Mirrors the structure of `docs/user-guide.md`. If a tester executes every case in this plan and finds zero defects, the build is considered flawless.
 
+Last aligned with code: 2026-05-09.
+
 ## How to use this plan
 
 1. Read `00-overview.md` first — it covers conventions, environment setup, credentials, and how to inspect persistence state.
@@ -30,12 +32,16 @@ A page-by-page, test-case-by-test-case verification plan for The Upper Room. Mir
 | [15-keyboard-shortcuts.md](./15-keyboard-shortcuts.md) | Every shortcut from the user guide, focus management, skip link. |
 | [16-cross-cutting.md](./16-cross-cutting.md) | Typography, color, spacing tokens, Material component inventory, breakpoints, a11y, CSRF, error/empty/loading states, optimistic UI rollback. |
 
-## Source-of-truth references
+## Current implementation references
 
 - User guide: `docs/user-guide.md`
 - Routes: `frontend/projects/the-upper-room/src/app/app.routes.ts`
+- Frontend auth: `frontend/projects/the-upper-room/src/app/auth/pkce-auth-provider.ts`, `frontend/projects/the-upper-room/src/app/auth/pkce.service.ts`, `frontend/projects/the-upper-room/src/app/auth/auth-callback/auth-callback.ts`
+- Backend composition root: `backend/src/TheUpperRoom.Api/Program.cs`
+- Runtime users: `backend/src/TheUpperRoom.Infrastructure/Users/UsersDbContext.cs`, `backend/src/TheUpperRoom.Infrastructure/Users/UserDirectory.cs`
+- Development user seeding: `backend/src/TheUpperRoom.Infrastructure/Seeding/Users/UserDataSeeder.cs`
+- Runtime feature stores: feature-specific SQLite EF contexts in `backend/src/TheUpperRoom.Api/<Feature>/*DbContext.cs`
+- Remaining in-memory stores: partners (`PartnersController`), partner-contact links (`PartnerContactsController`), auth rate-limit buckets (`AuthController`), and audit entries (`AuditStore`)
 - Design tokens: `frontend/projects/components/src/lib/tokens/_tokens.scss`
 - Breakpoints: `frontend/projects/components/src/lib/breakpoints/_mixins.scss`
-- Backend in-memory stores: `backend/src/TheUpperRoom.Api/<Feature>/`
-- Audit log store: `backend/src/TheUpperRoom.Api/Audit/AuditStore.cs`
 - Error catalog: `frontend/projects/the-upper-room/src/app/interceptors/error-catalog.ts`

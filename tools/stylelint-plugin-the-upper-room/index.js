@@ -1,5 +1,10 @@
 // traces_to: L2-003, L2-083
-const stylelint = require('stylelint');
+let stylelint;
+try {
+  stylelint = require('stylelint');
+} catch {
+  stylelint = require(require.resolve('stylelint', { paths: [process.cwd()] }));
+}
 const bem = require('./lib/bem-class-name.js');
 const spacing = require('./lib/spacing-token-only.js');
 

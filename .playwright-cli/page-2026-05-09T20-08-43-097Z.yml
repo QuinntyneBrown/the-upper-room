@@ -1,0 +1,55 @@
+- generic [ref=e6]:
+  - link "Skip to main content" [ref=e139] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e8]:
+    - link "The Upper Room" [ref=e140] [cursor=pointer]:
+      - /url: /dashboard
+    - button "Toronto" [ref=e141] [cursor=pointer]
+    - button "Notifications" [ref=e142] [cursor=pointer]:
+      - img [ref=e18]: notifications
+    - button "Account menu" [ref=e143] [cursor=pointer]:
+      - img [ref=e24]: account_circle
+  - navigation [ref=e27]
+  - navigation "Breadcrumb" [ref=e144]:
+    - link "Dashboard" [ref=e145] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e30]: /
+    - link "Boards" [ref=e146] [cursor=pointer]:
+      - /url: /boards
+    - generic [ref=e32]: /
+    - link "4d608a4e" [ref=e147] [cursor=pointer]:
+      - /url: /boards/4d608a4e
+    - generic [ref=e34]: /
+    - link "Configure" [ref=e148] [cursor=pointer]:
+      - /url: /boards/4d608a4e/configure
+  - main [ref=e36]:
+    - generic [ref=e37]:
+      - 'heading "Configure: Sprint 1" [level=1] [ref=e149]'
+      - generic [ref=e40]:
+        - heading "Swimlanes" [level=2] [ref=e150]
+        - generic [ref=e45] [cursor=pointer]:
+          - generic [ref=e46]: Group by
+          - combobox "Group by" [ref=e151]:
+            - generic [ref=e49]:
+              - generic [ref=e51]: None
+              - img [ref=e54]
+      - list [ref=e57]:
+        - listitem [ref=e58]:
+          - generic [ref=e59]: "::"
+          - generic [ref=e60]: To Do
+          - generic [ref=e61]: 2 cards
+          - button "Delete" [active] [ref=e152]:
+            - generic [ref=e64]: Delete
+        - listitem [ref=e67]:
+          - generic [ref=e68]: "::"
+          - generic [ref=e69]: In Progress
+          - generic [ref=e70]: 0 cards
+          - button "Delete" [ref=e153]:
+            - generic [ref=e73]: Delete
+        - listitem [ref=e76]:
+          - generic [ref=e77]: "::"
+          - generic [ref=e78]: Done
+          - generic [ref=e79]: 1 cards
+          - button "Delete" [ref=e154]:
+            - generic [ref=e82]: Delete
+  - contentinfo [ref=e85]: © The Upper Room

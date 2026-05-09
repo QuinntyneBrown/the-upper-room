@@ -1,0 +1,5 @@
+[GET] http://localhost:4200/api/v1/users/me => [200] OK
+[GET] http://localhost:4200/api/v1/notifications => [200] OK
+[GET] http://localhost:4200/api/v1/boards/4d608a4e => [200] OK
+[GET] http://localhost:4200/api/v1/cities => [200] OK
+[PATCH] http://localhost:4200/api/v1/boards/4d608a4e => [200] OK
