@@ -1,6 +1,6 @@
 # TASK-UI-007 — Migrate `audit-log.html` to Angular Material / Component Library
 
-**Status:** Draft  
+**Status:** Accepted  
 **Priority:** P2  
 **Effort:** Small (< 1 day)  
 **File:** `frontend/projects/the-upper-room/src/app/admin/audit-log/audit-log.html`
