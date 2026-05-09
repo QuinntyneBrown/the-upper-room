@@ -9,15 +9,12 @@
         <h2 data-testid="user-drawer-name">{{ u.name }}</h2>
         <p>{{ u.email }}</p>
       </div>
-      <button
-        data-testid="user-drawer-close"
-        type="button"
-        class="icon-btn"
-        aria-label="Close"
-        (click)="closed.emit()"
-      >
-        ×
-      </button>
+      <tar-icon-button
+        testId="user-drawer-close"
+        icon="close"
+        ariaLabel="Close"
+        (clicked)="closed.emit()"
+      />
     </header>
 
     <dl class="meta">
@@ -28,15 +25,12 @@
       <div>
         <dt>Role</dt>
         <dd>
-          <select
-            data-testid="user-drawer-role-select"
+          <tar-select
+            testId="user-drawer-role-select"
             [value]="u.role"
-            (change)="onRole($any($event.target).value)"
-          >
-            @for (r of roles; track r) {
-              <option [value]="r">{{ r }}</option>
-            }
-          </select>
+            [options]="roleOptions"
+            (valueChange)="onRole($event)"
+          />
         </dd>
       </div>
       <div>
@@ -50,31 +44,16 @@
     </dl>
 
     <div class="actions">
-      <button
-        data-testid="user-drawer-reset-password"
-        type="button"
-        class="btn btn--ghost"
-        (click)="resetPasswordRequested.emit(u)"
-      >
+      <tar-button variant="outlined" testId="user-drawer-reset-password" type="button" (clicked)="resetPasswordRequested.emit(u)">
         Reset password
-      </button>
+      </tar-button>
       @if (!isSelf()) {
-        <button
-          data-testid="user-drawer-disable"
-          type="button"
-          class="btn btn--ghost"
-          (click)="disableRequested.emit(u)"
-        >
+        <tar-button variant="outlined" testId="user-drawer-disable" type="button" (clicked)="disableRequested.emit(u)">
           Disable
-        </button>
-        <button
-          data-testid="user-drawer-delete"
-          type="button"
-          class="btn btn--danger"
-          (click)="deleteRequested.emit(u)"
-        >
+        </tar-button>
+        <tar-button variant="filled" color="warn" testId="user-drawer-delete" type="button" (clicked)="deleteRequested.emit(u)">
           Delete
-        </button>
+        </tar-button>
       }
     </div>
   </aside>

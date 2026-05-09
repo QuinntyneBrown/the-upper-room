@@ -1,6 +1,6 @@
 # TASK-UI-014 — Migrate `user-detail-drawer.html` (domain) to Angular Material / Component Library
 
-**Status:** Accepted  
+**Status:** Complete  
 **Priority:** P1  
 **Effort:** Small (< 1 day)  
 **File:** `frontend/projects/domain/src/lib/users/user-detail-drawer/user-detail-drawer.html`
@@ -65,13 +65,13 @@
 
 ## Acceptance Criteria
 
-- [ ] Close button (`icon-btn`) → `tar-icon-button icon="close"`
-- [ ] Role select → `tar-select` with computed `roleOptions`
-- [ ] Reset password button → `tar-button variant="outlined"`
-- [ ] Disable button → `tar-button variant="outlined"` (inside `@if (!isSelf())` guard — preserve)
-- [ ] Delete button → `tar-button` with destructive styling (inside `@if (!isSelf())` guard — preserve)
-- [ ] All `data-testid` attributes preserved via `testId` inputs
-- [ ] `closed`, `disableRequested`, `roleChanged`, `resetPasswordRequested`, `deleteRequested` outputs still emit
+- [x] Close button (`icon-btn`) → `tar-icon-button icon="close"`
+- [x] Role select → `tar-select` with computed `roleOptions`
+- [x] Reset password button → `tar-button variant="outlined"`
+- [x] Disable button → `tar-button variant="outlined"` (inside `@if (!isSelf())` guard — preserve)
+- [x] Delete button → `tar-button` with destructive styling (inside `@if (!isSelf())` guard — preserve)
+- [x] All `data-testid` attributes preserved via `testId` inputs
+- [x] `closed`, `disableRequested`, `roleChanged`, `resetPasswordRequested`, `deleteRequested` outputs still emit
 
 ## Notes
 

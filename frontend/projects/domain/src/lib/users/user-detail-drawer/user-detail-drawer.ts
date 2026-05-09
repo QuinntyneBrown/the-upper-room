@@ -1,10 +1,12 @@
 // traces_to: L2-028
 import { Component, EventEmitter, Input, Output, computed, inject, signal } from '@angular/core';
 import { UserRow } from 'api';
+import { TarButton, TarIconButton, TarSelect } from 'components';
 import { PERMISSIONS_SERVICE } from '../../rbac/permissions.contract';
 
 @Component({
   selector: 'tar-user-detail-drawer',
+  imports: [TarButton, TarIconButton, TarSelect],
   templateUrl: './user-detail-drawer.html',
   styleUrl: './user-detail-drawer.scss',
 })
@@ -22,6 +24,7 @@ export class UserDetailDrawer {
 
   protected readonly _user = signal<UserRow | null>(null);
   protected readonly roles = ['SystemAdmin', 'CityLead', 'Member', 'Guest'];
+  protected readonly roleOptions = this.roles.map((r) => ({ label: r, value: r }));
 
   protected readonly isSelf = computed(() => this._user()?.id === this.perms.snapshot().userId);
 
