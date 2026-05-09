@@ -13,7 +13,7 @@ namespace TheUpperRoom.Api.Dashboard;
 [ApiController]
 [Authorize]
 [Route("api/v1/dashboard")]
-public sealed class DashboardController(ContactsDbContext contactsDb, EventsDbContext eventsDb, IdeasDbContext ideasDb) : ControllerBase
+public sealed class DashboardController(ContactsDbContext contactsDb, EventsDbContext eventsDb, IdeasDbContext ideasDb, KanbanDbContext kanbanDb) : ControllerBase
 {
     [HttpGet]
     public IActionResult Get()
@@ -36,7 +36,7 @@ public sealed class DashboardController(ContactsDbContext contactsDb, EventsDbCo
             .Select(e => new { id = e.Id, title = e.Title, startAt = e.StartAt.ToString("O"), location = e.Location })
             .ToList();
 
-        var boardGroups = BoardsController.GetMyBoardGroups(user.Id)
+        var boardGroups = BoardsController.GetMyBoardGroups(user.Id, kanbanDb)
             .Select(g => new { boardId = g.BoardId, boardTitle = g.BoardTitle, cards = g.Cards })
             .ToList();
 
