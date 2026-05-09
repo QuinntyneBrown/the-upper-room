@@ -8,12 +8,15 @@ import {
   signal,
 } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTableModule } from '@angular/material/table';
 import {
   ConfirmService,
   SnackbarService,
   TarButton,
   TarEmptyState,
   TarSearchField,
+  TarSelect,
 } from 'components';
 import { InvitePayload, UserRow } from 'api';
 import { InviteUserDialog, UserDetailDrawer } from 'domain';
@@ -34,6 +37,9 @@ type RoleFilter = (typeof ROLES)[number];
     TarEmptyState,
     TarSearchField,
     TarButton,
+    TarSelect,
+    MatChipsModule,
+    MatTableModule,
     InviteUserDialog,
     UserDetailDrawer,
   ],
@@ -55,6 +61,12 @@ export class UserList implements OnDestroy {
   protected readonly total = signal(0);
   protected readonly isEmpty = computed(() => this.users().length === 0);
   protected readonly roles = ROLES;
+  protected readonly displayedColumns = ['name', 'email', 'role', 'city', 'status', 'lastSignIn'];
+  protected readonly pageSizeOptions = [
+    { label: '25', value: '25' },
+    { label: '50', value: '50' },
+    { label: '100', value: '100' },
+  ];
 
   protected readonly inviteOpen = signal(false);
   protected readonly inviteEmailError = signal<string | null>(null);

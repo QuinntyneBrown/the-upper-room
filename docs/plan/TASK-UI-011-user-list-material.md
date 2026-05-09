@@ -1,6 +1,6 @@
 # TASK-UI-011 — Migrate `user-list.html` to Angular Material / Component Library
 
-**Status:** Accepted  
+**Status:** Complete  
 **Priority:** P2  
 **Effort:** Small (< 1 day)  
 **File:** `frontend/projects/the-upper-room/src/app/users/user-list/user-list.html`
@@ -93,13 +93,13 @@
 
 ## Acceptance Criteria
 
-- [ ] Role filter chips → `mat-chip-listbox` with `mat-chip-option` (or `tar-chip-set` if it supports toggle mode)
-- [ ] Page-size select → `tar-select`
-- [ ] Raw `<table>` → `mat-table` with named column definitions
-- [ ] Row click (`selectUser`) preserved on `mat-row`
-- [ ] `data-testid="user-row-{email}"` preserved via `[attr.data-testid]` on `mat-row`
-- [ ] Role badge `<span class="user-list__role">` inside role column — keep as-is or use `mat-chip`
-- [ ] Existing compliant elements (`tar-button`, `tar-search-field`, `tar-empty-state`) untouched
+- [x] Role filter chips → `mat-chip-listbox` with `mat-chip-option` (or `tar-chip-set` if it supports toggle mode)
+- [x] Page-size select → `tar-select`
+- [x] Raw `<table>` → `mat-table` with named column definitions
+- [x] Row click (`selectUser`) preserved on `mat-row`
+- [x] `data-testid="user-row-{email}"` preserved via `[attr.data-testid]` on `mat-row`
+- [x] Role badge `<span class="user-list__role">` inside role column — keep as-is or use `mat-chip`
+- [x] Existing compliant elements (`tar-button`, `tar-search-field`, `tar-empty-state`) untouched
 
 ## Notes
 
