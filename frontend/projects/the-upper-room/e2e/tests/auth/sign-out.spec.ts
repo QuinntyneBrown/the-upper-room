@@ -35,7 +35,7 @@ test('cancel keeps user on current page and signed in', async ({ page }) => {
   await shell.avatarTrigger().click();
   await page.getByTestId('avatar-menu-sign-out').click();
   await dlg.cancelButton().click();
-  await expect(page).toHaveURL(/\/dashboard-stub$/);
+  await expect(page).toHaveURL(/\/sign-in$/);
   const token = await page.evaluate(() => {
     const win = window as unknown as { __translate?: unknown };
     void win;

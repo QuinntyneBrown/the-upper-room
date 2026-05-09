@@ -1,7 +1,7 @@
 ---
 id: TASK-0211
 title: Remove Stub placeholder component
-status: Accepted
+status: Done
 phase: P
 depends_on: []
 traces_to: []
