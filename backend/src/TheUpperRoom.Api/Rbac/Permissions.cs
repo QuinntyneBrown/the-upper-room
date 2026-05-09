@@ -33,10 +33,14 @@ public static class Permissions
         return list.ToArray();
     }
 
-    private static string[] CityLeadPermissions() =>
-        (from r in CityLeadResources
-         from a in CityLeadActions
-         select $"{r}:{a}").ToArray();
+    private static string[] CityLeadPermissions()
+    {
+        var list = (from r in CityLeadResources
+                    from a in CityLeadActions
+                    select $"{r}:{a}").ToList();
+        list.Add("KanbanBoard:Configure");
+        return list.ToArray();
+    }
 
     private static string[] MemberPermissions()
     {

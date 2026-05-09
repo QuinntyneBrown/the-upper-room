@@ -43,6 +43,7 @@ public static class RoleCatalog
     private static Permission[] SystemAdminPermissions() =>
     [
         .. CityLeadPermissions(),
+        new(PermissionResources.KanbanBoard, PermissionActions.Configure),
         new(PermissionResources.User, PermissionActions.Manage),
         new(PermissionResources.Role, PermissionActions.Manage),
         new(PermissionResources.Audit, PermissionActions.Read),
@@ -50,9 +51,12 @@ public static class RoleCatalog
     ];
 
     private static Permission[] CityLeadPermissions() =>
-        (from resource in CityLeadResources
-         from action in CityLeadActions
-         select new Permission(resource, action)).ToArray();
+    [
+        .. (from resource in CityLeadResources
+            from action in CityLeadActions
+            select new Permission(resource, action)),
+        new(PermissionResources.KanbanBoard, PermissionActions.Configure),
+    ];
 
     private static Permission[] MemberPermissions()
     {

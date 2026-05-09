@@ -8,5 +8,6 @@ public static class PermissionActions
     public const string Delete = "Delete";
     public const string Manage = "Manage";
     public const string RSVP = "RSVP";
+    public const string Configure = "Configure";
     public const string Switch = "Switch";
 }
