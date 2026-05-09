@@ -1,11 +1,23 @@
 // traces_to: L2-029, L2-030, L2-112
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, computed, effect, inject, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { MatChipsModule } from '@angular/material/chips';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CITY_SCOPE_SERVICE, PERMISSIONS_SERVICE } from 'domain';
-import { TarEmptyState, TarAvatar } from 'components';
+import { TarEmptyState, TarAvatar, TarButton, TarSearchField } from 'components';
 
 export interface ContactPhone {
   readonly value: string;
@@ -35,7 +47,7 @@ const PAGE_SIZE = 25;
 
 @Component({
   selector: 'app-contact-list',
-  imports: [RouterLink, TarEmptyState, TarAvatar],
+  imports: [RouterLink, MatChipsModule, TarEmptyState, TarAvatar, TarButton, TarSearchField],
   templateUrl: './contact-list.html',
   styleUrl: './contact-list.scss',
 })

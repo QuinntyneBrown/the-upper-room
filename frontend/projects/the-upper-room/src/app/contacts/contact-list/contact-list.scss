@@ -1,4 +1,4 @@
-// traces_to: L2-029, L2-030
+/* traces_to: L2-029, L2-030 */
 :host {
   display: flex;
   flex-direction: column;
@@ -15,48 +15,26 @@
   flex-wrap: wrap;
 }
 
-.search-input {
+tar-search-field {
   flex: 1;
   min-width: 160px;
-  padding: var(--md-sys-space-2) var(--md-sys-space-3);
-  border-radius: var(--md-sys-shape-corner-extra-small);
-  border: 1px solid var(--md-sys-color-outline);
-  font: var(--md-sys-typescale-body-medium);
-  background: var(--md-sys-color-surface);
-  color: inherit;
 }
 
-.filter-chip {
-  padding: var(--md-sys-space-1) var(--md-sys-space-3);
-  border-radius: var(--md-sys-shape-corner-full);
-  border: 1px solid var(--md-sys-color-outline);
-  background: transparent;
-  font: var(--md-sys-typescale-label-medium);
-  cursor: pointer;
-  color: inherit;
-
-  &--active {
-    background: var(--md-sys-color-secondary-container);
-    color: var(--md-sys-color-on-secondary-container);
-    border-color: transparent;
-  }
+.contact-filter {
+  align-self: flex-start;
+  margin-top: var(--md-sys-space-1);
 }
 
-.btn-filled {
-  border: 0;
-  border-radius: var(--md-sys-shape-corner-full);
-  padding: var(--md-sys-space-2) var(--md-sys-space-6);
-  background: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
-  font: var(--md-sys-typescale-label-large);
-  cursor: pointer;
+.contacts-new {
+  align-self: flex-start;
+  margin-top: var(--md-sys-space-1);
 }
 
-.btn-filled--toolbar {
+.contacts-new--toolbar {
   display: none;
 
   @media (min-width: 768px) {
-    display: inline-flex;
+    display: inline-block;
   }
 }
 
@@ -124,7 +102,7 @@
 .tag-chip {
   display: inline-flex;
   align-items: center;
-  padding: 2px var(--md-sys-space-2);
+  padding: var(--md-sys-space-1) var(--md-sys-space-2);
   border-radius: var(--md-sys-shape-corner-full);
   font: var(--md-sys-typescale-label-small);
   background: var(--md-sys-color-secondary-container);

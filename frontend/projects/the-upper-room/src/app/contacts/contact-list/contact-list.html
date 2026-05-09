@@ -1,25 +1,28 @@
 <div class="toolbar">
-  <input
-    data-testid="contacts-search"
-    class="search-input"
-    type="search"
-    placeholder="Search contacts…"
+  <tar-search-field
+    testId="contacts-search"
+    placeholder="Search contacts"
     [value]="searchQuery()"
-    (input)="onSearch($any($event.target).value)"
+    (valueChange)="onSearch($event)"
   />
-  <button
-    data-testid="contacts-filter-archived"
-    type="button"
-    class="filter-chip"
-    [class.filter-chip--active]="showArchived()"
-    (click)="toggleArchived()"
-  >
-    Archived
-  </button>
+  <mat-chip-listbox class="contact-filter" aria-label="Contact filters">
+    <mat-chip-option
+      data-testid="contacts-filter-archived"
+      [selected]="showArchived()"
+      (click)="toggleArchived()"
+    >
+      Archived
+    </mat-chip-option>
+  </mat-chip-listbox>
   @if (canCreate()) {
-    <a data-testid="contacts-new-button" routerLink="/contacts/new" class="btn-filled btn-filled--toolbar">
+    <tar-button
+      class="contacts-new contacts-new--toolbar"
+      testId="contacts-new-button"
+      routerLink="/contacts/new"
+      icon="person_add"
+    >
       New contact
-    </a>
+    </tar-button>
   }
 </div>
 
@@ -31,21 +34,34 @@
       body="Add your first contact to get started."
     >
       @if (canCreate()) {
-        <a data-testid="contacts-new-button" routerLink="/contacts/new" class="btn-filled">
+        <tar-button
+          class="contacts-new"
+          testId="contacts-new-button"
+          routerLink="/contacts/new"
+          icon="person_add"
+        >
           New contact
-        </a>
+        </tar-button>
       }
     </tar-empty-state>
   </div>
 } @else {
   <div data-testid="contacts-grid" class="contact-grid">
     @for (contact of contacts(); track contact.id) {
-      <a [attr.data-testid]="'contact-card-' + contact.name" [routerLink]="['/contacts', contact.id]" class="contact-card" [class.contact-card--archived]="contact.archived">
+      <a
+        [attr.data-testid]="'contact-card-' + contact.name"
+        [routerLink]="['/contacts', contact.id]"
+        class="contact-card"
+        [class.contact-card--archived]="contact.archived"
+      >
         <tar-avatar [user]="avatarUser(contact)" [size]="48" />
         <div class="contact-card__body">
           <span class="contact-card__name">{{ contact.name }}</span>
           @if (contact.title || contact.org) {
-            <span class="contact-card__subtitle">{{ contact.title }}{{ contact.title && contact.org ? ' @ ' : '' }}{{ contact.org }}</span>
+            <span class="contact-card__subtitle"
+              >{{ contact.title }}{{ contact.title && contact.org ? ' @ ' : ''
+              }}{{ contact.org }}</span
+            >
           }
           @if (primaryPhone(contact)) {
             <span class="contact-card__phone">{{ primaryPhone(contact) }}</span>
@@ -71,23 +87,46 @@
   @if (isXs()) {
     <div #scrollSentinel class="scroll-sentinel" aria-hidden="true"></div>
     @if (hasMore()) {
-      <button data-testid="contacts-load-more" type="button" class="btn-load-more" (click)="loadMore()">Load more</button>
+      <button
+        data-testid="contacts-load-more"
+        type="button"
+        class="btn-load-more"
+        (click)="loadMore()"
+      >
+        Load more
+      </button>
     }
   } @else {
     @if (totalPages() > 1) {
       <nav data-testid="contacts-paginator" class="paginator" aria-label="Contacts pagination">
         <span data-testid="contacts-page-info" class="paginator__info">{{ pageInfo() }}</span>
         <div class="paginator__controls">
-          <button type="button" class="paginator__btn" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)">‹ Prev</button>
+          <button
+            type="button"
+            class="paginator__btn"
+            [disabled]="currentPage() === 1"
+            (click)="goToPage(currentPage() - 1)"
+          >
+            ‹ Prev
+          </button>
           @for (p of pages(); track p) {
             <button
               type="button"
               class="paginator__btn"
               [class.paginator__btn--active]="p === currentPage()"
               (click)="goToPage(p)"
-            >{{ p }}</button>
+            >
+              {{ p }}
+            </button>
           }
-          <button type="button" class="paginator__btn" [disabled]="currentPage() === totalPages()" (click)="goToPage(currentPage() + 1)">Next ›</button>
+          <button
+            type="button"
+            class="paginator__btn"
+            [disabled]="currentPage() === totalPages()"
+            (click)="goToPage(currentPage() + 1)"
+          >
+            Next ›
+          </button>
         </div>
       </nav>
     }

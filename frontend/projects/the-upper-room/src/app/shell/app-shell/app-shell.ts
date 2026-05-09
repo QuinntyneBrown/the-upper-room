@@ -2,14 +2,27 @@
 import { Component, HostListener, signal, computed, inject } from '@angular/core';
 import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { TarIconButton, OfflineBanner, breadcrumbsFromUrl, Crumb } from 'components';
 import { SIGN_OUT_SERVICE, TarCitySwitcher, TarNotificationBell } from 'domain';
 import { GlobalSearch } from '../../search/global-search';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, RouterLink, TarIconButton, OfflineBanner, TarCitySwitcher, TarNotificationBell],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    TarIconButton,
+    OfflineBanner,
+    TarCitySwitcher,
+    TarNotificationBell,
+  ],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
 })
@@ -20,7 +33,6 @@ export class AppShell {
   private searchRef: MatDialogRef<GlobalSearch> | null = null;
 
   protected readonly drawerOpen = signal(false);
-  protected readonly avatarMenuOpen = signal(false);
   protected readonly scrolled = signal(false);
   protected readonly url = signal(this.router.url);
   protected readonly crumbs = computed<Crumb[]>(() => breadcrumbsFromUrl(this.url()));
@@ -65,17 +77,12 @@ export class AppShell {
     this.drawerOpen.set(false);
   }
 
-  toggleAvatarMenu(): void {
-    this.avatarMenuOpen.update((v) => !v);
-  }
-
   skipToMain(event: Event): void {
     event.preventDefault();
     document.querySelector<HTMLElement>('main')?.focus();
   }
 
   onSignOut(): void {
-    this.avatarMenuOpen.set(false);
     void this.signOutService.signOut();
   }
 }

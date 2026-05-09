@@ -1,8 +1,17 @@
 // traces_to: L2-060
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  ViewChild,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { TarSearchField } from 'components';
 
 interface SearchResult {
   id: string;
@@ -22,7 +31,7 @@ interface SearchResponse {
 
 @Component({
   selector: 'app-global-search',
-  imports: [MatDialogModule],
+  imports: [MatDialogModule, TarSearchField],
   templateUrl: './global-search.html',
   styleUrl: './global-search.scss',
   host: {
@@ -30,7 +39,7 @@ interface SearchResponse {
   },
 })
 export class GlobalSearch implements AfterViewInit, OnDestroy {
-  @ViewChild('searchInput') inputRef!: ElementRef<HTMLInputElement>;
+  @ViewChild(TarSearchField) searchField?: TarSearchField;
 
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
@@ -45,7 +54,7 @@ export class GlobalSearch implements AfterViewInit, OnDestroy {
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngAfterViewInit(): void {
-    requestAnimationFrame(() => this.inputRef?.nativeElement.focus());
+    requestAnimationFrame(() => this.searchField?.focus());
   }
 
   ngOnDestroy(): void {
@@ -56,10 +65,14 @@ export class GlobalSearch implements AfterViewInit, OnDestroy {
     this.query.set(value);
     this.activeIndex.set(-1);
     if (this.debounceTimer) clearTimeout(this.debounceTimer);
-    if (!value.trim()) { this.results.set([]); return; }
+    if (!value.trim()) {
+      this.results.set([]);
+      return;
+    }
     this.debounceTimer = setTimeout(() => {
-      this.http.get<SearchResponse>(`/api/v1/search?q=${encodeURIComponent(value)}`)
-        .subscribe(r => {
+      this.http
+        .get<SearchResponse>(`/api/v1/search?q=${encodeURIComponent(value)}`)
+        .subscribe((r) => {
           const all = [...r.contacts, ...r.partners, ...r.events, ...r.ideas, ...r.locations];
           this.results.set(all);
         });
@@ -70,10 +83,10 @@ export class GlobalSearch implements AfterViewInit, OnDestroy {
     const len = this.results().length;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      this.activeIndex.update(i => Math.min(i + 1, len - 1));
+      this.activeIndex.update((i) => Math.min(i + 1, len - 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      this.activeIndex.update(i => Math.max(i - 1, -1));
+      this.activeIndex.update((i) => Math.max(i - 1, -1));
     } else if (e.key === 'Enter') {
       const idx = this.activeIndex();
       if (idx >= 0 && idx < len) this.navigate(this.results()[idx]);

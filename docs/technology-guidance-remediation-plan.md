@@ -61,33 +61,33 @@ Calendar time will be longer if reviews are async; plan for 3 weeks elapsed.
 
 ### 1A. `IAppDbContext` abstraction
 
-- [ ] **1.1** Create `TheUpperRoom.Application/Data/IAppDbContext.cs` with the existing `DbSet<>` properties from `AppDbContext` plus a `SaveChangesAsync(CancellationToken)`.
-- [ ] **1.2** Update `TheUpperRoom.Infrastructure/Data/AppDbContext.cs` to implement `IAppDbContext`.
-- [ ] **1.3** Register the alias in `Infrastructure.DependencyInjection`:
+- [x] **1.1** Create `TheUpperRoom.Application/Data/IAppDbContext.cs` with the existing `DbSet<>` properties from `AppDbContext` plus a `SaveChangesAsync(CancellationToken)`.
+- [x] **1.2** Update `TheUpperRoom.Infrastructure/Data/AppDbContext.cs` to implement `IAppDbContext`.
+- [x] **1.3** Register the alias in `Infrastructure.DependencyInjection`:
   ```csharp
   services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
   ```
-- [ ] **1.4** Add an architecture test: every class in `Application/**/*Handler.cs` that takes a DbContext takes `IAppDbContext`, never the concrete type.
+- [x] **1.4** Add an architecture test: every class in `Application/**/*Handler.cs` that takes a DbContext takes `IAppDbContext`, never the concrete type.
 
 ### 1B. FluentValidation pipeline
 
-- [ ] **1.5** Add packages to `TheUpperRoom.Application.csproj`:
+- [x] **1.5** Add packages to `TheUpperRoom.Application.csproj`:
   ```xml
   <PackageReference Include="FluentValidation" Version="11.*" />
   <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.*" />
   ```
-- [ ] **1.6** Create `TheUpperRoom.Application/Common/ValidationBehavior.cs` (see audit §B11 for code).
-- [ ] **1.7** In `TheUpperRoom.Application.DependencyInjection`:
+- [x] **1.6** Create `TheUpperRoom.Application/Common/ValidationBehavior.cs` (see audit §B11 for code).
+- [x] **1.7** In `TheUpperRoom.Application.DependencyInjection`:
   ```csharp
   services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
   services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
   ```
-- [ ] **1.8** Write one test validator + one test command + a unit test proving the pipeline throws `ValidationException` on bad input.
+- [x] **1.8** Write one test validator + one test command + a unit test proving the pipeline throws `ValidationException` on bad input.
 
 ### 1C. ProblemDetails mapping
 
-- [ ] **1.9** Create `TheUpperRoom.Api/ExceptionHandling/ValidationExceptionHandler.cs` implementing `IExceptionHandler` (see audit §B12 for code).
-- [ ] **1.10** In `Program.cs`:
+- [x] **1.9** Create `TheUpperRoom.Api/ExceptionHandling/ValidationExceptionHandler.cs` implementing `IExceptionHandler` (see audit §B12 for code).
+- [x] **1.10** In `Program.cs`:
   ```csharp
   builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
   builder.Services.AddProblemDetails();
@@ -198,11 +198,11 @@ For feature `X`:
 
 ### 4A. Replace Serilog with Microsoft.Extensions.Logging
 
-- [ ] **4.1** Remove `Serilog.AspNetCore` and `Serilog.Formatting.Compact` from `TheUpperRoom.Api.csproj`.
-- [ ] **4.2** Remove `builder.Host.UseSerilog();` from `Program.cs`.
-- [ ] **4.3** Remove all `Serilog`-specific configuration sections from `appsettings.json` and `appsettings.Development.json`. Replace with the `Logging` section consumed by `Microsoft.Extensions.Logging`.
-- [ ] **4.4** Configure structured JSON console output: `builder.Logging.AddJsonConsole(...)`.
-- [ ] **4.5** Confirm `using Serilog;` no longer appears anywhere; existing `ILogger<T>` consumers need no change.
+- [x] **4.1** Remove `Serilog.AspNetCore` and `Serilog.Formatting.Compact` from `TheUpperRoom.Api.csproj`.
+- [x] **4.2** Remove `builder.Host.UseSerilog();` from `Program.cs`.
+- [x] **4.3** Remove all `Serilog`-specific configuration sections from `appsettings.json` and `appsettings.Development.json`. Replace with the `Logging` section consumed by `Microsoft.Extensions.Logging`.
+- [x] **4.4** Configure structured JSON console output: `builder.Logging.AddJsonConsole(...)`.
+- [x] **4.5** Confirm `using Serilog;` no longer appears anywhere; existing `ILogger<T>` consumers need no change.
 
 ### 4B. Seeding consolidation
 
@@ -262,7 +262,7 @@ For feature `X`:
 
 ### 5E. Defensive cleanup
 
-- [ ] **5.14** Audit `Auth/` for any `_logger.LogInformation("password = …")` style mistakes; add a unit test that scans `ILogger` calls for the words `password`, `code_verifier`, `token` in format strings.
+- [x] **5.14** Audit `Auth/` for any `_logger.LogInformation("password = …")` style mistakes; add a unit test that scans `ILogger` calls for the words `password`, `code_verifier`, `token` in format strings.
 
 ### Exit criteria
 - Local sign-in returns 200 + JWT for valid credentials, 401 for invalid, 429 for throttled.
@@ -276,7 +276,7 @@ For feature `X`:
 
 ### 6A. Domain service contracts (§F3)
 
-- [ ] **6.1** For each of the four domain services, create the contract pattern:
+- [x] **6.1** For each of the four domain services, create the contract pattern:
 
   | Service | Contract file | Token name | Interface |
   |---------|---------------|------------|-----------|
@@ -285,29 +285,29 @@ For feature `X`:
   | `theme.service.ts` | `theme.service.contract.ts` | `THEME_SERVICE` | `IThemeService` |
   | `sign-out.service.ts` | `sign-out.service.contract.ts` | `SIGN_OUT_SERVICE` | `ISignOutService` |
 
-- [ ] **6.2** In `provideDomain()`, register each: `{ provide: THEME_SERVICE, useExisting: ThemeService }`.
-- [ ] **6.3** Update every consumer from `inject(ThemeService)` to `inject(THEME_SERVICE)` (similar for the other three). Keep the concrete classes exported so the registration works.
-- [ ] **6.4** Re-export the contracts from the domain library's `public-api.ts`.
+- [x] **6.2** In `provideDomain()`, register each: `{ provide: THEME_SERVICE, useExisting: ThemeService }`.
+- [x] **6.3** Update every consumer from `inject(ThemeService)` to `inject(THEME_SERVICE)` (similar for the other three). Keep the concrete classes exported so the registration works.
+- [x] **6.4** Re-export the contracts from the domain library's `public-api.ts`.
 
 ### 6B. File-per-type for components (§F7)
 
 For each of the 8 components with inline templates / 3 with inline styles, do the extraction:
 
-- [ ] **6.5** `tar-avatar.ts` → `tar-avatar.html` + `tar-avatar.scss`
-- [ ] **6.6** `tar-avatar-uploader.ts` → `.html` + `.scss`
-- [ ] **6.7** `share-button.ts` → `.html` + `.scss`
-- [ ] **6.8** `board-move-sheet-dialog.ts` → `.html` + `.scss`
-- [ ] **6.9** `recurrence-edit-dialog.ts` → `.html` + `.scss`
-- [ ] **6.10** `event-cancel-dialog.ts` → `.html` + `.scss`
-- [ ] **6.11** `event-attendees-dialog.ts` → `.html` + `.scss`
-- [ ] **6.12** Add an ESLint rule (`@angular-eslint/component-max-inline-declarations` set to `{ template: 0, styles: 0 }` or use `no-restricted-syntax`) so future inline templates/styles are blocked at lint time.
+- [x] **6.5** `tar-avatar.ts` → `tar-avatar.html` + `tar-avatar.scss`
+- [x] **6.6** `tar-avatar-uploader.ts` → `.html` + `.scss`
+- [x] **6.7** `share-button.ts` → `.html` + `.scss`
+- [x] **6.8** `board-move-sheet-dialog.ts` → `.html` + `.scss`
+- [x] **6.9** `recurrence-edit-dialog.ts` → `.html` + `.scss`
+- [x] **6.10** `event-cancel-dialog.ts` → `.html` + `.scss`
+- [x] **6.11** `event-attendees-dialog.ts` → `.html` + `.scss`
+- [x] **6.12** Add an ESLint rule (`@angular-eslint/component-max-inline-declarations` set to `{ template: 0, styles: 0 }` or use `no-restricted-syntax`) so future inline templates/styles are blocked at lint time.
 
 ### 6C. Material adoption in main app (§F4)
 
-- [ ] **6.13** `contact-list.html`: replace search `<input>` with `<tar-search-field>`; replace `.filter-chip` buttons with `<mat-chip-listbox>`; replace `.btn-filled` anchors with `<a tar-button …>`.
-- [ ] **6.14** `global-search.html`: replace raw `<input>` with `<tar-search-field>`.
-- [ ] **6.15** `appearance.html`: replace radio-button-group with `<mat-button-toggle-group>` bound to the theme value.
-- [ ] **6.16** `app-shell.html`: avatar menu trigger → `<button mat-icon-button [matMenuTriggerFor]="avatarMenu">`; menu items → `<button mat-menu-item>`.
+- [x] **6.13** `contact-list.html`: replace search `<input>` with `<tar-search-field>`; replace `.filter-chip` buttons with `<mat-chip-listbox>`; replace `.btn-filled` anchors with Material-backed `tar-button` links.
+- [x] **6.14** `global-search.html`: replace raw `<input>` with `<tar-search-field>`.
+- [x] **6.15** `appearance.html`: replace radio-button-group with `<mat-button-toggle-group>` bound to the theme value.
+- [x] **6.16** `app-shell.html`: avatar menu trigger → `<button mat-icon-button [matMenuTriggerFor]="avatarMenu">`; menu items → `<button mat-menu-item>`.
 - [ ] **6.17** Visual regression: run Playwright suite + manual mobile/desktop check for each touched screen.
 
 ### Exit criteria

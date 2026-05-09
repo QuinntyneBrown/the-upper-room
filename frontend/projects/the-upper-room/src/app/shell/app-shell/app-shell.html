@@ -5,7 +5,11 @@
   Skip to main content
 </a>
 
-<header data-testid="top-bar" class="app-shell__top-bar" [class.app-shell__top-bar--elevated]="didScroll">
+<header
+  data-testid="top-bar"
+  class="app-shell__top-bar"
+  [class.app-shell__top-bar--elevated]="didScroll"
+>
   <tar-icon-button
     testId="drawer-toggle"
     icon="menu"
@@ -18,25 +22,21 @@
   <tar-city-switcher />
   <tar-notification-bell />
   <div class="app-shell__avatar">
-    <tar-icon-button
-      testId="avatar-trigger"
-      icon="account_circle"
-      ariaLabel="Account menu"
-      (clicked)="toggleAvatarMenu()"
-    />
-    @if (avatarMenuOpen()) {
-      <div class="app-shell__avatar-menu" role="menu">
-        <button
-          data-testid="avatar-menu-sign-out"
-          type="button"
-          class="app-shell__avatar-item"
-          role="menuitem"
-          (click)="onSignOut()"
-        >
-          Sign out
-        </button>
-      </div>
-    }
+    <button
+      mat-icon-button
+      data-testid="avatar-trigger"
+      type="button"
+      aria-label="Account menu"
+      [matMenuTriggerFor]="avatarMenu"
+    >
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #avatarMenu="matMenu" xPosition="before">
+      <button mat-menu-item data-testid="avatar-menu-sign-out" type="button" (click)="onSignOut()">
+        <mat-icon>logout</mat-icon>
+        <span>Sign out</span>
+      </button>
+    </mat-menu>
   </div>
 </header>
 

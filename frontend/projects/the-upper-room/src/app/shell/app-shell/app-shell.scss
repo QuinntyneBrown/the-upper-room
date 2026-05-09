@@ -1,4 +1,4 @@
-// traces_to: L2-009..L2-014, L2-026
+/* traces_to: L2-009..L2-014, L2-026 */
 @use '../../../../../components/src/lib/breakpoints/mixins' as bp;
 
 :host {
@@ -34,8 +34,7 @@
   background: var(--md-sys-color-surface);
   color: var(--md-sys-color-on-surface);
   box-shadow: none;
-  transition: box-shadow var(--md-sys-motion-duration-medium2)
-    var(--md-sys-motion-easing-standard);
+  transition: box-shadow var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
 
   @include bp.md {
     height: 64px;
@@ -48,33 +47,6 @@
 
 .app-shell__avatar {
   position: relative;
-}
-
-.app-shell__avatar-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: var(--md-sys-space-1);
-  background: var(--md-sys-color-surface-container-high);
-  border-radius: var(--md-sys-shape-corner-small);
-  box-shadow: var(--md-sys-elevation-level-2);
-  min-width: 180px;
-  z-index: 30;
-}
-
-.app-shell__avatar-item {
-  width: 100%;
-  text-align: left;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  padding: var(--md-sys-space-3) var(--md-sys-space-4);
-  font: var(--md-sys-typescale-body-medium);
-  cursor: pointer;
-
-  &:hover {
-    background: var(--md-sys-color-surface-container-highest);
-  }
 }
 
 .app-shell__drawer-toggle {
@@ -100,8 +72,7 @@
   background: var(--md-sys-color-surface-container);
   transform: translateX(-100%);
   z-index: 20;
-  transition: transform var(--md-sys-motion-duration-medium2)
-    var(--md-sys-motion-easing-standard);
+  transition: transform var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
 
   @include bp.lg {
     transform: translateX(0);

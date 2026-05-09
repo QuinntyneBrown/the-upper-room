@@ -4,6 +4,7 @@
   }
   <mat-icon matIconPrefix class="tar-search-field__icon">search</mat-icon>
   <input
+    #inputElement
     matInput
     class="tar-search-field__input"
     type="search"
@@ -11,8 +12,10 @@
     [placeholder]="placeholder"
     [disabled]="disabled"
     [attr.aria-label]="ariaLabel || label || placeholder"
+    [attr.autocomplete]="autocomplete"
     [attr.data-testid]="testId"
     (input)="onInput($event)"
+    (keydown)="searchKeydown.emit($event)"
   />
   @if (value) {
     <button

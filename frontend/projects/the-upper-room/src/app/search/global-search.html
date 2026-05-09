@@ -1,16 +1,11 @@
 <div class="global-search-dialog">
   <div class="global-search__input-wrap">
-    <span class="material-symbols-outlined global-search__icon">search</span>
-    <input
-      #searchInput
-      data-testid="global-search-input"
-      type="text"
-      class="global-search__input"
+    <tar-search-field
+      testId="global-search-input"
       placeholder="Search contacts, partners, events…"
       [value]="query()"
-      (input)="onInput($any($event.target).value)"
-      (keydown)="onKeydown($event)"
-      autocomplete="off"
+      (valueChange)="onInput($event)"
+      (searchKeydown)="onKeydown($event)"
     />
   </div>
 
@@ -24,7 +19,9 @@
           role="option"
           (click)="navigate(result)"
         >
-          <span class="material-symbols-outlined global-search__result-icon">{{ typeIcon(result.type) }}</span>
+          <span class="material-symbols-outlined global-search__result-icon">{{
+            typeIcon(result.type)
+          }}</span>
           <div class="global-search__result-text">
             <span class="global-search__result-title">{{ result.title }}</span>
             @if (result.subtitle) {

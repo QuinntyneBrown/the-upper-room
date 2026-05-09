@@ -419,7 +419,7 @@ Confirm every list view renders the right `tar-empty-state` when its data set is
 **Behavior verification**
 
 - Response header `X-Correlation-Id` echoes whatever the client sent (or a server-generated guid if none) — see `backend/src/TheUpperRoom.Api/Program.cs:55-62`.
-- Server-side log entries include the same correlation id (visible in `InMemorySink` logs).
+- Server-side log entries include the same correlation id in the Microsoft logging scope.
 
 **Pass criteria**: round-trip correlation works.
 
@@ -436,7 +436,7 @@ Confirm every list view renders the right `tar-empty-state` when its data set is
 
 **Behavior verification**
 
-- The `SensitiveFieldScrubber` Serilog enricher (`backend/src/TheUpperRoom.Api/Logging/`, registered at `Program.cs:9`) removes/masks `password` and similar fields.
+- Logging avoids request bodies and sensitive headers, and the automated logger-template scan fails if source log messages name `password`, `code_verifier`, or `token`.
 
 **Pass criteria**: no plaintext password in logs.
 

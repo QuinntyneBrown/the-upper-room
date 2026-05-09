@@ -1,16 +1,17 @@
 <h1 class="appearance__title">Appearance</h1>
-<div class="appearance__options" role="radiogroup" aria-label="Theme mode">
+<mat-button-toggle-group
+  class="appearance__options"
+  aria-label="Theme mode"
+  [value]="theme.mode()"
+  (change)="theme.setMode($event.value)"
+>
   @for (m of modes; track m) {
-    <button
+    <mat-button-toggle
       [attr.data-testid]="'theme-option-' + m"
-      type="button"
       class="appearance__option"
-      [class.appearance__option--active]="theme.mode() === m"
-      role="radio"
-      [attr.aria-checked]="theme.mode() === m"
-      (click)="theme.setMode(m)"
+      [value]="m"
     >
       {{ m }}
-    </button>
+    </mat-button-toggle>
   }
-</div>
+</mat-button-toggle-group>

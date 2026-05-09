@@ -2,10 +2,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Serilog;
-using Serilog.Context;
 using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Cities;
 using TheUpperRoom.Api.Contacts;
@@ -14,25 +11,19 @@ using TheUpperRoom.Api.ExceptionHandling;
 using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
-using TheUpperRoom.Api.Logging;
 using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
 using TheUpperRoom.Application;
 using TheUpperRoom.Infrastructure;
 using TheUpperRoom.Infrastructure.Seeding;
 
-if (Log.Logger.GetType().Name == "SilentLogger")
-{
-    Log.Logger = new LoggerConfiguration()
-        .MinimumLevel.Information()
-        .Enrich.With<SensitiveFieldScrubber>()
-        .Enrich.FromLogContext()
-        .WriteTo.Console(formatter: new Serilog.Formatting.Compact.CompactJsonFormatter())
-        .CreateLogger();
-}
-
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseSerilog();
+builder.Logging.ClearProviders();
+builder.Logging.AddJsonConsole(options =>
+{
+    options.IncludeScopes = true;
+    options.TimestampFormat = "O";
+});
 builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddProblemDetails();
@@ -185,11 +176,27 @@ app.Use(async (ctx, next) =>
     var correlationId = ctx.Request.Headers["X-Correlation-Id"].FirstOrDefault()
         ?? Guid.NewGuid().ToString();
     ctx.Response.Headers["X-Correlation-Id"] = correlationId;
-    using (LogContext.PushProperty("CorrelationId", correlationId))
-        await next();
+
+    using (app.Logger.BeginScope(new Dictionary<string, object?>
+    {
+        ["CorrelationId"] = correlationId,
+    }))
+    {
+        try
+        {
+            await next();
+        }
+        finally
+        {
+            app.Logger.LogInformation(
+                "HTTP {Method} {Path} responded {StatusCode}",
+                ctx.Request.Method,
+                ctx.Request.Path.Value,
+                ctx.Response.StatusCode);
+        }
+    }
 });
 
-app.UseSerilogRequestLogging();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

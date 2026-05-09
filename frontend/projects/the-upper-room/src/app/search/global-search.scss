@@ -1,11 +1,13 @@
-// traces_to: L2-060
-:host { display: contents; }
+/* traces_to: L2-060 */
+:host {
+  display: contents;
+}
 
 .global-search-backdrop {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(0,0,0,.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   padding-top: 15vh;
@@ -20,30 +22,12 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .global-search__input-wrap {
-  display: flex;
-  align-items: center;
-  gap: var(--md-sys-space-2);
   padding: var(--md-sys-space-3) var(--md-sys-space-4);
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
-}
-
-.global-search__icon {
-  color: var(--md-sys-color-on-surface-variant);
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.global-search__input {
-  flex: 1;
-  border: none;
-  outline: none;
-  background: transparent;
-  font: var(--md-sys-typescale-body-large);
-  color: var(--md-sys-color-on-surface);
 }
 
 .global-search__results {
@@ -60,7 +44,8 @@
   padding: var(--md-sys-space-2) var(--md-sys-space-4);
   cursor: pointer;
 
-  &:hover, &--active {
+  &:hover,
+  &--active {
     background: var(--md-sys-color-surface-variant);
   }
 }
