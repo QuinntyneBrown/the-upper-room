@@ -1,7 +1,7 @@
 ---
 id: TASK-0150
 title: Notification data model + API + dispatch service
-status: Accepted
+status: Completed
 phase: No
 depends_on: [TASK-0033]
 traces_to: [L2-062, L2-063]
