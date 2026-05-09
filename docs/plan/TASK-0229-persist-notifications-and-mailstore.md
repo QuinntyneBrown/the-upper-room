@@ -1,7 +1,7 @@
 ---
 id: TASK-0229
 title: Persist Notifications, preferences, and MailStore in database
-status: Accepted
+status: Done
 phase: P
 depends_on: []
 traces_to: []
