@@ -1,0 +1,87 @@
+// traces_to: L2-057, L2-058
+:host {
+  display: block;
+  padding: var(--md-sys-space-4);
+}
+
+.locations-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--md-sys-space-4);
+}
+
+.locations-header__title {
+  font: var(--md-sys-typescale-headline-small);
+  margin: 0;
+}
+
+.btn-primary {
+  border: none;
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: var(--md-sys-space-2) var(--md-sys-space-4);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-label-large);
+  cursor: pointer;
+}
+
+.locations-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--md-sys-space-3);
+
+  @media (min-width: 768px) { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 1200px) { grid-template-columns: repeat(3, 1fr); }
+}
+
+.location-card {
+  background: var(--md-sys-color-surface-container);
+  border-radius: var(--md-sys-shape-corner-medium);
+  padding: var(--md-sys-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--md-sys-space-2);
+}
+
+.location-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--md-sys-space-2);
+}
+
+.location-card__name {
+  font: var(--md-sys-typescale-title-medium);
+  margin: 0;
+  color: var(--md-sys-color-on-surface);
+}
+
+.location-card__archived-badge {
+  font: var(--md-sys-typescale-label-small);
+  padding: 2px var(--md-sys-space-2);
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.location-card__address,
+.location-card__capacity {
+  font: var(--md-sys-typescale-body-small);
+  color: var(--md-sys-color-on-surface-variant);
+  margin: 0;
+}
+
+.location-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+.btn-danger-text {
+  border: none;
+  background: transparent;
+  color: var(--md-sys-color-error);
+  font: var(--md-sys-typescale-label-medium);
+  cursor: pointer;
+  padding: var(--md-sys-space-1) var(--md-sys-space-2);
+}

@@ -1,0 +1,115 @@
+<header class="form-header">
+  <h1 class="form-header__title">New Location</h1>
+</header>
+
+<form class="location-form" (submit)="onSubmit($event)" novalidate>
+  <div class="form-field">
+    <label for="location-name" class="form-label">Name <span class="required">*</span></label>
+    <input
+      id="location-name"
+      data-testid="location-name"
+      type="text"
+      class="form-input"
+      [class.form-input--error]="nameError()"
+      [value]="name()"
+      (input)="name.set($any($event.target).value)"
+      autocomplete="off"
+    />
+    @if (nameError()) {
+      <p class="form-error">{{ nameError() }}</p>
+    }
+  </div>
+
+  <div class="form-field">
+    <label for="location-street" class="form-label">Street</label>
+    <input
+      id="location-street"
+      data-testid="location-street"
+      type="text"
+      class="form-input"
+      [value]="street()"
+      (input)="street.set($any($event.target).value)"
+    />
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="location-city" class="form-label">City</label>
+      <input
+        id="location-city"
+        data-testid="location-city"
+        type="text"
+        class="form-input"
+        [value]="city()"
+        (input)="city.set($any($event.target).value)"
+      />
+    </div>
+    <div class="form-field">
+      <label for="location-state" class="form-label">State / Province</label>
+      <input
+        id="location-state"
+        data-testid="location-state"
+        type="text"
+        class="form-input"
+        [value]="state()"
+        (input)="state.set($any($event.target).value)"
+      />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="location-country" class="form-label">Country</label>
+      <input
+        id="location-country"
+        data-testid="location-country"
+        type="text"
+        class="form-input"
+        [value]="country()"
+        (input)="country.set($any($event.target).value)"
+      />
+    </div>
+    <div class="form-field">
+      <label for="location-postal-code" class="form-label">Postal Code</label>
+      <input
+        id="location-postal-code"
+        data-testid="location-postal-code"
+        type="text"
+        class="form-input"
+        [value]="postalCode()"
+        (input)="postalCode.set($any($event.target).value)"
+      />
+    </div>
+  </div>
+
+  <div class="form-field">
+    <label for="location-capacity" class="form-label">Capacity</label>
+    <input
+      id="location-capacity"
+      data-testid="location-capacity"
+      type="number"
+      class="form-input"
+      [class.form-input--error]="capacityError()"
+      [value]="capacity()"
+      (input)="capacity.set($any($event.target).value)"
+      min="1"
+    />
+    @if (capacityError()) {
+      <p data-testid="location-capacity-error" class="form-error">{{ capacityError() }}</p>
+    }
+  </div>
+
+  <div class="form-actions">
+    <button
+      data-testid="location-cancel"
+      type="button"
+      class="btn-outlined"
+      (click)="onCancel()"
+    >Cancel</button>
+    <button
+      data-testid="location-submit"
+      type="submit"
+      class="btn-primary"
+    >Create location</button>
+  </div>
+</form>

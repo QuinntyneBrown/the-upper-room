@@ -1,0 +1,45 @@
+<header class="locations-header">
+  <h1 class="locations-header__title">Locations</h1>
+  <button
+    data-testid="locations-new-button"
+    type="button"
+    class="btn-primary"
+    (click)="goToNew()"
+  >New location</button>
+</header>
+
+@if (locations().length === 0) {
+  <tar-empty-state
+    data-testid="locations-empty-state"
+    icon="location_off"
+    heading="No locations yet"
+    body="Add your first venue or location."
+  />
+} @else {
+  <div data-testid="locations-grid" class="locations-grid">
+    @for (loc of locations(); track loc.id) {
+      <article data-testid="location-card" class="location-card">
+        <div class="location-card__header">
+          <h2 class="location-card__name">{{ loc.name }}</h2>
+          @if (loc.archived) {
+            <span class="location-card__archived-badge">Archived</span>
+          }
+        </div>
+        @if (loc.street || loc.city) {
+          <p class="location-card__address">{{ loc.street }}{{ loc.street && loc.city ? ', ' : '' }}{{ loc.city }}</p>
+        }
+        @if (loc.capacity) {
+          <p class="location-card__capacity">Capacity: {{ loc.capacity }}</p>
+        }
+        <div class="location-card__actions">
+          <button
+            data-testid="location-delete"
+            type="button"
+            class="btn-danger-text"
+            (click)="deleteLocation(loc)"
+          >Delete</button>
+        </div>
+      </article>
+    }
+  </div>
+}
