@@ -32,6 +32,11 @@ export class UserListPage {
     return this.page.getByTestId('user-page-size');
   }
 
+  async selectPageSize(value: string): Promise<void> {
+    await this.pageSize().click();
+    await this.page.locator('mat-option').filter({ hasText: value }).click();
+  }
+
   inviteButton(): Locator {
     return this.page.getByTestId('user-invite');
   }

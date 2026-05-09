@@ -79,6 +79,6 @@ test('changing page size updates query', async ({ page }) => {
   await seedAdmin(page);
   const list = new UserListPage(page);
   await list.goto();
-  await list.pageSize().selectOption('50');
+  await list.selectPageSize('50');
   await expect.poll(() => lastUrl).toContain('pageSize=50');
 });
