@@ -1,6 +1,6 @@
 # TASK-UI-001 — Migrate `contact-create.html` to Angular Material / Component Library
 
-**Status:** Draft  
+**Status:** Accepted  
 **Priority:** P1  
 **Effort:** Medium (1–2 days)  
 **File:** `frontend/projects/the-upper-room/src/app/contacts/contact-create/contact-create.html`
