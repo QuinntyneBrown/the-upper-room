@@ -1,7 +1,7 @@
 ---
 id: TASK-0186
 title: Coverage gates in CI
-status: Draft
+status: Accepted
 phase: Z
 depends_on: [TASK-0001]
 traces_to: [L2-101]
