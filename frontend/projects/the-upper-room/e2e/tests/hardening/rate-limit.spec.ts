@@ -1,29 +1,26 @@
 // traces_to: L2-094
 import { test, expect } from '@playwright/test';
 
-test('five failed sign-in attempts triggers rate limit snackbar', async ({ page }) => {
-  let callCount = 0;
-  await page.route('**/api/v1/auth/sign-in', (route) => {
-    callCount++;
-    if (callCount > 5) {
-      route.fulfill({
-        status: 429,
-        headers: { 'Retry-After': '1800' },
-        contentType: 'application/json',
-        body: JSON.stringify({ error: 'rate_limit_exceeded' }),
-      });
-    } else {
-      route.fulfill({ status: 401, contentType: 'application/json', body: JSON.stringify({ error: 'invalid_credentials' }) });
-    }
+test('HTTP 429 from API shows "Too many requests" snackbar', async ({ page }) => {
+  await page.route('**/api/v1/notifications/preferences', (route) => {
+    route.fulfill({
+      status: 429,
+      headers: { 'Retry-After': '60' },
+      contentType: 'application/json',
+      body: JSON.stringify({ error: 'rate_limit_exceeded' }),
+    });
   });
 
-  await page.goto('/sign-in');
+  await page.goto('/dashboard-stub');
+  await page.evaluate(() => {
+    const win = window as unknown as {
+      __setTestToken?: (t: string) => void;
+      __setRbac?: (s: { roles: string[]; permissions: string[] }) => void;
+    };
+    win.__setTestToken?.('user-token');
+    win.__setRbac?.({ roles: ['Member'], permissions: [] });
+  });
 
-  for (let i = 0; i < 5; i++) {
-    await page.getByTestId('email-field').fill('test@example.com');
-    await page.getByTestId('password-field').fill('wrongpass');
-    await page.getByTestId('sign-in-submit').click();
-  }
-
-  await expect(page.locator('tar-snackbar')).toContainText('Too many requests');
+  await page.goto('/settings/notifications');
+  await expect(page.locator('tar-snackbar')).toContainText('Too many requests', { timeout: 3000 });
 });
