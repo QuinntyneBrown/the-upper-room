@@ -40,3 +40,34 @@ body {
 *::after {
   box-sizing: border-box;
 }
+
+// traces_to: L2-119
+@media print {
+  body,
+  html {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .app-shell__top-bar,
+  .app-shell__drawer,
+  .app-shell__drawer-toggle,
+  .app-shell__scrim,
+  .app-shell__footer,
+  .app-shell__breadcrumbs,
+  .fab,
+  tar-snackbar {
+    display: none !important;
+  }
+
+  .app-shell__main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .tag-chip {
+    background: transparent !important;
+    border: 1px solid #000 !important;
+    color: #000 !important;
+  }
+}
