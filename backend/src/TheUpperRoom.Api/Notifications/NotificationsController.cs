@@ -90,22 +90,41 @@ public sealed class NotificationsController : ControllerBase
         foreach (var recipientId in body.RecipientIds)
         {
             var pref = _preferences.FirstOrDefault(p => p.UserId == recipientId && p.Code == body.Code);
-            if (pref is not null && !pref.InApp) continue;
+            var subject = Render(type.Title, data);
+            var bodyText = Render(type.BodyTemplate, data);
 
-            _store.Add(new NotificationRecord
+            if (pref is null || pref.InApp)
             {
-                UserId = recipientId,
-                Code = body.Code,
-                Title = Render(type.Title, data),
-                Body = Render(type.BodyTemplate, data),
-                Data = data,
-                Read = false,
-                CreatedAt = DateTimeOffset.UtcNow,
-                Severity = type.Severity.ToString(),
-            });
+                _store.Add(new NotificationRecord
+                {
+                    UserId = recipientId,
+                    Code = body.Code,
+                    Title = subject,
+                    Body = bodyText,
+                    Data = data,
+                    Read = false,
+                    CreatedAt = DateTimeOffset.UtcNow,
+                    Severity = type.Severity.ToString(),
+                });
+            }
+
+            if (pref is null || pref.Email)
+            {
+                MailStore.Send(recipientId, subject, bodyText);
+            }
         }
 
         return NoContent();
+    }
+
+    [HttpGet("test/sent-mail")]
+    public IActionResult ListSentMail([FromQuery] string? toUserId)
+    {
+        var items = MailStore.Sent
+            .Where(m => toUserId == null || m.ToUserId == toUserId)
+            .Select(m => new { m.ToUserId, m.Subject, m.Body, m.SentAt })
+            .ToList();
+        return Ok(items);
     }
 
     [HttpGet("preferences")]
