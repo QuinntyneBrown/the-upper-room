@@ -1,7 +1,7 @@
 ---
 id: TASK-0190
 title: Extract TarNotes to components library
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0081]
 traces_to: []
