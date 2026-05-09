@@ -1,7 +1,7 @@
 ---
 id: TASK-TC-2.5
 title: 'Run TC-2.5 - Sign-in rate limit: 5 attempts -> 429'
-status: Idle
+status: Completed
 test_id: TC-2.5
 source: ../../test-plan/02-authentication.md
 ---
@@ -19,7 +19,31 @@ Run `TC-2.5` from `docs/test-plan/02-authentication.md` and record the result.
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.
 
+## Result
+
+| Field | Value |
+|---|---|
+| Result | **PASS** |
+| Browser | curl (direct API) |
+| Viewport | N/A |
+| Build SHA | ee1af6b |
+| Tester | Claude (automated) |
+| Run at | 2026-05-09T14:00:00Z |
+
+### Evidence
+
+Posted 5 times to `POST /api/v1/auth/sign-in` with wrong credentials:
+
+| Attempt | Status |
+|---|---|
+| 1 | 401 ✅ |
+| 2 | 401 ✅ |
+| 3 | 401 ✅ |
+| 4 | 401 ✅ |
+| 5 | 429 ✅ |
+
+Rate limit is per-IP, in-memory.
