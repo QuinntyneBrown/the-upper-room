@@ -1,7 +1,7 @@
 ---
 id: TASK-0234
 title: Remove hardcoded SeedUsers and seeded "e-seed" event
-status: Draft
+status: Accepted
 phase: P
 depends_on: [TASK-0221, TASK-0224]
 traces_to: []
