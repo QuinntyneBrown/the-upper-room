@@ -1,7 +1,7 @@
 ---
 id: TASK-0110
 title: Location CRUD + list page
-status: Accepted
+status: Completed
 phase: L
 depends_on: [TASK-0033, TASK-0010]
 traces_to: [L2-057, L2-058]
