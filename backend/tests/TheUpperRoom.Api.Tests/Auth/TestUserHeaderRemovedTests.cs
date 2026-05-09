@@ -18,7 +18,7 @@ public sealed class TestUserHeaderRemovedTests : IClassFixture<WebApplicationFac
     public async Task Header_alone_without_bearer_returns_401_on_authorize_endpoint()
     {
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-Test-User-Id", "admin");
+        client.DefaultRequestHeaders.Add("X-Test-User-Id", "admin"); // intentionally only the legacy header
 
         var response = await client.GetAsync("/api/v1/contacts");
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);

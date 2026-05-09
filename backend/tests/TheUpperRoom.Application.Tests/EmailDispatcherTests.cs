@@ -26,7 +26,7 @@ public sealed class EmailDispatcherTests : IClassFixture<WebApplicationFactory<P
 
         await client.SendAsync(new HttpRequestMessage(HttpMethod.Post, "/api/v1/notifications/dispatch")
         {
-            Headers = { { "X-Test-User-Id", "lead" } },
+            Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("lead")) },
             Content = JsonContent.Create(new
             {
                 code = "invite_sent",
@@ -46,13 +46,13 @@ public sealed class EmailDispatcherTests : IClassFixture<WebApplicationFactory<P
 
         await client.SendAsync(new HttpRequestMessage(HttpMethod.Put, "/api/v1/notifications/preferences")
         {
-            Headers = { { "X-Test-User-Id", "guest" } },
+            Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("guest")) },
             Content = JsonContent.Create(new { code = "welcome", inApp = true, email = false, push = false }),
         });
 
         await client.SendAsync(new HttpRequestMessage(HttpMethod.Post, "/api/v1/notifications/dispatch")
         {
-            Headers = { { "X-Test-User-Id", "lead" } },
+            Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("lead")) },
             Content = JsonContent.Create(new { code = "welcome", recipientIds = new[] { "guest" } }),
         });
 
@@ -62,7 +62,11 @@ public sealed class EmailDispatcherTests : IClassFixture<WebApplicationFactory<P
 
     private async Task<MailDto[]> GetSentMail(HttpClient client, string toUserId)
     {
-        var resp = await client.GetAsync($"/api/v1/notifications/test/sent-mail?toUserId={toUserId}");
+        var req = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/notifications/test/sent-mail?toUserId={toUserId}")
+        {
+            Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("admin")) },
+        };
+        var resp = await client.SendAsync(req);
         Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
         return await resp.Content.ReadFromJsonAsync<MailDto[]>() ?? [];
     }

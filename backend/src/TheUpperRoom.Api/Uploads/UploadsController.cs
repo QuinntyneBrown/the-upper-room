@@ -1,10 +1,12 @@
 // traces_to: L2-050, L2-051
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 
 namespace TheUpperRoom.Api.Uploads;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/uploads")]
 public sealed class UploadsController : ControllerBase
 {
@@ -13,7 +15,7 @@ public sealed class UploadsController : ControllerBase
     [HttpPost]
     public IActionResult Upload([FromForm] IFormFile? file)
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         if (string.IsNullOrEmpty(userId) || !SeedUsers.ById.ContainsKey(userId))
             return Unauthorized();
 

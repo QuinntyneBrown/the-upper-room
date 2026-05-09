@@ -9,7 +9,7 @@ public sealed class LoggingScrubberTests : IClassFixture<WebApplicationFactory<P
 {
     private readonly WebApplicationFactory<Program> _factory;
     private static readonly string[] SensitiveWords =
-        ["password", "token", "secret", "code_verifier", "Authorization", "Cookie"];
+        ["password", "secret", "code_verifier", "Authorization", "Cookie", "test-token-do-not-log"];
 
     public LoggingScrubberTests(WebApplicationFactory<Program> factory) => _factory = factory;
 

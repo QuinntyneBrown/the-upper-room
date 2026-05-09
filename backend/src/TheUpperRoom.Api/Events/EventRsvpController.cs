@@ -1,4 +1,5 @@
 // traces_to: L2-052, L2-055
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 
@@ -9,6 +10,7 @@ public sealed record RsvpResponse(string RsvpStatus, int? WaitlistPosition = nul
 public sealed record PendingRsvpDto(string Id, string UserId, string UserName, string RequestedAt);
 
 [ApiController]
+[Authorize]
 [Route("api/v1/events/{eventId}/rsvp")]
 public sealed class EventRsvpController : ControllerBase
 {
@@ -121,7 +123,7 @@ public sealed class EventRsvpController : ControllerBase
 
     private SeedUser? GetCurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
     }
 }

@@ -14,7 +14,7 @@ public sealed class GetContactsQueryTests : IClassFixture<WebApplicationFactory<
     private HttpRequestMessage Get(string path, string userId)
     {
         var req = new HttpRequestMessage(HttpMethod.Get, path);
-        req.Headers.Add("X-Test-User-Id", userId);
+        req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken(userId));
         return req;
     }
 

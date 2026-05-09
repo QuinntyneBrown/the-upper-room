@@ -66,17 +66,17 @@ public sealed class AuditInterceptorTests : IClassFixture<WebApplicationFactory<
         Assert.Contains(audit.Items, e => e.ActorUserId == "lead" && e.Action == "PermissionDenied");
     }
 
-    private static HttpRequestMessage Patch(string path, object body, string userId = "lead")
+    private HttpRequestMessage Patch(string path, object body, string userId = "lead")
     {
         var req = new HttpRequestMessage(HttpMethod.Patch, path) { Content = JsonContent.Create(body) };
-        req.Headers.Add("X-Test-User-Id", userId);
+        req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken(userId));
         return req;
     }
 
-    private static HttpRequestMessage GetReq(string path, string userId = "lead")
+    private HttpRequestMessage GetReq(string path, string userId = "lead")
     {
         var req = new HttpRequestMessage(HttpMethod.Get, path);
-        req.Headers.Add("X-Test-User-Id", userId);
+        req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken(userId));
         return req;
     }
 

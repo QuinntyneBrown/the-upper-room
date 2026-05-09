@@ -1,4 +1,5 @@
 // traces_to: L2-059
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Contacts;
 using TheUpperRoom.Api.Events;
@@ -10,6 +11,7 @@ using TheUpperRoom.Api.Rbac;
 namespace TheUpperRoom.Api.Dashboard;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/dashboard")]
 public sealed class DashboardController : ControllerBase
 {
@@ -52,7 +54,7 @@ public sealed class DashboardController : ControllerBase
 
     private SeedUser? GetCurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
     }
 }

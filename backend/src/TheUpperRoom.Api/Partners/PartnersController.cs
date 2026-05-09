@@ -1,10 +1,12 @@
 // traces_to: L2-034, L2-035, L2-077
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 
 namespace TheUpperRoom.Api.Partners;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/partners")]
 public sealed class PartnersController : ControllerBase
 {
@@ -135,7 +137,7 @@ public sealed class PartnersController : ControllerBase
 
     private SeedUser? GetCurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
     }
 }

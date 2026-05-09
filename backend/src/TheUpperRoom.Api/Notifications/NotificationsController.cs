@@ -1,4 +1,5 @@
 // traces_to: L2-062, L2-063
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 using TheUpperRoom.Domain.Notifications;
@@ -6,6 +7,7 @@ using TheUpperRoom.Domain.Notifications;
 namespace TheUpperRoom.Api.Notifications;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/notifications")]
 public sealed class NotificationsController : ControllerBase
 {
@@ -190,7 +192,7 @@ public sealed class NotificationsController : ControllerBase
 
     private SeedUser? GetCurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
     }
 }

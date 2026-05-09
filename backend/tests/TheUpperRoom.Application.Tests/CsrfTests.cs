@@ -27,7 +27,7 @@ public sealed class CsrfTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task POST_bearer_endpoint_without_XSRF_token_succeeds()
     {
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-Test-User-Id", "admin");
+        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("admin"));
 
         var resp = await client.PostAsJsonAsync("/api/v1/notifications/read-all", new { });
 

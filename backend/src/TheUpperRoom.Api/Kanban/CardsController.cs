@@ -1,10 +1,12 @@
 // traces_to: L2-045
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 
 namespace TheUpperRoom.Api.Kanban;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/cards")]
 public sealed class CardsController : ControllerBase
 {
@@ -33,7 +35,7 @@ public sealed class CardsController : ControllerBase
 
     private SeedUser? CurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user)
             ? null
             : user;

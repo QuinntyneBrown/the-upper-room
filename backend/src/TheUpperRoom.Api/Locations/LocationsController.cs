@@ -1,10 +1,12 @@
 // traces_to: L2-057, L2-058, L2-113
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 
 namespace TheUpperRoom.Api.Locations;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/locations")]
 public sealed class LocationsController : ControllerBase
 {
@@ -140,7 +142,7 @@ public sealed class LocationsController : ControllerBase
 
     private SeedUser? GetCurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
     }
 }

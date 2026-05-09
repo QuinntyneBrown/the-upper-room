@@ -1,4 +1,5 @@
 // traces_to: L2-052, L2-053, L2-055, L2-056
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 
@@ -20,6 +21,7 @@ public sealed record CreateEventRequest(
     string? RecurrenceRule = null);
 
 [ApiController]
+[Authorize]
 [Route("api/v1/events")]
 public sealed class EventsController : ControllerBase
 {
@@ -233,7 +235,7 @@ public sealed class EventsController : ControllerBase
 
     private SeedUser? GetCurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
     }
 }

@@ -1,4 +1,5 @@
 // traces_to: L2-052, L2-055
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 
@@ -7,6 +8,7 @@ namespace TheUpperRoom.Api.Events;
 public sealed record CancelEventRequest(string? Message = null);
 
 [ApiController]
+[Authorize]
 [Route("api/v1/events/{id}/cancel")]
 public sealed class EventCancelController : ControllerBase
 {
@@ -27,7 +29,7 @@ public sealed class EventCancelController : ControllerBase
 
     private SeedUser? GetCurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
     }
 }

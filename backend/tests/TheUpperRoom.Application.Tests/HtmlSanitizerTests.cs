@@ -15,7 +15,7 @@ public sealed class HtmlSanitizerTests : IClassFixture<WebApplicationFactory<Pro
     public async Task Image_with_onerror_strips_event_handler()
     {
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-Test-User-Id", "admin");
+        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("admin"));
 
         var resp = await client.PostAsJsonAsync("/api/v1/sanitize/test",
             new { html = "<img src=x onerror=alert(1)>" });
@@ -32,7 +32,7 @@ public sealed class HtmlSanitizerTests : IClassFixture<WebApplicationFactory<Pro
     public async Task Script_tag_is_removed_completely()
     {
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-Test-User-Id", "admin");
+        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("admin"));
 
         var resp = await client.PostAsJsonAsync("/api/v1/sanitize/test",
             new { html = "<script>alert(1)</script>foo" });
@@ -47,7 +47,7 @@ public sealed class HtmlSanitizerTests : IClassFixture<WebApplicationFactory<Pro
     public async Task Javascript_href_is_stripped()
     {
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-Test-User-Id", "admin");
+        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("admin"));
 
         var resp = await client.PostAsJsonAsync("/api/v1/sanitize/test",
             new { html = "<a href=\"javascript:alert(1)\">x</a>" });

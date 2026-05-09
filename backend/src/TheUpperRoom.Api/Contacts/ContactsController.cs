@@ -1,5 +1,6 @@
 // traces_to: L2-079
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Audit;
 using TheUpperRoom.Api.Rbac;
@@ -9,6 +10,7 @@ using TheUpperRoom.Domain.Cities;
 namespace TheUpperRoom.Api.Contacts;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/contacts")]
 public sealed class ContactsController : ControllerBase
 {
@@ -154,7 +156,7 @@ public sealed class ContactsController : ControllerBase
 
     private SeedUser? GetCurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
     }
 

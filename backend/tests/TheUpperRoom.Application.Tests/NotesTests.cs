@@ -75,31 +75,31 @@ public sealed class NotesTests : IClassFixture<WebApplicationFactory<Program>>
             : null;
     }
 
-    private static HttpRequestMessage Post(string path, object body, string userId = "lead")
+    private HttpRequestMessage Post(string path, object body, string userId = "lead")
     {
         var req = new HttpRequestMessage(HttpMethod.Post, path) { Content = JsonContent.Create(body) };
-        req.Headers.Add("X-Test-User-Id", userId);
+        req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken(userId));
         return req;
     }
 
-    private static HttpRequestMessage Put(string path, object body, string userId = "lead")
+    private HttpRequestMessage Put(string path, object body, string userId = "lead")
     {
         var req = new HttpRequestMessage(HttpMethod.Put, path) { Content = JsonContent.Create(body) };
-        req.Headers.Add("X-Test-User-Id", userId);
+        req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken(userId));
         return req;
     }
 
-    private static HttpRequestMessage Delete(string path, string userId = "lead")
+    private HttpRequestMessage Delete(string path, string userId = "lead")
     {
         var req = new HttpRequestMessage(HttpMethod.Delete, path);
-        req.Headers.Add("X-Test-User-Id", userId);
+        req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken(userId));
         return req;
     }
 
-    private static HttpRequestMessage GetById(string path, string userId = "lead")
+    private HttpRequestMessage GetById(string path, string userId = "lead")
     {
         var req = new HttpRequestMessage(HttpMethod.Get, path);
-        req.Headers.Add("X-Test-User-Id", userId);
+        req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken(userId));
         return req;
     }
 

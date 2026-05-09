@@ -1,4 +1,5 @@
 // traces_to: L2-060, L2-077
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Contacts;
 using TheUpperRoom.Api.Events;
@@ -12,6 +13,7 @@ namespace TheUpperRoom.Api.Search;
 public sealed record SearchResult(string Id, string Type, string Title, string? Subtitle, string Url);
 
 [ApiController]
+[Authorize]
 [Route("api/v1/search")]
 public sealed class SearchController : ControllerBase
 {
@@ -60,7 +62,7 @@ public sealed class SearchController : ControllerBase
 
     private SeedUser? GetCurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
     }
 }

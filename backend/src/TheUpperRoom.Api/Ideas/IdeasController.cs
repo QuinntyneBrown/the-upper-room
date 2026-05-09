@@ -1,11 +1,13 @@
 // traces_to: L2-048, L2-049, L2-050, L2-051, L2-052
 using Ganss.Xss;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 
 namespace TheUpperRoom.Api.Ideas;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/ideas")]
 public sealed class IdeasController : ControllerBase
 {
@@ -235,7 +237,7 @@ public sealed class IdeasController : ControllerBase
 
     private SeedUser? GetCurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user)
             ? null
             : user;

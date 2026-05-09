@@ -1,5 +1,6 @@
 // traces_to: L2-041, L2-093
 using Ganss.Xss;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 using TheUpperRoom.Domain.Notes;
@@ -7,6 +8,7 @@ using TheUpperRoom.Domain.Notes;
 namespace TheUpperRoom.Api.Notes;
 
 [ApiController]
+[Authorize]
 [Route("api/v1/notes")]
 public sealed class NotesController : ControllerBase
 {
@@ -103,7 +105,7 @@ public sealed class NotesController : ControllerBase
 
     private SeedUser? GetCurrentUser()
     {
-        var userId = Request.Headers["X-Test-User-Id"].ToString();
+        var userId = User.FindFirst("sub")?.Value ?? "";
         return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user)
             ? null
             : user;
