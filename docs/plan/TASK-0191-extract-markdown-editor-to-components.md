@@ -1,7 +1,7 @@
 ---
 id: TASK-0191
 title: Extract MarkdownEditor to components library
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0101]
 traces_to: []
