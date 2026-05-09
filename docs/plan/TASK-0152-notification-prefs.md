@@ -1,7 +1,7 @@
 ---
 id: TASK-0152
 title: Notification preferences page
-status: Draft
+status: Accepted
 phase: No
 depends_on: [TASK-0150]
 traces_to: [L2-064]
