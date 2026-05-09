@@ -1,7 +1,7 @@
 ---
 id: TASK-0181
 title: Rate limiting (sign-in, forgot, generic)
-status: Draft
+status: Accepted
 phase: Z
 depends_on: [TASK-0021]
 traces_to: [L2-094]
