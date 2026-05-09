@@ -27,19 +27,10 @@ public sealed class CoverageGatesArchitectureTests
         var content = File.ReadAllText(runsettings);
         Assert.Contains(project, content, StringComparison.OrdinalIgnoreCase);
 
-        // The threshold value in the file must be >= minThreshold
         var pattern = new System.Text.RegularExpressions.Regex(
-            $@"{project}[^<]*<Threshold>(\d+)</Threshold>",
-            System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.Singleline);
+            $@"<Include>{System.Text.RegularExpressions.Regex.Escape("TheUpperRoom." + project)}</Include>[\s\S]*?<Threshold>(\d+)</Threshold>",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         var match = pattern.Match(content);
-        if (!match.Success)
-        {
-            // Try alternate format: look for threshold near the project name
-            var altPattern = new System.Text.RegularExpressions.Regex(
-                $@"<Include>.*{project}.*</Include>[\s\S]*?<Threshold>(\d+)</Threshold>",
-                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            match = altPattern.Match(content);
-        }
         Assert.True(match.Success, $"No threshold found for {project} in coverlet.runsettings");
         var threshold = int.Parse(match.Groups[1].Value);
         Assert.True(threshold >= minThreshold,

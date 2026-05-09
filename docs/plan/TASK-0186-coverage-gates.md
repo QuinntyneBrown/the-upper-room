@@ -1,7 +1,7 @@
 ---
 id: TASK-0186
 title: Coverage gates in CI
-status: Accepted
+status: Completed
 phase: Z
 depends_on: [TASK-0001]
 traces_to: [L2-101]
@@ -21,4 +21,4 @@ CI fails if coverage falls below: Domain 90%, Application 85%, Infrastructure 70
 - A PR that drops Application coverage to 84% fails the build.
 
 ## Definition of Done
-- [ ] Thresholds enforced on `main` and PR pipelines.
+- [x] Thresholds enforced on `main` and PR pipelines.
