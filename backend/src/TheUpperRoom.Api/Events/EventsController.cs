@@ -1,6 +1,7 @@
 // traces_to: L2-052, L2-053, L2-055, L2-056
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TheUpperRoom.Api.Rbac;
 
 namespace TheUpperRoom.Api.Events;
@@ -23,21 +24,8 @@ public sealed record CreateEventRequest(
 [ApiController]
 [Authorize]
 [Route("api/v1/events")]
-public sealed class EventsController : ControllerBase
+public sealed class EventsController(EventsDbContext db) : ControllerBase
 {
-    internal static readonly List<EventDto> Store =
-    [
-        new("e-seed", "City Prayer Night", null, "Scheduled",
-            DateTimeOffset.UtcNow.AddDays(14), DateTimeOffset.UtcNow.AddDays(14).AddHours(2),
-            "City Hall, Toronto", false, 8, 100, [],
-            "A night of prayer and worship for our city.",
-            [
-                new("a1", "Alice Nguyen", null, "Accepted"),
-                new("a2", "Bob Chen", null, "Accepted"),
-                new("a3", "Carol Davis", null, "Accepted"),
-            ])
-    ];
-
     [HttpGet]
     public IActionResult List(
         [FromQuery] string? status,
@@ -49,7 +37,12 @@ public sealed class EventsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        IEnumerable<EventDto> items = Store;
+        var rsvpCounts = db.Rsvps
+            .Where(r => r.Status == "Going")
+            .GroupBy(r => r.EventId)
+            .ToDictionary(g => g.Key, g => g.Count());
+
+        IEnumerable<EventDto> items = db.Events.AsEnumerable().Select(e => e.ToDto(rsvpCounts.GetValueOrDefault(e.Id)));
 
         if (!string.IsNullOrEmpty(status))
             items = items.Where(e => e.Status.Equals(status, StringComparison.OrdinalIgnoreCase));
@@ -74,8 +67,7 @@ public sealed class EventsController : ControllerBase
                 expanded.Add(ev);
                 continue;
             }
-            var occurrences = ExpandRecurrence(ev, windowStart, windowEnd);
-            expanded.AddRange(occurrences);
+            expanded.AddRange(ExpandRecurrence(ev, windowStart, windowEnd));
         }
 
         var result = expanded.OrderBy(e => e.StartAt).ToArray();
@@ -88,9 +80,10 @@ public sealed class EventsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var ev = Store.FirstOrDefault(e => e.Id == id);
-        if (ev is null) return NotFound();
-        return Ok(ev);
+        var row = db.Events.Find(id);
+        if (row is null) return NotFound();
+        var rsvpCount = db.Rsvps.Count(r => r.EventId == id && r.Status == "Going");
+        return Ok(row.ToDto(rsvpCount));
     }
 
     [HttpPost]
@@ -101,26 +94,25 @@ public sealed class EventsController : ControllerBase
         if (body is null || string.IsNullOrWhiteSpace(body.Title))
             return UnprocessableEntity(new { error = "Title is required." });
 
-        var ev = new EventDto(
-            Guid.NewGuid().ToString(),
-            body.Title,
-            null,
-            "Draft",
-            body.StartAt ?? DateTimeOffset.UtcNow.AddDays(7),
-            body.EndAt ?? DateTimeOffset.UtcNow.AddDays(7).AddHours(2),
-            body.Location,
-            body.IsVirtual,
-            0,
-            body.Capacity,
-            body.Tags ?? [],
-            body.Description,
-            null,
-            body.RequiresApproval,
-            body.RecurrenceRule,
-            null, null, null,
-            body.Timezone);
-        Store.Add(ev);
-        return Created($"/api/v1/events/{ev.Id}", ev);
+        var row = new EventRow
+        {
+            Id = Guid.NewGuid().ToString(),
+            Title = body.Title,
+            Status = "Draft",
+            StartAt = body.StartAt ?? DateTimeOffset.UtcNow.AddDays(7),
+            EndAt = body.EndAt ?? DateTimeOffset.UtcNow.AddDays(7).AddHours(2),
+            Location = body.Location,
+            IsVirtual = body.IsVirtual,
+            Capacity = body.Capacity,
+            RequiresApproval = body.RequiresApproval,
+            Description = body.Description,
+            Tags = body.Tags ?? Array.Empty<string>(),
+            RecurrenceRule = body.RecurrenceRule,
+            Timezone = body.Timezone,
+        };
+        db.Events.Add(row);
+        db.SaveChanges();
+        return Created($"/api/v1/events/{row.Id}", row.ToDto());
     }
 
     [HttpPut("{id}")]
@@ -131,26 +123,22 @@ public sealed class EventsController : ControllerBase
         if (body is null || string.IsNullOrWhiteSpace(body.Title))
             return UnprocessableEntity(new { error = "Title is required." });
 
-        var idx = Store.FindIndex(e => e.Id == id);
-        if (idx < 0) return NotFound();
+        var row = db.Events.Find(id);
+        if (row is null) return NotFound();
 
-        var existing = Store[idx];
-        var updated = existing with
-        {
-            Title = body.Title,
-            Description = body.Description,
-            StartAt = body.StartAt ?? existing.StartAt,
-            EndAt = body.EndAt ?? existing.EndAt,
-            Location = body.Location,
-            IsVirtual = body.IsVirtual,
-            Capacity = body.Capacity,
-            RequiresApproval = body.RequiresApproval,
-            Tags = body.Tags ?? [],
-            RecurrenceRule = body.RecurrenceRule ?? existing.RecurrenceRule,
-            Timezone = body.Timezone ?? existing.Timezone,
-        };
-        Store[idx] = updated;
-        return Ok(updated);
+        row.Title = body.Title;
+        row.Description = body.Description;
+        row.StartAt = body.StartAt ?? row.StartAt;
+        row.EndAt = body.EndAt ?? row.EndAt;
+        row.Location = body.Location;
+        row.IsVirtual = body.IsVirtual;
+        row.Capacity = body.Capacity;
+        row.RequiresApproval = body.RequiresApproval;
+        row.Tags = body.Tags ?? Array.Empty<string>();
+        row.RecurrenceRule = body.RecurrenceRule ?? row.RecurrenceRule;
+        row.Timezone = body.Timezone ?? row.Timezone;
+        db.SaveChanges();
+        return Ok(row.ToDto());
     }
 
     [HttpPost("{id}/occurrences/{date}/cancel")]
@@ -159,13 +147,13 @@ public sealed class EventsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var idx = Store.FindIndex(e => e.Id == id);
-        if (idx < 0) return NotFound();
+        var row = db.Events.Find(id);
+        if (row is null) return NotFound();
 
-        var ev = Store[idx];
-        var exceptions = ev.ExceptionDates?.ToList() ?? [];
+        var exceptions = row.ExceptionDates.ToList();
         if (!exceptions.Contains(date)) exceptions.Add(date);
-        Store[idx] = ev with { ExceptionDates = exceptions.ToArray() };
+        row.ExceptionDates = exceptions.ToArray();
+        db.SaveChanges();
         return Ok();
     }
 
@@ -180,7 +168,6 @@ public sealed class EventsController : ControllerBase
         var rule = parent.RecurrenceRule;
         var freq = ParseToken(rule, "FREQ");
         var count = int.TryParse(ParseToken(rule, "COUNT"), out var c) ? c : 52;
-        var byDay = ParseToken(rule, "BYDAY");
 
         var current = parent.StartAt;
         var emitted = 0;
@@ -209,17 +196,11 @@ public sealed class EventsController : ControllerBase
             current = freq switch
             {
                 "DAILY" => current.AddDays(1),
-                "WEEKLY" => AdvanceWeekly(current, byDay),
+                "WEEKLY" => current.AddDays(7),
                 "MONTHLY" => current.AddMonths(1),
                 _ => current.AddDays(7),
             };
         }
-    }
-
-    private static DateTimeOffset AdvanceWeekly(DateTimeOffset from, string? byDay)
-    {
-        // Simple: advance by 7 days (BYDAY filtering handled by seed data in tests)
-        return from.AddDays(7);
     }
 
     private static string? ParseToken(string rule, string key)

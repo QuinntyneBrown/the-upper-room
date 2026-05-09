@@ -15,7 +15,7 @@ public sealed record SearchResult(string Id, string Type, string Title, string? 
 [ApiController]
 [Authorize]
 [Route("api/v1/search")]
-public sealed class SearchController(ContactsDbContext contactsDb) : ControllerBase
+public sealed class SearchController(ContactsDbContext contactsDb, EventsDbContext eventsDb) : ControllerBase
 {
     private const int MaxPerGroup = 5;
 
@@ -38,7 +38,8 @@ public sealed class SearchController(ContactsDbContext contactsDb) : ControllerB
             .Select(p => new SearchResult(p.Id, "partner", p.Name, p.CityId, $"/partners/{p.Id}"))
             .ToList();
 
-        var events = EventsController.Store
+        var events = eventsDb.Events
+            .AsEnumerable()
             .Where(e => e.Title.Contains(term, StringComparison.OrdinalIgnoreCase))
             .Take(MaxPerGroup)
             .Select(e => new SearchResult(e.Id, "event", e.Title, e.StartAt.ToString("MMM d"), $"/events/{e.Id}"))

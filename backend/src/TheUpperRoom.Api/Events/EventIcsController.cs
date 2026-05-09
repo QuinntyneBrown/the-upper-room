@@ -5,13 +5,14 @@ namespace TheUpperRoom.Api.Events;
 
 [ApiController]
 [Route("api/v1/events/{id}/ics")]
-public sealed class EventIcsController : ControllerBase
+public sealed class EventIcsController(EventsDbContext db) : ControllerBase
 {
     [HttpGet]
     public IActionResult Get(string id)
     {
-        var ev = EventsController.Store.FirstOrDefault(e => e.Id == id);
-        if (ev is null) return NotFound();
+        var row = db.Events.Find(id);
+        if (row is null) return NotFound();
+        var ev = row.ToDto();
 
         var start = FormatUtc(ev.StartAt);
         var end = FormatUtc(ev.EndAt);

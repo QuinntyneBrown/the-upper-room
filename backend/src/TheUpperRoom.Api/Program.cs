@@ -7,6 +7,7 @@ using Serilog;
 using Serilog.Context;
 using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Contacts;
+using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.Logging;
 
 Log.Logger = new LoggerConfiguration()
@@ -53,10 +54,13 @@ builder.Services.AddAuthorization();
 
 var contactsConn = builder.Configuration["ContactsDb:ConnectionString"]
                    ?? "Data Source=Data/contacts.db";
-var contactsPath = contactsConn.Replace("Data Source=", "", StringComparison.OrdinalIgnoreCase).Trim();
-var contactsDir = Path.GetDirectoryName(Path.GetFullPath(contactsPath));
-if (!string.IsNullOrEmpty(contactsDir)) Directory.CreateDirectory(contactsDir);
+EnsureSqliteDirectoryExists(contactsConn);
 builder.Services.AddDbContext<ContactsDbContext>(o => o.UseSqlite(contactsConn));
+
+var eventsConn = builder.Configuration["EventsDb:ConnectionString"]
+                 ?? "Data Source=Data/events.db";
+EnsureSqliteDirectoryExists(eventsConn);
+builder.Services.AddDbContext<EventsDbContext>(o => o.UseSqlite(eventsConn));
 
 var app = builder.Build();
 
@@ -64,12 +68,33 @@ using (var scope = app.Services.CreateScope())
 {
     var contactsDb = scope.ServiceProvider.GetRequiredService<ContactsDbContext>();
     contactsDb.Database.EnsureCreated();
-    if (contactsDb.Contacts.Find("c1") is null)
+    SeedSeedContactsIfMissing(contactsDb);
+
+    scope.ServiceProvider.GetRequiredService<EventsDbContext>().Database.EnsureCreated();
+}
+
+static void SeedSeedContactsIfMissing(ContactsDbContext db)
+{
+    // Idempotent: ignore unique-key conflicts caused by parallel test hosts
+    // racing on the same connection string.
+    try
     {
-        contactsDb.Contacts.Add(new ContactRow { Id = "c1", Name = "Alice", CityId = "Toronto" });
-        contactsDb.Contacts.Add(new ContactRow { Id = "c2", Name = "Bob", CityId = "Halifax" });
-        contactsDb.SaveChanges();
+        if (db.Contacts.Find("c1") is not null) return;
+        db.Contacts.Add(new ContactRow { Id = "c1", Name = "Alice", CityId = "Toronto" });
+        db.Contacts.Add(new ContactRow { Id = "c2", Name = "Bob", CityId = "Halifax" });
+        db.SaveChanges();
     }
+    catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+    {
+        // Another host instance won the race; the rows already exist.
+    }
+}
+
+static void EnsureSqliteDirectoryExists(string connectionString)
+{
+    var path = connectionString.Replace("Data Source=", "", StringComparison.OrdinalIgnoreCase).Trim();
+    var dir = Path.GetDirectoryName(Path.GetFullPath(path));
+    if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
 }
 
 // traces_to: L2-096

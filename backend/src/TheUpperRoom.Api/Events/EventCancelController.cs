@@ -10,7 +10,7 @@ public sealed record CancelEventRequest(string? Message = null);
 [ApiController]
 [Authorize]
 [Route("api/v1/events/{id}/cancel")]
-public sealed class EventCancelController : ControllerBase
+public sealed class EventCancelController(EventsDbContext db) : ControllerBase
 {
     [HttpPost]
     public IActionResult Cancel(string id, [FromBody] CancelEventRequest? body)
@@ -18,13 +18,11 @@ public sealed class EventCancelController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var idx = EventsController.Store.FindIndex(e => e.Id == id);
-        if (idx < 0) return NotFound();
-
-        var ev = EventsController.Store[idx];
-        EventsController.Store[idx] = ev with { Status = "Cancelled" };
-
-        return Ok(EventsController.Store[idx]);
+        var row = db.Events.Find(id);
+        if (row is null) return NotFound();
+        row.Status = "Cancelled";
+        db.SaveChanges();
+        return Ok(row.ToDto());
     }
 
     private SeedUser? GetCurrentUser()

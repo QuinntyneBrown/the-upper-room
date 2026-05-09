@@ -12,18 +12,16 @@ public sealed record PendingRsvpDto(string Id, string UserId, string UserName, s
 [ApiController]
 [Authorize]
 [Route("api/v1/events/{eventId}/rsvp")]
-public sealed class EventRsvpController : ControllerBase
+public sealed class EventRsvpController(EventsDbContext db) : ControllerBase
 {
-    private static readonly List<(string EventId, string UserId, string Status, int? WaitlistPosition)> _rsvps = [];
-
     [HttpGet]
     public IActionResult GetMy(string eventId)
     {
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var rsvp = _rsvps.FirstOrDefault(r => r.EventId == eventId && r.UserId == user.Id);
-        return rsvp == default
+        var rsvp = db.Rsvps.Find(eventId, user.Id);
+        return rsvp is null
             ? Ok(new { rsvpStatus = (string?)null })
             : Ok(new { rsvpStatus = rsvp.Status, waitlistPosition = rsvp.WaitlistPosition });
     }
@@ -35,51 +33,58 @@ public sealed class EventRsvpController : ControllerBase
         if (user is null) return Unauthorized();
         if (body is null) return BadRequest();
 
-        var ev = EventsController.Store.FirstOrDefault(e => e.Id == eventId);
+        var ev = db.Events.Find(eventId);
         if (ev is null) return NotFound();
 
-        var existing = _rsvps.FirstOrDefault(r => r.EventId == eventId && r.UserId == user.Id);
+        var existing = db.Rsvps.Find(eventId, user.Id);
         string? promotedUser = null;
 
-        if (existing != default)
+        if (existing is not null)
         {
             if (existing.Status == "Going" && body.Status == "No")
             {
-                var waitlisted = _rsvps.FirstOrDefault(r => r.EventId == eventId && r.Status == "Waitlisted");
-                if (waitlisted != default)
+                var waitlisted = db.Rsvps.FirstOrDefault(r => r.EventId == eventId && r.Status == "Waitlisted");
+                if (waitlisted is not null)
                 {
-                    var wi = _rsvps.IndexOf(waitlisted);
-                    _rsvps[wi] = (waitlisted.EventId, waitlisted.UserId, "Going", null);
+                    waitlisted.Status = "Going";
+                    waitlisted.WaitlistPosition = null;
                     promotedUser = waitlisted.UserId;
                 }
             }
-            _rsvps.Remove(existing);
+            db.Rsvps.Remove(existing);
         }
 
         if (body.Status == "No")
+        {
+            db.SaveChanges();
             return Ok(new RsvpResponse("Cancelled", null, promotedUser));
+        }
 
         if (body.Status == "Maybe")
         {
-            _rsvps.Add((eventId, user.Id, "Maybe", null));
+            db.Rsvps.Add(new RsvpRow { EventId = eventId, UserId = user.Id, Status = "Maybe" });
+            db.SaveChanges();
             return Ok(new RsvpResponse("Maybe"));
         }
 
         if (ev.RequiresApproval)
         {
-            _rsvps.Add((eventId, user.Id, "PendingApproval", null));
+            db.Rsvps.Add(new RsvpRow { EventId = eventId, UserId = user.Id, Status = "PendingApproval" });
+            db.SaveChanges();
             return Ok(new RsvpResponse("PendingApproval"));
         }
 
-        var goingCount = _rsvps.Count(r => r.EventId == eventId && r.Status == "Going");
+        var goingCount = db.Rsvps.Count(r => r.EventId == eventId && r.Status == "Going");
         if (ev.Capacity.HasValue && goingCount >= ev.Capacity.Value)
         {
-            var pos = _rsvps.Count(r => r.EventId == eventId && r.Status == "Waitlisted") + 1;
-            _rsvps.Add((eventId, user.Id, "Waitlisted", pos));
+            var pos = db.Rsvps.Count(r => r.EventId == eventId && r.Status == "Waitlisted") + 1;
+            db.Rsvps.Add(new RsvpRow { EventId = eventId, UserId = user.Id, Status = "Waitlisted", WaitlistPosition = pos });
+            db.SaveChanges();
             return Ok(new RsvpResponse("Waitlisted", pos));
         }
 
-        _rsvps.Add((eventId, user.Id, "Going", null));
+        db.Rsvps.Add(new RsvpRow { EventId = eventId, UserId = user.Id, Status = "Going" });
+        db.SaveChanges();
         return Ok(new RsvpResponse("Going"));
     }
 
@@ -89,7 +94,7 @@ public sealed class EventRsvpController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var pending = _rsvps
+        var pending = db.Rsvps
             .Where(r => r.EventId == eventId && r.Status == "PendingApproval")
             .Select(r => new PendingRsvpDto(r.UserId, r.UserId, $"User {r.UserId}", DateTimeOffset.UtcNow.ToString("O")))
             .ToList();
@@ -102,10 +107,11 @@ public sealed class EventRsvpController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var idx = _rsvps.FindIndex(r => r.EventId == eventId && r.UserId == rsvpUserId && r.Status == "PendingApproval");
-        if (idx < 0) return NotFound();
-        var r = _rsvps[idx];
-        _rsvps[idx] = (r.EventId, r.UserId, "Going", null);
+        var rsvp = db.Rsvps.Find(eventId, rsvpUserId);
+        if (rsvp is null || rsvp.Status != "PendingApproval") return NotFound();
+        rsvp.Status = "Going";
+        rsvp.WaitlistPosition = null;
+        db.SaveChanges();
         return Ok();
     }
 
@@ -115,9 +121,10 @@ public sealed class EventRsvpController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var idx = _rsvps.FindIndex(r => r.EventId == eventId && r.UserId == rsvpUserId && r.Status == "PendingApproval");
-        if (idx < 0) return NotFound();
-        _rsvps.RemoveAt(idx);
+        var rsvp = db.Rsvps.Find(eventId, rsvpUserId);
+        if (rsvp is null || rsvp.Status != "PendingApproval") return NotFound();
+        db.Rsvps.Remove(rsvp);
+        db.SaveChanges();
         return Ok();
     }
 
