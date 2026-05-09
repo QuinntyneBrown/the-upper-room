@@ -1,7 +1,7 @@
 ---
 id: TASK-0230
 title: Persist Push subscriptions and load real VAPID key from config
-status: Accepted
+status: Done
 phase: P
 depends_on: []
 traces_to: []
