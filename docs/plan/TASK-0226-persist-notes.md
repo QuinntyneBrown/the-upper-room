@@ -1,7 +1,7 @@
 ---
 id: TASK-0226
 title: Persist Notes in database
-status: Accepted
+status: Done
 phase: P
 depends_on: []
 traces_to: []
