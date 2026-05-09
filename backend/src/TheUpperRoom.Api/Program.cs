@@ -5,6 +5,7 @@ using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Logging;
 
 Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
     .Enrich.With<SensitiveFieldScrubber>()
     .Enrich.FromLogContext()
     .WriteTo.Sink(new InMemorySink())
@@ -26,6 +27,7 @@ app.Use(async (ctx, next) =>
         await next();
 });
 
+app.UseSerilogRequestLogging();
 app.MapControllers();
 
 app.Run();
