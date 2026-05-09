@@ -1,7 +1,7 @@
 ---
 id: TASK-0225
 title: Persist Ideas, votes, and idea-partner links in database
-status: Draft
+status: Accepted
 phase: P
 depends_on: []
 traces_to: []
