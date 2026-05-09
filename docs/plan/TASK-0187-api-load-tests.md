@@ -1,7 +1,7 @@
 ---
 id: TASK-0187
 title: k6 API load tests
-status: Accepted
+status: Done
 phase: Z
 depends_on: [TASK-0060, TASK-0070]
 traces_to: [L2-091]
