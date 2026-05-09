@@ -1,6 +1,7 @@
 // traces_to: L2-029, L2-030, L2-112
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, computed, effect, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CityScopeService, PERMISSIONS_SERVICE } from 'domain';
@@ -34,7 +35,7 @@ const PAGE_SIZE = 25;
 
 @Component({
   selector: 'app-contact-list',
-  imports: [TarEmptyState, TarAvatar],
+  imports: [RouterLink, TarEmptyState, TarAvatar],
   templateUrl: './contact-list.html',
   styleUrl: './contact-list.scss',
 })

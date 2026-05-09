@@ -17,9 +17,9 @@
     Archived
   </button>
   @if (canCreate()) {
-    <button data-testid="contacts-new-button" type="button" class="btn-filled btn-filled--toolbar">
+    <a data-testid="contacts-new-button" routerLink="/contacts/new" class="btn-filled btn-filled--toolbar">
       New contact
-    </button>
+    </a>
   }
 </div>
 
@@ -31,9 +31,9 @@
       body="Add your first contact to get started."
     >
       @if (canCreate()) {
-        <button data-testid="contacts-new-button" type="button" class="btn-filled">
+        <a data-testid="contacts-new-button" routerLink="/contacts/new" class="btn-filled">
           New contact
-        </button>
+        </a>
       }
     </tar-empty-state>
   </div>
