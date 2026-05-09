@@ -1,7 +1,7 @@
 ---
 id: TASK-0189
 title: Reduced-motion support pass
-status: Draft
+status: Accepted
 phase: Z
 depends_on: [TASK-0002]
 traces_to: [L2-006]
