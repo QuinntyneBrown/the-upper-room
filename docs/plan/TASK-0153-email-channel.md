@@ -1,7 +1,7 @@
 ---
 id: TASK-0153
 title: Email channel for notifications
-status: Draft
+status: Accepted
 phase: No
 depends_on: [TASK-0150]
 traces_to: [L2-063]
