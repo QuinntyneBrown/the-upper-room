@@ -1,7 +1,7 @@
 ---
 id: TASK-0171
 title: Time zone handling
-status: Accepted
+status: Done
 phase: X
 depends_on: [TASK-0124]
 traces_to: [L2-111]
