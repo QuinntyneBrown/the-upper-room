@@ -1,7 +1,7 @@
 ---
 id: TASK-0127
 title: Event recurrence
-status: Draft
+status: Accepted
 phase: E
 depends_on: [TASK-0124]
 traces_to: [L2-056]
