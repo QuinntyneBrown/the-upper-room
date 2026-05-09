@@ -2,11 +2,9 @@
 import { Routes } from '@angular/router';
 import { Landing } from './landing/landing';
 import { Stub } from './stub/stub';
-import { EchoTest } from './echo-test/echo-test';
 import { AppShell } from './shell/app-shell/app-shell';
 import { NotFound } from './error/not-found/not-found';
 import { Forbidden } from './error/forbidden/forbidden';
-import { Throw } from './error/throw-route/throw-route';
 import { Appearance } from './settings/appearance/appearance';
 import { SignIn } from './auth/sign-in/sign-in';
 import { AuthCallback } from './auth/auth-callback/auth-callback';
@@ -14,7 +12,6 @@ import { SignUp } from './auth/sign-up/sign-up';
 import { VerifyEmail } from './auth/verify-email/verify-email';
 import { ForgotPassword } from './auth/forgot-password/forgot-password';
 import { ResetPassword } from './auth/reset-password/reset-password';
-import { RbacDemo } from './rbac/rbac-demo/rbac-demo';
 import { authGuard, permissionGuard, roleGuard } from 'domain';
 import { UserList } from './users/user-list/user-list';
 import { MyProfile } from './users/my-profile/my-profile';
@@ -41,7 +38,6 @@ import { PartnerEdit } from './partners/partner-edit/partner-edit';
 import { EventList } from './events/event-list/event-list';
 import { EventDetail } from './events/event-detail/event-detail';
 import { EventForm } from './events/event-form/event-form';
-import { DateFormattingTest } from './date-formatting-test/date-formatting-test';
 import { Dashboard } from './dashboard/dashboard';
 
 export const routes: Routes = [
@@ -50,10 +46,7 @@ export const routes: Routes = [
     path: 'styleguide',
     loadComponent: () => import('./styleguide/styleguide').then((m) => m.Styleguide),
   },
-  { path: 'echo-test', component: EchoTest },
   { path: 'forbidden', component: Forbidden },
-  { path: '__throw', component: Throw },
-  { path: '__rbac-demo', component: RbacDemo },
   { path: 'settings/appearance', component: Appearance },
   { path: 'sign-in', component: SignIn },
   { path: 'sign-up', component: SignUp },
@@ -102,7 +95,6 @@ export const routes: Routes = [
       },
       { path: 'profile', component: MyProfile },
       { path: 'settings/notifications', component: TarNotificationPreferences },
-      { path: 'date-formatting-test', component: DateFormattingTest },
       {
         path: 'admin/users',
         component: UserList,
