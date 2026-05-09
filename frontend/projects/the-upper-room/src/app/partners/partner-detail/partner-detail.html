@@ -20,141 +20,78 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span class="material-symbols-outlined">open_in_new</span>
+          <mat-icon>open_in_new</mat-icon>
           {{ websiteDomain(p.website) }}
         </a>
       }
     </div>
 
     <div class="partner-header__actions">
-      <a data-testid="partner-edit-button" [href]="'/partners/' + p.id + '/edit'" class="btn-outlined">Edit</a>
+      <tar-button variant="outlined" testId="partner-edit-button" [routerLink]="'/partners/' + p.id + '/edit'">Edit</tar-button>
       @if (!p.archived) {
-        <button data-testid="partner-archive-button" type="button" class="btn-outlined" (click)="archive()">Archive</button>
+        <tar-button variant="outlined" testId="partner-archive-button" type="button" (clicked)="archive()">Archive</tar-button>
       } @else {
-        <button data-testid="partner-restore-button" type="button" class="btn-outlined" (click)="archive()">Restore</button>
+        <tar-button variant="outlined" testId="partner-restore-button" type="button" (clicked)="archive()">Restore</tar-button>
       }
-      <button data-testid="partner-delete-button" type="button" class="btn-danger" (click)="openDeleteDialog()">Delete</button>
+      <tar-button variant="filled" color="warn" testId="partner-delete-button" type="button" (clicked)="openDeleteDialog()">Delete</tar-button>
     </div>
   </header>
 
-  @if (showDeleteDialog()) {
-    <div class="dialog-backdrop" (click)="closeDeleteDialog()">
-      <div class="dialog" (click)="$event.stopPropagation()">
-        @if (!deleteBlockedMessage()) {
-          <h2 class="dialog__title">Delete partner?</h2>
-          <p class="dialog__body">
-            Type <strong>{{ p.name }}</strong> to confirm permanent deletion.
-          </p>
-          <input
-            data-testid="delete-confirm-input"
-            class="dialog__input"
-            type="text"
-            [placeholder]="p.name"
-            [value]="deleteConfirmName()"
-            (input)="deleteConfirmName.set($any($event.target).value)"
-          />
-          <div class="dialog__actions">
-            <button type="button" class="btn-outlined" (click)="closeDeleteDialog()">Cancel</button>
-            <button
-              type="button"
-              class="btn-danger"
-              [disabled]="deleteConfirmName() !== p.name"
-              (click)="confirmDelete()"
-            >Delete</button>
-          </div>
-        } @else {
-          <h2 class="dialog__title">Cannot delete</h2>
-          <p class="dialog__body">{{ deleteBlockedMessage() }}</p>
-          <div class="dialog__actions">
-            <button type="button" class="btn-outlined" (click)="closeDeleteDialog()">Cancel</button>
-            <button type="button" class="btn-filled" (click)="archiveInstead()">Archive instead</button>
-          </div>
-        }
-      </div>
-    </div>
-  }
+  <tar-tabs [tabs]="TABS" [selectedIndex]="tabIndex()" (selectedIndexChange)="onTabChange($event)">
+    <ng-template let-tab>
+      @if (tab.id === 'overview') {
+        <div data-testid="partner-panel-overview" class="partner-panel" role="tabpanel">
+          @if (p.descriptionMarkdown) {
+            <section class="partner-section">
+              <div data-testid="partner-description" class="partner-description">{{ p.descriptionMarkdown }}</div>
+            </section>
+          } @else {
+            <div data-testid="partner-description" class="partner-description partner-description--empty">
+              No description yet.
+            </div>
+          }
 
-  <nav class="partner-tabs" role="tablist">
-    <button
-      data-testid="partner-tab-overview"
-      type="button"
-      class="partner-tabs__tab"
-      [class.partner-tabs__tab--active]="activeTab() === 'overview'"
-      role="tab"
-      [attr.aria-selected]="activeTab() === 'overview'"
-      (click)="activeTab.set('overview')"
-    >Overview</button>
-    <button
-      data-testid="partner-tab-contacts"
-      type="button"
-      class="partner-tabs__tab"
-      [class.partner-tabs__tab--active]="activeTab() === 'contacts'"
-      role="tab"
-      [attr.aria-selected]="activeTab() === 'contacts'"
-      (click)="activeTab.set('contacts')"
-    >Contacts</button>
-    <button
-      data-testid="partner-tab-activity"
-      type="button"
-      class="partner-tabs__tab"
-      [class.partner-tabs__tab--active]="activeTab() === 'activity'"
-      role="tab"
-      [attr.aria-selected]="activeTab() === 'activity'"
-      (click)="activeTab.set('activity')"
-    >Activity</button>
-  </nav>
+          @if ((p.addresses?.length ?? 0) > 0) {
+            <section class="partner-section">
+              <h2 class="partner-section__heading">Addresses</h2>
+              @for (addr of p.addresses; track $index) {
+                <div class="partner-address">
+                  @if (addr.street) { <span>{{ addr.street }}</span> }
+                  @if (addr.city) { <span>{{ addr.city }}</span> }
+                  @if (addr.country) { <span>{{ addr.country }}</span> }
+                </div>
+              }
+            </section>
+          }
 
-  @if (activeTab() === 'overview') {
-    <div data-testid="partner-panel-overview" class="partner-panel" role="tabpanel">
-      @if (p.descriptionMarkdown) {
-        <section class="partner-section">
-          <div data-testid="partner-description" class="partner-description">{{ p.descriptionMarkdown }}</div>
-        </section>
-      } @else {
-        <div data-testid="partner-description" class="partner-description partner-description--empty">
-          No description yet.
+          @if ((p.socialLinks?.length ?? 0) > 0) {
+            <section class="partner-section">
+              <h2 class="partner-section__heading">Social links</h2>
+              @for (link of p.socialLinks; track $index) {
+                <a
+                  [attr.data-testid]="'social-chip-' + link.platform"
+                  [href]="link.url"
+                  class="partner-social-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >{{ link.label || link.platform }}</a>
+              }
+            </section>
+          }
         </div>
       }
 
-      @if ((p.addresses?.length ?? 0) > 0) {
-        <section class="partner-section">
-          <h2 class="partner-section__heading">Addresses</h2>
-          @for (addr of p.addresses; track $index) {
-            <div class="partner-address">
-              @if (addr.street) { <span>{{ addr.street }}</span> }
-              @if (addr.city) { <span>{{ addr.city }}</span> }
-              @if (addr.country) { <span>{{ addr.country }}</span> }
-            </div>
-          }
-        </section>
+      @if (tab.id === 'contacts') {
+        <div data-testid="partner-panel-contacts" class="partner-panel" role="tabpanel">
+          <app-partner-contacts-tab [partnerId]="p.id" [partnerName]="p.name" />
+        </div>
       }
 
-      @if ((p.socialLinks?.length ?? 0) > 0) {
-        <section class="partner-section">
-          <h2 class="partner-section__heading">Social links</h2>
-          @for (link of p.socialLinks; track $index) {
-            <a
-              [attr.data-testid]="'social-chip-' + link.platform"
-              [href]="link.url"
-              class="partner-social-link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >{{ link.label || link.platform }}</a>
-          }
-        </section>
+      @if (tab.id === 'activity') {
+        <div data-testid="partner-panel-activity" class="partner-panel" role="tabpanel">
+          <p class="partner-panel__placeholder">Activity log coming soon.</p>
+        </div>
       }
-    </div>
-  }
-
-  @if (activeTab() === 'contacts') {
-    <div data-testid="partner-panel-contacts" class="partner-panel" role="tabpanel">
-      <app-partner-contacts-tab [partnerId]="p.id" [partnerName]="p.name" />
-    </div>
-  }
-
-  @if (activeTab() === 'activity') {
-    <div data-testid="partner-panel-activity" class="partner-panel" role="tabpanel">
-      <p class="partner-panel__placeholder">Activity log coming soon.</p>
-    </div>
-  }
+    </ng-template>
+  </tar-tabs>
 }

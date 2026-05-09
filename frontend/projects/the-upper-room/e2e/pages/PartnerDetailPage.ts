@@ -10,7 +10,7 @@ export class PartnerDetailPage {
   websiteLink(): Locator { return this.page.getByTestId('partner-website-link'); }
   letterAvatar(): Locator { return this.page.getByTestId('partner-letter-avatar'); }
   logoImg(): Locator { return this.page.getByTestId('partner-logo'); }
-  tab(name: string): Locator { return this.page.getByTestId(`partner-tab-${name.toLowerCase()}`); }
+  tab(name: string): Locator { return this.page.getByRole('tab', { name: name.charAt(0).toUpperCase() + name.slice(1) }); }
   overviewPanel(): Locator { return this.page.getByTestId('partner-panel-overview'); }
   description(): Locator { return this.page.getByTestId('partner-description'); }
 }
