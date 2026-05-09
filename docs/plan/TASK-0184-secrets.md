@@ -1,7 +1,7 @@
 ---
 id: TASK-0184
 title: Secrets management
-status: Draft
+status: Accepted
 phase: Z
 depends_on: [TASK-0001]
 traces_to: [L2-095]
