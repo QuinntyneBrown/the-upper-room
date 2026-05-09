@@ -1,0 +1,149 @@
+@if (event(); as ev) {
+  <div class="event-hero">
+    @if (ev.coverImageUrl) {
+      <img class="event-hero__cover" [src]="ev.coverImageUrl" [alt]="ev.title" />
+      <div class="event-hero__gradient"></div>
+    }
+    <div class="event-hero__overlay">
+      <div class="event-hero__meta">
+        <span
+          data-testid="event-status-chip"
+          class="event-status-chip"
+          [attr.data-status]="ev.status"
+        >{{ ev.status }}</span>
+        @if (ev.isVirtual) {
+          <span class="event-hero__virtual">
+            <span class="material-symbols-outlined">videocam</span> Virtual
+          </span>
+        }
+      </div>
+      <h1 data-testid="event-detail-title" class="event-hero__title">{{ ev.title }}</h1>
+      <button
+        data-testid="event-share-button"
+        type="button"
+        class="event-hero__share btn-icon-outlined"
+        aria-label="Share event"
+        (click)="copyShareUrl()"
+      >
+        <span class="material-symbols-outlined">share</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="event-detail__body">
+    <div class="event-detail__main">
+      @if (ev.description) {
+        <section class="event-detail__section">
+          <h2 class="event-detail__section-title">About</h2>
+          <p data-testid="event-description" class="event-detail__description">{{ ev.description }}</p>
+        </section>
+      }
+
+      @if (ev.location) {
+        <section class="event-detail__section">
+          <h2 class="event-detail__section-title">Location</h2>
+          <p class="event-detail__location">
+            <span class="material-symbols-outlined">location_on</span>
+            {{ ev.location }}
+          </p>
+        </section>
+      }
+    </div>
+
+    <aside class="event-detail__sidebar">
+      <div data-testid="event-datetime-card" class="event-detail-card">
+        <div class="event-detail-card__icon">
+          <span class="material-symbols-outlined">calendar_month</span>
+        </div>
+        <div>
+          <p class="event-detail-card__label">Start</p>
+          <p class="event-detail-card__value">{{ formatDate(ev.startAt) }}</p>
+          <p class="event-detail-card__label">End</p>
+          <p class="event-detail-card__value">{{ formatDate(ev.endAt) }}</p>
+        </div>
+      </div>
+
+      <div data-testid="event-rsvp-card" class="event-detail-card">
+        <div class="event-detail-card__icon">
+          <span class="material-symbols-outlined">people</span>
+        </div>
+        <div>
+          <p class="event-detail-card__value">
+            {{ ev.rsvpCount }}{{ ev.capacity ? ' / ' + ev.capacity : '' }} RSVPs
+          </p>
+        </div>
+      </div>
+
+      @if (ev.attendees.length > 0) {
+        <div data-testid="event-attendees-grid" class="event-attendees">
+          @for (a of visibleAttendees(); track a.id) {
+            <div
+              [attr.data-testid]="'attendee-avatar-' + a.id"
+              class="attendee-avatar"
+              [attr.aria-label]="a.name"
+              [attr.title]="a.name"
+            >
+              @if (a.avatarUrl) {
+                <img [src]="a.avatarUrl" [alt]="a.name" />
+              } @else {
+                <span>{{ initials(a.name) }}</span>
+              }
+            </div>
+          }
+          @if (hiddenCount() > 0) {
+            <button
+              data-testid="event-attendees-more"
+              type="button"
+              class="attendee-avatar attendee-avatar--more"
+              (click)="openAttendeesDialog()"
+            >+{{ hiddenCount() }}</button>
+          }
+        </div>
+      }
+
+      <button
+        data-testid="event-add-to-calendar"
+        type="button"
+        class="btn-outlined event-detail__calendar-btn"
+        (click)="addToCalendar()"
+      >
+        <span class="material-symbols-outlined">calendar_add_on</span>
+        Add to calendar
+      </button>
+    </aside>
+  </div>
+
+  @if (showAttendeesDialog()) {
+    <div
+      data-testid="event-attendees-dialog"
+      class="event-dialog-backdrop"
+      (click)="closeAttendeesDialog()"
+    >
+      <div class="event-dialog" (click)="$event.stopPropagation()">
+        <div class="event-dialog__header">
+          <h2 class="event-dialog__title">Attendees</h2>
+          <button type="button" class="event-dialog__close" (click)="closeAttendeesDialog()">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="event-dialog__list">
+          @for (a of ev.attendees; track a.id) {
+            <div [attr.data-testid]="'attendee-list-' + a.id" class="event-dialog__attendee">
+              <div class="attendee-avatar attendee-avatar--sm">
+                @if (a.avatarUrl) {
+                  <img [src]="a.avatarUrl" [alt]="a.name" />
+                } @else {
+                  <span>{{ initials(a.name) }}</span>
+                }
+              </div>
+              <div>
+                <p class="event-dialog__attendee-name">{{ a.name }}</p>
+                <p class="event-dialog__attendee-status">{{ a.rsvpStatus }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+}

@@ -1,4 +1,4 @@
-// traces_to: L2-052, L2-053
+// traces_to: L2-052, L2-053, L2-055
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 
@@ -12,7 +12,13 @@ public sealed class EventsController : ControllerBase
     [
         new("e-seed", "City Prayer Night", null, "Scheduled",
             DateTimeOffset.UtcNow.AddDays(14), DateTimeOffset.UtcNow.AddDays(14).AddHours(2),
-            "City Hall, Toronto", false, 8, 100, [])
+            "City Hall, Toronto", false, 8, 100, [],
+            "A night of prayer and worship for our city.",
+            [
+                new("a1", "Alice Nguyen", null, "Accepted"),
+                new("a2", "Bob Chen", null, "Accepted"),
+                new("a3", "Carol Davis", null, "Accepted"),
+            ])
     ];
 
     [HttpGet]
