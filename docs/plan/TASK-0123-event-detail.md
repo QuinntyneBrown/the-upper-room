@@ -1,7 +1,7 @@
 ---
 id: TASK-0123
 title: Event detail page
-status: Accepted
+status: Done
 phase: E
 depends_on: [TASK-0120]
 traces_to: [L2-055]
