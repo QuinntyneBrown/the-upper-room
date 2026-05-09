@@ -20,6 +20,13 @@ export interface ConfirmRequest extends ConfirmOptions {
 export class ConfirmService {
   readonly current = signal<ConfirmRequest | null>(null);
 
+  constructor() {
+    if (typeof window !== 'undefined') {
+      (window as unknown as { __openConfirmDialog: (o: ConfirmOptions) => Promise<boolean> }).__openConfirmDialog =
+        (o) => this.confirm(o);
+    }
+  }
+
   confirm(options: ConfirmOptions): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
       this.current.set({ ...options, resolve });
