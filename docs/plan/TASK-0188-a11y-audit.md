@@ -1,7 +1,7 @@
 ---
 id: TASK-0188
 title: Accessibility audit (axe-playwright + manual keyboard)
-status: Accepted
+status: Completed
 phase: Z
 depends_on: [TASK-0005]
 traces_to: [L2-085, L2-086, L2-087, L2-088]
@@ -25,4 +25,4 @@ Run `axe-playwright` against every key page; assert zero serious/critical violat
 3. Dialog focus traps verified for confirm-dialog (Esc closes, Tab wraps).
 
 ## Definition of Done
-- [ ] All scenarios green; PR template requires running audit locally.
+- [x] All scenarios green; PR template requires running audit locally.
