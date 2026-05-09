@@ -1,7 +1,7 @@
 ---
 id: TASK-0220
 title: Real auth token issuance in AuthController
-status: Draft
+status: Accepted
 phase: P
 depends_on: []
 traces_to: []
