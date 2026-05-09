@@ -1,7 +1,7 @@
 ---
 id: TASK-0196
 title: Extract tag-selector to domain library
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0053]
 traces_to: []
