@@ -1,7 +1,7 @@
 ---
 id: TASK-0213
 title: Remove TranslateService debug global and console.warn
-status: Draft
+status: Accepted
 phase: P
 depends_on: []
 traces_to: []
