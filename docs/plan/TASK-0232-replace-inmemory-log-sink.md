@@ -1,7 +1,7 @@
 ---
 id: TASK-0232
 title: Replace InMemorySink with a real structured logging sink
-status: Accepted
+status: Done
 phase: P
 depends_on: []
 traces_to: []
