@@ -1,0 +1,66 @@
+<form class="partner-form" (submit)="onSubmit($event)" novalidate>
+  <div class="save-bar">
+    <span data-testid="partner-unsaved-dot" class="unsaved-dot" [class.unsaved-dot--visible]="isDirty()"></span>
+    <h1 class="save-bar__title">New Partner</h1>
+    <button data-testid="partner-cancel" type="button" class="btn-outlined" (click)="onCancel()">Cancel</button>
+    <button data-testid="partner-submit" type="submit" class="btn-filled" [disabled]="submitting()">Save</button>
+  </div>
+
+  @if (formBanner()) {
+    <div data-testid="partner-form-banner" class="form-banner">{{ formBanner() }}</div>
+  }
+
+  <div class="form-body">
+    <section class="form-section">
+      <h2 class="form-section__heading">Basic info</h2>
+
+      <div class="field">
+        <label class="field__label" for="partner-name">Name *</label>
+        <input
+          id="partner-name"
+          data-testid="partner-name"
+          class="field__input"
+          [class.field__input--error]="nameError()"
+          type="text"
+          autocomplete="organization"
+          [value]="name()"
+          (input)="name.set($any($event.target).value)"
+        />
+        @if (nameError()) {
+          <span data-testid="partner-error-name" class="field__error">{{ nameError() }}</span>
+        }
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="partner-website">Website</label>
+        <div class="field__input-group">
+          <input
+            id="partner-website"
+            data-testid="partner-website"
+            class="field__input"
+            [class.field__input--error]="websiteError()"
+            type="url"
+            placeholder="https://example.org"
+            [value]="website()"
+            (input)="website.set($any($event.target).value)"
+          />
+          @if (websiteValid() && website()) {
+            <a
+              data-testid="partner-visit-link"
+              class="field__trailing-link"
+              [href]="website()"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit website"
+            >
+              <span class="material-symbols-outlined">open_in_new</span>
+            </a>
+          }
+        </div>
+        @if (websiteError()) {
+          <span data-testid="partner-error-website" class="field__error">{{ websiteError() }}</span>
+        }
+      </div>
+    </section>
+  </div>
+</form>

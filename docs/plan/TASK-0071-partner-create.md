@@ -1,7 +1,7 @@
 ---
 id: TASK-0071
 title: Partner create form
-status: Draft
+status: Done
 phase: P
 depends_on: [TASK-0070]
 traces_to: [L2-037]
