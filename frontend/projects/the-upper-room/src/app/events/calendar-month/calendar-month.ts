@@ -157,10 +157,9 @@ export class CalendarMonth implements OnChanges {
   protected prev(): void {
     const vt = this.viewType();
     this.viewDate.update(d => {
+      if (vt === 'month') return new Date(d.getFullYear(), d.getMonth() - 1, 1);
       const nd = new Date(d);
-      if (vt === 'month') nd.setMonth(nd.getMonth() - 1);
-      else if (vt === 'week') nd.setDate(nd.getDate() - 7);
-      else if (vt === 'day') nd.setDate(nd.getDate() - 1);
+      nd.setDate(nd.getDate() - (vt === 'week' ? 7 : 1));
       return nd;
     });
     this.popoverDay.set(null);
@@ -170,10 +169,9 @@ export class CalendarMonth implements OnChanges {
   protected next(): void {
     const vt = this.viewType();
     this.viewDate.update(d => {
+      if (vt === 'month') return new Date(d.getFullYear(), d.getMonth() + 1, 1);
       const nd = new Date(d);
-      if (vt === 'month') nd.setMonth(nd.getMonth() + 1);
-      else if (vt === 'week') nd.setDate(nd.getDate() + 7);
-      else if (vt === 'day') nd.setDate(nd.getDate() + 1);
+      nd.setDate(nd.getDate() + (vt === 'week' ? 7 : 1));
       return nd;
     });
     this.popoverDay.set(null);
@@ -240,12 +238,7 @@ export class CalendarMonth implements OnChanges {
     return hour >= lo && hour <= hi;
   }
 
-  protected viewYear(): number { return this.viewDate().getFullYear(); }
-  protected viewMonth(): number { return this.viewDate().getMonth(); }
-
   protected capitalize(s: string): string { return s.charAt(0).toUpperCase() + s.slice(1); }
-
-  protected isoDate(d: Date): string { return toIsoDate(d); }
 }
 
 function toIsoDate(d: Date): string {

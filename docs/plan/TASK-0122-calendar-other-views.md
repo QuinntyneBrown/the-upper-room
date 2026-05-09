@@ -1,7 +1,7 @@
 ---
 id: TASK-0122
 title: Calendar Week / Day / Agenda views
-status: Accepted
+status: Done
 phase: E
 depends_on: [TASK-0121]
 traces_to: [L2-054]
