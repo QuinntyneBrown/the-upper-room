@@ -8,7 +8,7 @@ namespace TheUpperRoom.Api.Notifications;
 [Route("api/v1/push")]
 public sealed class PushController : ControllerBase
 {
-    private sealed class PushSubscriptionRecord
+    internal sealed class PushSubscriptionRecord
     {
         public string UserId { get; init; } = "";
         public string Endpoint { get; init; } = "";

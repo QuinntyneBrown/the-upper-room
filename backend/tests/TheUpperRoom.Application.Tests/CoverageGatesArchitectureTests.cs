@@ -47,31 +47,30 @@ public sealed class CoverageGatesArchitectureTests
     }
 
     [Fact]
-    public void Frontend_jest_config_exists()
+    public void Frontend_vitest_config_exists()
     {
         var root = FindRepoRoot();
-        var jestConfig = Path.Combine(root, "frontend", "jest.config.js");
-        Assert.True(File.Exists(jestConfig), "frontend/jest.config.js must exist with coverage thresholds");
+        var vitestConfig = Path.Combine(root, "frontend", "vitest.config.js");
+        Assert.True(File.Exists(vitestConfig), "frontend/vitest.config.js must exist with coverage thresholds");
     }
 
     [Theory]
     [InlineData(80)]
-    public void Frontend_jest_config_enforces_coverage_thresholds(int minThreshold)
+    public void Frontend_vitest_config_enforces_coverage_thresholds(int minThreshold)
     {
         var root = FindRepoRoot();
-        var jestConfig = Path.Combine(root, "frontend", "jest.config.js");
-        if (!File.Exists(jestConfig))
-            Assert.Fail("frontend/jest.config.js does not exist");
+        var vitestConfig = Path.Combine(root, "frontend", "vitest.config.js");
+        if (!File.Exists(vitestConfig))
+            Assert.Fail("frontend/vitest.config.js does not exist");
 
-        var content = File.ReadAllText(jestConfig);
-        Assert.Contains("coverageThreshold", content);
+        var content = File.ReadAllText(vitestConfig);
+        Assert.Contains("thresholds", content);
         Assert.Contains("branches", content);
         Assert.Contains("lines", content);
 
-        // Verify threshold value meets minimum
         var pattern = new System.Text.RegularExpressions.Regex(@"lines\s*:\s*(\d+)");
         var match = pattern.Match(content);
-        Assert.True(match.Success, "jest.config.js must set a 'lines' coverage threshold");
+        Assert.True(match.Success, "vitest.config.js must set a 'lines' coverage threshold");
         var threshold = int.Parse(match.Groups[1].Value);
         Assert.True(threshold >= minThreshold,
             $"Frontend lines threshold {threshold} < required {minThreshold}");

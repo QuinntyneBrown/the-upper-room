@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- traces_to: L2-101 -->
+<!-- Coverage thresholds: Domain>=90%, Application>=85%, Infrastructure>=70% -->
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Include>[TheUpperRoom.Domain]*,[TheUpperRoom.Application]*,[TheUpperRoom.Infrastructure]*</Include>
+          <Exclude>[*Tests*]*</Exclude>
+          <SkipAutoProps>true</SkipAutoProps>
+          <!-- Domain: threshold 90 -->
+          <Thresholds>
+            <Entry>
+              <Include>TheUpperRoom.Domain</Include>
+              <Threshold>90</Threshold>
+              <ThresholdType>line</ThresholdType>
+            </Entry>
+            <Entry>
+              <Include>TheUpperRoom.Application</Include>
+              <Threshold>85</Threshold>
+              <ThresholdType>line</ThresholdType>
+            </Entry>
+            <Entry>
+              <Include>TheUpperRoom.Infrastructure</Include>
+              <Threshold>70</Threshold>
+              <ThresholdType>line</ThresholdType>
+            </Entry>
+          </Thresholds>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
