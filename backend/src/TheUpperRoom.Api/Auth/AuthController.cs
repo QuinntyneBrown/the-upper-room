@@ -66,6 +66,14 @@ public sealed class AuthController : ControllerBase
         return NoContent();
     }
 
+    [HttpPost("sign-out")]
+    [RequireXsrf]
+    public IActionResult SignOut()
+    {
+        Response.Cookies.Delete("tar.refresh", new CookieOptions { Path = "/api/v1/auth" });
+        return NoContent();
+    }
+
     [HttpPost("exchange")]
     public ActionResult<ExchangeResponse> Exchange(ExchangeRequest req)
     {

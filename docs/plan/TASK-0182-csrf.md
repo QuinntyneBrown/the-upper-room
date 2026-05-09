@@ -1,7 +1,7 @@
 ---
 id: TASK-0182
 title: CSRF protection (anti-forgery double-submit)
-status: Accepted
+status: Completed
 phase: Z
 depends_on: [TASK-0021]
 traces_to: [L2-096]

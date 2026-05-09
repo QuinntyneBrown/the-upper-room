@@ -18,6 +18,9 @@ builder.Services.AddSingleton<IPkceVerifier, PkceVerifier>();
 
 var app = builder.Build();
 
+// traces_to: L2-096
+app.UseMiddleware<TheUpperRoom.Api.Auth.CsrfMiddleware>();
+
 // traces_to: L2-092
 app.Use(async (ctx, next) =>
 {

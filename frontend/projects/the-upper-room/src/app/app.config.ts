@@ -1,4 +1,4 @@
-// traces_to: L2-084, L2-069, L2-115, L2-016, L2-015
+// traces_to: L2-084, L2-069, L2-115, L2-016, L2-015, L2-096
 import { ApplicationConfig, ErrorHandler, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -9,6 +9,7 @@ import { provideDomain } from 'domain';
 import { routes } from './app.routes';
 import { correlationIdInterceptor } from './interceptors/correlation-id.interceptor';
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { csrfInterceptor } from './interceptors/csrf.interceptor';
 import { retryInterceptor } from './interceptors/retry.interceptor';
 import { errorInterceptor } from './interceptors/error.interceptor';
 import { GlobalErrorHandler } from './error/global-error-handler';
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([
         correlationIdInterceptor,
         authInterceptor,
+        csrfInterceptor,
         retryInterceptor,
         errorInterceptor,
       ]),
