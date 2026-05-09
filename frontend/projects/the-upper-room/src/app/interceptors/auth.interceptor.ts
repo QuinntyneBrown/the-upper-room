@@ -1,7 +1,7 @@
 // traces_to: L2-084
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { ACCESS_TOKEN_SOURCE } from '../services/access-token.contract';
+import { ACCESS_TOKEN_SOURCE } from 'domain';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = inject(ACCESS_TOKEN_SOURCE).current();

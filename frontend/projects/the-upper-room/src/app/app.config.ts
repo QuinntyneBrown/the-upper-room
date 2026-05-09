@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideApi } from 'api';
 import { provideTarComponents, retryInterceptor } from 'components';
-import { provideDomain, TOKEN_STORE } from 'domain';
+import { provideDomain, TOKEN_STORE, ACCESS_TOKEN_SOURCE } from 'domain';
 
 import { routes } from './app.routes';
 import { correlationIdInterceptor } from './interceptors/correlation-id.interceptor';
@@ -12,7 +12,6 @@ import { authInterceptor } from './interceptors/auth.interceptor';
 import { csrfInterceptor } from './interceptors/csrf.interceptor';
 import { errorInterceptor } from './interceptors/error.interceptor';
 import { GlobalErrorHandler } from './error/global-error-handler';
-import { ACCESS_TOKEN_SOURCE } from './services/access-token.contract';
 import { AUTH_PROVIDER } from './auth/auth-provider.contract';
 import { PkceAuthProvider } from './auth/pkce-auth-provider';
 import { AccessTokenStore } from './auth/access-token-store';

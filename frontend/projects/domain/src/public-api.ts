@@ -30,5 +30,8 @@ export * from './lib/tags/tag.model';
 export * from './lib/tags/tag-selector/tar-tag-selector';
 
 // Auth
+export * from './lib/auth/access-token-source.contract';
 export * from './lib/auth/token-store.contract';
 export * from './lib/auth/sign-out.service';
+export * from './lib/auth/idle.service';
+export * from './lib/auth/inactivity-dialog/inactivity-dialog';

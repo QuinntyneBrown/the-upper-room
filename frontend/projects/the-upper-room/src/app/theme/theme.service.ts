@@ -1,7 +1,7 @@
 // traces_to: L2-115
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ACCESS_TOKEN_SOURCE } from '../services/access-token.contract';
+import { ACCESS_TOKEN_SOURCE } from 'domain';
 
 export type ThemeMode = 'system' | 'light' | 'dark';
 

@@ -4,8 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { TarSnackbar } from '../../../components/src/lib/snackbar/tar-snackbar';
 import { TarConfirmDialog } from '../../../components/src/lib/confirm-dialog/tar-confirm-dialog';
 import { ErrorBoundary } from './error/error-boundary/error-boundary';
-import { InactivityDialog } from './auth/inactivity-dialog/inactivity-dialog';
-import { IdleService } from './auth/idle.service';
+import { InactivityDialog, IdleService } from 'domain';
 
 @Component({
   selector: 'app-root',
