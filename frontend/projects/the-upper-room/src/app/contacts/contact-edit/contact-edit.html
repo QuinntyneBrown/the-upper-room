@@ -2,99 +2,66 @@
   <div class="save-bar">
     <span data-testid="contact-unsaved-dot" class="unsaved-dot" [class.unsaved-dot--visible]="isDirty()"></span>
     <h1 class="save-bar__title">Edit Contact</h1>
-    <button data-testid="contact-cancel" type="button" class="btn-outlined" (click)="onCancel()">Cancel</button>
-    <button data-testid="contact-submit" type="submit" class="btn-filled" [disabled]="submitting()">Save</button>
+    <tar-button variant="outlined" type="button" testId="contact-cancel" (clicked)="onCancel()">Cancel</tar-button>
+    <tar-button variant="filled" type="submit" testId="contact-submit" [disabled]="submitting()">Save</tar-button>
   </div>
 
   @if (formBanner()) {
     <div data-testid="contact-form-banner" class="form-banner">
       {{ formBanner() }}
-      <button data-testid="contact-reload-button" type="button" class="banner-btn" (click)="onReload()">Reload</button>
+      <tar-button variant="text" type="button" testId="contact-reload-button" (clicked)="onReload()">Reload</tar-button>
     </div>
   }
 
   <div class="form-body">
     <div class="field-row">
-      <div class="field">
-        <label class="field__label" for="contact-first-name">First name *</label>
-        <input
-          id="contact-first-name"
-          data-testid="contact-first-name"
-          class="field__input"
-          [class.field__input--error]="firstNameError()"
-          type="text"
-          autocomplete="given-name"
-          [value]="firstName()"
-          (input)="firstName.set($any($event.target).value); setDirty()"
-        />
-        @if (firstNameError()) {
-          <span data-testid="contact-error-first-name" class="field__error">{{ firstNameError() }}</span>
-        }
-      </div>
-
-      <div class="field">
-        <label class="field__label" for="contact-last-name">Last name</label>
-        <input
-          id="contact-last-name"
-          data-testid="contact-last-name"
-          class="field__input"
-          type="text"
-          autocomplete="family-name"
-          [value]="lastName()"
-          (input)="lastName.set($any($event.target).value); setDirty()"
-        />
-      </div>
-    </div>
-
-    <div class="field">
-      <label class="field__label" for="contact-pronouns">Pronouns</label>
-      <input
-        id="contact-pronouns"
-        data-testid="contact-pronouns"
-        class="field__input"
-        type="text"
-        [value]="pronouns()"
-        (input)="pronouns.set($any($event.target).value); setDirty()"
+      <tar-text-field
+        label="First name"
+        testId="contact-first-name"
+        errorTestId="contact-error-first-name"
+        [required]="true"
+        autocomplete="given-name"
+        [value]="firstName()"
+        [error]="firstNameError()"
+        (valueChange)="firstName.set($event); setDirty()"
+      />
+      <tar-text-field
+        label="Last name"
+        testId="contact-last-name"
+        autocomplete="family-name"
+        [value]="lastName()"
+        (valueChange)="lastName.set($event); setDirty()"
       />
     </div>
+
+    <tar-text-field
+      label="Pronouns"
+      testId="contact-pronouns"
+      [value]="pronouns()"
+      (valueChange)="pronouns.set($event); setDirty()"
+    />
 
     <div class="field-row">
-      <div class="field">
-        <label class="field__label" for="contact-title">Title</label>
-        <input
-          id="contact-title"
-          data-testid="contact-title"
-          class="field__input"
-          type="text"
-          [value]="title()"
-          (input)="title.set($any($event.target).value); setDirty()"
-        />
-      </div>
-
-      <div class="field">
-        <label class="field__label" for="contact-org">Organization</label>
-        <input
-          id="contact-org"
-          data-testid="contact-org"
-          class="field__input"
-          type="text"
-          [value]="org()"
-          (input)="org.set($any($event.target).value); setDirty()"
-        />
-      </div>
-    </div>
-
-    <div class="field">
-      <label class="field__label" for="contact-display-name">Display name override</label>
-      <input
-        id="contact-display-name"
-        data-testid="contact-display-name"
-        class="field__input"
-        type="text"
-        [value]="displayName()"
-        (input)="displayName.set($any($event.target).value); setDirty()"
+      <tar-text-field
+        label="Title"
+        testId="contact-title"
+        [value]="title()"
+        (valueChange)="title.set($event); setDirty()"
+      />
+      <tar-text-field
+        label="Organization"
+        testId="contact-org"
+        [value]="org()"
+        (valueChange)="org.set($event); setDirty()"
       />
     </div>
+
+    <tar-text-field
+      label="Display name override"
+      testId="contact-display-name"
+      [value]="displayName()"
+      (valueChange)="displayName.set($event); setDirty()"
+    />
 
     <section class="methods-section">
       <h2 class="methods-section__heading">Tags</h2>

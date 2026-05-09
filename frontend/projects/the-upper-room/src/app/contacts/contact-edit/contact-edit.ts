@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { TarButton, TarTextField } from 'components';
 import { TarTagSelector, Tag } from 'domain';
 import type { PhoneRow, EmailRow, AddressRow } from '../contact-create/contact-create';
 
@@ -11,7 +12,7 @@ const E164_RE = /^\+?[1-9]\d{1,14}$/;
 
 @Component({
   selector: 'app-contact-edit',
-  imports: [TarTagSelector],
+  imports: [TarButton, TarTextField, TarTagSelector],
   templateUrl: './contact-edit.html',
   styleUrl: './contact-edit.scss',
 })
