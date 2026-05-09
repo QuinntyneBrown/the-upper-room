@@ -1,7 +1,7 @@
 ---
 id: TASK-0172
 title: Optimistic UI patterns generalized
-status: Draft
+status: Accepted
 phase: X
 depends_on: [TASK-0008, TASK-0092, TASK-0100]
 traces_to: [L2-114]
