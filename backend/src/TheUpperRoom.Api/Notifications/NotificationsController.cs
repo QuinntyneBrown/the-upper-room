@@ -108,6 +108,27 @@ public sealed class NotificationsController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("preferences")]
+    public IActionResult ListPreferences()
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+
+        var result = NotificationCatalog.All.Select(t =>
+        {
+            var stored = _preferences.FirstOrDefault(p => p.UserId == user.Id && p.Code == t.Code);
+            return new
+            {
+                code = t.Code,
+                inApp = stored?.InApp ?? true,
+                email = stored?.Email ?? true,
+                push = stored?.Push ?? false,
+            };
+        }).ToList();
+
+        return Ok(result);
+    }
+
     [HttpPut("preferences")]
     public IActionResult UpsertPreference([FromBody] UpsertPreferenceRequest? body)
     {

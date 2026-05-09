@@ -1,0 +1,49 @@
+<h1>Notification Preferences</h1>
+
+<table class="np__table">
+  <thead>
+    <tr>
+      <th>Notification</th>
+      <th>In-app</th>
+      <th>Email</th>
+      <th>Push</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (pref of prefs(); track pref.code) {
+      <tr [attr.data-testid]="'pref-row-' + pref.code">
+        <td class="np__code">{{ pref.code }}</td>
+        <td>
+          <input
+            type="checkbox"
+            data-testid="pref-toggle-inApp"
+            [checked]="pref.inApp"
+            (change)="onToggle(pref.code, 'inApp')"
+          />
+        </td>
+        <td>
+          <input
+            type="checkbox"
+            data-testid="pref-toggle-email"
+            [checked]="pref.email"
+            (change)="onToggle(pref.code, 'email')"
+          />
+        </td>
+        <td>
+          <input
+            type="checkbox"
+            data-testid="pref-toggle-push"
+            [checked]="pref.push"
+            (change)="onToggle(pref.code, 'push')"
+          />
+        </td>
+        <td>
+          @if (savedCode() === pref.code) {
+            <span data-testid="pref-saved" class="np__saved">Saved</span>
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

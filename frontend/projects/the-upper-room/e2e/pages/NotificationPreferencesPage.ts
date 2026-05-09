@@ -6,7 +6,7 @@ export class NotificationPreferencesPage {
 
   async goto(): Promise<void> { await this.page.goto('/settings/notifications'); }
 
-  rows(): Locator { return this.page.getByTestId('pref-row'); }
+  rows(): Locator { return this.page.locator('[data-testid^="pref-row-"]'); }
   row(code: string): Locator { return this.page.getByTestId(`pref-row-${code}`); }
 
   toggle(code: string, channel: 'inApp' | 'email' | 'push'): Locator {

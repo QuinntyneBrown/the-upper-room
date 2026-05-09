@@ -33,6 +33,7 @@ import { LocationList } from './locations/location-list/location-list';
 import { LocationForm } from './locations/location-form/location-form';
 import { LocationDetail } from './locations/location-detail/location-detail';
 import { AuditLog } from './admin/audit-log/audit-log';
+import { NotificationPreferences } from './notifications/notification-preferences/notification-preferences';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -85,6 +86,7 @@ export const routes: Routes = [
         data: { permissions: ['KanbanBoard:Configure'] },
       },
       { path: 'profile', component: MyProfile },
+      { path: 'settings/notifications', component: NotificationPreferences },
       {
         path: 'admin/users',
         component: UserList,
