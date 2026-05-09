@@ -128,7 +128,14 @@ export class EventDetail implements OnInit {
   protected openAttendeesDialog(): void { this.showAttendeesDialog.set(true); }
   protected closeAttendeesDialog(): void { this.showAttendeesDialog.set(false); }
 
-  protected addToCalendar(): void { /* TASK-0126 */ }
+  protected addToCalendar(): void {
+    const id = this.event()?.id;
+    if (!id) return;
+    const a = document.createElement('a');
+    a.href = `/api/v1/events/${id}/ics`;
+    a.download = '';
+    a.click();
+  }
 
   protected copyShareUrl(): void { /* TASK-0176 */ }
 
