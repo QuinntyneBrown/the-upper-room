@@ -31,6 +31,15 @@ public sealed class ContactsController : ControllerBase
             ? _store.Count
             : _store.Values.Count(c => c.CityId == user.City);
 
+    internal static IEnumerable<Contact> Search(string term, SeedUser user)
+    {
+        var all = user.Role == Roles.SystemAdmin
+            ? _store.Values
+            : _store.Values.Where(c => c.CityId == user.City);
+        return all.Where(c => c.Name.Contains(term, StringComparison.OrdinalIgnoreCase))
+                  .Select(c => c.ToContact());
+    }
+
     [HttpGet]
     public IActionResult List([FromQuery] string? search, [FromQuery] int? page, [FromQuery] int? size)
     {

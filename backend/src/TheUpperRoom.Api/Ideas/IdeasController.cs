@@ -35,6 +35,10 @@ public sealed class IdeasController : ControllerBase
     internal static int StoreCount() =>
         _store.Count(i => i.Status != "Archived" && i.Status != "Completed");
 
+    internal static IEnumerable<(string Id, string Title, string Status)> Search(string term) =>
+        _store.Where(i => i.Title.Contains(term, StringComparison.OrdinalIgnoreCase))
+              .Select(i => (i.Id, i.Title, i.Status));
+
     private static readonly Dictionary<string, string[]> _proposerTransitions = new()
     {
         ["Draft"] = ["Submitted"],

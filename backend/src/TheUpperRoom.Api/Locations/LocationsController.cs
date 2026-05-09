@@ -29,6 +29,10 @@ public sealed class LocationsController : ControllerBase
     private static readonly List<LocationRecord> _store = [];
     private static readonly HashSet<string> _referencedByFutureEvents = [];
 
+    internal static IEnumerable<(string Id, string Name, string City)> Search(string term) =>
+        _store.Where(l => !l.Archived && l.Name.Contains(term, StringComparison.OrdinalIgnoreCase))
+              .Select(l => (l.Id, l.Name, l.City));
+
     [HttpGet]
     public IActionResult List()
     {

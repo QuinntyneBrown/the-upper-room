@@ -1,6 +1,10 @@
 @let isOpen = drawerOpen();
 @let didScroll = scrolled();
 
+@if (searchOpen()) {
+  <app-global-search (click)="closeSearch()"></app-global-search>
+}
+
 <a data-testid="skip-link" class="app-shell__skip-link" href="#main" (click)="skipToMain($event)">
   Skip to main content
 </a>

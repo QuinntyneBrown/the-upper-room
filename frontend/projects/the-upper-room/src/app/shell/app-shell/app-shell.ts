@@ -4,10 +4,11 @@ import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { TarIconButton, OfflineBanner, breadcrumbsFromUrl, Crumb } from 'components';
 import { SignOutService, TarCitySwitcher, TarNotificationBell } from 'domain';
+import { GlobalSearch } from '../../search/global-search';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, TarIconButton, OfflineBanner, TarCitySwitcher, TarNotificationBell],
+  imports: [RouterOutlet, TarIconButton, OfflineBanner, TarCitySwitcher, TarNotificationBell, GlobalSearch],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
 })
@@ -20,6 +21,7 @@ export class AppShell {
   protected readonly scrolled = signal(false);
   protected readonly url = signal(this.router.url);
   protected readonly crumbs = computed<Crumb[]>(() => breadcrumbsFromUrl(this.url()));
+  protected readonly searchOpen = signal(false);
 
   constructor() {
     this.router.events
@@ -31,6 +33,19 @@ export class AppShell {
   onScroll(): void {
     this.scrolled.set(window.scrollY > 200);
   }
+
+  @HostListener('window:keydown', ['$event'])
+  onGlobalKeydown(e: KeyboardEvent): void {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      this.searchOpen.set(true);
+    }
+    if (e.key === 'Escape' && this.searchOpen()) {
+      this.searchOpen.set(false);
+    }
+  }
+
+  closeSearch(): void { this.searchOpen.set(false); }
 
   toggleDrawer(): void {
     this.drawerOpen.update((v) => !v);

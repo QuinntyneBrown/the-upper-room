@@ -16,6 +16,9 @@ public sealed class PartnersController : ControllerBase
 
     internal static int StoreCount() => _store.Count(p => !p.Archived);
 
+    internal static IEnumerable<PartnerDto> Search(string term) =>
+        _store.Where(p => !p.Archived && p.Name.Contains(term, StringComparison.OrdinalIgnoreCase));
+
     [HttpGet]
     public IActionResult List(
         [FromQuery] string? search,
