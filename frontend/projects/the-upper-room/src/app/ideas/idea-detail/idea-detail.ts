@@ -3,6 +3,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { optimisticMutation } from 'components';
 import { MarkdownEditor } from '../markdown-editor/markdown-editor';
 import type { IdeaDto } from '../idea-list/idea-list';
 
@@ -73,7 +74,12 @@ export class IdeaDetail implements OnInit {
   protected onStatusChange(newStatus: string): void {
     const idea = this.idea();
     if (!idea || newStatus === idea.status) return;
-    this.postStatus(newStatus);
+    optimisticMutation(
+      this.idea,
+      { ...idea, status: newStatus },
+      () => this.http.post<IdeaDetailDto>(`/api/v1/ideas/${this.ideaId}/status`, { status: newStatus }),
+      () => this.snackbar.show("Couldn't save. Try again.", 'error'),
+    );
   }
 
   protected toggleVote(): void {

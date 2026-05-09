@@ -2,7 +2,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { SnackbarService } from 'components';
+import { SnackbarService, optimisticMutation } from 'components';
 import { CardDetailDialog, CardSchemaField, CardDetailPatch } from '../card-detail-dialog/card-detail-dialog';
 
 export interface BoardCardTag {
@@ -191,16 +191,22 @@ export class BoardView implements AfterViewInit, OnDestroy {
     }
     const sourceColumnId = card.columnId;
 
-    this.board.set({
+    const next = {
       ...current,
       cards: current.cards.map((c) =>
         c.id === cardId ? { ...c, columnId: column.id, swimlaneKey: targetSwimlaneKey ?? c.swimlaneKey } : c
       ),
-    });
+    };
 
     const body: Record<string, string | undefined> = { targetColumnId: column.id, sourceColumnId };
     if (targetSwimlaneKey !== undefined) body['targetSwimlaneKey'] = targetSwimlaneKey;
-    this.http.post(`/api/v1/cards/${cardId}/move`, body).subscribe();
+
+    optimisticMutation(
+      this.board,
+      next,
+      () => this.http.post(`/api/v1/cards/${cardId}/move`, body),
+      () => this.snackbar.show("Couldn't save. Try again.", 'error'),
+    );
   }
 
   protected cardCount(columnId: string): number {
@@ -247,11 +253,16 @@ export class BoardView implements AfterViewInit, OnDestroy {
     const current = this.board();
     if (!current || card.columnId === targetColumn.id) return;
     const sourceColumnId = card.columnId;
-    this.board.set({
+    const next = {
       ...current,
       cards: current.cards.map((c) => (c.id === card.id ? { ...c, columnId: targetColumn.id } : c)),
-    });
-    this.http.post(`/api/v1/cards/${card.id}/move`, { targetColumnId: targetColumn.id, sourceColumnId }).subscribe();
+    };
+    optimisticMutation(
+      this.board,
+      next,
+      () => this.http.post(`/api/v1/cards/${card.id}/move`, { targetColumnId: targetColumn.id, sourceColumnId }),
+      () => this.snackbar.show("Couldn't save. Try again.", 'error'),
+    );
   }
 
   protected closeMoveSheet(): void {

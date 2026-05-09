@@ -1,7 +1,7 @@
 // traces_to: L2-048, L2-049
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SnackbarService } from 'components';
+import { SnackbarService, optimisticMutation } from 'components';
 import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
 
 export interface IdeaDto {
@@ -64,17 +64,17 @@ export class IdeaList implements OnInit {
 
   protected toggleVote(idea: IdeaDto): void {
     const wasVoted = idea.hasVoted;
-    this.ideas.update((list) =>
-      list.map((i) =>
-        i.id === idea.id
-          ? { ...i, hasVoted: !wasVoted, voteCount: wasVoted ? i.voteCount - 1 : i.voteCount + 1 }
-          : i
-      )
+    const next = this.ideas().map((i) =>
+      i.id === idea.id
+        ? { ...i, hasVoted: !wasVoted, voteCount: wasVoted ? i.voteCount - 1 : i.voteCount + 1 }
+        : i
     );
 
-    this.http.post<IdeaDto>(`/api/v1/ideas/${idea.id}/vote`, {}).subscribe((updated) => {
-      this.ideas.update((list) => list.map((i) => (i.id === updated.id ? updated : i)));
-      if (wasVoted) this.snackbar.show('Vote removed', 'info');
-    });
+    optimisticMutation(
+      this.ideas,
+      next,
+      () => this.http.post<IdeaDto>(`/api/v1/ideas/${idea.id}/vote`, {}),
+      () => this.snackbar.show("Couldn't save. Try again.", 'error'),
+    );
   }
 }
