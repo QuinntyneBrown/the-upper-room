@@ -68,13 +68,21 @@ internal sealed class ListContactsHandler : IRequestHandler<ListContactsQuery, L
         if (user is null)
             return Task.FromResult(new ListContactsResult(Array.Empty<Contact>(), 0, ContactsOutcome.Unauthorized));
 
-        var allCities = request.Scope == "all";
-        if (allCities && user.Role != Roles.SystemAdmin)
+        var allCities = request.Scope == "all" || request.Scope == "__all__";
+        var cityFilter = !allCities && !string.IsNullOrEmpty(request.Scope) ? request.Scope : null;
+
+        if ((allCities || cityFilter != null) && user.Role != Roles.SystemAdmin)
             return Task.FromResult(new ListContactsResult(Array.Empty<Contact>(), 0, ContactsOutcome.Forbidden));
 
-        IEnumerable<ContactRow> items = allCities || user.Role == Roles.SystemAdmin
-            ? _db.Contacts.AsEnumerable()
-            : _db.Contacts.Where(c => c.CityId == user.City).AsEnumerable();
+        IEnumerable<ContactRow> items;
+        if (allCities)
+            items = _db.Contacts.AsEnumerable();
+        else if (cityFilter != null && user.Role == Roles.SystemAdmin)
+            items = _db.Contacts.Where(c => c.CityId.Equals(cityFilter, StringComparison.OrdinalIgnoreCase)).AsEnumerable();
+        else if (user.Role == Roles.SystemAdmin)
+            items = _db.Contacts.AsEnumerable();
+        else
+            items = _db.Contacts.Where(c => c.CityId == user.City).AsEnumerable();
 
         if (!string.IsNullOrEmpty(request.Search))
             items = items.Where(c => c.Name.Contains(request.Search, StringComparison.OrdinalIgnoreCase));

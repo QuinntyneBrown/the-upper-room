@@ -1,9 +1,9 @@
 // traces_to: L2-029, L2-030, L2-112
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, computed, effect, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { PERMISSIONS_SERVICE } from 'domain';
+import { CityScopeService, PERMISSIONS_SERVICE } from 'domain';
 import { TarEmptyState, TarAvatar } from 'components';
 
 export interface ContactPhone {
@@ -43,6 +43,7 @@ export class ContactList implements OnInit, OnDestroy, AfterViewInit {
 
   private readonly http = inject(HttpClient);
   private readonly perms = inject(PERMISSIONS_SERVICE);
+  private readonly cityScope = inject(CityScopeService);
   private readonly destroy$ = new Subject<void>();
   private readonly search$ = new Subject<string>();
   private observer?: IntersectionObserver;
@@ -64,8 +65,16 @@ export class ContactList implements OnInit, OnDestroy, AfterViewInit {
   });
   protected readonly totalPages = computed(() => Math.ceil(this.total() / PAGE_SIZE));
 
+  constructor() {
+    effect(() => {
+      this.cityScope.current();
+      this.contacts.set([]);
+      this.currentPage.set(1);
+      this.loadPage(1);
+    });
+  }
+
   ngOnInit(): void {
-    this.loadPage(1);
     this.search$
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe(() => {
@@ -103,6 +112,10 @@ export class ContactList implements OnInit, OnDestroy, AfterViewInit {
     const q = this.searchQuery();
     if (q) params.set('search', q);
     if (this.showArchived()) params.set('archived', 'true');
+    if (this.perms.hasPermission('City:Switch')) {
+      const scope = this.cityScope.current();
+      if (scope) params.set('scope', scope);
+    }
     return params.toString();
   }
 

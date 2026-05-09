@@ -1,6 +1,6 @@
 // traces_to: L2-009..L2-014, L2-021, L2-026
 import { Component, HostListener, signal, computed, inject } from '@angular/core';
-import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TarIconButton, OfflineBanner, breadcrumbsFromUrl, Crumb } from 'components';
@@ -9,7 +9,7 @@ import { GlobalSearch } from '../../search/global-search';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, TarIconButton, OfflineBanner, TarCitySwitcher, TarNotificationBell],
+  imports: [RouterOutlet, RouterLink, TarIconButton, OfflineBanner, TarCitySwitcher, TarNotificationBell],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
 })
