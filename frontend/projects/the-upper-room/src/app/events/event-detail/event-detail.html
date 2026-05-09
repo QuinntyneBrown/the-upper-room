@@ -67,12 +67,67 @@
         <div class="event-detail-card__icon">
           <span class="material-symbols-outlined">people</span>
         </div>
-        <div>
+        <div class="event-rsvp-card__body">
           <p class="event-detail-card__value">
             {{ ev.rsvpCount }}{{ ev.capacity ? ' / ' + ev.capacity : '' }} RSVPs
           </p>
+          @if (myRsvpStatus()) {
+            <p data-testid="rsvp-status" class="event-rsvp__status">{{ myRsvpStatus() }}
+              @if (myRsvpStatus() === 'Waitlisted' && myWaitlistPosition()) {
+                <span class="event-rsvp__waitlist-pos">(#{{ myWaitlistPosition() }})</span>
+              }
+            </p>
+          }
+          <div class="event-rsvp__actions">
+            <button
+              data-testid="rsvp-button-yes"
+              type="button"
+              class="btn-filled"
+              [class.btn-filled--active]="myRsvpStatus() === 'Going'"
+              (click)="rsvp('Yes')"
+            >Going</button>
+            <button
+              data-testid="rsvp-button-maybe"
+              type="button"
+              class="btn-tonal"
+              [class.btn-tonal--active]="myRsvpStatus() === 'Maybe'"
+              (click)="rsvp('Maybe')"
+            >Maybe</button>
+            <button
+              data-testid="rsvp-button-no"
+              type="button"
+              class="btn-outlined"
+              [class.btn-outlined--active]="myRsvpStatus() === 'Cancelled'"
+              (click)="rsvp('No')"
+            >Can't go</button>
+          </div>
         </div>
       </div>
+
+      @if (isOrganizer() && pendingRsvps().length > 0) {
+        <div data-testid="rsvp-panel" class="event-rsvp-panel">
+          <h3 class="event-rsvp-panel__title">Pending Approvals</h3>
+          @for (req of pendingRsvps(); track req.id) {
+            <div [attr.data-testid]="'rsvp-request-' + req.id" class="event-rsvp-panel__item">
+              <span class="event-rsvp-panel__name">{{ req.userName }}</span>
+              <div class="event-rsvp-panel__btns">
+                <button
+                  [attr.data-testid]="'rsvp-approve-' + req.id"
+                  type="button"
+                  class="btn-filled"
+                  (click)="approvePendingRsvp(req.id)"
+                >Approve</button>
+                <button
+                  [attr.data-testid]="'rsvp-deny-' + req.id"
+                  type="button"
+                  class="btn-outlined"
+                  (click)="denyPendingRsvp(req.id)"
+                >Deny</button>
+              </div>
+            </div>
+          }
+        </div>
+      }
 
       @if (ev.attendees.length > 0) {
         <div data-testid="event-attendees-grid" class="event-attendees">

@@ -22,7 +22,7 @@ public sealed record CreateEventRequest(
 [Route("api/v1/events")]
 public sealed class EventsController : ControllerBase
 {
-    private static readonly List<EventDto> _store =
+    internal static readonly List<EventDto> Store =
     [
         new("e-seed", "City Prayer Night", null, "Scheduled",
             DateTimeOffset.UtcNow.AddDays(14), DateTimeOffset.UtcNow.AddDays(14).AddHours(2),
@@ -46,7 +46,7 @@ public sealed class EventsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        IEnumerable<EventDto> items = _store;
+        IEnumerable<EventDto> items = Store;
 
         if (!string.IsNullOrEmpty(status))
             items = items.Where(e => e.Status.Equals(status, StringComparison.OrdinalIgnoreCase));
@@ -71,7 +71,7 @@ public sealed class EventsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var ev = _store.FirstOrDefault(e => e.Id == id);
+        var ev = Store.FirstOrDefault(e => e.Id == id);
         if (ev is null) return NotFound();
         return Ok(ev);
     }
@@ -96,8 +96,10 @@ public sealed class EventsController : ControllerBase
             0,
             body.Capacity,
             body.Tags ?? [],
-            body.Description);
-        _store.Add(ev);
+            body.Description,
+            null,
+            body.RequiresApproval);
+        Store.Add(ev);
         return Created($"/api/v1/events/{ev.Id}", ev);
     }
 
@@ -109,10 +111,10 @@ public sealed class EventsController : ControllerBase
         if (body is null || string.IsNullOrWhiteSpace(body.Title))
             return UnprocessableEntity(new { error = "Title is required." });
 
-        var idx = _store.FindIndex(e => e.Id == id);
+        var idx = Store.FindIndex(e => e.Id == id);
         if (idx < 0) return NotFound();
 
-        var existing = _store[idx];
+        var existing = Store[idx];
         var updated = existing with
         {
             Title = body.Title,
@@ -122,9 +124,10 @@ public sealed class EventsController : ControllerBase
             Location = body.Location,
             IsVirtual = body.IsVirtual,
             Capacity = body.Capacity,
+            RequiresApproval = body.RequiresApproval,
             Tags = body.Tags ?? [],
         };
-        _store[idx] = updated;
+        Store[idx] = updated;
         return Ok(updated);
     }
 

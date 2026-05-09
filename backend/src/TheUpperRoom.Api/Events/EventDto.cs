@@ -16,4 +16,5 @@ public sealed record EventDto(
     int? Capacity,
     string[] Tags,
     string? Description = null,
-    IReadOnlyList<AttendeeDto>? Attendees = null);
+    IReadOnlyList<AttendeeDto>? Attendees = null,
+    bool RequiresApproval = false);
