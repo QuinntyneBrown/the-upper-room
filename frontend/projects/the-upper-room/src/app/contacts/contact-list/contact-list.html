@@ -40,7 +40,7 @@
 } @else {
   <div data-testid="contacts-grid" class="contact-grid">
     @for (contact of contacts(); track contact.id) {
-      <div [attr.data-testid]="'contact-card-' + contact.name" class="contact-card" [class.contact-card--archived]="contact.archived">
+      <a [attr.data-testid]="'contact-card-' + contact.name" [routerLink]="['/contacts', contact.id]" class="contact-card" [class.contact-card--archived]="contact.archived">
         <tar-avatar [user]="avatarUser(contact)" [size]="48" />
         <div class="contact-card__body">
           <span class="contact-card__name">{{ contact.name }}</span>
@@ -64,7 +64,7 @@
             </div>
           }
         </div>
-      </div>
+      </a>
     }
   </div>
 
