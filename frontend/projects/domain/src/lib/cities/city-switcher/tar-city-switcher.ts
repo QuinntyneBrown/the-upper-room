@@ -1,5 +1,5 @@
 // traces_to: L2-109
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TarBanner } from 'components';
 import { PERMISSIONS_SERVICE } from '../../rbac/permissions.contract';
@@ -18,7 +18,7 @@ interface CityRow {
   templateUrl: './tar-city-switcher.html',
   styleUrl: './tar-city-switcher.scss',
 })
-export class TarCitySwitcher implements OnInit {
+export class TarCitySwitcher {
   private readonly http = inject(HttpClient);
   private readonly perms = inject(PERMISSIONS_SERVICE);
   protected readonly scope = inject(CityScopeService);
@@ -28,6 +28,15 @@ export class TarCitySwitcher implements OnInit {
   protected readonly visibleCities = computed(() => this.cities().filter((c) => !c.archived));
   protected readonly open = signal(false);
 
+  constructor() {
+    effect(() => {
+      if (this.canSwitch() && this.cities().length === 0) {
+        this.http.get<{ items: CityRow[] }>('/api/v1/cities')
+          .subscribe((r) => this.cities.set(r.items));
+      }
+    });
+  }
+
   protected readonly currentLabel = computed(() => {
     if (this.scope.isAllCities()) return 'All cities';
     const slug = this.scope.current();
@@ -35,13 +44,6 @@ export class TarCitySwitcher implements OnInit {
   });
 
   protected readonly allCitiesValue = ALL_CITIES;
-
-  ngOnInit(): void {
-    if (!this.canSwitch()) return;
-    this.http
-      .get<{ items: CityRow[] }>('/api/v1/cities')
-      .subscribe((r) => this.cities.set(r.items));
-  }
 
   protected toggle(): void {
     this.open.update((v) => !v);
