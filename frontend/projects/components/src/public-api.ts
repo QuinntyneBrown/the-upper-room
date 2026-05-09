@@ -84,3 +84,7 @@ export * from './lib/notes/tar-notes';
 
 // Markdown editor
 export * from './lib/markdown-editor/tar-markdown-editor';
+
+// Network
+export * from './lib/network/network.service';
+export * from './lib/network/offline-banner/offline-banner';

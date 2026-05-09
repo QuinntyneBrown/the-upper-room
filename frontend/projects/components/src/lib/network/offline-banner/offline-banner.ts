@@ -1,6 +1,6 @@
 // traces_to: L2-070
 import { Component, inject } from '@angular/core';
-import { TarBanner } from 'components';
+import { TarBanner } from '../../banner/banner';
 import { NetworkService } from '../network.service';
 
 @Component({
