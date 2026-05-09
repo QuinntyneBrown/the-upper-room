@@ -10,11 +10,10 @@ public sealed class CityScopingTests : IClassFixture<WebApplicationFactory<Progr
 
     public CityScopingTests(WebApplicationFactory<Program> factory) => _factory = factory;
 
-    private HttpRequestMessage Get(string path, string userId, bool allCities = false)
+    private HttpRequestMessage Get(string path, string userId)
     {
         var req = new HttpRequestMessage(HttpMethod.Get, path);
         req.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken(userId));
-        if (allCities) req.Headers.Add("X-All-Cities", "true");
         return req;
     }
 
@@ -35,10 +34,10 @@ public sealed class CityScopingTests : IClassFixture<WebApplicationFactory<Progr
     }
 
     [Fact]
-    public async Task SystemAdmin_with_all_cities_header_bypasses_filter()
+    public async Task SystemAdmin_with_scope_all_bypasses_filter()
     {
         var client = _factory.CreateClient();
-        var response = await client.SendAsync(Get("/api/v1/contacts/c2", "admin", allCities: true));
+        var response = await client.SendAsync(Get("/api/v1/contacts/c2?scope=all", "admin"));
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 }

@@ -29,12 +29,19 @@ public sealed class ContactsController(ContactsDbContext db) : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult List([FromQuery] string? search, [FromQuery] int? page, [FromQuery] int? size)
+    public IActionResult List(
+        [FromQuery] string? search,
+        [FromQuery] int? page,
+        [FromQuery] int? size,
+        [FromQuery] string? scope)
     {
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        IEnumerable<ContactRow> items = user.Role == Roles.SystemAdmin
+        var allCities = scope == "all";
+        if (allCities && user.Role != Roles.SystemAdmin) return StatusCode(403, new { error = "Forbidden" });
+
+        IEnumerable<ContactRow> items = allCities || user.Role == Roles.SystemAdmin
             ? db.Contacts.AsEnumerable()
             : db.Contacts.Where(c => c.CityId == user.City).AsEnumerable();
 
@@ -53,15 +60,17 @@ public sealed class ContactsController(ContactsDbContext db) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Contact> GetById(string id)
+    public ActionResult<Contact> GetById(string id, [FromQuery] string? scope)
     {
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
+        var allCities = scope == "all";
+        if (allCities && user.Role != Roles.SystemAdmin) return StatusCode(403, new { error = "Forbidden" });
+
         var c = db.Contacts.Find(id);
         if (c is null) return NotFound();
 
-        var allCities = user.Role == Roles.SystemAdmin && Request.Headers["X-All-Cities"].ToString() == "true";
         if (allCities) return Ok(c.ToContact());
 
         var visible = CityScope.VisibleOrNull(c, user.City);
