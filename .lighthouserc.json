@@ -1,0 +1,25 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:4200/",
+        "http://localhost:4200/contacts",
+        "http://localhost:4200/ideas",
+        "http://localhost:4200/boards"
+      ],
+      "numberOfRuns": 1
+    },
+    "assert": {
+      "preset": "lighthouse:recommended",
+      "assertions": {
+        "largest-contentful-paint": ["warn", { "maxNumericValue": 2500 }],
+        "total-blocking-time": ["warn", { "maxNumericValue": 300 }],
+        "cumulative-layout-shift": ["warn", { "maxNumericValue": 0.1 }],
+        "interactive": ["warn", { "maxNumericValue": 5000 }]
+      }
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}

@@ -19,6 +19,6 @@ test('angular.json initial bundle warning ≤ 400kB and error ≤ 600kB', () => 
     return parseFloat(val);
   };
 
-  expect(parseKb(initial!.maximumWarning)).toBeLessThanOrEqual(500);
-  expect(parseKb(initial!.maximumError)).toBeLessThanOrEqual(1024);
+  expect(parseKb(initial!.maximumWarning)).toBeLessThanOrEqual(400);
+  expect(parseKb(initial!.maximumError)).toBeLessThanOrEqual(600);
 });
