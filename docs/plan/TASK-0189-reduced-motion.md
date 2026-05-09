@@ -1,7 +1,7 @@
 ---
 id: TASK-0189
 title: Reduced-motion support pass
-status: Accepted
+status: Completed
 phase: Z
 depends_on: [TASK-0002]
 traces_to: [L2-006]
@@ -24,4 +24,4 @@ estimated_context: small
 4. Idea heart click does NOT play scale animation.
 
 ## Definition of Done
-- [ ] No essential motion is also disabled (e.g., a loading spinner still spins, but slowed).
+- [x] No essential motion is also disabled (e.g., a loading spinner still spins, but slowed).
