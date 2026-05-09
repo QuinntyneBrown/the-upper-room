@@ -1,5 +1,17 @@
 <h1>Notification Preferences</h1>
 
+<div class="np__push-section">
+  @if (!pushSubscribed()) {
+    <button type="button" data-testid="push-enable-button" class="btn-outlined" (click)="enablePush()">
+      Enable push notifications
+    </button>
+  } @else {
+    <button type="button" data-testid="push-disable-button" class="btn-outlined" (click)="disablePush()">
+      Disable push notifications
+    </button>
+  }
+</div>
+
 <table class="np__table">
   <thead>
     <tr>

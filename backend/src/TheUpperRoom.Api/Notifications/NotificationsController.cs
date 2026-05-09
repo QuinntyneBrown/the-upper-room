@@ -112,6 +112,11 @@ public sealed class NotificationsController : ControllerBase
             {
                 MailStore.Send(recipientId, subject, bodyText);
             }
+
+            if (pref?.Push == true)
+            {
+                PushController.EnqueuePush(recipientId, subject, bodyText);
+            }
         }
 
         return NoContent();
