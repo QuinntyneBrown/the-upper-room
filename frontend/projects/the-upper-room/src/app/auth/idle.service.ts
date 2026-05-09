@@ -1,7 +1,7 @@
 // traces_to: L2-022
 import { Injectable, inject, signal } from '@angular/core';
 import { ACCESS_TOKEN_SOURCE } from '../services/access-token.contract';
-import { SignOutService } from './sign-out.service';
+import { SignOutService } from 'domain';
 
 const IDLE_THRESHOLD_MS = 30 * 60 * 1000;
 const COUNTDOWN_SECONDS = 60;

@@ -3,9 +3,8 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { catchError, of } from 'rxjs';
-import { ConfirmService } from '../../../../components/src/lib/confirm-dialog/confirm.service';
-import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-snackbar.service';
-import { AccessTokenStore } from './access-token-store';
+import { ConfirmService, SnackbarService } from 'components';
+import { TOKEN_STORE } from './token-store.contract';
 
 @Injectable({ providedIn: 'root' })
 export class SignOutService {
@@ -13,7 +12,7 @@ export class SignOutService {
   private readonly router = inject(Router);
   private readonly confirm = inject(ConfirmService);
   private readonly snackbar = inject(SnackbarService);
-  private readonly tokens = inject(AccessTokenStore);
+  private readonly tokens = inject(TOKEN_STORE);
 
   async signOut(): Promise<void> {
     const ok = await this.confirm.confirm({
@@ -33,7 +32,7 @@ export class SignOutService {
       .subscribe(() => {
         this.tokens.set(null);
         this.snackbar.show("You've been signed out.", 'info');
-        this.router.navigateByUrl('/sign-in?signedOut=1');
+        void this.router.navigateByUrl('/sign-in?signedOut=1');
       });
   }
 }

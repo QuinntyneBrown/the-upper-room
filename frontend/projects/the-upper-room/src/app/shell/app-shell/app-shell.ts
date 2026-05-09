@@ -3,7 +3,7 @@ import { Component, HostListener, signal, computed, inject } from '@angular/core
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { TarIconButton, OfflineBanner, breadcrumbsFromUrl, Crumb } from 'components';
-import { SignOutService } from '../../auth/sign-out.service';
+import { SignOutService } from 'domain';
 import { CitySwitcher } from '../../cities/city-switcher/city-switcher';
 import { NotificationBell } from '../../notifications/notification-bell/notification-bell';
 

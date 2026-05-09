@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideApi } from 'api';
 import { provideTarComponents, retryInterceptor } from 'components';
-import { provideDomain } from 'domain';
+import { provideDomain, TOKEN_STORE } from 'domain';
 
 import { routes } from './app.routes';
 import { correlationIdInterceptor } from './interceptors/correlation-id.interceptor';
@@ -33,6 +33,7 @@ export const appConfig: ApplicationConfig = {
     ),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: ACCESS_TOKEN_SOURCE, useExisting: AccessTokenStore },
+    { provide: TOKEN_STORE, useExisting: AccessTokenStore },
     { provide: AUTH_PROVIDER, useExisting: PkceAuthProvider },
     provideApi(),
     provideTarComponents({ dictionaries: DICTIONARIES }),
