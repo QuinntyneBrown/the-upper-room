@@ -1,7 +1,7 @@
 ---
 id: TASK-0173
 title: PWA manifest + service worker (shell-only cache)
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0001]
 traces_to: [L2-117, L2-116]
