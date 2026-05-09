@@ -1,0 +1,83 @@
+<div class="toolbar">
+  <input
+    data-testid="partners-search"
+    class="search-input"
+    type="search"
+    placeholder="Search partners…"
+    [value]="searchQuery()"
+    (input)="onSearch($any($event.target).value)"
+  />
+  <button
+    data-testid="partners-filter-archived"
+    type="button"
+    class="filter-chip"
+    [class.filter-chip--active]="showArchived()"
+    (click)="toggleArchived()"
+  >
+    Archived
+  </button>
+  @if (canCreate()) {
+    <button data-testid="partners-new-button" type="button" class="btn-filled btn-filled--toolbar">
+      New partner
+    </button>
+  }
+</div>
+
+@if (isEmpty()) {
+  <div data-testid="partners-empty-state">
+    <tar-empty-state
+      icon="domain_disabled"
+      heading="No partners yet"
+      body="Add your first partner to get started."
+    >
+      @if (canCreate()) {
+        <button data-testid="partners-new-button" type="button" class="btn-filled">
+          New partner
+        </button>
+      }
+    </tar-empty-state>
+  </div>
+} @else {
+  <div data-testid="partners-grid" class="partner-grid">
+    @for (partner of partners(); track partner.id) {
+      <div
+        [attr.data-testid]="'partner-card-' + partner.name"
+        class="partner-card"
+        [class.partner-card--archived]="partner.archived"
+      >
+        <div class="partner-card__avatar">
+          @if (partner.logo) {
+            <img class="partner-card__logo" [src]="partner.logo" [alt]="partner.name" />
+          } @else {
+            <span class="partner-card__initial">{{ partner.name.charAt(0) }}</span>
+          }
+        </div>
+        <div class="partner-card__body">
+          <span class="partner-card__name">{{ partner.name }}</span>
+          @if (partner.website) {
+            <span class="partner-card__website">{{ websiteDomain(partner.website) }}</span>
+          }
+          @if (partner.contactCount > 0) {
+            <span class="partner-card__contacts">{{ partner.contactCount }} contact{{ partner.contactCount === 1 ? '' : 's' }}</span>
+          }
+          @if (visibleTags(partner).length > 0) {
+            <div class="partner-card__tags">
+              @for (tag of visibleTags(partner); track tag.id) {
+                <span class="tag-chip" [attr.data-color]="tag.color">{{ tag.name }}</span>
+              }
+              @if (extraTagCount(partner) > 0) {
+                <span class="tag-chip tag-chip--more">+{{ extraTagCount(partner) }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+}
+
+@if (canCreate()) {
+  <button data-testid="partners-fab" type="button" class="fab" aria-label="New partner">
+    <span class="fab__icon">+</span>
+  </button>
+}

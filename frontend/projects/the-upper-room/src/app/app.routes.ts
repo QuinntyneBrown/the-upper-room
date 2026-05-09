@@ -34,6 +34,7 @@ import { LocationForm } from './locations/location-form/location-form';
 import { LocationDetail } from './locations/location-detail/location-detail';
 import { AuditLog } from './admin/audit-log/audit-log';
 import { TarNotificationPreferences } from 'domain';
+import { PartnerList } from './partners/partner-list/partner-list';
 import { DateFormattingTest } from './date-formatting-test/date-formatting-test';
 
 export const routes: Routes = [
@@ -76,7 +77,7 @@ export const routes: Routes = [
       { path: 'locations', component: LocationList },
       { path: 'locations/new', component: LocationForm },
       { path: 'locations/:id', component: LocationDetail },
-      { path: 'partners', component: Stub },
+      { path: 'partners', component: PartnerList },
       { path: 'partners/:id', component: Stub },
       { path: 'boards', component: BoardList },
       { path: 'boards/:id', component: BoardView },
