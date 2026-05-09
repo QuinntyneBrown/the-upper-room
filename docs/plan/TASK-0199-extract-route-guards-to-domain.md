@@ -1,7 +1,7 @@
 ---
 id: TASK-0199
 title: Extract route guards to domain library
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0031, TASK-0032]
 traces_to: []
