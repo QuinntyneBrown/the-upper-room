@@ -1,6 +1,6 @@
 # TASK-UI-008 — Migrate `create-board-wizard.html` to Angular Material / Component Library
 
-**Status:** Draft  
+**Status:** Accepted  
 **Priority:** P2  
 **Effort:** Small (< 1 day)  
 **File:** `frontend/projects/the-upper-room/src/app/kanban/create-board-wizard/create-board-wizard.html`
