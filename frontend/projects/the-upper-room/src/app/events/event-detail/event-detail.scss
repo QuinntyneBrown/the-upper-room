@@ -120,6 +120,12 @@
   margin: 0;
 }
 
+.event-detail-card__tz {
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-on-surface-variant);
+  margin: var(--md-sys-space-1) 0 0;
+}
+
 .event-detail__location {
   display: flex;
   align-items: center;

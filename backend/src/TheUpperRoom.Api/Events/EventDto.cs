@@ -21,4 +21,5 @@ public sealed record EventDto(
     string? RecurrenceRule = null,
     string? RecurrenceId = null,
     string? OccurrenceDate = null,
-    string[]? ExceptionDates = null);
+    string[]? ExceptionDates = null,
+    string? Timezone = null);

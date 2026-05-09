@@ -60,6 +60,9 @@
           <p class="event-detail-card__value">{{ formatDate(ev.startAt) }}</p>
           <p class="event-detail-card__label">End</p>
           <p class="event-detail-card__value">{{ formatDate(ev.endAt) }}</p>
+          @if (ev.timezone) {
+            <p data-testid="event-timezone-label" class="event-detail-card__tz">{{ ev.timezone }}</p>
+          }
         </div>
       </div>
 

@@ -17,7 +17,8 @@ public sealed record CreateEventRequest(
     int? Capacity = null,
     bool RequiresApproval = false,
     string[]? Tags = null,
-    string? RecurrenceRule = null);
+    string? RecurrenceRule = null,
+    string? Timezone = null);
 
 [ApiController]
 [Route("api/v1/events")]
@@ -114,7 +115,9 @@ public sealed class EventsController : ControllerBase
             body.Description,
             null,
             body.RequiresApproval,
-            body.RecurrenceRule);
+            body.RecurrenceRule,
+            null, null, null,
+            body.Timezone);
         Store.Add(ev);
         return Created($"/api/v1/events/{ev.Id}", ev);
     }
@@ -143,6 +146,7 @@ public sealed class EventsController : ControllerBase
             RequiresApproval = body.RequiresApproval,
             Tags = body.Tags ?? [],
             RecurrenceRule = body.RecurrenceRule ?? existing.RecurrenceRule,
+            Timezone = body.Timezone ?? existing.Timezone,
         };
         Store[idx] = updated;
         return Ok(updated);

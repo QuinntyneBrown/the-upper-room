@@ -30,6 +30,7 @@ export interface EventDetailDto {
   readonly recurrenceRule?: string | null;
   readonly recurrenceId?: string | null;
   readonly occurrenceDate?: string | null;
+  readonly timezone?: string | null;
 }
 
 interface RsvpResponse {
