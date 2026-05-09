@@ -1,7 +1,7 @@
 ---
 id: TASK-0192
 title: Extract NetworkService and OfflineBanner to components library
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0012]
 traces_to: []

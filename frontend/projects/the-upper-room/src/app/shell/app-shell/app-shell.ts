@@ -2,9 +2,8 @@
 import { Component, HostListener, signal, computed, inject } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { TarIconButton } from 'components';
+import { TarIconButton, OfflineBanner } from 'components';
 import { breadcrumbsFromUrl, Crumb } from '../breadcrumb.service';
-import { OfflineBanner } from '../../../../../components/src/lib/network/offline-banner/offline-banner';
 import { SignOutService } from '../../auth/sign-out.service';
 import { CitySwitcher } from '../../cities/city-switcher/city-switcher';
 import { NotificationBell } from '../../notifications/notification-bell/notification-bell';
