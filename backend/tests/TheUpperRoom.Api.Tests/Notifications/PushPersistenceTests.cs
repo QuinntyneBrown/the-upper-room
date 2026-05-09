@@ -107,9 +107,9 @@ public sealed class PushPersistenceTests : IDisposable
             new { code = "welcome", recipientIds = new[] { "lead" }, data = (object?)null });
         Assert.Equal(HttpStatusCode.NoContent, dispatch.StatusCode);
 
-        var pending = await AuthedClient(factory2, "admin").GetAsync("/api/v1/push/test/pending?userId=lead");
-        var json = await pending.Content.ReadAsStringAsync();
-        Assert.Contains("\"title\"", json); // a push was enqueued because subscription was found
+        using var scope = factory2.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<PushDbContext>();
+        Assert.NotEmpty(db.PendingPushes.Where(p => p.UserId == "lead").ToList()); // subscription survived
     }
 
     [Fact]
@@ -132,10 +132,9 @@ public sealed class PushPersistenceTests : IDisposable
         }
 
         await using var factory2 = Factory();
-        var pending = await AuthedClient(factory2, "admin").GetAsync("/api/v1/push/test/pending?userId=lead");
-        Assert.Equal(HttpStatusCode.OK, pending.StatusCode);
-        var json = await pending.Content.ReadAsStringAsync();
-        Assert.Contains("\"title\"", json);
+        using var scope = factory2.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<PushDbContext>();
+        Assert.NotEmpty(db.PendingPushes.Where(p => p.UserId == "lead").ToList());
     }
 
     [Fact]

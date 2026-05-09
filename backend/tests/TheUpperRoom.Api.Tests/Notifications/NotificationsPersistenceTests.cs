@@ -117,9 +117,8 @@ public sealed class NotificationsPersistenceTests : IDisposable
         }
 
         await using var factory2 = Factory();
-        var resp = await AuthedClient(factory2, "admin").GetAsync("/api/v1/notifications/test/sent-mail?toUserId=admin");
-        Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
-        var items = await resp.Content.ReadAsStringAsync();
-        Assert.Contains("\"toUserId\":\"admin\"", items);
+        using var scope = factory2.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
+        Assert.Contains(db.SentMail.ToList(), m => m.ToUserId == "admin");
     }
 }

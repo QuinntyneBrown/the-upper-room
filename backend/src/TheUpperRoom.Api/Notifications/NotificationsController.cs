@@ -102,18 +102,6 @@ public sealed class NotificationsController(NotificationsDbContext db, MailStore
         return NoContent();
     }
 
-    [HttpGet("test/sent-mail")]
-    public IActionResult ListSentMail([FromQuery] string? toUserId)
-    {
-        var items = db.SentMail
-            .Where(m => toUserId == null || m.ToUserId == toUserId)
-            .AsEnumerable()
-            .OrderBy(m => m.SentAt)
-            .Select(m => new { m.ToUserId, m.Subject, m.Body, m.SentAt })
-            .ToList();
-        return Ok(items);
-    }
-
     [HttpGet("preferences")]
     public IActionResult ListPreferences()
     {

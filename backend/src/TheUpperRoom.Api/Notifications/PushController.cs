@@ -48,16 +48,6 @@ public sealed class PushController(PushDbContext db, PushSettings settings) : Co
         return NoContent();
     }
 
-    [HttpGet("test/pending")]
-    public IActionResult TestPending([FromQuery] string? userId)
-    {
-        var items = db.PendingPushes
-            .Where(p => userId == null || p.UserId == userId)
-            .Select(p => new { title = p.Title, body = p.Body })
-            .ToList();
-        return Ok(items);
-    }
-
     private SeedUser? GetCurrentUser()
     {
         var userId = User.FindFirst("sub")?.Value ?? "";

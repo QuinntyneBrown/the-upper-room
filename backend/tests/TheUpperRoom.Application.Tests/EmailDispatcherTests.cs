@@ -1,7 +1,9 @@
-// traces_to: L2-063
-using System.Net;
+// traces_to: L2-063, TASK-0231
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using TheUpperRoom.Api.Notifications;
 using TheUpperRoom.Domain.Notifications;
 
 namespace TheUpperRoom.Application.Tests;
@@ -26,7 +28,7 @@ public sealed class EmailDispatcherTests : IClassFixture<WebApplicationFactory<P
 
         await client.SendAsync(new HttpRequestMessage(HttpMethod.Post, "/api/v1/notifications/dispatch")
         {
-            Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("lead")) },
+            Headers = { Authorization = new AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("lead")) },
             Content = JsonContent.Create(new
             {
                 code = "invite_sent",
@@ -35,7 +37,7 @@ public sealed class EmailDispatcherTests : IClassFixture<WebApplicationFactory<P
             }),
         });
 
-        var mail = await GetSentMail(client, "admin");
+        var mail = GetSentMail("admin");
         Assert.Contains(mail, m => m.Subject.Contains("Invitation sent") && m.Body.Contains("test@example.com"));
     }
 
@@ -46,30 +48,24 @@ public sealed class EmailDispatcherTests : IClassFixture<WebApplicationFactory<P
 
         await client.SendAsync(new HttpRequestMessage(HttpMethod.Put, "/api/v1/notifications/preferences")
         {
-            Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("guest")) },
+            Headers = { Authorization = new AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("guest")) },
             Content = JsonContent.Create(new { code = "welcome", inApp = true, email = false, push = false }),
         });
 
         await client.SendAsync(new HttpRequestMessage(HttpMethod.Post, "/api/v1/notifications/dispatch")
         {
-            Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("lead")) },
+            Headers = { Authorization = new AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("lead")) },
             Content = JsonContent.Create(new { code = "welcome", recipientIds = new[] { "guest" } }),
         });
 
-        var mail = await GetSentMail(client, "guest");
+        var mail = GetSentMail("guest");
         Assert.DoesNotContain(mail, m => m.Subject.Contains("Welcome to The Upper Room"));
     }
 
-    private async Task<MailDto[]> GetSentMail(HttpClient client, string toUserId)
+    private SentMailRow[] GetSentMail(string toUserId)
     {
-        var req = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/notifications/test/sent-mail?toUserId={toUserId}")
-        {
-            Headers = { Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _factory.IssueAccessToken("admin")) },
-        };
-        var resp = await client.SendAsync(req);
-        Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
-        return await resp.Content.ReadFromJsonAsync<MailDto[]>() ?? [];
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
+        return db.SentMail.Where(m => m.ToUserId == toUserId).ToArray();
     }
-
-    private sealed record MailDto(string ToUserId, string Subject, string Body, DateTimeOffset SentAt);
 }
