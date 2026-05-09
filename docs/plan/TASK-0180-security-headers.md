@@ -1,7 +1,7 @@
 ---
 id: TASK-0180
 title: Security headers + HSTS + CSP
-status: Accepted
+status: Completed
 phase: Z
 depends_on: [TASK-0001]
 traces_to: [L2-092]
