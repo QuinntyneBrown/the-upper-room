@@ -1,4 +1,4 @@
-// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016, L2-015, L2-017, L2-024, L2-038, L2-029, L2-032, L2-048
+// traces_to: L2-074, L2-084, L2-067, L2-068, L2-069, L2-115, L2-016, L2-015, L2-017, L2-024, L2-038, L2-029, L2-032, L2-048, L2-052
 import { Routes } from '@angular/router';
 import { Landing } from './landing/landing';
 import { Stub } from './stub/stub';
@@ -38,6 +38,7 @@ import { PartnerList } from './partners/partner-list/partner-list';
 import { PartnerCreate } from './partners/partner-create/partner-create';
 import { PartnerDetail } from './partners/partner-detail/partner-detail';
 import { PartnerEdit } from './partners/partner-edit/partner-edit';
+import { EventList } from './events/event-list/event-list';
 import { DateFormattingTest } from './date-formatting-test/date-formatting-test';
 
 export const routes: Routes = [
@@ -80,6 +81,7 @@ export const routes: Routes = [
       { path: 'locations', component: LocationList },
       { path: 'locations/new', component: LocationForm },
       { path: 'locations/:id', component: LocationDetail },
+      { path: 'events', component: EventList },
       { path: 'partners', component: PartnerList },
       { path: 'partners/new', component: PartnerCreate },
       { path: 'partners/:id/edit', component: PartnerEdit },

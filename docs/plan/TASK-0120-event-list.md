@@ -1,7 +1,7 @@
 ---
 id: TASK-0120
 title: Event data model + API + list page
-status: Draft
+status: Done
 phase: E
 depends_on: [TASK-0033, TASK-0070, TASK-0110]
 traces_to: [L2-052, L2-053]

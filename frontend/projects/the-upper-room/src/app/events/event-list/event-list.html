@@ -1,0 +1,88 @@
+<div class="events-toolbar">
+  <h1 class="events-toolbar__title">Events</h1>
+  <div class="events-toolbar__controls">
+    <select
+      data-testid="events-filter-status"
+      class="filter-select"
+      [value]="statusFilter()"
+      (change)="onStatusFilter($any($event.target).value)"
+    >
+      <option value="">All statuses</option>
+      <option value="Scheduled">Scheduled</option>
+      <option value="Cancelled">Cancelled</option>
+      <option value="Completed">Completed</option>
+    </select>
+    <button
+      data-testid="events-view-toggle"
+      type="button"
+      class="btn-icon-outlined"
+      [attr.aria-label]="viewMode() === 'list' ? 'Switch to calendar view' : 'Switch to list view'"
+      (click)="toggleView()"
+    >
+      <span class="material-symbols-outlined">{{ viewMode() === 'list' ? 'calendar_month' : 'list' }}</span>
+    </button>
+  </div>
+</div>
+
+@if (viewMode() === 'list') {
+  @if (events().length === 0) {
+    <tar-empty-state
+      data-testid="event-list-empty"
+      icon="event"
+      heading="No events yet"
+      body="Events will appear here once scheduled."
+    />
+  } @else {
+    <div class="events-list">
+      @for (event of events(); track event.id) {
+        <article
+          [attr.data-testid]="'event-card-' + event.id"
+          class="event-card"
+          [class.event-card--cancelled]="event.status === 'Cancelled'"
+        >
+          @if (event.status === 'Cancelled') {
+            <div data-testid="event-cancelled-ribbon" class="event-card__ribbon">Cancelled</div>
+          }
+
+          @if (event.coverImageUrl) {
+            <img class="event-card__cover" [src]="event.coverImageUrl" [alt]="event.title" />
+          }
+
+          <div class="event-card__body">
+            <div class="event-card__meta">
+              <span
+                [attr.data-testid]="'event-status-chip-' + event.id"
+                class="event-status-chip"
+                [attr.data-status]="event.status"
+              >{{ event.status }}</span>
+              @if (event.isVirtual) {
+                <span class="event-card__virtual">
+                  <span class="material-symbols-outlined">videocam</span> Virtual
+                </span>
+              } @else if (event.location) {
+                <span class="event-card__location">
+                  <span class="material-symbols-outlined">location_on</span> {{ event.location }}
+                </span>
+              }
+            </div>
+
+            <h2 data-testid="event-card-title" class="event-card__title">{{ event.title }}</h2>
+
+            <p class="event-card__date">{{ formatDate(event.startAt) }}</p>
+
+            @if (event.capacity) {
+              <p class="event-card__rsvp">{{ event.rsvpCount }} / {{ event.capacity }} RSVPs</p>
+            } @else {
+              <p class="event-card__rsvp">{{ event.rsvpCount }} RSVPs</p>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+} @else {
+  <div data-testid="events-calendar-view" class="events-calendar-placeholder">
+    <span class="material-symbols-outlined events-calendar-placeholder__icon">calendar_month</span>
+    <p>Calendar view coming soon.</p>
+  </div>
+}
