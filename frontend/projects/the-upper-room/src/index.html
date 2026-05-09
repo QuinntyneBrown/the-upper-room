@@ -11,6 +11,48 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
     />
+    <style>
+      #browser-support-banner {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        background: #b91c1c;
+        color: #fff;
+        padding: 10px 16px;
+        font-family: sans-serif;
+        font-size: 14px;
+        text-align: center;
+      }
+      #browser-support-banner.visible { display: flex; align-items: center; justify-content: center; gap: 12px; }
+      #browser-support-dismiss { background: transparent; border: 1px solid #fff; color: #fff; border-radius: 4px; padding: 2px 10px; cursor: pointer; }
+    </style>
+    <script>
+      // traces_to: L2-120 — browser support detection on first paint
+      (function () {
+        try {
+          if (sessionStorage.getItem('browser-support-dismissed')) return;
+          var ua = navigator.userAgent;
+          if (!/Trident\//.test(ua) && !/MSIE /.test(ua)) return;
+          document.addEventListener('DOMContentLoaded', function () {
+            var banner = document.createElement('div');
+            banner.id = 'browser-support-banner';
+            banner.setAttribute('data-testid', 'browser-support-banner');
+            banner.className = 'visible';
+            banner.innerHTML =
+              'Your browser is not supported. Please upgrade to a modern browser for the best experience.' +
+              '<button data-testid="browser-support-dismiss" id="browser-support-dismiss">Dismiss</button>';
+            document.body.insertBefore(banner, document.body.firstChild);
+            document.getElementById('browser-support-dismiss').addEventListener('click', function () {
+              sessionStorage.setItem('browser-support-dismissed', '1');
+              banner.style.display = 'none';
+            });
+          });
+        } catch (e) { /* noop */ }
+      })();
+    </script>
     <script>
       // traces_to: L2-115 — apply theme synchronously to avoid FOUC
       (function () {
