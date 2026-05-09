@@ -2,8 +2,8 @@
   <div class="save-bar">
     <span data-testid="partner-unsaved-dot" class="unsaved-dot" [class.unsaved-dot--visible]="isDirty()"></span>
     <h1 class="save-bar__title">New Partner</h1>
-    <button data-testid="partner-cancel" type="button" class="btn-outlined" (click)="onCancel()">Cancel</button>
-    <button data-testid="partner-submit" type="submit" class="btn-filled" [disabled]="submitting()">Save</button>
+    <tar-button variant="outlined" type="button" testId="partner-cancel" (clicked)="onCancel()">Cancel</tar-button>
+    <tar-button variant="filled" type="submit" testId="partner-submit" [disabled]="submitting()">Save</tar-button>
   </div>
 
   @if (formBanner()) {
@@ -14,51 +14,39 @@
     <section class="form-section">
       <h2 class="form-section__heading">Basic info</h2>
 
-      <div class="field">
-        <label class="field__label" for="partner-name">Name *</label>
-        <input
-          id="partner-name"
-          data-testid="partner-name"
-          class="field__input"
-          [class.field__input--error]="nameError()"
-          type="text"
-          autocomplete="organization"
-          [value]="name()"
-          (input)="name.set($any($event.target).value)"
-        />
-        @if (nameError()) {
-          <span data-testid="partner-error-name" class="field__error">{{ nameError() }}</span>
-        }
-      </div>
+      <tar-text-field
+        label="Name"
+        testId="partner-name"
+        errorTestId="partner-error-name"
+        [required]="true"
+        autocomplete="organization"
+        [value]="name()"
+        [error]="nameError()"
+        (valueChange)="name.set($event)"
+      />
 
-      <div class="field">
-        <label class="field__label" for="partner-website">Website</label>
-        <div class="field__input-group">
-          <input
-            id="partner-website"
-            data-testid="partner-website"
-            class="field__input"
-            [class.field__input--error]="websiteError()"
-            type="url"
-            placeholder="https://example.org"
-            [value]="website()"
-            (input)="website.set($any($event.target).value)"
-          />
-          @if (websiteValid() && website()) {
-            <a
-              data-testid="partner-visit-link"
-              class="field__trailing-link"
-              [href]="website()"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Visit website"
-            >
-              <span class="material-symbols-outlined">open_in_new</span>
-            </a>
-          }
-        </div>
-        @if (websiteError()) {
-          <span data-testid="partner-error-website" class="field__error">{{ websiteError() }}</span>
+      <div class="field__input-group">
+        <tar-text-field
+          label="Website"
+          testId="partner-website"
+          errorTestId="partner-error-website"
+          type="url"
+          placeholder="https://example.org"
+          [value]="website()"
+          [error]="websiteError()"
+          (valueChange)="website.set($event)"
+        />
+        @if (websiteValid() && website()) {
+          <a
+            data-testid="partner-visit-link"
+            class="field__trailing-link"
+            [href]="website()"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Visit website"
+          >
+            <mat-icon>open_in_new</mat-icon>
+          </a>
         }
       </div>
     </section>

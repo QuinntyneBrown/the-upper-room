@@ -2,13 +2,14 @@
 import { Component, ElementRef, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ConfirmService, SnackbarService } from 'components';
+import { MatIconModule } from '@angular/material/icon';
+import { TarButton, TarTextField, ConfirmService, SnackbarService } from 'components';
 
 const URL_RE = /^https?:\/\//i;
 
 @Component({
   selector: 'app-partner-create',
-  imports: [],
+  imports: [TarButton, TarTextField, MatIconModule],
   templateUrl: './partner-create.html',
   styleUrl: './partner-create.scss',
 })
