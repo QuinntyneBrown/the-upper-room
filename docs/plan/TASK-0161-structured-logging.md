@@ -1,7 +1,7 @@
 ---
 id: TASK-0161
 title: Structured logging (Serilog) + correlation propagation
-status: Draft
+status: Accepted
 phase: Au
 depends_on: [TASK-0007, TASK-0033]
 traces_to: [L2-097]
