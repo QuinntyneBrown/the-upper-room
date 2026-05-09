@@ -35,30 +35,6 @@
   color: var(--md-sys-color-on-surface);
 }
 
-.btn-filled {
-  border: 0;
-  border-radius: var(--md-sys-shape-corner-full);
-  padding: var(--md-sys-space-2) var(--md-sys-space-6);
-  background: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
-  font: var(--md-sys-typescale-label-large);
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
-
-.btn-outlined {
-  border: 1px solid var(--md-sys-color-outline);
-  border-radius: var(--md-sys-shape-corner-full);
-  padding: var(--md-sys-space-2) var(--md-sys-space-6);
-  background: transparent;
-  color: var(--md-sys-color-primary);
-  font: var(--md-sys-typescale-label-large);
-  cursor: pointer;
-}
 
 .form-body {
   display: flex;
@@ -74,39 +50,6 @@
   gap: var(--md-sys-space-4);
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--md-sys-space-1);
-}
-
-.field__label {
-  font: var(--md-sys-typescale-label-medium);
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-.field__input {
-  padding: var(--md-sys-space-2) var(--md-sys-space-3);
-  border-radius: var(--md-sys-shape-corner-extra-small);
-  border: 1px solid var(--md-sys-color-outline);
-  font: var(--md-sys-typescale-body-medium);
-  background: var(--md-sys-color-surface);
-  color: inherit;
-
-  &--error {
-    border-color: var(--md-sys-color-error);
-  }
-
-  &:focus {
-    outline: 2px solid var(--md-sys-color-primary);
-    outline-offset: 2px;
-  }
-}
-
-.field__error {
-  font: var(--md-sys-typescale-label-small);
-  color: var(--md-sys-color-error);
-}
 
 .form-banner {
   margin: var(--md-sys-space-3) var(--md-sys-space-4);
@@ -150,36 +93,3 @@
   max-width: 120px;
 }
 
-.method-row__primary {
-  display: flex;
-  align-items: center;
-  gap: var(--md-sys-space-1);
-  font: var(--md-sys-typescale-label-small);
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.btn-add {
-  align-self: flex-start;
-  padding: var(--md-sys-space-1) var(--md-sys-space-3);
-  border: 1px dashed var(--md-sys-color-outline);
-  border-radius: var(--md-sys-shape-corner-full);
-  background: transparent;
-  color: var(--md-sys-color-primary);
-  font: var(--md-sys-typescale-label-medium);
-  cursor: pointer;
-}
-
-.btn-icon {
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: var(--md-sys-color-on-surface-variant);
-  font-size: 1.25rem;
-  line-height: 1;
-  padding: var(--md-sys-space-1);
-
-  &:hover {
-    color: var(--md-sys-color-error);
-  }
-}

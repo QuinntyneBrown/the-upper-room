@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { TarButton, TarTextField, TarIconButton, TarCheckbox } from 'components';
 import { TarTagSelector, Tag } from 'domain';
 
 export interface PhoneRow { value: string; label: string; primary: boolean; error: string | null }
@@ -14,7 +15,7 @@ const E164_RE = /^\+?[1-9]\d{1,14}$/;
 
 @Component({
   selector: 'app-contact-create',
-  imports: [TarTagSelector],
+  imports: [TarButton, TarTextField, TarIconButton, TarCheckbox, TarTagSelector],
   templateUrl: './contact-create.html',
   styleUrl: './contact-create.scss',
 })
@@ -89,6 +90,12 @@ export class ContactCreate {
 
   protected addAddress(): void {
     this.addresses.update((a) => [...a, { street: '', city: '', country: '' }]);
+  }
+
+  protected updateAddress(index: number, field: keyof AddressRow, value: string): void {
+    this.addresses.update((rows) =>
+      rows.map((r, i) => (i === index ? { ...r, [field]: value } : r)),
+    );
   }
 
   protected onSubmit(event: Event): void {

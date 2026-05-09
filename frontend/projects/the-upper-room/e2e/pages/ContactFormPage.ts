@@ -25,6 +25,6 @@ export class ContactFormPage {
   removePhone(index: number): Locator { return this.page.getByTestId(`contact-phone-remove-${index}`); }
   emailRow(index: number): Locator { return this.page.getByTestId(`contact-email-row-${index}`); }
   emailInput(index: number): Locator { return this.page.getByTestId(`contact-email-input-${index}`); }
-  emailPrimary(index: number): Locator { return this.page.getByTestId(`contact-email-primary-${index}`); }
+  emailPrimary(index: number): Locator { return this.page.getByTestId(`contact-email-row-${index}`).getByRole('checkbox'); }
   formBanner(): Locator { return this.page.getByTestId('contact-form-banner'); }
 }
