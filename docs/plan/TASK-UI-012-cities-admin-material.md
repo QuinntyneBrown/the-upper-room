@@ -1,6 +1,6 @@
 # TASK-UI-012 — Migrate `cities-admin.html` Table to `mat-table`
 
-**Status:** Accepted  
+**Status:** Complete  
 **Priority:** P3  
 **Effort:** Small (< 1 day)  
 **File:** `frontend/projects/the-upper-room/src/app/cities/cities-admin/cities-admin.html`
@@ -72,11 +72,11 @@
 
 ## Acceptance Criteria
 
-- [ ] Raw `<table>` → `mat-table` with named `matColumnDef` blocks
-- [ ] `data-testid="city-row-{slug}"` preserved on `mat-row`
-- [ ] `tar-button` in actions column unchanged and functional
-- [ ] `MatTableModule` imported in the component or its module
-- [ ] Existing compliant header and create-form sections untouched
+- [x] Raw `<table>` → `mat-table` with named `matColumnDef` blocks
+- [x] `data-testid="city-row-{slug}"` preserved on `mat-row`
+- [x] `tar-button` in actions column unchanged and functional
+- [x] `MatTableModule` imported in the component or its module
+- [x] Existing compliant header and create-form sections untouched
 
 ## Notes
 

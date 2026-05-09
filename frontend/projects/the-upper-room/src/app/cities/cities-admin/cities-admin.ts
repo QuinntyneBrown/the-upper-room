@@ -1,6 +1,7 @@
 // traces_to: L2-077
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { MatTableModule } from '@angular/material/table';
 import { ConfirmService, TarButton, TarFormActions, TarTextField } from 'components';
 import { mapErrorToMessage } from '../../interceptors/error-catalog';
 
@@ -15,7 +16,7 @@ export interface CityRow {
 
 @Component({
   selector: 'app-cities-admin',
-  imports: [TarButton, TarTextField, TarFormActions],
+  imports: [TarButton, TarTextField, TarFormActions, MatTableModule],
   templateUrl: './cities-admin.html',
   styleUrl: './cities-admin.scss',
 })
@@ -30,6 +31,7 @@ export class CitiesAdmin implements OnInit {
   protected readonly formError = signal<string | null>(null);
 
   protected readonly slugPreview = computed(() => slugify(this.newName()));
+  protected readonly displayedColumns = ['name', 'slug', 'country', 'status', 'actions'];
 
   ngOnInit(): void {
     this.refresh();
