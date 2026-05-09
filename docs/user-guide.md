@@ -44,6 +44,13 @@ The Upper Room is a multi-city platform for managing contacts, partners, ideas, 
 6. On success you are taken to the **Dashboard**.
 7. If your credentials are wrong you'll see an error above the form. Re-enter and try again.
 
+**Local development credentials.** When running the app locally against the mock auth provider, the only accepted login is:
+
+- **Email:** `test@example.com`
+- **Password:** `Password!23456`
+
+Any other combination returns `auth.invalid_credentials`. These credentials are for local development only — never use them in a deployed environment.
+
 ### 2.2 Signing up (no invitation)
 
 1. From the sign-in page click **Create account**, or go to `/sign-up`.
