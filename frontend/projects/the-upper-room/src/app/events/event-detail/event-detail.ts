@@ -61,6 +61,8 @@ export class EventDetail implements OnInit {
 
   protected readonly event = signal<EventDetailDto | null>(null);
   protected readonly showAttendeesDialog = signal(false);
+  protected readonly showCancelDialog = signal(false);
+  protected readonly cancelMessage = signal('');
   protected readonly myRsvpStatus = signal<string | null>(null);
   protected readonly myWaitlistPosition = signal<number | null>(null);
   protected readonly pendingRsvps = signal<PendingRsvpDto[]>([]);
@@ -130,6 +132,19 @@ export class EventDetail implements OnInit {
 
   protected openAttendeesDialog(): void { this.showAttendeesDialog.set(true); }
   protected closeAttendeesDialog(): void { this.showAttendeesDialog.set(false); }
+
+  protected openCancelDialog(): void { this.showCancelDialog.set(true); }
+  protected closeCancelDialog(): void { this.showCancelDialog.set(false); }
+
+  protected confirmCancel(): void {
+    const id = this.event()?.id;
+    if (!id) return;
+    this.http.post<{ status: string }>(`/api/v1/events/${id}/cancel`, { message: this.cancelMessage() || null })
+      .subscribe(r => {
+        this.event.update(ev => ev ? { ...ev, status: r.status } : ev);
+        this.showCancelDialog.set(false);
+      });
+  }
 
   protected addToCalendar(): void {
     const id = this.event()?.id;

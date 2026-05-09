@@ -165,8 +165,61 @@
         <span class="material-symbols-outlined">calendar_add_on</span>
         Add to calendar
       </button>
+
+      @if (isOrganizer() && ev.status !== 'Cancelled') {
+        <button
+          data-testid="event-cancel-button"
+          type="button"
+          class="btn-outlined event-detail__cancel-btn"
+          (click)="openCancelDialog()"
+        >
+          <span class="material-symbols-outlined">cancel</span>
+          Cancel event
+        </button>
+      }
     </aside>
   </div>
+
+  @if (showCancelDialog()) {
+    <div
+      data-testid="event-cancel-dialog"
+      class="event-dialog-backdrop"
+      (click)="closeCancelDialog()"
+    >
+      <div class="event-dialog" (click)="$event.stopPropagation()">
+        <div class="event-dialog__header">
+          <h2 class="event-dialog__title">Cancel event</h2>
+          <button type="button" class="event-dialog__close" (click)="closeCancelDialog()">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="event-dialog__list">
+          <div class="form-field" style="padding: 16px">
+            <label class="form-field__label" for="cancel-msg">Message to attendees (optional)</label>
+            <textarea
+              data-testid="event-cancel-message"
+              id="cancel-msg"
+              class="form-field__textarea"
+              rows="3"
+              [value]="cancelMessage()"
+              (input)="cancelMessage.set($any($event.target).value)"
+              placeholder="Let attendees know why…"
+            ></textarea>
+          </div>
+          <div style="padding: 0 16px 16px; display: flex; gap: 8px; justify-content: flex-end">
+            <button type="button" class="btn-outlined" (click)="closeCancelDialog()">Keep event</button>
+            <button
+              data-testid="event-cancel-confirm"
+              type="button"
+              class="btn-filled"
+              style="background: var(--md-sys-color-error); color: var(--md-sys-color-on-error)"
+              (click)="confirmCancel()"
+            >Yes, cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 
   @if (showAttendeesDialog()) {
     <div
