@@ -1,0 +1,380 @@
+# Technology Guidance Remediation Plan
+
+**Plan date:** 2026-05-09
+**Scope:** Close every gap identified in `docs/technology-guidance-audit.md` (28 criteria; 11 FAILs + 6 PARTIALs).
+**Target end state:** Codebase is fully compliant with `C:\projects\the-health-game\docs\technology-guidance-and-practices.md`.
+
+---
+
+## Guiding Principles
+
+1. **Walking-skeleton first.** Get the *shape* right end-to-end on one small slice (Contacts) before sweeping the rest. Mistakes in the shape are cheap to fix on one feature, expensive on twelve.
+2. **One PR per feature slice during the sweep.** The architectural refactor + file-splitting + validation is a coordinated change per feature; bundling them all per feature avoids long-lived broken intermediate states.
+3. **Tests stay green after every PR.** Migrations of EF state are coordinated with the feature move; no orphaned schema.
+4. **Backend and frontend tracks run in parallel where possible.** The frontend cleanup (§F3, §F7, §F4) doesn't block on backend.
+5. **No new features during the migration.** This plan reshuffles the existing surface area; do not stack net-new behavior on top.
+
+---
+
+## Phase Overview
+
+| Phase | Theme | Duration (est.) | Blocks |
+|------:|-------|----------------:|--------|
+| 0 | Pre-flight & safety net | 0.5 day | All |
+| 1 | Foundations: `IAppDbContext`, FluentValidation, exception handling | 1 day | Phase 2 |
+| 2 | Pilot vertical slice (Contacts) | 1.5 days | Phase 3 |
+| 3 | Sweep — migrate remaining features | 4–6 days | Phase 4 |
+| 4 | Logging, seeding, RBAC, infra cleanup | 1 day | Phase 5 |
+| 5 | Authentication: hashing, real sign-in, distributed throttle | 1.5 days | Phase 7 |
+| 6 | Frontend remediation (parallel with 1–5) | 2 days | Phase 7 |
+| 7 | Final acceptance pass | 0.5 day | — |
+| **Total** | | **~12 working days** | |
+
+Calendar time will be longer if reviews are async; plan for 3 weeks elapsed.
+
+---
+
+# Phase 0 — Pre-flight & Safety Net (0.5 day)
+
+**Goal:** Reduce the blast radius of the refactor so we can move fast without breaking things irreversibly.
+
+### Tasks
+
+- [ ] **0.1** Create branch `refactor/tech-guidance-compliance` off `main`.
+- [ ] **0.2** Confirm test baseline: run all backend tests (`dotnet test backend/TheUpperRoom.sln`) and Playwright E2E (`npm --prefix frontend run e2e`) and record pass counts.
+- [ ] **0.3** Capture a SQL Server schema snapshot (`dotnet ef migrations script` from each existing context, or a `SELECT … INFORMATION_SCHEMA` dump) so we can verify the eventual single-context schema is equivalent.
+- [ ] **0.4** Add a Roslyn analyzer or test that fails when a `.cs` file declares more than one top-level type. Suggested: a unit test in `TheUpperRoom.Architecture.Tests` (new project) that walks every `.cs` file under `backend/src/` and asserts exactly one top-level type per file. Mark currently-failing files as a known-allowed list that shrinks over time. **This is the rail that keeps §B13 from regressing.**
+- [ ] **0.5** Add an architecture test (NetArchTest or hand-rolled) asserting:
+   - `TheUpperRoom.Api` does **not** contain types named `*Handler`, `*Command`, `*Query`, `*Validator`, `*DbContext`, or `*DataSeeder` (with an initial allow-list that shrinks).
+   - `TheUpperRoom.Application` does **not** reference `Microsoft.EntityFrameworkCore.SqlServer` or `Microsoft.AspNetCore.*`.
+- [ ] **0.6** Tag baseline: `git tag pre-refactor`.
+
+### Exit criteria
+- All current tests still pass.
+- Architecture/file-shape tests are committed and currently RED for the known violations (allow-listed) but GREEN for new code.
+
+---
+
+# Phase 1 — Foundations (1 day)
+
+**Goal:** Land the cross-cutting plumbing every feature slice will depend on.
+
+### 1A. `IAppDbContext` abstraction
+
+- [ ] **1.1** Create `TheUpperRoom.Application/Data/IAppDbContext.cs` with the existing `DbSet<>` properties from `AppDbContext` plus a `SaveChangesAsync(CancellationToken)`.
+- [ ] **1.2** Update `TheUpperRoom.Infrastructure/Data/AppDbContext.cs` to implement `IAppDbContext`.
+- [ ] **1.3** Register the alias in `Infrastructure.DependencyInjection`:
+  ```csharp
+  services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
+  ```
+- [ ] **1.4** Add an architecture test: every class in `Application/**/*Handler.cs` that takes a DbContext takes `IAppDbContext`, never the concrete type.
+
+### 1B. FluentValidation pipeline
+
+- [ ] **1.5** Add packages to `TheUpperRoom.Application.csproj`:
+  ```xml
+  <PackageReference Include="FluentValidation" Version="11.*" />
+  <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.*" />
+  ```
+- [ ] **1.6** Create `TheUpperRoom.Application/Common/ValidationBehavior.cs` (see audit §B11 for code).
+- [ ] **1.7** In `TheUpperRoom.Application.DependencyInjection`:
+  ```csharp
+  services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+  services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+  ```
+- [ ] **1.8** Write one test validator + one test command + a unit test proving the pipeline throws `ValidationException` on bad input.
+
+### 1C. ProblemDetails mapping
+
+- [ ] **1.9** Create `TheUpperRoom.Api/ExceptionHandling/ValidationExceptionHandler.cs` implementing `IExceptionHandler` (see audit §B12 for code).
+- [ ] **1.10** In `Program.cs`:
+  ```csharp
+  builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+  builder.Services.AddProblemDetails();
+  app.UseExceptionHandler();
+  ```
+- [ ] **1.11** Integration test: `POST /api/contacts` (or any existing endpoint) with invalid body returns HTTP 400 + RFC-7807 body once the first real validator exists (covered in Phase 2).
+
+### Exit criteria
+- Solution builds.
+- New unit tests for the pipeline are green.
+- No production handlers changed yet (zero-risk landing).
+
+---
+
+# Phase 2 — Pilot Vertical Slice: Contacts (1.5 days)
+
+**Goal:** Prove the target architecture on the smallest non-trivial feature. This becomes the template every other feature follows.
+
+Why Contacts: medium complexity (CRUD + soft delete + scoping), already has a DbContext, has its own seeder, and is one of the worst one-type-per-file offenders (`ContactsCqrs.cs` = 17 types).
+
+### Steps
+
+- [ ] **2.1** Move `ContactRow` → `TheUpperRoom.Domain/Contacts/Contact.cs` (rename to `Contact`; drop the `Row` suffix). Update navigation property names.
+- [ ] **2.2** Move `ContactsDbContext`'s `DbSet<Contact>` and any `OnModelCreating` configuration into `AppDbContext`. Extract the configuration into `TheUpperRoom.Infrastructure/Data/Configurations/Contacts/ContactConfiguration.cs` implementing `IEntityTypeConfiguration<Contact>`.
+- [ ] **2.3** Delete `Api/Contacts/ContactsDbContext.cs`.
+- [ ] **2.4** Generate an EF migration that drops the standalone Contacts DbContext (if it had its own database) or, if it shared the DB, only adjusts schema. Verify schema is unchanged.
+- [ ] **2.5** Split `Api/Contacts/ContactsCqrs.cs` into one-type-per-file under `Application/Contacts/`:
+   ```
+   ListContactsQuery.cs, ListContactsResult.cs, ListContactsHandler.cs
+   GetContactQuery.cs, GetContactResult.cs, GetContactHandler.cs
+   CreateContactCommand.cs, CreateContactResult.cs, CreateContactHandler.cs
+   UpdateContactCommand.cs, UpdateContactResult.cs, UpdateContactHandler.cs
+   PatchContactCommand.cs, PatchContactResult.cs, PatchContactHandler.cs
+   DeleteContactCommand.cs, DeleteContactResult.cs, DeleteContactHandler.cs
+   MutateContactOutcome.cs
+   ```
+   Each handler now depends on `IAppDbContext`.
+- [ ] **2.6** Create `*CommandValidator.cs` for each Create/Update/Patch/Delete command. Move all inline `if (...) return Outcome.Invalid` checks from handlers into validators. Handlers should now only contain business logic and persistence.
+- [ ] **2.7** Split `Api/Contacts/ContactsController.cs` so `PatchContactRequest` lives in its own file under `Api/Contacts/Requests/PatchContactRequest.cs`.
+- [ ] **2.8** Move `Api/Contacts/ContactsDataSeeder.cs` → `TheUpperRoom.Infrastructure/Seeding/Contacts/ContactsDataSeeder.cs`. Move its DI registration from `Program.cs` into `Infrastructure.DependencyInjection`.
+- [ ] **2.9** Remove `Api/Contacts/` allow-list entries from the architecture and file-shape tests added in Phase 0; tests should now pass for everything in `Contacts`.
+- [ ] **2.10** Update `TheUpperRoom.Application.Tests` and `TheUpperRoom.Api.Tests` for the new namespaces and types. Re-run full test suite — it must be green.
+- [ ] **2.11** Manual smoke test: `GET /api/contacts`, `POST /api/contacts` with valid + invalid body (verify 400 ValidationProblemDetails), `PATCH`, `DELETE`.
+- [ ] **2.12** Document the resulting structure in `docs/architecture/feature-template.md` so the rest of the sweep has a written reference.
+
+### Exit criteria
+- Contacts feature has zero types in `Api/Contacts/` other than `ContactsController.cs` and the request DTO file(s).
+- All tests pass.
+- File-shape and architecture tests pass for everything under `Contacts/`.
+
+---
+
+# Phase 3 — Sweep: Migrate Remaining Features (4–6 days)
+
+**Goal:** Apply the Contacts template to every other feature.
+
+### 3.1 Feature inventory & order
+
+Migrate in roughly increasing complexity so the team builds momentum:
+
+| # | Feature | Notes / Complexity |
+|--:|---------|--------------------|
+| 1 | Audit | Mostly read-only; `AuditStore` becomes a service in Application + Infrastructure. |
+| 2 | Locations | Simple CRUD. |
+| 3 | Cities | Has a seeder; shared with `IRequireCityScope` (already in Application). |
+| 4 | Partners | Simple CRUD. |
+| 5 | Notes | `NotesCqrs.cs` has 14 types. |
+| 6 | Ideas | `IdeasDbContext.cs` carries 4 types incl. event types. |
+| 7 | Notifications | Has a Push DbContext too. |
+| 8 | Events / EventRsvp | `EventRsvpCqrs.cs` (14 types) + `CancelEventCommand.cs` (4) + dialog interactions; biggest. |
+| 9 | Kanban | `PatchCardCommand.cs` (7); board/card/column relationships. |
+| 10 | Dashboard | Aggregator query reading from many tables — migrate after its dependencies. |
+| 11 | Search | Cross-feature; depends on others being on a single context. |
+| 12 | Rbac (data side) | Move role/permission constants into Domain (continues in Phase 4). |
+
+### 3.2 Per-feature checklist (repeat for each)
+
+For feature `X`:
+
+- [ ] **3.X.a** Move EF entities → `Domain/X/` (rename `XRow` → `X`).
+- [ ] **3.X.b** Merge `XDbContext`'s DbSets and config into `AppDbContext`; extract `IEntityTypeConfiguration<>` files under `Infrastructure/Data/Configurations/X/`.
+- [ ] **3.X.c** Delete `Api/X/XDbContext.cs`. Adjust DI registration. Run EF migrations to consolidate schema.
+- [ ] **3.X.d** Split every multi-type file in `Api/X/` into one type per file under `Application/X/`. Handlers depend on `IAppDbContext`.
+- [ ] **3.X.e** Add `*CommandValidator.cs` for every command; remove inline validation from handlers.
+- [ ] **3.X.f** Move any `XDataSeeder.cs` → `Infrastructure/Seeding/X/`.
+- [ ] **3.X.g** Split request DTOs from controller files.
+- [ ] **3.X.h** Remove allow-list entries from architecture and file-shape tests.
+- [ ] **3.X.i** Update tests and run full suite.
+- [ ] **3.X.j** Manual smoke test of the feature's endpoints.
+- [ ] **3.X.k** Open PR titled `refactor(<feature>): align with technology guidance`.
+
+### 3.3 EF context consolidation
+
+- [ ] **3.13** After all feature DbContexts are gone, regenerate a single migration if the consolidation produced any drift. Verify schema diff against the Phase-0 snapshot is zero (or only intended).
+- [ ] **3.14** Update connection-string usage so only `AppDbContext` is registered. Search-and-destroy `AddDbContext<XDbContext>(...)` calls.
+
+### Exit criteria
+- Only one EF context (`AppDbContext`) remains.
+- `Api/<Feature>/` folders contain only controllers + request DTOs.
+- File-shape allow-list is empty (or only contains intentional exceptions, documented).
+- All tests pass.
+
+---
+
+# Phase 4 — Logging, Seeding, RBAC, Infra Cleanup (1 day)
+
+**Goal:** Knock out the remaining backend non-architectural items.
+
+### 4A. Replace Serilog with Microsoft.Extensions.Logging
+
+- [ ] **4.1** Remove `Serilog.AspNetCore` and `Serilog.Formatting.Compact` from `TheUpperRoom.Api.csproj`.
+- [ ] **4.2** Remove `builder.Host.UseSerilog();` from `Program.cs`.
+- [ ] **4.3** Remove all `Serilog`-specific configuration sections from `appsettings.json` and `appsettings.Development.json`. Replace with the `Logging` section consumed by `Microsoft.Extensions.Logging`.
+- [ ] **4.4** Configure structured JSON console output: `builder.Logging.AddJsonConsole(...)`.
+- [ ] **4.5** Confirm `using Serilog;` no longer appears anywhere; existing `ILogger<T>` consumers need no change.
+
+### 4B. Seeding consolidation
+
+- [ ] **4.6** Verify no `*DataSeeder` lives in `Api/`. Move any stragglers to `Infrastructure/Seeding/<Feature>/`.
+- [ ] **4.7** Replace seeder DI registrations in `Program.cs` with a single call to `services.AddSeeders()` defined in `Infrastructure.DependencyInjection`.
+
+### 4C. RBAC into Domain
+
+- [ ] **4.8** Create `TheUpperRoom.Domain/Rbac/Role.cs`, `Permission.cs`, `RolePermission.cs` as proper entities (not just string constants).
+- [ ] **4.9** Create `Application/Rbac/IPermissionChecker.cs` and `Infrastructure/Rbac/PermissionChecker.cs` (EF-backed).
+- [ ] **4.10** Replace handler-level role-string comparisons (`user.Role != Roles.SystemAdmin`) with permission checks (`permissions.Require("Contacts.Edit")`). Sweep handlers feature-by-feature.
+- [ ] **4.11** Add EF migration adding `Roles`, `Permissions`, `RolePermissions` tables; seed default mapping (SystemAdmin → all, CityLead → city-scoped subset, etc.) via an `IDataSeeder`.
+- [ ] **4.12** Expose permissions through an existing `/api/me` (or new `/api/permissions`) endpoint so the frontend `permissions.service.ts` can consume the same data.
+
+### Exit criteria
+- No Serilog references.
+- All seeders under `Infrastructure/Seeding/`.
+- Domain RBAC entities exist; handlers no longer compare role strings directly.
+
+---
+
+# Phase 5 — Authentication: Real Local Sign-In (1.5 days)
+
+**Goal:** Make the password-based flow actually work, with secure storage and durable throttling.
+
+### 5A. Password hashing
+
+- [ ] **5.1** Decide hasher: recommended `Microsoft.AspNetCore.Identity.PasswordHasher<TUser>` (PBKDF2 ≥ 100k iterations, no extra deps). Alternative: `Konscious.Security.Cryptography.Argon2` for Argon2id.
+- [ ] **5.2** Define `Application/Auth/IPasswordHasher.cs` (`Hash(plain) → string`, `Verify(plain, hash) → enum {Success, Rehash, Failed}`).
+- [ ] **5.3** Implement `Infrastructure/Auth/PasswordHasher.cs` wrapping the chosen library.
+- [ ] **5.4** Register the hasher in `Infrastructure.DependencyInjection`.
+
+### 5B. User schema
+
+- [ ] **5.5** Add `PasswordHash` (nullable for OIDC-only users), `PasswordUpdatedUtc`, `EmailVerified`, `EmailVerificationTokenHash`, `PasswordResetTokenHash`, `PasswordResetExpiresUtc` columns to the user entity.
+- [ ] **5.6** EF migration.
+
+### 5C. Real sign-in
+
+- [ ] **5.7** Implement `SignInCommand` + `SignInHandler` in `Application/Auth/`:
+   - Look up user by email.
+   - On hit, call `passwordHasher.Verify(...)`.
+   - On success, issue JWT (delegate to existing `JwtIssuer`).
+   - On failure, throw a typed `InvalidCredentialsException` mapped to 401 by an exception handler.
+   - Always emit `AuditStore.Record(...)` (success or failure), with email + IP.
+- [ ] **5.8** Replace `AuthController.SignIn`'s body so it goes through MediatR.
+- [ ] **5.9** Implement `RegisterCommand`, `RequestPasswordResetCommand`, `ResetPasswordCommand`, `VerifyEmailCommand`, `ChangePasswordCommand`, `DeleteAccountCommand` — these are required by the guidance ("Full user management"). Each gets a validator.
+- [ ] **5.10** Wire controller endpoints for each. Reuse existing email-sending plumbing if any; otherwise add a stub `IEmailSender` with a no-op implementation registered behind a feature flag (real provider configured per-environment).
+
+### 5D. Distributed throttling + audit
+
+- [ ] **5.11** Replace static in-memory `SignInBucket` / `ForgotBucket` with one of:
+   - **Preferred:** ASP.NET Core 8 rate-limiting middleware (`AddRateLimiter`) keyed by email + IP, applied to sign-in/reset endpoints via `RequireRateLimiting("auth")`. Use `IDistributedCache` partition key for multi-instance.
+   - Fallback: an `AuthThrottle` table tracking attempts per email.
+- [ ] **5.12** Ensure every sign-in attempt (and PKCE exchange) writes an `AuditStore` entry: `Success`, `Failure`, `Locked`. Include actor identifier (email or sub) and IP.
+- [ ] **5.13** Add tests: 5 failed attempts → 6th locked; lockout window release; audit entries for each event.
+
+### 5E. Defensive cleanup
+
+- [ ] **5.14** Audit `Auth/` for any `_logger.LogInformation("password = …")` style mistakes; add a unit test that scans `ILogger` calls for the words `password`, `code_verifier`, `token` in format strings.
+
+### Exit criteria
+- Local sign-in returns 200 + JWT for valid credentials, 401 for invalid, 429 for throttled.
+- Audit entries on every sign-in attempt.
+- No plaintext password ever logged.
+- `dotnet ef migrations` reflect the schema additions.
+
+---
+
+# Phase 6 — Frontend Remediation (2 days, parallel with Phases 1–5)
+
+### 6A. Domain service contracts (§F3)
+
+- [ ] **6.1** For each of the four domain services, create the contract pattern:
+
+  | Service | Contract file | Token name | Interface |
+  |---------|---------------|------------|-----------|
+  | `city-scope.service.ts` | `city-scope.service.contract.ts` | `CITY_SCOPE_SERVICE` | `ICityScopeService` |
+  | `idle.service.ts` | `idle.service.contract.ts` | `IDLE_SERVICE` | `IIdleService` |
+  | `theme.service.ts` | `theme.service.contract.ts` | `THEME_SERVICE` | `IThemeService` |
+  | `sign-out.service.ts` | `sign-out.service.contract.ts` | `SIGN_OUT_SERVICE` | `ISignOutService` |
+
+- [ ] **6.2** In `provideDomain()`, register each: `{ provide: THEME_SERVICE, useExisting: ThemeService }`.
+- [ ] **6.3** Update every consumer from `inject(ThemeService)` to `inject(THEME_SERVICE)` (similar for the other three). Keep the concrete classes exported so the registration works.
+- [ ] **6.4** Re-export the contracts from the domain library's `public-api.ts`.
+
+### 6B. File-per-type for components (§F7)
+
+For each of the 8 components with inline templates / 3 with inline styles, do the extraction:
+
+- [ ] **6.5** `tar-avatar.ts` → `tar-avatar.html` + `tar-avatar.scss`
+- [ ] **6.6** `tar-avatar-uploader.ts` → `.html` + `.scss`
+- [ ] **6.7** `share-button.ts` → `.html` + `.scss`
+- [ ] **6.8** `board-move-sheet-dialog.ts` → `.html` + `.scss`
+- [ ] **6.9** `recurrence-edit-dialog.ts` → `.html` + `.scss`
+- [ ] **6.10** `event-cancel-dialog.ts` → `.html` + `.scss`
+- [ ] **6.11** `event-attendees-dialog.ts` → `.html` + `.scss`
+- [ ] **6.12** Add an ESLint rule (`@angular-eslint/component-max-inline-declarations` set to `{ template: 0, styles: 0 }` or use `no-restricted-syntax`) so future inline templates/styles are blocked at lint time.
+
+### 6C. Material adoption in main app (§F4)
+
+- [ ] **6.13** `contact-list.html`: replace search `<input>` with `<tar-search-field>`; replace `.filter-chip` buttons with `<mat-chip-listbox>`; replace `.btn-filled` anchors with `<a tar-button …>`.
+- [ ] **6.14** `global-search.html`: replace raw `<input>` with `<tar-search-field>`.
+- [ ] **6.15** `appearance.html`: replace radio-button-group with `<mat-button-toggle-group>` bound to the theme value.
+- [ ] **6.16** `app-shell.html`: avatar menu trigger → `<button mat-icon-button [matMenuTriggerFor]="avatarMenu">`; menu items → `<button mat-menu-item>`.
+- [ ] **6.17** Visual regression: run Playwright suite + manual mobile/desktop check for each touched screen.
+
+### Exit criteria
+- All four domain services have contracts and are consumed via tokens.
+- No component declares `template:` or `styles:` inline.
+- No raw `<input>`/`<button>` in the listed templates.
+- ESLint rule blocks regressions.
+
+---
+
+# Phase 7 — Final Acceptance Pass (0.5 day)
+
+- [ ] **7.1** Re-run the full audit checklist from `docs/technology-guidance-audit.md` "Acceptance Checklist" — every box ticked.
+- [ ] **7.2** All architecture and file-shape tests are green with **no allow-list entries**.
+- [ ] **7.3** `dotnet test backend/TheUpperRoom.sln` — green.
+- [ ] **7.4** `npm --prefix frontend run lint && npm --prefix frontend run test && npm --prefix frontend run e2e` — green.
+- [ ] **7.5** Manual smoke: sign in (PKCE + password), CRUD a contact, see Material chip filter on the list, switch theme via toggle group, verify lockout after 5 failed sign-ins.
+- [ ] **7.6** Update `README.md` and `docs/` with the new architecture diagram (single `AppDbContext`, Application owns CQRS, etc.).
+- [ ] **7.7** Delete `docs/technology-guidance-audit.md` allow-lists; mark `docs/technology-guidance-remediation-plan.md` as complete in its frontmatter.
+- [ ] **7.8** Tag release: `git tag tech-guidance-compliant-v1`.
+
+---
+
+# Risk Register
+
+| # | Risk | Impact | Mitigation |
+|--:|------|--------|-----------|
+| R1 | Multi-DbContext consolidation produces a schema diff that breaks existing data | High | Snapshot schema in Phase 0; verify zero diff after each feature; do consolidation in a single migration per feature; back up DB before deploying. |
+| R2 | One-type-per-file split introduces merge conflicts with parallel feature work | Medium | Freeze feature work on `main` for the migration window, or sequence features so each PR lands fast (≤1 day open). |
+| R3 | FluentValidation pipeline breaks endpoints whose handlers relied on inline checks returning a non-throwing outcome | Medium | Keep handler-level outcome enums (e.g. `MutateContactOutcome.NotFound`) for *business* outcomes; only move *input* validation into validators. Document this distinction in the feature template (§2.12). |
+| R4 | Removing Serilog loses log shape that downstream tools (Seq, etc.) rely on | Low–Medium | Confirm with whoever consumes logs that JSON console output is acceptable; if not, add `Microsoft.Extensions.Logging.AbstractionsAdapter` for the consumer. |
+| R5 | Frontend service token migration breaks injection in tests that hand-construct components | Low | Update test bed providers in lockstep; the `inject(TOKEN)` change is mechanical — search/replace then run unit tests. |
+| R6 | Adding `PasswordHash` column on Users without a backfill plan locks out OIDC-only users | Medium | Make the column nullable; sign-in handler returns 401 if `PasswordHash` is null and the user attempts password sign-in (with audit). |
+| R7 | Distributed rate-limiting requires Redis/cache infra not yet provisioned | Low | Start with in-process limiter (still better than the static dict because it integrates with ASP.NET pipeline) and add the distributed store when multi-instance deployment lands. |
+
+---
+
+# Parallelization Map
+
+```
+Phase 0 ──► Phase 1 ──► Phase 2 ──► Phase 3 ──► Phase 4 ──► Phase 5 ──► Phase 7
+                                               │
+                                               └─► Phase 6 (frontend, parallel)
+```
+
+Phase 6 only requires Phase 0 to be done. A second engineer can take Phase 6 as soon as the branch exists.
+
+---
+
+# Tracking
+
+Recommended: create a GitHub project board with one column per Phase and one card per checkbox above. Use the PR title format:
+
+- `chore(arch): phase 0 — file-shape architecture tests`
+- `feat(arch): phase 1A — IAppDbContext`
+- `feat(arch): phase 1B — fluent validation pipeline`
+- `refactor(contacts): phase 2 — pilot vertical slice`
+- `refactor(<feature>): phase 3.X — align with technology guidance`
+- `chore(logging): phase 4A — replace serilog`
+- `feat(auth): phase 5C — real local sign-in`
+- `refactor(frontend): phase 6A — domain service contracts`
+- `chore(arch): phase 7 — final acceptance`
+
+Each PR closes the relevant checkboxes in this document.
+
+---
+
+# Done = Done Definition
+
+The remediation is complete when **every** acceptance-checklist item in `docs/technology-guidance-audit.md` is ticked, the architecture and file-shape tests run with **no allow-list**, and a fresh re-audit produces 28/28 PASS.
