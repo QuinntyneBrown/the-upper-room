@@ -162,3 +162,10 @@
   color: var(--md-sys-color-on-surface-variant);
   font: var(--md-sys-typescale-body-small);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell__top-bar,
+  .app-shell__drawer {
+    transition-duration: 0s;
+  }
+}

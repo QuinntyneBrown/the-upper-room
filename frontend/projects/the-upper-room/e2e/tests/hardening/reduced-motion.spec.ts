@@ -19,14 +19,13 @@ test('drawer opens instantly under prefers-reduced-motion', async ({ page }) => 
   await page.goto('/contacts');
 
   const drawer = page.getByTestId('drawer');
-  const durationBefore = await drawer.evaluate((el) => getComputedStyle(el).transitionDuration);
 
-  await page.getByTestId('drawer-toggle').click();
-  await expect(drawer).toHaveAttribute('aria-hidden', 'false', { timeout: 500 });
-
-  // Under reduced motion, transition-duration must be 0s
+  // Under reduced motion, transition-duration on drawer must be 0s
   const duration = await drawer.evaluate((el) => getComputedStyle(el).transitionDuration);
   expect(duration).toBe('0s');
+
+  await page.getByTestId('drawer-toggle').click();
+  await expect(drawer).toHaveClass(/app-shell__drawer--open/, { timeout: 500 });
 });
 
 test('skeleton element has no shimmer animation under prefers-reduced-motion', async ({ page }) => {

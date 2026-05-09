@@ -53,3 +53,10 @@
 .tar-snackbar__dismiss {
   color: inherit;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .tar-snackbar {
+    transition-duration: 0s;
+    animation: none;
+  }
+}

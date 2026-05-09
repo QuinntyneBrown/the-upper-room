@@ -27,6 +27,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .tar-skeleton__row {
-    animation-duration: 0s;
+    animation: none;
+    background: var(--md-sys-color-surface-container-high);
   }
 }

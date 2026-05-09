@@ -126,3 +126,11 @@
 .idea-vote__count {
   font: var(--md-sys-typescale-label-medium);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .idea-vote {
+    transition: none;
+
+    &:active { transform: none; }
+  }
+}
