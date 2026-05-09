@@ -1,7 +1,7 @@
 ---
 id: TASK-0224
 title: Persist Events and RSVPs in database
-status: Draft
+status: Accepted
 phase: P
 depends_on: []
 traces_to: []
