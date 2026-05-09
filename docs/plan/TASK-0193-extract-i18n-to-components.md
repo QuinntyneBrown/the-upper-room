@@ -1,7 +1,7 @@
 ---
 id: TASK-0193
 title: Extract TranslateService and transloco pipe to components library
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0013]
 traces_to: []
