@@ -1,7 +1,7 @@
 ---
 id: TASK-0130
 title: Dashboard page
-status: Accepted
+status: Done
 phase: H
 depends_on: [TASK-0060, TASK-0070, TASK-0100, TASK-0120, TASK-0090]
 traces_to: [L2-059]
