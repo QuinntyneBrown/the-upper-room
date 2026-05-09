@@ -1,7 +1,7 @@
 ---
 id: TASK-TC-3.4
 title: 'Run TC-3.4 - Breadcrumbs render below top bar'
-status: Idle
+status: Completed
 test_id: TC-3.4
 source: ../../test-plan/03-navigation.md
 ---
@@ -19,7 +19,25 @@ Run `TC-3.4` from `docs/test-plan/03-navigation.md` and record the result.
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.
 
+## Result
+
+| Field | Value |
+|---|---|
+| Result | **PASS** |
+| Browser | Chromium (Playwright) |
+| Viewport | 1280×720 |
+| Build SHA | aef6c7d |
+| Tester | Claude (automated) |
+| Run at | 2026-05-09T16:45:00Z |
+
+### Evidence
+
+- Navigated to `/contacts`
+- `<nav data-testid="breadcrumbs" aria-label="Breadcrumb">` present ✅
+- Crumbs: `<a>Dashboard</a>` (no aria-current) / `<a aria-current="page">Contacts</a>` ✅
+- Slash separator `<span aria-hidden="true">/</span>` between crumbs ✅
+- `aria-current="page"` only on last crumb ✅
