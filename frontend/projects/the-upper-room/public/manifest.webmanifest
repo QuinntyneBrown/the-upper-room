@@ -1,8 +1,11 @@
 {
   "name": "The Upper Room",
-  "short_name": "The Upper Room",
-  "start_url": "/",
+  "short_name": "Upper Room",
+  "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#ffffff"
+  "theme_color": "#6750a4",
+  "icons": [
+    { "src": "favicon.ico", "sizes": "48x48", "type": "image/x-icon" }
+  ]
 }
