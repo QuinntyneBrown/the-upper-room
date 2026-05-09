@@ -16,6 +16,7 @@ export * from './lib/rbac/permissions.contract';
 export * from './lib/rbac/permissions.service';
 export * from './lib/rbac/has-permission.directive';
 export * from './lib/rbac/has-role.directive';
+export * from './lib/rbac/guards';
 
 // Bootstrap
 export * from './lib/bootstrap/me-bootstrap.contract';

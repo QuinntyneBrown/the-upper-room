@@ -15,7 +15,7 @@ import { VerifyEmail } from './auth/verify-email/verify-email';
 import { ForgotPassword } from './auth/forgot-password/forgot-password';
 import { ResetPassword } from './auth/reset-password/reset-password';
 import { RbacDemo } from './rbac/rbac-demo/rbac-demo';
-import { authGuard, permissionGuard, roleGuard } from './rbac/guards';
+import { authGuard, permissionGuard, roleGuard } from 'domain';
 import { UserList } from './users/user-list/user-list';
 import { MyProfile } from './users/my-profile/my-profile';
 import { CitiesAdmin } from './cities/cities-admin/cities-admin';

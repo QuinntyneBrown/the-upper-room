@@ -1,14 +1,14 @@
 // traces_to: L2-024, L2-032
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
-import { PERMISSIONS_SERVICE } from 'domain';
-import { AccessTokenStore } from '../auth/access-token-store';
-import { SnackbarService } from '../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { PERMISSIONS_SERVICE } from './permissions.contract';
+import { ACCESS_TOKEN_SOURCE } from '../auth/access-token-source.contract';
+import { SnackbarService } from 'components';
 
 export const authGuard: CanActivateFn = (_route, state) => {
-  const tokens = inject(AccessTokenStore);
+  const tokenSource = inject(ACCESS_TOKEN_SOURCE);
   const router = inject(Router);
-  if (tokens.current()) return true;
+  if (tokenSource.current()) return true;
   return router.createUrlTree(['/sign-in'], {
     queryParams: { returnUrl: state.url },
   });
