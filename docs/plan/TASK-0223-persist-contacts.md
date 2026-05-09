@@ -1,7 +1,7 @@
 ---
 id: TASK-0223
 title: Persist Contacts in database (replace static in-memory store)
-status: Draft
+status: Accepted
 phase: P
 depends_on: []
 traces_to: []
