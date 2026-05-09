@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TheUpperRoom.Domain.Common.ValueObjects;
 using TheUpperRoom.Domain.Locations;
 
-namespace TheUpperRoom.Infrastructure.Persistence.Configurations;
+namespace TheUpperRoom.Infrastructure.Data.Configurations;
 
 internal sealed class LocationConfiguration : IEntityTypeConfiguration<Location>
 {

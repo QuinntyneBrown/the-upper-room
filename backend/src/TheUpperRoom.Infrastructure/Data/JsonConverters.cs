@@ -2,7 +2,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace TheUpperRoom.Infrastructure.Persistence;
+namespace TheUpperRoom.Infrastructure.Data;
 
 internal static class JsonConverters
 {

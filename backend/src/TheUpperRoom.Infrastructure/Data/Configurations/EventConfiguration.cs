@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TheUpperRoom.Domain.Events;
 
-namespace TheUpperRoom.Infrastructure.Persistence.Configurations;
+namespace TheUpperRoom.Infrastructure.Data.Configurations;
 
 internal sealed class EventConfiguration : IEntityTypeConfiguration<Event>
 {

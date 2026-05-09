@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TheUpperRoom.Infrastructure.Persistence;
+using TheUpperRoom.Infrastructure.Data;
 
 namespace TheUpperRoom.Infrastructure;
 

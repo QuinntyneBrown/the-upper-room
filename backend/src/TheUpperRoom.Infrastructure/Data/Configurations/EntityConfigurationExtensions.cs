@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TheUpperRoom.Domain.Common;
 
-namespace TheUpperRoom.Infrastructure.Persistence.Configurations;
+namespace TheUpperRoom.Infrastructure.Data.Configurations;
 
 internal static class EntityConfigurationExtensions
 {

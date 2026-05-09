@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TheUpperRoom.Infrastructure.Persistence;
+using TheUpperRoom.Infrastructure.Data;
 
 namespace TheUpperRoom.Infrastructure.Tests.Persistence;
 

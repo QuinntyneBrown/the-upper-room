@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TheUpperRoom.Domain.Cities;
 
-namespace TheUpperRoom.Infrastructure.Persistence.Configurations;
+namespace TheUpperRoom.Infrastructure.Data.Configurations;
 
 internal sealed class CityConfiguration : IEntityTypeConfiguration<City>
 {

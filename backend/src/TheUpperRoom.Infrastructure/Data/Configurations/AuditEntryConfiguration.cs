@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TheUpperRoom.Domain.Audit;
 
-namespace TheUpperRoom.Infrastructure.Persistence.Configurations;
+namespace TheUpperRoom.Infrastructure.Data.Configurations;
 
 internal sealed class AuditEntryConfiguration : IEntityTypeConfiguration<AuditEntry>
 {

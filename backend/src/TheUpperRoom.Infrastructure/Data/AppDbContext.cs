@@ -13,7 +13,7 @@ using TheUpperRoom.Domain.Partners;
 using TheUpperRoom.Domain.Tags;
 using TheUpperRoom.Domain.Users;
 
-namespace TheUpperRoom.Infrastructure.Persistence;
+namespace TheUpperRoom.Infrastructure.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

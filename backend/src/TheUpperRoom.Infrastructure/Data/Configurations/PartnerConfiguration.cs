@@ -1,33 +1,33 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TheUpperRoom.Domain.Common.ValueObjects;
-using TheUpperRoom.Domain.Contacts;
+using TheUpperRoom.Domain.Partners;
 
-namespace TheUpperRoom.Infrastructure.Persistence.Configurations;
+namespace TheUpperRoom.Infrastructure.Data.Configurations;
 
-internal sealed class ContactConfiguration : IEntityTypeConfiguration<Contact>
+internal sealed class PartnerConfiguration : IEntityTypeConfiguration<Partner>
 {
-    public void Configure(EntityTypeBuilder<Contact> builder)
+    public void Configure(EntityTypeBuilder<Partner> builder)
     {
-        builder.ToTable("Contacts");
+        builder.ToTable("Partners");
         builder.ConfigureCityScoped();
 
-        builder.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
-        builder.Property(e => e.LastName).HasMaxLength(100).IsRequired();
-        builder.Property(e => e.DisplayNameOverride).HasMaxLength(200);
-        builder.Property(e => e.Pronouns).HasMaxLength(30);
-        builder.Property(e => e.Title).HasMaxLength(100);
-        builder.Property(e => e.Organization).HasMaxLength(200);
-        builder.Property(e => e.OrganizationPartnerId).HasMaxLength(100);
-        builder.Property(e => e.AvatarUrl).HasMaxLength(2048);
+        builder.Property(e => e.Name).HasMaxLength(200).IsRequired();
+        builder.Property(e => e.LegalName).HasMaxLength(200);
+        builder.Property(e => e.Website).HasMaxLength(2048);
+        builder.Property(e => e.DescriptionMarkdown).HasMaxLength(2000);
+        builder.Property(e => e.LogoUrl).HasMaxLength(2048);
         builder.Property(e => e.Archived).IsRequired();
         builder.Property(e => e.DeletedAt);
 
-        builder.Ignore(e => e.DisplayName);
+        builder.HasIndex(e => new { e.CityId, e.Name }).IsUnique();
+
         builder.Ignore(e => e.IsDeleted);
         builder.Ignore(e => e.Addresses);
         builder.Ignore(e => e.Phones);
         builder.Ignore(e => e.Emails);
+        builder.Ignore(e => e.SocialLinks);
+        builder.Ignore(e => e.LinkedContacts);
         builder.Ignore(e => e.TagIds);
 
         builder.Property<List<Address>>("_addresses")
@@ -44,6 +44,16 @@ internal sealed class ContactConfiguration : IEntityTypeConfiguration<Contact>
             .HasField("_emails").UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasColumnName("Emails").HasColumnType("nvarchar(max)")
             .HasConversion(JsonConverters.ListConverter<EmailAddress>(), JsonConverters.ListComparer<EmailAddress>());
+
+        builder.Property<List<SocialLink>>("_socialLinks")
+            .HasField("_socialLinks").UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("SocialLinks").HasColumnType("nvarchar(max)")
+            .HasConversion(JsonConverters.ListConverter<SocialLink>(), JsonConverters.ListComparer<SocialLink>());
+
+        builder.Property<List<PartnerContactLink>>("_linkedContacts")
+            .HasField("_linkedContacts").UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("LinkedContacts").HasColumnType("nvarchar(max)")
+            .HasConversion(JsonConverters.ListConverter<PartnerContactLink>(), JsonConverters.ListComparer<PartnerContactLink>());
 
         builder.Property<List<string>>("_tagIds")
             .HasField("_tagIds").UsePropertyAccessMode(PropertyAccessMode.Field)
