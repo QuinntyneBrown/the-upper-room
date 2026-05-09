@@ -1,7 +1,7 @@
 ---
 id: TASK-0200
 title: Extract ThemeService to domain library
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0014]
 traces_to: []
