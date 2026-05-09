@@ -8,22 +8,11 @@ namespace TheUpperRoom.Api.Notifications;
 [ApiController]
 [Authorize]
 [Route("api/v1/push")]
-public sealed class PushController : ControllerBase
+public sealed class PushController(PushDbContext db, PushSettings settings) : ControllerBase
 {
-    internal sealed class PushSubscriptionRecord
-    {
-        public string UserId { get; init; } = "";
-        public string Endpoint { get; init; } = "";
-        public string P256dh { get; init; } = "";
-        public string Auth { get; init; } = "";
-    }
-
-    internal static readonly List<PushSubscriptionRecord> Subscriptions = [];
-    internal static readonly List<PendingPush> PendingPushes = [];
-
     [HttpGet("vapid-public-key")]
     public IActionResult VapidPublicKey() =>
-        Ok("BFakeVapidPublicKey123ForTesting");
+        Ok(settings.VapidPublicKey);
 
     [HttpPost("subscribe")]
     public IActionResult Subscribe([FromBody] PushSubscribeRequest? body)
@@ -32,14 +21,16 @@ public sealed class PushController : ControllerBase
         if (user is null) return Unauthorized();
         if (body is null) return BadRequest();
 
-        Subscriptions.RemoveAll(s => s.UserId == user.Id);
-        Subscriptions.Add(new PushSubscriptionRecord
+        var existing = db.Subscriptions.Find(user.Id);
+        if (existing is not null) db.Subscriptions.Remove(existing);
+        db.Subscriptions.Add(new PushSubscriptionRow
         {
             UserId = user.Id,
             Endpoint = body.Endpoint,
             P256dh = body.Keys?.P256dh ?? "",
             Auth = body.Keys?.Auth ?? "",
         });
+        db.SaveChanges();
         return NoContent();
     }
 
@@ -48,24 +39,23 @@ public sealed class PushController : ControllerBase
     {
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
-        Subscriptions.RemoveAll(s => s.UserId == user.Id);
+        var existing = db.Subscriptions.Find(user.Id);
+        if (existing is not null)
+        {
+            db.Subscriptions.Remove(existing);
+            db.SaveChanges();
+        }
         return NoContent();
     }
 
     [HttpGet("test/pending")]
     public IActionResult TestPending([FromQuery] string? userId)
     {
-        var items = PendingPushes
+        var items = db.PendingPushes
             .Where(p => userId == null || p.UserId == userId)
-            .Select(p => new { p.Title, p.Body })
+            .Select(p => new { title = p.Title, body = p.Body })
             .ToList();
         return Ok(items);
-    }
-
-    internal static void EnqueuePush(string userId, string title, string body)
-    {
-        if (Subscriptions.Any(s => s.UserId == userId))
-            PendingPushes.Add(new PendingPush(userId, title, body));
     }
 
     private SeedUser? GetCurrentUser()
@@ -75,6 +65,5 @@ public sealed class PushController : ControllerBase
     }
 }
 
-internal sealed record PendingPush(string UserId, string Title, string Body);
 public sealed record PushSubscribeRequest(string Endpoint, PushKeys? Keys);
 public sealed record PushKeys(string P256dh, string Auth);

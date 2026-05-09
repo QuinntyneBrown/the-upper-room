@@ -47,11 +47,6 @@ public sealed class PushPersistenceTests : IDisposable
     private WebApplicationFactory<Program> Factory(string? vapidPublicKey = "BVapidConfiguredKeyXyzAbc") =>
         new WebApplicationFactory<Program>().WithWebHostBuilder(b =>
         {
-            b.ConfigureAppConfiguration((_, cfg) =>
-                cfg.AddInMemoryCollection(new Dictionary<string, string?>
-                {
-                    ["Push:VapidPublicKey"] = vapidPublicKey,
-                }));
             b.ConfigureTestServices(services =>
             {
                 Replace<PushDbContext>(services, _paths[typeof(PushDbContext)]);
@@ -62,6 +57,13 @@ public sealed class PushPersistenceTests : IDisposable
                 Replace<ContactsDbContext>(services, _paths[typeof(ContactsDbContext)]);
                 Replace<LocationsDbContext>(services, _paths[typeof(LocationsDbContext)]);
                 Replace<KanbanDbContext>(services, _paths[typeof(KanbanDbContext)]);
+
+                if (vapidPublicKey is not null)
+                {
+                    var pushSettingsDescriptor = services.Single(s => s.ServiceType == typeof(PushSettings));
+                    services.Remove(pushSettingsDescriptor);
+                    services.AddSingleton(new PushSettings { VapidPublicKey = vapidPublicKey });
+                }
             });
         });
 

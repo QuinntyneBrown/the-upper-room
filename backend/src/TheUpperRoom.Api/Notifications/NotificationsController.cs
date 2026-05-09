@@ -9,7 +9,7 @@ namespace TheUpperRoom.Api.Notifications;
 [ApiController]
 [Authorize]
 [Route("api/v1/notifications")]
-public sealed class NotificationsController(NotificationsDbContext db, MailStore mail) : ControllerBase
+public sealed class NotificationsController(NotificationsDbContext db, MailStore mail, PushDispatcher push) : ControllerBase
 {
     [HttpGet]
     public IActionResult List()
@@ -94,7 +94,7 @@ public sealed class NotificationsController(NotificationsDbContext db, MailStore
 
             if (pref?.Push == true)
             {
-                PushController.EnqueuePush(recipientId, subject, bodyText);
+                push.Enqueue(recipientId, subject, bodyText);
             }
         }
 

@@ -93,6 +93,21 @@ EnsureSqliteDirectoryExists(notificationsConn);
 builder.Services.AddDbContext<NotificationsDbContext>(o => o.UseSqlite(notificationsConn));
 builder.Services.AddScoped<MailStore>();
 
+var pushConn = builder.Configuration["PushDb:ConnectionString"]
+               ?? "Data Source=Data/push.db";
+EnsureSqliteDirectoryExists(pushConn);
+builder.Services.AddDbContext<PushDbContext>(o => o.UseSqlite(pushConn));
+builder.Services.AddScoped<PushDispatcher>();
+
+var pushSettings = builder.Configuration.GetSection("Push").Get<PushSettings>() ?? new PushSettings();
+if (string.IsNullOrWhiteSpace(pushSettings.VapidPublicKey))
+{
+    if (builder.Environment.IsProduction())
+        throw new InvalidOperationException("Push:VapidPublicKey must be configured in Production.");
+    pushSettings.VapidPublicKey = "BDevOnlyVapidPublicKeyPlaceholderForLocalDevelopment";
+}
+builder.Services.AddSingleton(pushSettings);
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -107,6 +122,7 @@ using (var scope = app.Services.CreateScope())
     scope.ServiceProvider.GetRequiredService<NotesDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<KanbanDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<NotificationsDbContext>().Database.EnsureCreated();
+    scope.ServiceProvider.GetRequiredService<PushDbContext>().Database.EnsureCreated();
 }
 
 static void SeedSeedContactsIfMissing(ContactsDbContext db)
