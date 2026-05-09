@@ -1,6 +1,6 @@
 # TASK-UI-003 — Migrate `contact-detail.html` to Angular Material / Component Library
 
-**Status:** Draft  
+**Status:** Accepted  
 **Priority:** P3  
 **Effort:** Small (< 1 day)  
 **File:** `frontend/projects/the-upper-room/src/app/contacts/contact-detail/contact-detail.html`
