@@ -40,4 +40,19 @@ describe('TranslateService (components library)', () => {
     svc.setLocale('de-DE');
     expect(svc.translate('hello')).toBe('Hello');
   });
+
+  // TASK-0213
+  it('does not assign anything to window.__translate', () => {
+    delete (window as unknown as Record<string, unknown>).__translate;
+    setup();
+    expect((window as unknown as Record<string, unknown>).__translate).toBeUndefined();
+  });
+
+  // TASK-0213
+  it('does not call console.warn for missing keys', () => {
+    const warnSpy = spyOn(console, 'warn');
+    const svc = setup();
+    svc.translate('nope.missing');
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
 });
