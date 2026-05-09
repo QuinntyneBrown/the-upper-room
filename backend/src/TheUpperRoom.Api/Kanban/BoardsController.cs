@@ -48,8 +48,12 @@ public sealed class BoardsController(
         var columns = db.Columns.Where(c => c.BoardId == id).OrderBy(c => c.ColumnOrder)
             .Select(c => new BoardColumnDto(c.Id, c.Name, c.Color, c.WipLimit)).ToArray();
 
+        var swimlaneMode = board.SwimlaneMode;
         var cards = db.Cards.Where(c => c.BoardId == id).OrderBy(c => c.CardOrder)
-            .Select(c => new BoardCardDto(c.Id, c.ColumnId, c.Title, Array.Empty<BoardCardTagDto>(), c.AssigneeName, c.DueDate)).ToArray();
+            .AsEnumerable()
+            .Select(c => new BoardCardDto(c.Id, c.ColumnId, c.Title, Array.Empty<BoardCardTagDto>(), c.AssigneeName, c.DueDate,
+                swimlaneMode == "Assignee" ? (c.AssigneeName ?? "") : null))
+            .ToArray();
 
         return Ok(new BoardDetailDto(board.Id, board.Name, board.Description, columns, cards, board.SwimlaneMode));
     }

@@ -11,7 +11,8 @@ public sealed record BoardCardDto(
     string Title,
     BoardCardTagDto[] Tags,
     string? AssigneeName,
-    string? DueDate);
+    string? DueDate,
+    string? SwimlaneKey = null);
 
 public sealed record BoardDetailDto(
     string Id,

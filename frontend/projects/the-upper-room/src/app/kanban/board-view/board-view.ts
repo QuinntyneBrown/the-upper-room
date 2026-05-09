@@ -144,7 +144,7 @@ export class BoardView implements AfterViewInit, OnDestroy {
     const filter = this.activeTagName();
     const showArchived = this.showArchived();
     return (this.board()?.cards ?? [])
-      .filter((c) => c.columnId === columnId && c.swimlaneKey === laneKey)
+      .filter((c) => c.columnId === columnId && (c.swimlaneKey ?? '') === laneKey)
       .filter((c) => showArchived || !c.archived)
       .filter((c) => !filter || c.tags.some((t) => t.name === filter));
   }
