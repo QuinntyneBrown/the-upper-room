@@ -1,7 +1,7 @@
 ---
 id: TASK-0233
 title: Remove or gate X-All-Cities header bypass
-status: Accepted
+status: Done
 phase: P
 depends_on: [TASK-0221]
 traces_to: []
