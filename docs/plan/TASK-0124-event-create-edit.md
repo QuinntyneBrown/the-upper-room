@@ -1,7 +1,7 @@
 ---
 id: TASK-0124
 title: Event create / edit form
-status: Accepted
+status: Done
 phase: E
 depends_on: [TASK-0120, TASK-0070, TASK-0110]
 traces_to: [L2-056]
