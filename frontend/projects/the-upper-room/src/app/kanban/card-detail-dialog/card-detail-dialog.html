@@ -1,79 +1,67 @@
-<div data-testid="card-detail-dialog" class="dialog-overlay" role="dialog" aria-modal="true">
-  <div class="dialog">
-    <header class="dialog__header">
-      <input
-        data-testid="card-detail-title"
-        type="text"
-        class="dialog__title"
-        [value]="currentTitle()"
-        (input)="currentTitle.set($any($event.target).value)"
-        (blur)="onTitleBlur()"
-      />
-      <div class="dialog__header-actions">
-        <button data-testid="card-detail-archive" type="button" class="btn-text" (click)="onArchive()">Archive</button>
-        <button data-testid="card-detail-delete" type="button" class="btn-text btn-text--danger" (click)="onDelete()">Delete</button>
-        <button data-testid="card-detail-close" type="button" class="btn-icon" (click)="onClose()" aria-label="Close">×</button>
-      </div>
-    </header>
+<tar-dialog [open]="true" testId="card-detail-dialog" [showActions]="false" [closeOnBackdrop]="false" (closed)="onClose()">
+  <header class="dialog__header">
+    <tar-text-field
+      testId="card-detail-title"
+      [value]="currentTitle()"
+      (valueChange)="currentTitle.set($event)"
+      (blurred)="onTitleBlur()"
+    />
+    <div class="dialog__header-actions">
+      <tar-button variant="text" testId="card-detail-archive" type="button" (clicked)="onArchive()">Archive</tar-button>
+      <tar-button variant="text" color="warn" testId="card-detail-delete" type="button" (clicked)="onDelete()">Delete</tar-button>
+      <tar-icon-button icon="close" ariaLabel="Close" testId="card-detail-close" (clicked)="onClose()" />
+    </div>
+  </header>
 
-    @if (schema.length > 0) {
-      <section class="dialog__section">
-        <h3 class="dialog__section-title">Details</h3>
-        @for (field of schema; track field.key) {
-          <label class="dialog__field">
-            <span class="dialog__field-label">{{ field.label }}{{ field.required ? ' *' : '' }}</span>
-            <input
-              [attr.data-testid]="'card-detail-field-' + field.key"
-              type="text"
-              class="dialog__input"
-              [value]="fieldValue(field.key)"
-              (input)="onFieldInput(field.key, $any($event.target).value)"
-            />
-            @if (fieldErrors()[field.key]; as err) {
-              <span [attr.data-testid]="'card-detail-field-error-' + field.key" class="dialog__field-error">
-                {{ err }}
-              </span>
-            }
-          </label>
-        }
-      </section>
-    }
-
+  @if (schema.length > 0) {
     <section class="dialog__section">
-      <h3 class="dialog__section-title">Comments</h3>
-      <ul data-testid="card-detail-comments" class="dialog__comments">
-        @for (c of comments(); track $index) {
-          <li class="dialog__comment">{{ c }}</li>
-        }
-      </ul>
-      <div class="dialog__comment-input-row">
-        <textarea
-          data-testid="card-detail-comment-input"
-          class="dialog__input"
-          rows="2"
-          [value]="newComment()"
-          (input)="newComment.set($any($event.target).value)"
-        ></textarea>
-        <button data-testid="card-detail-comment-add" type="button" class="btn-filled" (click)="addComment()">
-          Add
-        </button>
-      </div>
+      <h3 class="dialog__section-title">Details</h3>
+      @for (field of schema; track field.key) {
+        <tar-text-field
+          [testId]="'card-detail-field-' + field.key"
+          [errorTestId]="'card-detail-field-error-' + field.key"
+          [label]="field.label"
+          [required]="field.required"
+          [value]="fieldValue(field.key)"
+          [error]="fieldErrors()[field.key] ?? null"
+          (valueChange)="onFieldInput(field.key, $event)"
+        />
+      }
     </section>
+  }
 
-    <section class="dialog__section">
-      <h3 class="dialog__section-title">Attachments</h3>
-      <ul data-testid="card-detail-attachments" class="dialog__attachments">
-        @for (a of attachments(); track $index) {
-          <li class="dialog__attachment">{{ a }}</li>
-        }
-      </ul>
-      <input
-        data-testid="card-detail-attachment-input"
-        type="file"
-        accept="application/pdf,image/*"
-        #fileInput
-        (change)="onAttach(fileInput)"
+  <section class="dialog__section">
+    <h3 class="dialog__section-title">Comments</h3>
+    <ul data-testid="card-detail-comments" class="dialog__comments">
+      @for (c of comments(); track $index) {
+        <li class="dialog__comment">{{ c }}</li>
+      }
+    </ul>
+    <div class="dialog__comment-input-row">
+      <tar-textarea
+        testId="card-detail-comment-input"
+        [rows]="2"
+        [value]="newComment()"
+        (valueChange)="newComment.set($event)"
       />
-    </section>
-  </div>
-</div>
+      <tar-button variant="filled" testId="card-detail-comment-add" type="button" (clicked)="addComment()">Add</tar-button>
+    </div>
+  </section>
+
+  <section class="dialog__section">
+    <h3 class="dialog__section-title">Attachments</h3>
+    <ul data-testid="card-detail-attachments" class="dialog__attachments">
+      @for (a of attachments(); track $index) {
+        <li class="dialog__attachment">{{ a }}</li>
+      }
+    </ul>
+    <input
+      data-testid="card-detail-attachment-input"
+      type="file"
+      accept="application/pdf,image/*"
+      aria-label="Attach file"
+      #fileInput
+      (change)="onAttach(fileInput)"
+    />
+  </section>
+</tar-dialog>

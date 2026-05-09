@@ -1,6 +1,6 @@
 // traces_to: L2-046
 import { Component, EventEmitter, Input, OnInit, Output, inject, signal } from '@angular/core';
-import { ConfirmService } from 'components';
+import { ConfirmService, TarButton, TarDialog, TarIconButton, TarTextarea, TarTextField } from 'components';
 import { BoardCard } from '../board-view/board-view';
 
 export interface CardSchemaField {
@@ -17,6 +17,7 @@ export interface CardDetailPatch {
 
 @Component({
   selector: 'app-card-detail-dialog',
+  imports: [TarButton, TarDialog, TarIconButton, TarTextarea, TarTextField],
   templateUrl: './card-detail-dialog.html',
   styleUrl: './card-detail-dialog.scss',
 })
