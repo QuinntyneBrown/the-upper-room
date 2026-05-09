@@ -20,8 +20,13 @@ export class TranslateService {
   }
 
   translate(key: string): string {
-    // TODO: implement using injected dicts
-    return '';
+    const dict = this.dicts[this.locale()] ?? this.dicts[this.defaultLocale] ?? {};
+    const value = dict[key];
+    if (value === undefined) {
+      console.warn(`[i18n] missing key: ${key}`);
+      return key;
+    }
+    return value;
   }
 
   private detectLocale(): string {

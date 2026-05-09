@@ -9,8 +9,8 @@ import {
   TarIcon,
   TarListError,
   TarSkeleton,
+  TranslocoPipe,
 } from 'components';
-import { TranslocoPipe } from '../i18n/transloco.pipe';
 import { TarTagSelector } from '../tags/tag-selector/tar-tag-selector';
 import type { Tag } from '../tags/tag-list/tag-list';
 

@@ -1,14 +1,18 @@
 import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
+import { TRANSLATE_DICTIONARIES } from './i18n/translate.token';
+
+export interface TarComponentsOptions {
+  dictionaries?: Record<string, Record<string, string>>;
+}
 
 /**
- * Registers any environment providers required by the components library.
- *
- * The components in this library wrap Angular Material primitives, which in
- * v21+ use CSS-based animations and no longer require @angular/animations
- * to be wired up. This helper exists as the canonical entry point for
- * future provider needs (e.g. icon registry, locale, custom Material
- * defaults) without forcing every consumer to learn the per-feature APIs.
+ * Registers environment providers required by the components library.
+ * Pass `dictionaries` to supply translated strings for the `transloco` pipe.
  */
-export function provideTarComponents(): EnvironmentProviders {
-  return makeEnvironmentProviders([]);
+export function provideTarComponents(options: TarComponentsOptions = {}): EnvironmentProviders {
+  return makeEnvironmentProviders([
+    options.dictionaries
+      ? { provide: TRANSLATE_DICTIONARIES, useValue: options.dictionaries }
+      : [],
+  ]);
 }

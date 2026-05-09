@@ -88,3 +88,8 @@ export * from './lib/markdown-editor/tar-markdown-editor';
 // Network
 export * from './lib/network/network.service';
 export * from './lib/network/offline-banner/offline-banner';
+
+// i18n
+export * from './lib/i18n/translate.token';
+export * from './lib/i18n/translate.service';
+export * from './lib/i18n/transloco.pipe';

@@ -17,6 +17,7 @@ import { ACCESS_TOKEN_SOURCE } from './services/access-token.contract';
 import { AUTH_PROVIDER } from './auth/auth-provider.contract';
 import { PkceAuthProvider } from './auth/pkce-auth-provider';
 import { AccessTokenStore } from './auth/access-token-store';
+import { DICTIONARIES } from './i18n/dictionaries';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,7 +36,7 @@ export const appConfig: ApplicationConfig = {
     { provide: ACCESS_TOKEN_SOURCE, useExisting: AccessTokenStore },
     { provide: AUTH_PROVIDER, useExisting: PkceAuthProvider },
     provideApi(),
-    provideTarComponents(),
+    provideTarComponents({ dictionaries: DICTIONARIES }),
     provideDomain(),
   ],
 };

@@ -42,7 +42,7 @@
       data-testid="markdown-editor-textarea"
       class="md-editor__textarea"
       [value]="value()"
-      [maxlength]="maxLength()"
+      [attr.maxlength]="maxLength()"
       (input)="onInput($event)"
       placeholder="Write your idea here…"
     ></textarea>
