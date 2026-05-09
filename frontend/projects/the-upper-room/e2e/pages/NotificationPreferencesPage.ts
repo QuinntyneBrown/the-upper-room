@@ -10,7 +10,11 @@ export class NotificationPreferencesPage {
   row(code: string): Locator { return this.page.getByTestId(`pref-row-${code}`); }
 
   toggle(code: string, channel: 'inApp' | 'email' | 'push'): Locator {
-    return this.row(code).getByTestId(`pref-toggle-${channel}`);
+    return this.row(code).locator(`[data-testid="pref-toggle-${channel}"] input[type="checkbox"]`);
+  }
+
+  toggleHost(code: string, channel: 'inApp' | 'email' | 'push'): Locator {
+    return this.row(code).locator(`[data-testid="pref-toggle-${channel}"]`);
   }
 
   savedIndicator(code: string): Locator {
