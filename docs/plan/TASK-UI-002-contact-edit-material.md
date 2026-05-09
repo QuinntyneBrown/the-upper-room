@@ -1,6 +1,6 @@
 # TASK-UI-002 — Migrate `contact-edit.html` to Angular Material / Component Library
 
-**Status:** Accepted  
+**Status:** Complete  
 **Priority:** P1  
 **Effort:** Medium (1–2 days)  
 **File:** `frontend/projects/the-upper-room/src/app/contacts/contact-edit/contact-edit.html`
