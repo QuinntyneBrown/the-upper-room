@@ -1,7 +1,7 @@
 ---
 id: TASK-0221
 title: Implement real auth middleware (replace X-Test-User-Id pattern)
-status: Accepted
+status: Done
 phase: P
 depends_on: [TASK-0220]
 traces_to: []
