@@ -1,7 +1,7 @@
 ---
 id: TASK-0140
 title: Global search dialog + cross-resource backend endpoint
-status: Accepted
+status: Done
 phase: S
 depends_on: [TASK-0060, TASK-0070, TASK-0100, TASK-0110, TASK-0120]
 traces_to: [L2-060, L2-077]
