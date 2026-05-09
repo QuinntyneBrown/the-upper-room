@@ -1,7 +1,7 @@
 ---
 id: TASK-0194
 title: Extract BreadcrumbService to components library
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0005]
 traces_to: []
