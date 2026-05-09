@@ -1,0 +1,177 @@
+// traces_to: L2-054
+:host { display: block; position: relative; }
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--md-sys-space-2);
+  padding: var(--md-sys-space-3);
+}
+
+.calendar__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--md-sys-space-2);
+  margin-bottom: var(--md-sys-space-2);
+}
+
+.calendar__month-label {
+  flex: 1;
+  font: var(--md-sys-typescale-title-medium);
+  color: var(--md-sys-color-on-surface);
+  text-align: center;
+}
+
+.calendar__nav-btn {
+  background: none;
+  border: none;
+  padding: var(--md-sys-space-1);
+  cursor: pointer;
+  border-radius: var(--md-sys-shape-corner-full);
+  display: flex;
+  align-items: center;
+  color: var(--md-sys-color-on-surface-variant);
+
+  &:hover { background: var(--md-sys-color-surface-variant); }
+}
+
+.calendar__today-btn {
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: var(--md-sys-space-1) var(--md-sys-space-3);
+  background: transparent;
+  color: var(--md-sys-color-primary);
+  font: var(--md-sys-typescale-label-medium);
+  cursor: pointer;
+}
+
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--md-sys-color-outline-variant);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-small);
+  overflow: hidden;
+}
+
+.calendar__weekday {
+  background: var(--md-sys-color-surface-variant);
+  padding: var(--md-sys-space-1) var(--md-sys-space-2);
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-on-surface-variant);
+  text-align: center;
+}
+
+.calendar-cell {
+  background: var(--md-sys-color-surface);
+  min-height: 80px;
+  padding: var(--md-sys-space-1);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+
+  @media (min-width: 768px) { min-height: 120px; }
+
+  &--today {
+    background: var(--md-sys-color-secondary-container);
+
+    .calendar-cell__day {
+      background: var(--md-sys-color-secondary);
+      color: var(--md-sys-color-on-secondary);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  &--selected {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: -2px;
+  }
+
+  &--other-month {
+    background: var(--md-sys-color-surface-variant);
+
+    .calendar-cell__day { color: var(--md-sys-color-on-surface-variant); opacity: 0.5; }
+  }
+}
+
+.calendar-cell__day {
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-on-surface);
+  align-self: flex-start;
+}
+
+.calendar-cell__event {
+  font: var(--md-sys-typescale-label-small);
+  padding: 1px var(--md-sys-space-1);
+  border-radius: 2px;
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &[data-status="Cancelled"] {
+    background: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+  }
+}
+
+.calendar-cell__more {
+  background: none;
+  border: none;
+  padding: 0;
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-primary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.calendar-popover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  width: min(300px, 90vw);
+  background: var(--md-sys-color-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-medium);
+  box-shadow: var(--md-sys-elevation-3, 0 4px 12px rgba(0,0,0,.2));
+  padding: var(--md-sys-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--md-sys-space-2);
+}
+
+.calendar-popover__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font: var(--md-sys-typescale-label-medium);
+  color: var(--md-sys-color-on-surface);
+}
+
+.calendar-popover__close {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.calendar-popover__event {
+  font: var(--md-sys-typescale-body-small);
+  padding: var(--md-sys-space-1) var(--md-sys-space-2);
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  background: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface);
+}

@@ -1,7 +1,7 @@
 ---
 id: TASK-0121
 title: Calendar Month view
-status: Draft
+status: Done
 phase: E
 depends_on: [TASK-0120]
 traces_to: [L2-054]

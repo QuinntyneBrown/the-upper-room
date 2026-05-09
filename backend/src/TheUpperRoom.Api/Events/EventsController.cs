@@ -20,6 +20,7 @@ public sealed class EventsController : ControllerBase
         [FromQuery] string? status,
         [FromQuery] string? tag,
         [FromQuery] string? partner,
+        [FromQuery] string? month,
         [FromQuery] bool myEvents = false)
     {
         var user = GetCurrentUser();
@@ -32,6 +33,13 @@ public sealed class EventsController : ControllerBase
 
         if (!string.IsNullOrEmpty(tag))
             items = items.Where(e => e.Tags.Contains(tag, StringComparer.OrdinalIgnoreCase));
+
+        if (!string.IsNullOrEmpty(month) && DateOnly.TryParseExact(month + "-01", "yyyy-MM-dd", out var firstDay))
+        {
+            var start = new DateTimeOffset(firstDay.Year, firstDay.Month, 1, 0, 0, 0, TimeSpan.Zero);
+            var end = start.AddMonths(1);
+            items = items.Where(e => e.StartAt >= start && e.StartAt < end);
+        }
 
         var result = items.OrderBy(e => e.StartAt).ToArray();
         return Ok(new { items = result, total = result.Length });

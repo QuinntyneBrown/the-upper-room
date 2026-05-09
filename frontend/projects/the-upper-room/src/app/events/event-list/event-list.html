@@ -81,8 +81,7 @@
     </div>
   }
 } @else {
-  <div data-testid="events-calendar-view" class="events-calendar-placeholder">
-    <span class="material-symbols-outlined events-calendar-placeholder__icon">calendar_month</span>
-    <p>Calendar view coming soon.</p>
+  <div data-testid="events-calendar-view">
+    <app-calendar-month [events]="events()" (monthChange)="onCalendarMonthChange($event)" />
   </div>
 }

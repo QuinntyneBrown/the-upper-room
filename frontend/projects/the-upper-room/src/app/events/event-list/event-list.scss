@@ -129,14 +129,3 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
-.events-calendar-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--md-sys-space-8);
-  gap: var(--md-sys-space-3);
-  color: var(--md-sys-color-on-surface-variant);
-
-  &__icon { font-size: 48px; }
-}

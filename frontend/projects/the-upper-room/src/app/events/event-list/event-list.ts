@@ -2,6 +2,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
+import { CalendarMonth } from '../calendar-month/calendar-month';
 
 export interface EventDto {
   readonly id: string;
@@ -19,7 +20,7 @@ export interface EventDto {
 
 @Component({
   selector: 'app-event-list',
-  imports: [TarEmptyState],
+  imports: [TarEmptyState, CalendarMonth],
   templateUrl: './event-list.html',
   styleUrl: './event-list.scss',
 })
@@ -29,6 +30,7 @@ export class EventList implements OnInit {
   protected readonly events = signal<EventDto[]>([]);
   protected readonly statusFilter = signal('');
   protected readonly viewMode = signal<'list' | 'calendar'>('list');
+  protected readonly calendarMonth = signal(new Date());
 
   ngOnInit(): void {
     this.load();
@@ -37,6 +39,10 @@ export class EventList implements OnInit {
   private load(): void {
     const params = new URLSearchParams();
     if (this.statusFilter()) params.set('status', this.statusFilter());
+    if (this.viewMode() === 'calendar') {
+      const d = this.calendarMonth();
+      params.set('month', `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
+    }
     const qs = params.toString();
     this.http
       .get<{ items: EventDto[] }>(`/api/v1/events${qs ? `?${qs}` : ''}`)
@@ -50,6 +56,12 @@ export class EventList implements OnInit {
 
   protected toggleView(): void {
     this.viewMode.update((v) => (v === 'list' ? 'calendar' : 'list'));
+    this.load();
+  }
+
+  protected onCalendarMonthChange(e: { year: number; month: number }): void {
+    this.calendarMonth.set(new Date(e.year, e.month - 1, 1));
+    this.load();
   }
 
   protected formatDate(iso: string): string {
