@@ -1,6 +1,7 @@
 // traces_to: L2-034, L2-035
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PERMISSIONS_SERVICE } from 'domain';
@@ -19,7 +20,7 @@ export interface Partner {
 
 @Component({
   selector: 'app-partner-list',
-  imports: [TarEmptyState],
+  imports: [RouterLink, TarEmptyState],
   templateUrl: './partner-list.html',
   styleUrl: './partner-list.scss',
 })

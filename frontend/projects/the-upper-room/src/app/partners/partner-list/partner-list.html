@@ -17,9 +17,9 @@
     Archived
   </button>
   @if (canCreate()) {
-    <button data-testid="partners-new-button" type="button" class="btn-filled btn-filled--toolbar">
+    <a data-testid="partners-new-button" routerLink="/partners/new" class="btn-filled btn-filled--toolbar">
       New partner
-    </button>
+    </a>
   }
 </div>
 
@@ -31,17 +31,18 @@
       body="Add your first partner to get started."
     >
       @if (canCreate()) {
-        <button data-testid="partners-new-button" type="button" class="btn-filled">
+        <a data-testid="partners-new-button" routerLink="/partners/new" class="btn-filled">
           New partner
-        </button>
+        </a>
       }
     </tar-empty-state>
   </div>
 } @else {
   <div data-testid="partners-grid" class="partner-grid">
     @for (partner of partners(); track partner.id) {
-      <div
+      <a
         [attr.data-testid]="'partner-card-' + partner.name"
+        [routerLink]="['/partners', partner.id]"
         class="partner-card"
         [class.partner-card--archived]="partner.archived"
       >
@@ -71,7 +72,7 @@
             </div>
           }
         </div>
-      </div>
+      </a>
     }
   </div>
 }
