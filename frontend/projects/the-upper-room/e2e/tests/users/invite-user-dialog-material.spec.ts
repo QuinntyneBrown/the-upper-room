@@ -56,10 +56,10 @@ test('cancel button is a mat-button', async ({ page }) => {
   await expect(dlg.cancel()).toHaveAttribute('mat-button');
 });
 
-test('dialog root is a mat-card via tar-dialog', async ({ page }) => {
+test('dialog opens inside a Material dialog overlay', async ({ page }) => {
   await seedAdmin(page);
   const dlg = await openDialog(page);
   await expect(dlg.root()).toBeVisible();
-  const tag = await dlg.root().evaluate((el) => el.tagName.toLowerCase());
-  expect(tag).toBe('mat-card');
+  const overlay = page.locator('mat-dialog-container').filter({ has: dlg.root() });
+  await expect(overlay).toBeVisible();
 });

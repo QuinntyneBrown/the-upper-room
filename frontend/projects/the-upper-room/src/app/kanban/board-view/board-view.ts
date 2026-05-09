@@ -2,8 +2,16 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { SnackbarService, optimisticMutation } from 'components';
-import { CardDetailDialog, CardSchemaField, CardDetailPatch } from '../card-detail-dialog/card-detail-dialog';
+import {
+  CardDetailDialog,
+  CardDetailDialogData,
+  CardDetailDialogResult,
+  CardDetailPatch,
+  CardSchemaField,
+} from '../card-detail-dialog/card-detail-dialog';
+import { BoardMoveSheetDialog, BoardMoveSheetDialogData } from './board-move-sheet-dialog';
 
 export interface BoardCardTag {
   readonly id: string;
@@ -42,7 +50,7 @@ export interface BoardDetail {
 
 @Component({
   selector: 'app-board-view',
-  imports: [CardDetailDialog],
+  imports: [],
   templateUrl: './board-view.html',
   styleUrl: './board-view.scss',
 })
@@ -50,24 +58,18 @@ export class BoardView implements AfterViewInit, OnDestroy {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
   private readonly snackbar = inject(SnackbarService);
+  private readonly dialog = inject(MatDialog);
 
   @ViewChild('columnsEl') readonly columnsEl?: ElementRef<HTMLElement>;
 
   protected readonly board = signal<BoardDetail | null>(null);
   protected readonly activeTagName = signal<string | null>(null);
-  protected readonly selectedCardId = signal<string | null>(null);
   protected readonly activeColumnIndex = signal(0);
-  protected readonly moveSheetCard = signal<BoardCard | null>(null);
   protected readonly showArchived = signal(false);
 
   private readonly scrollListener = () => this.onColumnsScroll();
   private touchStartX = 0;
   private touchStartY = 0;
-
-  protected readonly selectedCard = computed(() => {
-    const id = this.selectedCardId();
-    return id ? (this.board()?.cards.find((c) => c.id === id) ?? null) : null;
-  });
 
   protected readonly cardSchema = computed(() => this.board()?.cardSchema ?? []);
 
@@ -227,7 +229,7 @@ export class BoardView implements AfterViewInit, OnDestroy {
     const dy = Math.abs(event.touches[0].clientY - this.touchStartY);
     if (dx > 10 || dy > 10) {
       event.preventDefault();
-      this.moveSheetCard.set(card);
+      this.openMoveSheet(card);
     }
   }
 
@@ -244,12 +246,22 @@ export class BoardView implements AfterViewInit, OnDestroy {
     const dy = Math.abs(event.clientY - this.touchStartY);
     if (dx > 12 || dy > 12) {
       event.preventDefault();
-      this.moveSheetCard.set(card);
+      this.openMoveSheet(card);
     }
   }
 
-  protected moveCardFromSheet(card: BoardCard, targetColumn: BoardColumn): void {
-    this.moveSheetCard.set(null);
+  private openMoveSheet(card: BoardCard): void {
+    const options = (this.board()?.columns ?? []).filter((c) => c.id !== card.columnId);
+    const data: BoardMoveSheetDialogData = { card, options };
+    this.dialog
+      .open<BoardMoveSheetDialog, BoardMoveSheetDialogData, BoardColumn>(BoardMoveSheetDialog, { data })
+      .afterClosed()
+      .subscribe((targetColumn) => {
+        if (targetColumn) this.moveCardToColumn(card, targetColumn);
+      });
+  }
+
+  private moveCardToColumn(card: BoardCard, targetColumn: BoardColumn): void {
     const current = this.board();
     if (!current || card.columnId === targetColumn.id) return;
     const sourceColumnId = card.columnId;
@@ -265,23 +277,23 @@ export class BoardView implements AfterViewInit, OnDestroy {
     );
   }
 
-  protected closeMoveSheet(): void {
-    this.moveSheetCard.set(null);
-  }
-
-  protected otherColumns(card: BoardCard): BoardColumn[] {
-    return (this.board()?.columns ?? []).filter((c) => c.id !== card.columnId);
-  }
-
   protected openCard(card: BoardCard): void {
-    this.selectedCardId.set(card.id);
+    const data: CardDetailDialogData = {
+      card,
+      schema: this.cardSchema(),
+      onPatch: (patch) => this.applyCardPatch(patch),
+    };
+    this.dialog
+      .open<CardDetailDialog, CardDetailDialogData, CardDetailDialogResult>(CardDetailDialog, { data })
+      .afterClosed()
+      .subscribe((result) => {
+        const target = this.board()?.cards.find((c) => c.id === card.id) ?? card;
+        if (result?.kind === 'archive') this.archiveCard(target);
+        else if (result?.kind === 'delete') this.deleteCard(target);
+      });
   }
 
-  protected closeCard(): void {
-    this.selectedCardId.set(null);
-  }
-
-  protected onCardPatched(patch: CardDetailPatch): void {
+  private applyCardPatch(patch: CardDetailPatch): void {
     const current = this.board();
     if (!current) return;
     this.board.set({
@@ -291,9 +303,7 @@ export class BoardView implements AfterViewInit, OnDestroy {
     this.http.patch(`/api/v1/cards/${patch.id}`, patch.body).subscribe();
   }
 
-  protected onCardArchived(): void {
-    const card = this.selectedCard();
-    if (!card) return;
+  private archiveCard(card: BoardCard): void {
     const current = this.board();
     if (!current) return;
     this.board.set({
@@ -301,12 +311,9 @@ export class BoardView implements AfterViewInit, OnDestroy {
       cards: current.cards.map((c) => (c.id === card.id ? { ...c, archived: true } : c)),
     });
     this.http.patch(`/api/v1/cards/${card.id}`, { archived: true }).subscribe();
-    this.closeCard();
   }
 
-  protected onCardDeleted(): void {
-    const card = this.selectedCard();
-    if (!card) return;
+  private deleteCard(card: BoardCard): void {
     const current = this.board();
     if (!current) return;
     this.board.set({
@@ -315,6 +322,5 @@ export class BoardView implements AfterViewInit, OnDestroy {
     });
     this.http.delete(`/api/v1/cards/${card.id}`).subscribe();
     this.snackbar.show('Card deleted', 'info');
-    this.closeCard();
   }
 }

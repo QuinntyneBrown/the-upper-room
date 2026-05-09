@@ -1,18 +1,32 @@
 // traces_to: L2-074, L2-022
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TarSnackbar } from '../../../components/src/lib/snackbar/tar-snackbar';
-import { TarConfirmDialog } from '../../../components/src/lib/confirm-dialog/tar-confirm-dialog';
 import { ErrorBoundary } from './error/error-boundary/error-boundary';
-import { InactivityDialog, IdleService } from 'domain';
+import { IdleService, InactivityDialog } from 'domain';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TarSnackbar, TarConfirmDialog, ErrorBoundary, InactivityDialog],
+  imports: [RouterOutlet, TarSnackbar, ErrorBoundary],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  // Eagerly construct so its activity listeners attach at app start.
   private readonly idle = inject(IdleService);
+  private readonly dialog = inject(MatDialog);
+  private inactivityRef: MatDialogRef<InactivityDialog> | null = null;
+
+  constructor() {
+    effect(() => {
+      const state = this.idle.state();
+      if (state === 'warning' && !this.inactivityRef) {
+        this.inactivityRef = this.dialog.open(InactivityDialog, { disableClose: true });
+        this.inactivityRef.afterClosed().subscribe(() => (this.inactivityRef = null));
+      } else if (state === 'active' && this.inactivityRef) {
+        this.inactivityRef.close();
+        this.inactivityRef = null;
+      }
+    });
+  }
 }

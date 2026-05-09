@@ -1,7 +1,9 @@
 // traces_to: L2-041, L2-042
 import { Component, ElementRef, OnInit, ViewChild, inject, input, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
 import { SnackbarService } from '../snackbar/tar-snackbar.service';
+import { NoteHistoryDialog, NoteHistoryDialogData } from './note-history-dialog';
 
 export interface NoteDto {
   id: string;
@@ -29,6 +31,7 @@ export class TarNotes implements OnInit {
 
   private readonly http = inject(HttpClient);
   private readonly snackbar = inject(SnackbarService);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly notes = signal<NoteDto[]>([]);
   protected readonly composerText = signal('');
@@ -37,8 +40,6 @@ export class TarNotes implements OnInit {
   protected readonly editingText = signal('');
   protected readonly currentUserId = signal<string | null>(null);
   protected readonly isAdmin = signal(false);
-  protected readonly historyNote = signal<NoteDto | null>(null);
-  protected readonly historyPreviewHtml = signal<string | null>(null);
 
   ngOnInit(): void {
     this.http.get<{ id: string; roles: string[] }>('/api/v1/users/me').subscribe((me) => {
@@ -112,17 +113,8 @@ export class TarNotes implements OnInit {
   }
 
   protected openHistory(note: NoteDto): void {
-    this.historyNote.set(note);
-    this.historyPreviewHtml.set(note.bodyHtmlSanitized);
-  }
-
-  protected closeHistory(): void {
-    this.historyNote.set(null);
-    this.historyPreviewHtml.set(null);
-  }
-
-  protected selectVersion(html: string): void {
-    this.historyPreviewHtml.set(html);
+    const data: NoteHistoryDialogData = { note };
+    this.dialog.open<NoteHistoryDialog, NoteHistoryDialogData>(NoteHistoryDialog, { data });
   }
 
   protected relativeTime(dateStr: string): string {

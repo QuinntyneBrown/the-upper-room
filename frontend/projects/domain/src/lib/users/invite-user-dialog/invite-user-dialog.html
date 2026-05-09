@@ -1,5 +1,6 @@
-<tar-dialog [open]="true" title="Invite a user" testId="invite-dialog" [showActions]="false" (closed)="cancelled.emit()">
-  <form (submit)="onSubmit($event)" novalidate>
+<h2 mat-dialog-title>Invite a user</h2>
+<form (submit)="onSubmit($event)" novalidate>
+  <mat-dialog-content>
     <tar-text-field
       testId="invite-email"
       errorTestId="invite-error-email"
@@ -7,7 +8,7 @@
       type="email"
       autocomplete="email"
       [value]="email()"
-      [error]="emailError"
+      [error]="data.emailError()"
       (valueChange)="email.set($event)"
     />
 
@@ -48,10 +49,10 @@
       [value]="message()"
       (valueChange)="message.set($event)"
     />
+  </mat-dialog-content>
 
-    <div class="actions">
-      <tar-button variant="text" testId="invite-cancel" type="button" (clicked)="cancelled.emit()">Cancel</tar-button>
-      <tar-button variant="filled" testId="invite-submit" type="submit" [disabled]="!canSubmit()">Send invitation</tar-button>
-    </div>
-  </form>
-</tar-dialog>
+  <mat-dialog-actions align="end">
+    <tar-button variant="text" testId="invite-cancel" type="button" (clicked)="onCancel()">Cancel</tar-button>
+    <tar-button variant="filled" testId="invite-submit" type="submit" [disabled]="!canSubmit()">Send invitation</tar-button>
+  </mat-dialog-actions>
+</form>

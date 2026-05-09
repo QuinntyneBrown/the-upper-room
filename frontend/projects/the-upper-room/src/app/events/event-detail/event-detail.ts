@@ -2,8 +2,11 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { SnackbarService } from 'components';
 import { PermissionsService } from 'domain';
+import { EventAttendeesDialog, EventAttendeesDialogData } from './event-attendees-dialog';
+import { EventCancelDialog } from './event-cancel-dialog';
 
 export interface AttendeeDto {
   readonly id: string;
@@ -59,11 +62,9 @@ export class EventDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly snackbar = inject(SnackbarService);
   private readonly permissions = inject(PermissionsService);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly event = signal<EventDetailDto | null>(null);
-  protected readonly showAttendeesDialog = signal(false);
-  protected readonly showCancelDialog = signal(false);
-  protected readonly cancelMessage = signal('');
   protected readonly myRsvpStatus = signal<string | null>(null);
   protected readonly myWaitlistPosition = signal<number | null>(null);
   protected readonly pendingRsvps = signal<PendingRsvpDto[]>([]);
@@ -131,19 +132,24 @@ export class EventDetail implements OnInit {
       });
   }
 
-  protected openAttendeesDialog(): void { this.showAttendeesDialog.set(true); }
-  protected closeAttendeesDialog(): void { this.showAttendeesDialog.set(false); }
+  protected openAttendeesDialog(): void {
+    const attendees = this.event()?.attendees ?? [];
+    const data: EventAttendeesDialogData = { attendees };
+    this.dialog.open<EventAttendeesDialog, EventAttendeesDialogData>(EventAttendeesDialog, { data });
+  }
 
-  protected openCancelDialog(): void { this.showCancelDialog.set(true); }
-  protected closeCancelDialog(): void { this.showCancelDialog.set(false); }
-
-  protected confirmCancel(): void {
-    const id = this.event()?.id;
-    if (!id) return;
-    this.http.post<{ status: string }>(`/api/v1/events/${id}/cancel`, { message: this.cancelMessage() || null })
-      .subscribe(r => {
-        this.event.update(ev => ev ? { ...ev, status: r.status } : ev);
-        this.showCancelDialog.set(false);
+  protected openCancelDialog(): void {
+    this.dialog
+      .open<EventCancelDialog, void, string | null>(EventCancelDialog)
+      .afterClosed()
+      .subscribe((message) => {
+        if (message === undefined) return;
+        const id = this.event()?.id;
+        if (!id) return;
+        this.http.post<{ status: string }>(`/api/v1/events/${id}/cancel`, { message })
+          .subscribe(r => {
+            this.event.update(ev => ev ? { ...ev, status: r.status } : ev);
+          });
       });
   }
 

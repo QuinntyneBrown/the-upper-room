@@ -1,5 +1,8 @@
 // traces_to: L2-099
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { firstValueFrom } from 'rxjs';
+import { TarConfirmDialog } from './tar-confirm-dialog';
 
 export type ConfirmSeverity = 'info' | 'warning' | 'danger';
 
@@ -12,13 +15,9 @@ export interface ConfirmOptions {
   readonly requireTypedConfirmation?: string;
 }
 
-export interface ConfirmRequest extends ConfirmOptions {
-  readonly resolve: (result: boolean) => void;
-}
-
 @Injectable({ providedIn: 'root' })
 export class ConfirmService {
-  readonly current = signal<ConfirmRequest | null>(null);
+  private readonly dialog = inject(MatDialog);
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -27,16 +26,15 @@ export class ConfirmService {
     }
   }
 
-  confirm(options: ConfirmOptions): Promise<boolean> {
-    return new Promise<boolean>((resolve) => {
-      this.current.set({ ...options, resolve });
+  async confirm(options: ConfirmOptions): Promise<boolean> {
+    const ref = this.dialog.open<TarConfirmDialog, ConfirmOptions, boolean>(TarConfirmDialog, {
+      data: options,
+      autoFocus: '[data-testid="confirm-cancel"]',
+      restoreFocus: true,
+      panelClass: 'tar-confirm-dialog-panel',
+      ariaLabelledBy: 'confirm-dialog-title',
     });
-  }
-
-  resolve(result: boolean): void {
-    const req = this.current();
-    if (!req) return;
-    this.current.set(null);
-    req.resolve(result);
+    const result = await firstValueFrom(ref.afterClosed());
+    return result === true;
   }
 }

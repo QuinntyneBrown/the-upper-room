@@ -79,14 +79,6 @@
     <span>{{ total() }} total</span>
   </footer>
 
-  @if (inviteOpen()) {
-    <tar-invite-user-dialog
-      [emailError]="inviteEmailError()"
-      (submitted)="onInviteSubmit($event)"
-      (cancelled)="closeInvite()"
-    />
-  }
-
   @if (selectedUser(); as su) {
     <tar-user-detail-drawer
       [user]="su"

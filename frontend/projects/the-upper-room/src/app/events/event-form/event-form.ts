@@ -2,6 +2,8 @@
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { RecurrenceEditDialog, RecurrenceEditScope } from './recurrence-edit-dialog';
 import type { EventDetailDto } from '../event-detail/event-detail';
 
 interface LocationRef { id: string; name: string; }
@@ -34,6 +36,7 @@ export class EventForm implements OnInit, OnDestroy {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly eventId = signal<string | null>(null);
   protected readonly title = signal('');
@@ -54,8 +57,7 @@ export class EventForm implements OnInit, OnDestroy {
   protected readonly tagInput = signal('');
   protected readonly tags = signal<string[]>([]);
   protected readonly recurrenceType = signal<'none' | 'daily' | 'weekly' | 'monthly'>('none');
-  protected readonly recurrenceEditScope = signal<'single' | 'following' | 'series' | null>(null);
-  protected readonly showRecurrenceDialog = signal(false);
+  protected readonly recurrenceEditScope = signal<RecurrenceEditScope | null>(null);
   protected readonly isRecurring = signal(false);
 
   protected readonly timezones = TIMEZONES;
@@ -83,7 +85,7 @@ export class EventForm implements OnInit, OnDestroy {
           this.populateForm(ev);
           if (ev.recurrenceId) {
             this.isRecurring.set(true);
-            this.showRecurrenceDialog.set(true);
+            this.openRecurrenceDialog();
           }
         });
     }
@@ -118,9 +120,13 @@ export class EventForm implements OnInit, OnDestroy {
     }
   }
 
-  protected chooseEditScope(scope: 'single' | 'following' | 'series'): void {
-    this.recurrenceEditScope.set(scope);
-    this.showRecurrenceDialog.set(false);
+  private openRecurrenceDialog(): void {
+    this.dialog
+      .open<RecurrenceEditDialog, void, RecurrenceEditScope>(RecurrenceEditDialog, { disableClose: true })
+      .afterClosed()
+      .subscribe((scope) => {
+        if (scope) this.recurrenceEditScope.set(scope);
+      });
   }
 
   protected onLocationInput(v: string): void {

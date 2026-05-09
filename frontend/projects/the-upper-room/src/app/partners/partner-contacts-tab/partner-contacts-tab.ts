@@ -2,8 +2,9 @@
 import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmService, SnackbarService } from 'components';
-import { LinkContactDialog } from '../link-contact-dialog/link-contact-dialog';
+import { LinkContactDialog, LinkContactDialogData } from '../link-contact-dialog/link-contact-dialog';
 
 export interface LinkedContact {
   readonly id: string;
@@ -14,7 +15,7 @@ export interface LinkedContact {
 
 @Component({
   selector: 'app-partner-contacts-tab',
-  imports: [LinkContactDialog],
+  imports: [],
   templateUrl: './partner-contacts-tab.html',
   styleUrl: './partner-contacts-tab.scss',
 })
@@ -26,9 +27,9 @@ export class PartnerContactsTab implements OnInit {
   private readonly router = inject(Router);
   private readonly confirm = inject(ConfirmService);
   private readonly snackbar = inject(SnackbarService);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly linked = signal<LinkedContact[]>([]);
-  protected readonly showDialog = signal(false);
 
   ngOnInit(): void {
     this.loadLinked();
@@ -41,16 +42,13 @@ export class PartnerContactsTab implements OnInit {
   }
 
   protected openLinkDialog(): void {
-    this.showDialog.set(true);
-  }
-
-  protected onContactLinked(contact: LinkedContact): void {
-    this.showDialog.set(false);
-    this.loadLinked();
-  }
-
-  protected onDialogClosed(): void {
-    this.showDialog.set(false);
+    const data: LinkContactDialogData = { partnerId: this.partnerId };
+    this.dialog
+      .open<LinkContactDialog, LinkContactDialogData, LinkedContact>(LinkContactDialog, { data })
+      .afterClosed()
+      .subscribe((contact) => {
+        if (contact) this.loadLinked();
+      });
   }
 
   protected async unlinkContact(contact: LinkedContact): Promise<void> {

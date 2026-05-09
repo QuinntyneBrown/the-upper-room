@@ -57,24 +57,3 @@
     }
   </div>
 </div>
-
-@if (historyNote(); as hn) {
-  <div class="notes__dialog-backdrop" (click)="closeHistory()"></div>
-  <div data-testid="note-history-dialog" class="notes__dialog" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
-    <div class="notes__dialog-header">
-      <h2 class="notes__dialog-title">Edit history</h2>
-      <button data-testid="note-history-close" type="button" class="notes__btn-text" (click)="closeHistory()">Close</button>
-    </div>
-    <div class="notes__dialog-layout">
-      <ul class="notes__history-list">
-        @for (v of hn.history; track v.id) {
-          <li data-testid="note-history-version" class="notes__history-item" (click)="selectVersion(v.bodyHtmlSanitized)">
-            <span data-testid="note-history-version-time" class="notes__time">{{ relativeTime(v.createdAt) }}</span>
-            <span class="notes__author">{{ v.createdBy }}</span>
-          </li>
-        }
-      </ul>
-      <div data-testid="note-history-preview" class="notes__history-preview notes__body" [innerHTML]="historyPreviewHtml()"></div>
-    </div>
-  </div>
-}

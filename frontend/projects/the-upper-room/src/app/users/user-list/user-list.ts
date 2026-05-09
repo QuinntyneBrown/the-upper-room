@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import {
   ConfirmService,
@@ -19,7 +20,7 @@ import {
   TarSelect,
 } from 'components';
 import { InvitePayload, UserRow } from 'api';
-import { InviteUserDialog, UserDetailDrawer } from 'domain';
+import { InviteUserDialog, InviteUserDialogData, UserDetailDrawer } from 'domain';
 
 export type { UserRow } from 'api';
 
@@ -40,7 +41,6 @@ type RoleFilter = (typeof ROLES)[number];
     TarSelect,
     MatChipsModule,
     MatTableModule,
-    InviteUserDialog,
     UserDetailDrawer,
   ],
   templateUrl: './user-list.html',
@@ -50,6 +50,7 @@ export class UserList implements OnDestroy {
   private readonly http = inject(HttpClient);
   private readonly snackbar = inject(SnackbarService);
   private readonly confirmer = inject(ConfirmService);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly searchInput = signal('');
   protected readonly debouncedSearch = signal('');
@@ -67,9 +68,6 @@ export class UserList implements OnDestroy {
     { label: '50', value: '50' },
     { label: '100', value: '100' },
   ];
-
-  protected readonly inviteOpen = signal(false);
-  protected readonly inviteEmailError = signal<string | null>(null);
 
   protected readonly selectedUser = signal<UserRow | null>(null);
 
@@ -100,18 +98,22 @@ export class UserList implements OnDestroy {
   }
 
   protected openInvite(): void {
-    this.inviteEmailError.set(null);
-    this.inviteOpen.set(true);
+    const emailError = signal<string | null>(null);
+    const data: InviteUserDialogData = {
+      emailError,
+      onSubmit: (payload) => this.submitInvite(payload, emailError, ref),
+    };
+    const ref = this.dialog.open<InviteUserDialog, InviteUserDialogData>(InviteUserDialog, { data });
   }
 
-  protected closeInvite(): void {
-    this.inviteOpen.set(false);
-  }
-
-  protected onInviteSubmit(payload: InvitePayload): void {
+  private submitInvite(
+    payload: InvitePayload,
+    emailError: ReturnType<typeof signal<string | null>>,
+    ref: { close: () => void },
+  ): void {
     this.http.post<{ id: string }>('/api/v1/invitations', payload).subscribe({
       next: ({ id }) => {
-        this.inviteOpen.set(false);
+        ref.close();
         this.snackbar.show(`Invitation sent to ${payload.email}`, 'success', {
           label: 'Undo',
           onClick: () => this.revokeInvitation(id),
@@ -119,7 +121,7 @@ export class UserList implements OnDestroy {
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 409) {
-          this.inviteEmailError.set('This email already has a pending invitation.');
+          emailError.set('This email already has a pending invitation.');
         }
       },
     });

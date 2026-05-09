@@ -1,20 +1,28 @@
 // traces_to: L2-027
-import { Component, EventEmitter, Input, Output, computed, signal } from '@angular/core';
+import { Component, Signal, computed, inject, signal } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { InvitePayload } from 'api';
-import { TarButton, TarDialog, TarSelect, TarTextarea, TarTextField } from 'components';
+import { TarButton, TarSelect, TarTextarea, TarTextField } from 'components';
 
 const ROLES = ['Member', 'CityLead', 'SystemAdmin'];
 
+export interface InviteUserDialogData {
+  readonly emailError: Signal<string | null>;
+  readonly onSubmit: (payload: InvitePayload) => void;
+}
+
 @Component({
   selector: 'tar-invite-user-dialog',
-  imports: [TarButton, TarDialog, TarSelect, TarTextarea, TarTextField],
+  imports: [MatDialogModule, TarButton, TarSelect, TarTextarea, TarTextField],
   templateUrl: './invite-user-dialog.html',
   styleUrl: './invite-user-dialog.scss',
+  host: {
+    'data-testid': 'invite-dialog',
+  },
 })
 export class InviteUserDialog {
-  @Input({ required: true }) emailError: string | null = null;
-  @Output() readonly submitted = new EventEmitter<InvitePayload>();
-  @Output() readonly cancelled = new EventEmitter<void>();
+  protected readonly data = inject<InviteUserDialogData>(MAT_DIALOG_DATA);
+  private readonly ref = inject<MatDialogRef<InviteUserDialog>>(MatDialogRef);
 
   protected readonly email = signal('');
   protected readonly firstName = signal('');
@@ -35,7 +43,7 @@ export class InviteUserDialog {
   protected onSubmit(event: Event): void {
     event.preventDefault();
     if (!this.canSubmit()) return;
-    this.submitted.emit({
+    this.data.onSubmit({
       email: this.email(),
       firstName: this.firstName(),
       lastName: this.lastName(),
@@ -43,5 +51,9 @@ export class InviteUserDialog {
       city: this.city(),
       message: this.message(),
     });
+  }
+
+  protected onCancel(): void {
+    this.ref.close();
   }
 }

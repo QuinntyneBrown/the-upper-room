@@ -47,10 +47,3 @@
   }
 </div>
 
-@if (showDialog()) {
-  <app-link-contact-dialog
-    [partnerId]="partnerId"
-    (linked)="onContactLinked($event)"
-    (cancelled)="onDialogClosed()"
-  />
-}

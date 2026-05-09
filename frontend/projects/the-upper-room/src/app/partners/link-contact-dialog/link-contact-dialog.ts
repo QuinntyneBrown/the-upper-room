@@ -1,6 +1,7 @@
 // traces_to: L2-036
-import { Component, EventEmitter, Input, Output, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import type { LinkedContact } from '../partner-contacts-tab/partner-contacts-tab';
 
@@ -10,17 +11,22 @@ interface ContactSearchResult {
   readonly cityId: string;
 }
 
+export interface LinkContactDialogData {
+  readonly partnerId: string;
+}
+
 @Component({
   selector: 'app-link-contact-dialog',
-  imports: [],
+  imports: [MatDialogModule],
   templateUrl: './link-contact-dialog.html',
   styleUrl: './link-contact-dialog.scss',
+  host: {
+    'data-testid': 'link-contact-dialog',
+  },
 })
 export class LinkContactDialog {
-  @Input({ required: true }) partnerId!: string;
-  @Output() linked = new EventEmitter<LinkedContact>();
-  @Output() cancelled = new EventEmitter<void>();
-
+  protected readonly data = inject<LinkContactDialogData>(MAT_DIALOG_DATA);
+  private readonly ref = inject<MatDialogRef<LinkContactDialog, LinkedContact>>(MatDialogRef);
   private readonly http = inject(HttpClient);
   private readonly search$ = new Subject<string>();
 
@@ -61,14 +67,14 @@ export class LinkContactDialog {
     this.submitting.set(true);
 
     this.http
-      .post<{ contactId: string; role: string }>(`/api/v1/partners/${this.partnerId}/contacts`, {
+      .post<{ contactId: string; role: string }>(`/api/v1/partners/${this.data.partnerId}/contacts`, {
         contactId: contact.id,
         role: this.role(),
       })
       .subscribe({
         next: () => {
           this.submitting.set(false);
-          this.linked.emit({ ...contact, role: this.role() });
+          this.ref.close({ ...contact, role: this.role() });
         },
         error: (err) => {
           this.submitting.set(false);
@@ -80,6 +86,6 @@ export class LinkContactDialog {
   }
 
   protected cancel(): void {
-    this.cancelled.emit();
+    this.ref.close();
   }
 }

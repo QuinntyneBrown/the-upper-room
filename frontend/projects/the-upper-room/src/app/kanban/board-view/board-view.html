@@ -153,35 +153,5 @@
     </div>
   }
 
-  @if (moveSheetCard(); as mc) {
-    <div class="move-sheet-backdrop" (click)="closeMoveSheet()"></div>
-    <div data-testid="board-move-sheet" class="move-sheet" role="dialog" aria-modal="true">
-      <h2 class="move-sheet__title">Move to...</h2>
-      <ul class="move-sheet__options">
-        @for (col of otherColumns(mc); track col.id) {
-          <li>
-            <button
-              [attr.data-testid]="'board-move-sheet-option-' + col.name"
-              type="button"
-              class="move-sheet__option"
-              (click)="moveCardFromSheet(mc, col)"
-            >
-              {{ col.name }}
-            </button>
-          </li>
-        }
-      </ul>
-    </div>
-  }
 
-  @if (selectedCard(); as sc) {
-    <app-card-detail-dialog
-      [card]="sc"
-      [schema]="cardSchema()"
-      (closed)="closeCard()"
-      (patched)="onCardPatched($event)"
-      (archived)="onCardArchived()"
-      (deleted)="onCardDeleted()"
-    />
-  }
 }

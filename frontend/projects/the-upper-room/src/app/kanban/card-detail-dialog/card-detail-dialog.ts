@@ -1,6 +1,7 @@
 // traces_to: L2-046
-import { Component, EventEmitter, Input, OnInit, Output, inject, signal } from '@angular/core';
-import { ConfirmService, TarButton, TarDialog, TarIconButton, TarTextarea, TarTextField } from 'components';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { ConfirmService, TarButton, TarIconButton, TarTextarea, TarTextField } from 'components';
 import { BoardCard } from '../board-view/board-view';
 
 export interface CardSchemaField {
@@ -15,20 +16,29 @@ export interface CardDetailPatch {
   readonly body: Record<string, unknown>;
 }
 
+export interface CardDetailDialogData {
+  readonly card: BoardCard;
+  readonly schema: readonly CardSchemaField[];
+  readonly onPatch: (patch: CardDetailPatch) => void;
+}
+
+export type CardDetailDialogResult =
+  | { kind: 'close' }
+  | { kind: 'archive' }
+  | { kind: 'delete' };
+
 @Component({
   selector: 'app-card-detail-dialog',
-  imports: [TarButton, TarDialog, TarIconButton, TarTextarea, TarTextField],
+  imports: [MatDialogModule, TarButton, TarIconButton, TarTextarea, TarTextField],
   templateUrl: './card-detail-dialog.html',
   styleUrl: './card-detail-dialog.scss',
+  host: {
+    'data-testid': 'card-detail-dialog',
+  },
 })
 export class CardDetailDialog implements OnInit {
-  @Input({ required: true }) card!: BoardCard;
-  @Input() schema: readonly CardSchemaField[] = [];
-  @Output() closed = new EventEmitter<void>();
-  @Output() patched = new EventEmitter<CardDetailPatch>();
-  @Output() archived = new EventEmitter<void>();
-  @Output() deleted = new EventEmitter<void>();
-
+  protected readonly data = inject<CardDetailDialogData>(MAT_DIALOG_DATA);
+  private readonly ref = inject<MatDialogRef<CardDetailDialog, CardDetailDialogResult>>(MatDialogRef);
   private readonly confirm = inject(ConfirmService);
 
   protected readonly currentTitle = signal('');
@@ -39,9 +49,9 @@ export class CardDetailDialog implements OnInit {
   protected readonly newComment = signal('');
 
   ngOnInit(): void {
-    this.currentTitle.set(this.card.title);
+    this.currentTitle.set(this.data.card.title);
     const data: Record<string, string> = {};
-    for (const [k, v] of Object.entries(this.card.data ?? {})) {
+    for (const [k, v] of Object.entries(this.data.card.data ?? {})) {
       data[k] = v ?? '';
     }
     this.currentData.set(data);
@@ -62,13 +72,13 @@ export class CardDetailDialog implements OnInit {
 
   protected onTitleBlur(): void {
     const next = this.currentTitle().trim();
-    if (!next || next === this.card.title) return;
-    this.patched.emit({ id: this.card.id, body: { title: next } });
+    if (!next || next === this.data.card.title) return;
+    this.data.onPatch({ id: this.data.card.id, body: { title: next } });
   }
 
   protected onClose(): void {
     const errors: Record<string, string> = {};
-    for (const field of this.schema) {
+    for (const field of this.data.schema) {
       if (field.required && !this.fieldValue(field.key).trim()) {
         errors[field.key] = `${field.label} is required`;
       }
@@ -77,7 +87,7 @@ export class CardDetailDialog implements OnInit {
       this.fieldErrors.set(errors);
       return;
     }
-    this.closed.emit();
+    this.ref.close({ kind: 'close' });
   }
 
   protected addComment(): void {
@@ -88,7 +98,7 @@ export class CardDetailDialog implements OnInit {
   }
 
   protected onArchive(): void {
-    this.archived.emit();
+    this.ref.close({ kind: 'archive' });
   }
 
   protected async onDelete(): Promise<void> {
@@ -96,10 +106,10 @@ export class CardDetailDialog implements OnInit {
       severity: 'danger',
       title: 'Delete card?',
       body: 'This will permanently remove the card.',
-      requireTypedConfirmation: this.card.title,
+      requireTypedConfirmation: this.data.card.title,
       confirmLabel: 'Delete',
     });
-    if (ok) this.deleted.emit();
+    if (ok) this.ref.close({ kind: 'delete' });
   }
 
   protected onAttach(input: HTMLInputElement): void {

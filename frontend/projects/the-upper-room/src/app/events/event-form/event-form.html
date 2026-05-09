@@ -1,17 +1,3 @@
-@if (showRecurrenceDialog()) {
-  <div data-testid="recurrence-edit-dialog" class="recurrence-dialog-backdrop">
-    <div class="recurrence-dialog">
-      <h2 class="recurrence-dialog__title">Edit recurring event</h2>
-      <p class="recurrence-dialog__body">Which events do you want to change?</p>
-      <div class="recurrence-dialog__actions">
-        <button data-testid="recurrence-edit-single" type="button" class="btn-filled" (click)="chooseEditScope('single')">This event only</button>
-        <button data-testid="recurrence-edit-following" type="button" class="btn-tonal" (click)="chooseEditScope('following')">This and following events</button>
-        <button data-testid="recurrence-edit-series" type="button" class="btn-outlined" (click)="chooseEditScope('series')">Entire series</button>
-      </div>
-    </div>
-  </div>
-}
-
 <div class="event-form-layout">
   <div class="event-form">
     <h1 class="event-form__heading">{{ eventId() ? 'Edit Event' : 'New Event' }}</h1>

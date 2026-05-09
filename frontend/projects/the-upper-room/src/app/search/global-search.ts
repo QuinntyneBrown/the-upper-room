@@ -1,7 +1,8 @@
 // traces_to: L2-060
-import { Component, OnInit, OnDestroy, inject, signal, computed, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 interface SearchResult {
   id: string;
@@ -21,15 +22,19 @@ interface SearchResponse {
 
 @Component({
   selector: 'app-global-search',
-  imports: [],
+  imports: [MatDialogModule],
   templateUrl: './global-search.html',
   styleUrl: './global-search.scss',
+  host: {
+    'data-testid': 'global-search-dialog',
+  },
 })
-export class GlobalSearch implements OnInit, OnDestroy {
+export class GlobalSearch implements AfterViewInit, OnDestroy {
   @ViewChild('searchInput') inputRef!: ElementRef<HTMLInputElement>;
 
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly ref = inject<MatDialogRef<GlobalSearch>>(MatDialogRef);
 
   protected readonly query = signal('');
   protected readonly results = signal<SearchResult[]>([]);
@@ -39,7 +44,7 @@ export class GlobalSearch implements OnInit, OnDestroy {
 
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     requestAnimationFrame(() => this.inputRef?.nativeElement.focus());
   }
 
@@ -76,6 +81,7 @@ export class GlobalSearch implements OnInit, OnDestroy {
   }
 
   protected navigate(result: SearchResult): void {
+    this.ref.close();
     void this.router.navigateByUrl(result.url);
   }
 

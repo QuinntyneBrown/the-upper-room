@@ -1,0 +1,15 @@
+<h2 mat-dialog-title class="notes__dialog-title">Edit history</h2>
+<mat-dialog-content class="notes__dialog-layout">
+  <ul class="notes__history-list">
+    @for (v of data.note.history; track v.id) {
+      <li data-testid="note-history-version" class="notes__history-item" (click)="selectVersion(v.bodyHtmlSanitized)">
+        <span data-testid="note-history-version-time" class="notes__time">{{ relativeTime(v.createdAt) }}</span>
+        <span class="notes__author">{{ v.createdBy }}</span>
+      </li>
+    }
+  </ul>
+  <div data-testid="note-history-preview" class="notes__history-preview notes__body" [innerHTML]="previewHtml()"></div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button data-testid="note-history-close" type="button" class="notes__btn-text" mat-dialog-close>Close</button>
+</mat-dialog-actions>

@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Move {{ data.cardCount }} cards from '{{ data.columnName }}' to...</h2>
+<mat-dialog-content>
+  <tar-select
+    label="Move to column"
+    testId="config-move-cards-target"
+    [value]="target()"
+    [options]="data.options"
+    (valueChange)="target.set($event)"
+  />
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <tar-button variant="text" type="button" (clicked)="cancel()">Cancel</tar-button>
+  <tar-button variant="filled" testId="config-move-cards-confirm" type="button" (clicked)="confirm()">Confirm</tar-button>
+</mat-dialog-actions>

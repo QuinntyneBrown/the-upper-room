@@ -1,22 +1,22 @@
-<tar-dialog [open]="true" testId="card-detail-dialog" [showActions]="false" [closeOnBackdrop]="false" (closed)="onClose()">
-  <header class="dialog__header">
-    <tar-text-field
-      testId="card-detail-title"
-      [value]="currentTitle()"
-      (valueChange)="currentTitle.set($event)"
-      (blurred)="onTitleBlur()"
-    />
-    <div class="dialog__header-actions">
-      <tar-button variant="text" testId="card-detail-archive" type="button" (clicked)="onArchive()">Archive</tar-button>
-      <tar-button variant="text" color="warn" testId="card-detail-delete" type="button" (clicked)="onDelete()">Delete</tar-button>
-      <tar-icon-button icon="close" ariaLabel="Close" testId="card-detail-close" (clicked)="onClose()" />
-    </div>
-  </header>
+<header class="dialog__header">
+  <tar-text-field
+    testId="card-detail-title"
+    [value]="currentTitle()"
+    (valueChange)="currentTitle.set($event)"
+    (blurred)="onTitleBlur()"
+  />
+  <div class="dialog__header-actions">
+    <tar-button variant="text" testId="card-detail-archive" type="button" (clicked)="onArchive()">Archive</tar-button>
+    <tar-button variant="text" color="warn" testId="card-detail-delete" type="button" (clicked)="onDelete()">Delete</tar-button>
+    <tar-icon-button icon="close" ariaLabel="Close" testId="card-detail-close" (clicked)="onClose()" />
+  </div>
+</header>
 
-  @if (schema.length > 0) {
+<mat-dialog-content>
+  @if (data.schema.length > 0) {
     <section class="dialog__section">
       <h3 class="dialog__section-title">Details</h3>
-      @for (field of schema; track field.key) {
+      @for (field of data.schema; track field.key) {
         <tar-text-field
           [testId]="'card-detail-field-' + field.key"
           [errorTestId]="'card-detail-field-error-' + field.key"
@@ -64,4 +64,4 @@
       (change)="onAttach(fileInput)"
     />
   </section>
-</tar-dialog>
+</mat-dialog-content>

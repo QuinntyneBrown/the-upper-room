@@ -1,6 +1,7 @@
 // traces_to: L2-043, L2-044
-import { Component, EventEmitter, Output, signal } from '@angular/core';
-import { TarButton, TarCheckbox, TarDialog, TarTextarea, TarTextField } from 'components';
+import { Component, inject, signal } from '@angular/core';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { TarButton, TarCheckbox, TarTextarea, TarTextField } from 'components';
 
 export interface CreateBoardForm {
   readonly name: string;
@@ -10,13 +11,15 @@ export interface CreateBoardForm {
 
 @Component({
   selector: 'app-create-board-wizard',
-  imports: [TarButton, TarCheckbox, TarDialog, TarTextarea, TarTextField],
+  imports: [MatDialogModule, TarButton, TarCheckbox, TarTextarea, TarTextField],
   templateUrl: './create-board-wizard.html',
   styleUrl: './create-board-wizard.scss',
+  host: {
+    'data-testid': 'create-board-wizard',
+  },
 })
 export class CreateBoardWizard {
-  @Output() submitted = new EventEmitter<CreateBoardForm>();
-  @Output() cancelled = new EventEmitter<void>();
+  private readonly ref = inject<MatDialogRef<CreateBoardWizard, CreateBoardForm>>(MatDialogRef);
 
   protected readonly name = signal('');
   protected readonly description = signal('');
@@ -24,15 +27,16 @@ export class CreateBoardWizard {
 
   protected onSubmit(event: Event): void {
     event.preventDefault();
-    if (!this.name().trim()) return;
-    this.submitted.emit({
-      name: this.name().trim(),
+    const name = this.name().trim();
+    if (!name) return;
+    this.ref.close({
+      name,
       description: this.description().trim(),
       defaultColumns: this.defaultColumns(),
     });
   }
 
   protected onCancel(): void {
-    this.cancelled.emit();
+    this.ref.close();
   }
 }

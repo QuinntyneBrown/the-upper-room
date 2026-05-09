@@ -1,49 +1,47 @@
-<div data-testid="global-search-dialog" class="global-search-backdrop" (click)="$event.target === $event.currentTarget && $event.stopPropagation()">
-  <div class="global-search-dialog">
-    <div class="global-search__input-wrap">
-      <span class="material-symbols-outlined global-search__icon">search</span>
-      <input
-        #searchInput
-        data-testid="global-search-input"
-        type="text"
-        class="global-search__input"
-        placeholder="Search contacts, partners, events…"
-        [value]="query()"
-        (input)="onInput($any($event.target).value)"
-        (keydown)="onKeydown($event)"
-        autocomplete="off"
-      />
-    </div>
-
-    @if (hasResults()) {
-      <ul class="global-search__results" role="listbox">
-        @for (result of results(); track result.id; let i = $index) {
-          <li
-            [attr.data-testid]="'search-result-' + result.id"
-            class="global-search__result"
-            [class.global-search__result--active]="activeIndex() === i"
-            role="option"
-            (click)="navigate(result)"
-          >
-            <span class="material-symbols-outlined global-search__result-icon">{{ typeIcon(result.type) }}</span>
-            <div class="global-search__result-text">
-              <span class="global-search__result-title">{{ result.title }}</span>
-              @if (result.subtitle) {
-                <span class="global-search__result-sub">{{ result.subtitle }}</span>
-              }
-            </div>
-            <span class="global-search__result-type">{{ result.type }}</span>
-          </li>
-        }
-      </ul>
-    }
-
-    @if (isEmpty()) {
-      <div data-testid="global-search-empty" class="global-search__empty">
-        <span class="material-symbols-outlined global-search__empty-icon">search_off</span>
-        <p class="global-search__empty-title">No matches</p>
-        <p class="global-search__empty-sub">Try different keywords or check your filters.</p>
-      </div>
-    }
+<div class="global-search-dialog">
+  <div class="global-search__input-wrap">
+    <span class="material-symbols-outlined global-search__icon">search</span>
+    <input
+      #searchInput
+      data-testid="global-search-input"
+      type="text"
+      class="global-search__input"
+      placeholder="Search contacts, partners, events…"
+      [value]="query()"
+      (input)="onInput($any($event.target).value)"
+      (keydown)="onKeydown($event)"
+      autocomplete="off"
+    />
   </div>
+
+  @if (hasResults()) {
+    <ul class="global-search__results" role="listbox">
+      @for (result of results(); track result.id; let i = $index) {
+        <li
+          [attr.data-testid]="'search-result-' + result.id"
+          class="global-search__result"
+          [class.global-search__result--active]="activeIndex() === i"
+          role="option"
+          (click)="navigate(result)"
+        >
+          <span class="material-symbols-outlined global-search__result-icon">{{ typeIcon(result.type) }}</span>
+          <div class="global-search__result-text">
+            <span class="global-search__result-title">{{ result.title }}</span>
+            @if (result.subtitle) {
+              <span class="global-search__result-sub">{{ result.subtitle }}</span>
+            }
+          </div>
+          <span class="global-search__result-type">{{ result.type }}</span>
+        </li>
+      }
+    </ul>
+  }
+
+  @if (isEmpty()) {
+    <div data-testid="global-search-empty" class="global-search__empty">
+      <span class="material-symbols-outlined global-search__empty-icon">search_off</span>
+      <p class="global-search__empty-title">No matches</p>
+      <p class="global-search__empty-sub">Try different keywords or check your filters.</p>
+    </div>
+  }
 </div>

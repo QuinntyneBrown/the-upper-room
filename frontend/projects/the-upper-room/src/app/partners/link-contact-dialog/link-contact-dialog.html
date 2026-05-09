@@ -1,58 +1,54 @@
-<div data-testid="link-contact-dialog" class="dialog-backdrop" (click)="cancel()">
-  <div class="dialog" (click)="$event.stopPropagation()">
-    <h2 class="dialog__title">Link contact</h2>
-
-    <div class="field">
-      <label class="field__label" for="link-contact-search">Search contacts</label>
-      <input
-        id="link-contact-search"
-        data-testid="link-contact-search"
-        class="field__input"
-        type="search"
-        placeholder="Type a name…"
-        [value]="query()"
-        (input)="onSearch($any($event.target).value)"
-        autocomplete="off"
-      />
-      @if (results().length > 0) {
-        <ul class="search-results">
-          @for (c of results(); track c.id) {
-            <li
-              [attr.data-testid]="'link-contact-result-' + c.name"
-              class="search-results__item"
-              (click)="selectContact(c)"
-            >{{ c.name }}</li>
-          }
-        </ul>
-      }
-    </div>
-
-    <div class="field">
-      <label class="field__label" for="link-contact-role">Role</label>
-      <input
-        id="link-contact-role"
-        data-testid="link-contact-role"
-        class="field__input"
-        type="text"
-        placeholder="e.g. Primary Contact"
-        [value]="role()"
-        (input)="role.set($any($event.target).value)"
-      />
-    </div>
-
-    @if (error()) {
-      <div data-testid="link-contact-error" class="dialog__error">{{ error() }}</div>
+<h2 mat-dialog-title class="dialog__title">Link contact</h2>
+<mat-dialog-content>
+  <div class="field">
+    <label class="field__label" for="link-contact-search">Search contacts</label>
+    <input
+      id="link-contact-search"
+      data-testid="link-contact-search"
+      class="field__input"
+      type="search"
+      placeholder="Type a name…"
+      [value]="query()"
+      (input)="onSearch($any($event.target).value)"
+      autocomplete="off"
+    />
+    @if (results().length > 0) {
+      <ul class="search-results">
+        @for (c of results(); track c.id) {
+          <li
+            [attr.data-testid]="'link-contact-result-' + c.name"
+            class="search-results__item"
+            (click)="selectContact(c)"
+          >{{ c.name }}</li>
+        }
+      </ul>
     }
-
-    <div class="dialog__actions">
-      <button data-testid="link-contact-cancel" type="button" class="btn-outlined" (click)="cancel()">Cancel</button>
-      <button
-        data-testid="link-contact-confirm"
-        type="button"
-        class="btn-filled"
-        [disabled]="!selected() || submitting()"
-        (click)="confirm()"
-      >Link</button>
-    </div>
   </div>
-</div>
+
+  <div class="field">
+    <label class="field__label" for="link-contact-role">Role</label>
+    <input
+      id="link-contact-role"
+      data-testid="link-contact-role"
+      class="field__input"
+      type="text"
+      placeholder="e.g. Primary Contact"
+      [value]="role()"
+      (input)="role.set($any($event.target).value)"
+    />
+  </div>
+
+  @if (error()) {
+    <div data-testid="link-contact-error" class="dialog__error">{{ error() }}</div>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="dialog__actions">
+  <button data-testid="link-contact-cancel" type="button" class="btn-outlined" (click)="cancel()">Cancel</button>
+  <button
+    data-testid="link-contact-confirm"
+    type="button"
+    class="btn-filled"
+    [disabled]="!selected() || submitting()"
+    (click)="confirm()"
+  >Link</button>
+</mat-dialog-actions>

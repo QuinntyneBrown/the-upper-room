@@ -2,7 +2,9 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { TarButton, TarDialog, TarSelect } from 'components';
+import { MatDialog } from '@angular/material/dialog';
+import { TarButton, TarSelect } from 'components';
+import { MoveCardsDialog, MoveCardsDialogData } from './move-cards-dialog';
 
 interface BoardColumn {
   readonly id: string;
@@ -26,18 +28,17 @@ interface BoardDetail {
 
 @Component({
   selector: 'app-board-configure',
-  imports: [TarButton, TarDialog, TarSelect],
+  imports: [TarButton, TarSelect],
   templateUrl: './board-configure.html',
   styleUrl: './board-configure.scss',
 })
 export class BoardConfigure {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly board = signal<BoardDetail | null>(null);
   protected readonly columns = signal<BoardColumn[]>([]);
-  protected readonly deleteTarget = signal<BoardColumn | null>(null);
-  protected readonly moveCardsTo = signal<string>('');
   protected readonly swimlaneMode = signal<string>('None');
 
   protected readonly swimlaneModeOptions = [
@@ -52,20 +53,6 @@ export class BoardConfigure {
       counts.set(card.columnId, (counts.get(card.columnId) ?? 0) + 1);
     }
     return counts;
-  });
-
-  protected readonly otherColumns = computed(() =>
-    this.columns().filter((c) => c.id !== this.deleteTarget()?.id),
-  );
-
-  protected readonly moveCardsTargetOptions = computed(() =>
-    this.otherColumns().map((c) => ({ label: c.name, value: c.id })),
-  );
-
-  protected readonly cardsInDeleteTarget = computed(() => {
-    const target = this.deleteTarget();
-    if (!target) return 0;
-    return this.cardCountByColumn().get(target.id) ?? 0;
   });
 
   constructor() {
@@ -108,20 +95,16 @@ export class BoardConfigure {
       this.persistDelete(column.id);
       return;
     }
-    this.deleteTarget.set(column);
-    this.moveCardsTo.set(this.otherColumns()[0]?.id ?? '');
-  }
-
-  protected confirmMove(): void {
-    const target = this.deleteTarget();
-    const targetColumnId = this.moveCardsTo();
-    if (!target || !targetColumnId) return;
-    this.persistDelete(target.id, targetColumnId);
-    this.deleteTarget.set(null);
-  }
-
-  protected cancelMove(): void {
-    this.deleteTarget.set(null);
+    const options = this.columns()
+      .filter((c) => c.id !== column.id)
+      .map((c) => ({ label: c.name, value: c.id }));
+    const data: MoveCardsDialogData = { columnName: column.name, cardCount: count, options };
+    this.dialog
+      .open<MoveCardsDialog, MoveCardsDialogData, string>(MoveCardsDialog, { data })
+      .afterClosed()
+      .subscribe((targetColumnId) => {
+        if (targetColumnId) this.persistDelete(column.id, targetColumnId);
+      });
   }
 
   protected onSwimlaneChange(mode: string): void {

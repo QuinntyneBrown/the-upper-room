@@ -51,7 +51,6 @@ export * from './lib/chip/chip-set';
 export * from './lib/badge/badge';
 export * from './lib/tooltip/tooltip';
 export * from './lib/menu/menu';
-export * from './lib/dialog/dialog';
 export * from './lib/pagination/pagination';
 
 // Feedback

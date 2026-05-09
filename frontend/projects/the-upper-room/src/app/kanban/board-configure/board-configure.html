@@ -38,26 +38,4 @@
       </li>
     }
   </ul>
-
-  @if (deleteTarget(); as target) {
-    <tar-dialog
-      [open]="true"
-      [title]="'Move ' + cardsInDeleteTarget() + ' cards from \'' + target.name + '\' to...'"
-      testId="config-move-cards-dialog"
-      [showActions]="false"
-      (closed)="cancelMove()"
-    >
-      <tar-select
-        label="Move to column"
-        testId="config-move-cards-target"
-        [value]="moveCardsTo()"
-        [options]="moveCardsTargetOptions()"
-        (valueChange)="moveCardsTo.set($event)"
-      />
-      <div class="dialog__actions">
-        <tar-button variant="text" type="button" (clicked)="cancelMove()">Cancel</tar-button>
-        <tar-button variant="filled" testId="config-move-cards-confirm" type="button" (clicked)="confirmMove()">Confirm</tar-button>
-      </div>
-    </tar-dialog>
-  }
 }
