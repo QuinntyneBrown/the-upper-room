@@ -1,0 +1,198 @@
+<div class="event-form-layout">
+  <div class="event-form">
+    <h1 class="event-form__heading">{{ eventId() ? 'Edit Event' : 'New Event' }}</h1>
+
+    <section class="event-form__section">
+      <h2 class="event-form__section-title">Basics</h2>
+      <div class="form-field">
+        <label class="form-field__label" for="ef-title">Title *</label>
+        <input
+          data-testid="event-form-title"
+          id="ef-title"
+          type="text"
+          class="form-field__input"
+          [value]="title()"
+          (input)="title.set($any($event.target).value)"
+          placeholder="Event title"
+        />
+      </div>
+      <div class="form-field">
+        <label class="form-field__label" for="ef-desc">Description</label>
+        <textarea
+          data-testid="event-form-description"
+          id="ef-desc"
+          class="form-field__textarea"
+          [value]="description()"
+          (input)="description.set($any($event.target).value)"
+          rows="4"
+          placeholder="What's this event about?"
+        ></textarea>
+      </div>
+    </section>
+
+    <section class="event-form__section">
+      <h2 class="event-form__section-title">When</h2>
+      <div class="form-field-row">
+        <div class="form-field">
+          <label class="form-field__label" for="ef-start">Start *</label>
+          <input
+            data-testid="event-form-start"
+            id="ef-start"
+            type="datetime-local"
+            class="form-field__input"
+            [value]="startAt()"
+            (input)="startAt.set($any($event.target).value)"
+          />
+        </div>
+        <div class="form-field">
+          <label class="form-field__label" for="ef-end">End *</label>
+          <input
+            data-testid="event-form-end"
+            id="ef-end"
+            type="datetime-local"
+            class="form-field__input"
+            [class.form-field__input--error]="endBeforeStart()"
+            [value]="endAt()"
+            (input)="endAt.set($any($event.target).value)"
+          />
+          @if (endBeforeStart()) {
+            <p data-testid="event-form-end-error" class="form-field__error">End time must be after start time.</p>
+          }
+        </div>
+      </div>
+      <div class="form-field">
+        <label class="form-field__label" for="ef-tz">Timezone</label>
+        <select
+          data-testid="event-form-timezone"
+          id="ef-tz"
+          class="form-field__select"
+          [value]="timezone()"
+          (change)="timezone.set($any($event.target).value)"
+        >
+          @for (tz of timezones; track tz) {
+            <option [value]="tz">{{ tz }}</option>
+          }
+        </select>
+      </div>
+    </section>
+
+    <section class="event-form__section">
+      <h2 class="event-form__section-title">Where</h2>
+      <div class="form-field" style="position:relative">
+        <label class="form-field__label" for="ef-location">Location</label>
+        <input
+          data-testid="event-form-location-search"
+          id="ef-location"
+          type="text"
+          class="form-field__input"
+          [value]="locationQuery()"
+          (input)="onLocationInput($any($event.target).value)"
+          placeholder="Search venues…"
+          autocomplete="off"
+        />
+        @if (showLocationResults()) {
+          <div class="form-field__dropdown">
+            @for (loc of locationResults(); track loc.id) {
+              <button
+                [attr.data-testid]="'event-form-location-result-' + loc.id"
+                type="button"
+                class="form-field__dropdown-item"
+                (click)="selectLocation(loc)"
+              >{{ loc.name }}</button>
+            }
+          </div>
+        }
+      </div>
+      <label class="form-field__check">
+        <input type="checkbox" [checked]="isVirtual()" (change)="isVirtual.set($any($event.target).checked)" />
+        Virtual event
+      </label>
+      @if (isVirtual()) {
+        <div class="form-field">
+          <label class="form-field__label" for="ef-url">Virtual URL</label>
+          <input
+            id="ef-url"
+            type="url"
+            class="form-field__input"
+            [value]="virtualUrl()"
+            (input)="virtualUrl.set($any($event.target).value)"
+            placeholder="https://…"
+          />
+        </div>
+      }
+    </section>
+
+    <section class="event-form__section">
+      <h2 class="event-form__section-title">Who</h2>
+      <div class="form-field">
+        <label class="form-field__label" for="ef-capacity">Capacity</label>
+        <input
+          data-testid="event-form-capacity"
+          id="ef-capacity"
+          type="number"
+          min="1"
+          class="form-field__input"
+          [value]="capacity()"
+          (input)="capacity.set($any($event.target).value)"
+          placeholder="Unlimited"
+        />
+      </div>
+      <label class="form-field__check">
+        <input type="checkbox" [checked]="requiresApproval()" (change)="requiresApproval.set($any($event.target).checked)" />
+        Requires approval
+      </label>
+    </section>
+
+    <section class="event-form__section">
+      <h2 class="event-form__section-title">Tags</h2>
+      <div class="form-field form-field--tags">
+        @for (tag of tags(); track tag) {
+          <span class="tag-chip">
+            {{ tag }}
+            <button type="button" class="tag-chip__remove" (click)="removeTag(tag)" [attr.aria-label]="'Remove ' + tag">×</button>
+          </span>
+        }
+        <input
+          type="text"
+          class="form-field__input form-field__input--inline"
+          [value]="tagInput()"
+          (input)="tagInput.set($any($event.target).value)"
+          (keydown)="onTagKeydown($event)"
+          placeholder="Add tag…"
+        />
+      </div>
+    </section>
+
+    <div class="event-form__actions">
+      <button
+        data-testid="event-form-submit"
+        type="button"
+        class="btn-filled"
+        [disabled]="!canSubmit()"
+        (click)="onSubmit()"
+      >
+        {{ eventId() ? 'Save Changes' : 'Create Event' }}
+      </button>
+    </div>
+  </div>
+
+  <aside data-testid="event-form-preview" class="event-preview">
+    <div class="event-preview__card">
+      <h3 data-testid="event-preview-title" class="event-preview__title">
+        {{ title() || 'Untitled Event' }}
+      </h3>
+      @if (startAt()) {
+        <p data-testid="event-preview-start-time" class="event-preview__time">
+          {{ previewStartTime() }}
+        </p>
+      }
+      @if (endAt()) {
+        <p class="event-preview__time">{{ previewEndTime() }}</p>
+      }
+      <p data-testid="event-preview-timezone-label" class="event-preview__tz">{{ timezone() }}</p>
+      <p data-testid="event-preview-location" class="event-preview__location">
+        {{ locationName() || (isVirtual() ? 'Virtual' : 'Location TBD') }}
+      </p>
+    </div>
+  </aside>
+</div>

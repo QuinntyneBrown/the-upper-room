@@ -40,6 +40,7 @@ import { PartnerDetail } from './partners/partner-detail/partner-detail';
 import { PartnerEdit } from './partners/partner-edit/partner-edit';
 import { EventList } from './events/event-list/event-list';
 import { EventDetail } from './events/event-detail/event-detail';
+import { EventForm } from './events/event-form/event-form';
 import { DateFormattingTest } from './date-formatting-test/date-formatting-test';
 
 export const routes: Routes = [
@@ -83,6 +84,8 @@ export const routes: Routes = [
       { path: 'locations/new', component: LocationForm },
       { path: 'locations/:id', component: LocationDetail },
       { path: 'events', component: EventList },
+      { path: 'events/new', component: EventForm },
+      { path: 'events/:id/edit', component: EventForm },
       { path: 'events/:id', component: EventDetail },
       { path: 'partners', component: PartnerList },
       { path: 'partners/new', component: PartnerCreate },
