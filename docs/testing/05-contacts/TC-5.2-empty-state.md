@@ -1,7 +1,7 @@
 ---
 id: TASK-TC-5.2
 title: 'Run TC-5.2 - Empty state'
-status: Idle
+status: Completed
 test_id: TC-5.2
 source: ../../test-plan/05-contacts.md
 ---
@@ -19,7 +19,24 @@ Run `TC-5.2` from `docs/test-plan/05-contacts.md` and record the result.
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.
 
+## Result
+
+| Field | Value |
+|---|---|
+| Result | **PASS** |
+| Browser | Chromium (Playwright) |
+| Viewport | 1280×720 |
+| Build SHA | 4b4097e |
+| Tester | Claude (automated) |
+| Run at | 2026-05-09T17:54:00Z |
+
+### Evidence
+
+- Mocked `GET /api/v1/contacts` to return `{ items: [], total: 0 }` ✅
+- `data-testid="contacts-empty-state"` wrapper rendered ✅
+- `tar-empty-state` rendered with `icon="person_add"`, heading "No contacts yet", body "Add your first contact to get started." ✅
+- "New contact" slot button visible (canCreate=true) ✅
