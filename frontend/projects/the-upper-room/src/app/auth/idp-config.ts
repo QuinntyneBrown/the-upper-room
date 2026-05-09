@@ -11,9 +11,6 @@ export const IDP_CONFIG = new InjectionToken<IdpConfig>('IDP_CONFIG', {
   factory: () => ({
     authorizeUrl: '/__idp/authorize',
     clientId: 'the-upper-room',
-    redirectUri:
-      typeof window === 'undefined'
-        ? 'http://localhost:4200/auth/callback'
-        : `${window.location.origin}/auth/callback`,
+    redirectUri: `${window.location.origin}/auth/callback`,
   }),
 });
