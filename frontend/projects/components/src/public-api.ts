@@ -93,3 +93,6 @@ export * from './lib/network/offline-banner/offline-banner';
 export * from './lib/i18n/translate.token';
 export * from './lib/i18n/translate.service';
 export * from './lib/i18n/transloco.pipe';
+
+// Breadcrumb
+export * from './lib/breadcrumb/breadcrumb.service';
