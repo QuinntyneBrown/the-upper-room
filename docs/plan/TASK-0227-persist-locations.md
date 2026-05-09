@@ -1,7 +1,7 @@
 ---
 id: TASK-0227
 title: Persist Locations in database
-status: Draft
+status: Accepted
 phase: P
 depends_on: []
 traces_to: []
