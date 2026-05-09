@@ -1,7 +1,7 @@
 ---
 id: TASK-0111
 title: Location detail (map + photos)
-status: Draft
+status: Accepted
 phase: L
 depends_on: [TASK-0110]
 traces_to: [L2-058, L2-113]
