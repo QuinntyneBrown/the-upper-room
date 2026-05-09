@@ -216,7 +216,7 @@ export class BoardView implements AfterViewInit, OnDestroy {
   }
 
   protected isOverLimit(column: BoardColumn): boolean {
-    return column.wipLimit !== undefined && this.cardCount(column.id) >= column.wipLimit;
+    return column.wipLimit != null && this.cardCount(column.id) >= column.wipLimit;
   }
 
   protected onCardTouchStart(event: TouchEvent, card: BoardCard): void {

@@ -46,7 +46,7 @@
           <header class="column__header">
             <span class="column__name">{{ column.name }}</span>
             <span class="column__count">
-              @if (column.wipLimit !== undefined) {
+              @if (column.wipLimit != null) {
                 {{ cardCount(column.id) }} / {{ column.wipLimit }}
               } @else {
                 {{ cardCount(column.id) }}
