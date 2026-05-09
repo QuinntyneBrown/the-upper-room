@@ -15,7 +15,7 @@ public sealed record SearchResult(string Id, string Type, string Title, string? 
 [ApiController]
 [Authorize]
 [Route("api/v1/search")]
-public sealed class SearchController : ControllerBase
+public sealed class SearchController(ContactsDbContext contactsDb) : ControllerBase
 {
     private const int MaxPerGroup = 5;
 
@@ -28,7 +28,7 @@ public sealed class SearchController : ControllerBase
 
         var term = q.Trim();
 
-        var contacts = ContactsController.Search(term, user)
+        var contacts = ContactsController.Search(term, user, contactsDb)
             .Take(MaxPerGroup)
             .Select(c => new SearchResult(c.Id, "contact", c.Name, c.CityId, $"/contacts/{c.Id}"))
             .ToList();

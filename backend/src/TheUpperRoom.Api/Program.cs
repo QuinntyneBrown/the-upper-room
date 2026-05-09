@@ -1,10 +1,12 @@
 // traces_to: L2-080, L2-015, L2-023, L2-079, L2-097
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Context;
 using TheUpperRoom.Api.Auth;
+using TheUpperRoom.Api.Contacts;
 using TheUpperRoom.Api.Logging;
 
 Log.Logger = new LoggerConfiguration()
@@ -49,7 +51,26 @@ builder.Services
     });
 builder.Services.AddAuthorization();
 
+var contactsConn = builder.Configuration["ContactsDb:ConnectionString"]
+                   ?? "Data Source=Data/contacts.db";
+var contactsPath = contactsConn.Replace("Data Source=", "", StringComparison.OrdinalIgnoreCase).Trim();
+var contactsDir = Path.GetDirectoryName(Path.GetFullPath(contactsPath));
+if (!string.IsNullOrEmpty(contactsDir)) Directory.CreateDirectory(contactsDir);
+builder.Services.AddDbContext<ContactsDbContext>(o => o.UseSqlite(contactsConn));
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var contactsDb = scope.ServiceProvider.GetRequiredService<ContactsDbContext>();
+    contactsDb.Database.EnsureCreated();
+    if (contactsDb.Contacts.Find("c1") is null)
+    {
+        contactsDb.Contacts.Add(new ContactRow { Id = "c1", Name = "Alice", CityId = "Toronto" });
+        contactsDb.Contacts.Add(new ContactRow { Id = "c2", Name = "Bob", CityId = "Halifax" });
+        contactsDb.SaveChanges();
+    }
+}
 
 // traces_to: L2-096
 app.UseMiddleware<TheUpperRoom.Api.Auth.CsrfMiddleware>();

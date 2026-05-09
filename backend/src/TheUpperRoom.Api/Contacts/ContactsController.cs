@@ -12,34 +12,20 @@ namespace TheUpperRoom.Api.Contacts;
 [ApiController]
 [Authorize]
 [Route("api/v1/contacts")]
-public sealed class ContactsController : ControllerBase
+public sealed class ContactsController(ContactsDbContext db) : ControllerBase
 {
-    private sealed class ContactMutable : IHasCity
-    {
-        public string Id { get; init; } = "";
-        public string Name { get; set; } = "";
-        public string CityId { get; init; } = "";
-        public Contact ToContact() => new(Id, Name, CityId);
-    }
-
-    private static readonly Dictionary<string, ContactMutable> _store = new()
-    {
-        ["c1"] = new() { Id = "c1", Name = "Alice", CityId = "Toronto" },
-        ["c2"] = new() { Id = "c2", Name = "Bob", CityId = "Halifax" },
-    };
-
-    internal static int StoreCount(SeedUser user) =>
+    internal static int StoreCount(SeedUser user, ContactsDbContext db) =>
         user.Role == Roles.SystemAdmin
-            ? _store.Count
-            : _store.Values.Count(c => c.CityId == user.City);
+            ? db.Contacts.Count()
+            : db.Contacts.Count(c => c.CityId == user.City);
 
-    internal static IEnumerable<Contact> Search(string term, SeedUser user)
+    internal static IEnumerable<Contact> Search(string term, SeedUser user, ContactsDbContext db)
     {
-        var all = user.Role == Roles.SystemAdmin
-            ? _store.Values
-            : _store.Values.Where(c => c.CityId == user.City);
-        return all.Where(c => c.Name.Contains(term, StringComparison.OrdinalIgnoreCase))
-                  .Select(c => c.ToContact());
+        var query = user.Role == Roles.SystemAdmin
+            ? db.Contacts.AsEnumerable()
+            : db.Contacts.Where(c => c.CityId == user.City).AsEnumerable();
+        return query.Where(c => c.Name.Contains(term, StringComparison.OrdinalIgnoreCase))
+                    .Select(c => c.ToContact());
     }
 
     [HttpGet]
@@ -48,9 +34,9 @@ public sealed class ContactsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        IEnumerable<ContactMutable> items = user.Role == Roles.SystemAdmin
-            ? _store.Values
-            : _store.Values.Where(c => c.CityId == user.City);
+        IEnumerable<ContactRow> items = user.Role == Roles.SystemAdmin
+            ? db.Contacts.AsEnumerable()
+            : db.Contacts.Where(c => c.CityId == user.City).AsEnumerable();
 
         if (!string.IsNullOrEmpty(search))
             items = items.Where(c => c.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
@@ -72,7 +58,8 @@ public sealed class ContactsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        if (!_store.TryGetValue(id, out var c)) return NotFound();
+        var c = db.Contacts.Find(id);
+        if (c is null) return NotFound();
 
         var allCities = user.Role == Roles.SystemAdmin && Request.Headers["X-All-Cities"].ToString() == "true";
         if (allCities) return Ok(c.ToContact());
@@ -91,9 +78,11 @@ public sealed class ContactsController : ControllerBase
             return UnprocessableEntity(new { error = "First name is required." });
 
         var id = Guid.NewGuid().ToString("N")[..8];
-        var contact = new Contact(id, DisplayName(body), user.City);
-        var mut = new ContactMutable { Id = contact.Id, Name = contact.Name, CityId = contact.CityId };
-        _store[id] = mut;
+        var row = new ContactRow { Id = id, Name = DisplayName(body), CityId = user.City };
+        db.Contacts.Add(row);
+        db.SaveChanges();
+
+        var contact = row.ToContact();
         AuditStore.Record(user.Id, "Contact", id, "Create", afterJson: JsonSerializer.Serialize(contact));
         return Created($"/api/v1/contacts/{id}", contact);
     }
@@ -107,12 +96,13 @@ public sealed class ContactsController : ControllerBase
         if (string.IsNullOrWhiteSpace(body.FirstName))
             return UnprocessableEntity(new { error = "First name is required." });
 
-        if (!_store.TryGetValue(id, out var c)) return NotFound();
-        var visible = CityScope.VisibleOrNull(c, user.City);
-        if (visible is null) return NotFound();
+        var c = db.Contacts.Find(id);
+        if (c is null) return NotFound();
+        if (CityScope.VisibleOrNull(c, user.City) is null) return NotFound();
 
         var before = JsonSerializer.Serialize(c.ToContact());
         c.Name = DisplayName(body);
+        db.SaveChanges();
         var after = JsonSerializer.Serialize(c.ToContact());
         AuditStore.Record(user.Id, "Contact", id, "Update", before, after);
         return Ok(c.ToContact());
@@ -124,14 +114,15 @@ public sealed class ContactsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        if (!_store.TryGetValue(id, out var c)) return NotFound();
-        var visible = CityScope.VisibleOrNull(c, user.City);
-        if (visible is null) return NotFound();
+        var c = db.Contacts.Find(id);
+        if (c is null) return NotFound();
+        if (CityScope.VisibleOrNull(c, user.City) is null) return NotFound();
 
         if (body?.Name is not null)
         {
             var before = JsonSerializer.Serialize(c.ToContact());
             c.Name = body.Name;
+            db.SaveChanges();
             var after = JsonSerializer.Serialize(c.ToContact());
             AuditStore.Record(user.Id, "Contact", id, "Update", before, after);
         }
@@ -145,12 +136,13 @@ public sealed class ContactsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        if (!_store.TryGetValue(id, out var c)) return NotFound();
-        var visible = CityScope.VisibleOrNull(c, user.City);
-        if (visible is null) return NotFound();
+        var c = db.Contacts.Find(id);
+        if (c is null) return NotFound();
+        if (CityScope.VisibleOrNull(c, user.City) is null) return NotFound();
 
         AuditStore.Record(user.Id, "Contact", id, "Delete", beforeJson: JsonSerializer.Serialize(c.ToContact()));
-        _store.Remove(id);
+        db.Contacts.Remove(c);
+        db.SaveChanges();
         return NoContent();
     }
 

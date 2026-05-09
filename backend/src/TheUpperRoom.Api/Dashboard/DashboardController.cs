@@ -13,7 +13,7 @@ namespace TheUpperRoom.Api.Dashboard;
 [ApiController]
 [Authorize]
 [Route("api/v1/dashboard")]
-public sealed class DashboardController : ControllerBase
+public sealed class DashboardController(ContactsDbContext contactsDb) : ControllerBase
 {
     [HttpGet]
     public IActionResult Get()
@@ -23,7 +23,7 @@ public sealed class DashboardController : ControllerBase
 
         var now = DateTimeOffset.UtcNow;
 
-        var contactCount = ContactsController.StoreCount(user);
+        var contactCount = ContactsController.StoreCount(user, contactsDb);
         var partnerCount = PartnersController.StoreCount();
         var upcomingEventCount = EventsController.Store
             .Count(e => e.StartAt > now && e.Status != "Cancelled");
