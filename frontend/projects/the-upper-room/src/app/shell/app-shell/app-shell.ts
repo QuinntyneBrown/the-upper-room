@@ -3,13 +3,12 @@ import { Component, HostListener, signal, computed, inject } from '@angular/core
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { TarIconButton, OfflineBanner, breadcrumbsFromUrl, Crumb } from 'components';
-import { SignOutService } from 'domain';
-import { CitySwitcher } from '../../cities/city-switcher/city-switcher';
+import { SignOutService, TarCitySwitcher } from 'domain';
 import { NotificationBell } from '../../notifications/notification-bell/notification-bell';
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, TarIconButton, OfflineBanner, CitySwitcher, NotificationBell],
+  imports: [RouterOutlet, TarIconButton, OfflineBanner, TarCitySwitcher, NotificationBell],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.scss',
 })

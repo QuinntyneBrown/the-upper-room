@@ -1,5 +1,5 @@
 // traces_to: L2-024, L2-032
-import { TestBed, fakeAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, provideRouter } from '@angular/router';
 import { authGuard, roleGuard, permissionGuard } from './guards';
 import { ACCESS_TOKEN_SOURCE } from '../auth/access-token-source.contract';
@@ -34,17 +34,17 @@ describe('authGuard (domain library)', () => {
     });
   }
 
-  it('returns true when token present', fakeAsync(() => {
+  it('returns true when token present', () => {
     setup(true);
     const result = TestBed.runInInjectionContext(() => authGuard(routeWith({}), state));
     expect(result).toBe(true);
-  }));
+  });
 
-  it('redirects to /sign-in when no token', fakeAsync(() => {
+  it('redirects to /sign-in when no token', () => {
     setup(false);
     const result = TestBed.runInInjectionContext(() => authGuard(routeWith({}), state));
     expect(result).not.toBe(true);
-  }));
+  });
 });
 
 describe('roleGuard (domain library)', () => {
@@ -58,21 +58,21 @@ describe('roleGuard (domain library)', () => {
     });
   }
 
-  it('returns true when user has required role', fakeAsync(() => {
+  it('returns true when user has required role', () => {
     setup(['Admin']);
     const result = TestBed.runInInjectionContext(() =>
       roleGuard(routeWith({ roles: ['Admin'] }), state),
     );
     expect(result).toBe(true);
-  }));
+  });
 
-  it('redirects to /forbidden when role missing', fakeAsync(() => {
+  it('redirects to /forbidden when role missing', () => {
     setup(['Member']);
     const result = TestBed.runInInjectionContext(() =>
       roleGuard(routeWith({ roles: ['Admin'] }), state),
     );
     expect(result).not.toBe(true);
-  }));
+  });
 });
 
 describe('permissionGuard (domain library)', () => {
@@ -85,19 +85,19 @@ describe('permissionGuard (domain library)', () => {
     });
   }
 
-  it('returns true when user has required permission', fakeAsync(() => {
+  it('returns true when user has required permission', () => {
     setup(['Contact:Read']);
     const result = TestBed.runInInjectionContext(() =>
       permissionGuard(routeWith({ permissions: ['Contact:Read'] }), state),
     );
     expect(result).toBe(true);
-  }));
+  });
 
-  it('redirects to /forbidden when permission missing', fakeAsync(() => {
+  it('redirects to /forbidden when permission missing', () => {
     setup([]);
     const result = TestBed.runInInjectionContext(() =>
       permissionGuard(routeWith({ permissions: ['Contact:Delete'] }), state),
     );
     expect(result).not.toBe(true);
-  }));
+  });
 });

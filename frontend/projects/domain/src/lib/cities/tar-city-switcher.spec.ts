@@ -1,5 +1,5 @@
 // traces_to: L2-109
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
@@ -39,19 +39,23 @@ describe('TarCitySwitcher (domain library)', () => {
 
   afterEach(() => ctrl.verify());
 
-  it('does not load cities when user lacks City:Switch permission', fakeAsync(() => {
+  it('does not load cities when user lacks City:Switch permission', () => {
     setup([]);
-    tick();
-    ctrl.verify();
     expect(ctrl.match('/api/v1/cities')).toHaveLength(0);
-  }));
+  });
 
-  it('loads cities when user has City:Switch permission', fakeAsync(() => {
+  it('loads cities when user has City:Switch permission', async () => {
     setup(['City:Switch']);
-    tick();
     ctrl.expectOne('/api/v1/cities').flush({ items: [{ id: '1', name: 'Ottawa', slug: 'ottawa', archived: false }] });
     fixture.detectChanges();
+    await fixture.whenStable();
+
+    // Open the dropdown to reveal the city list
+    const trigger = fixture.nativeElement.querySelector('[data-testid="city-switcher-trigger"]') as HTMLButtonElement;
+    trigger.click();
+    fixture.detectChanges();
+
     const el: HTMLElement = fixture.nativeElement;
     expect(el.textContent).toContain('Ottawa');
-  }));
+  });
 });

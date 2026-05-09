@@ -39,3 +39,7 @@ export * from './lib/auth/token-store.contract';
 export * from './lib/auth/sign-out.service';
 export * from './lib/auth/idle.service';
 export * from './lib/auth/inactivity-dialog/inactivity-dialog';
+
+// Cities
+export * from './lib/cities/city-scope.service';
+export * from './lib/cities/city-switcher/tar-city-switcher';

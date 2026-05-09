@@ -1,6 +1,6 @@
 // traces_to: L2-109
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { PERMISSIONS_SERVICE } from 'domain';
+import { PERMISSIONS_SERVICE } from '../rbac/permissions.contract';
 
 export const ALL_CITIES = '__all__';
 
@@ -14,7 +14,6 @@ export class CityScopeService {
   readonly isAllCities = computed(() => this.active() === ALL_CITIES);
 
   constructor() {
-    // Initialise from the user's home city when the snapshot first lands.
     const cityId = this.perms.snapshot().cityId;
     if (cityId) this.active.set(cityId);
   }

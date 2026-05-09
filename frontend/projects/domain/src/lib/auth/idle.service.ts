@@ -39,7 +39,7 @@ export class IdleService {
     }
   }
 
-  private tick(): void {
+  protected tick(): void {
     if (!this.tokenSource.current()) return;
     const elapsed = Date.now() - this.lastActivity;
     if (this.state() === 'active') {

@@ -2,7 +2,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TarBanner } from 'components';
-import { PERMISSIONS_SERVICE } from 'domain';
+import { PERMISSIONS_SERVICE } from '../../rbac/permissions.contract';
 import { ALL_CITIES, CityScopeService } from '../city-scope.service';
 
 interface CityRow {
@@ -13,12 +13,12 @@ interface CityRow {
 }
 
 @Component({
-  selector: 'app-city-switcher',
+  selector: 'tar-city-switcher',
   imports: [TarBanner],
-  templateUrl: './city-switcher.html',
-  styleUrl: './city-switcher.scss',
+  templateUrl: './tar-city-switcher.html',
+  styleUrl: './tar-city-switcher.scss',
 })
-export class CitySwitcher implements OnInit {
+export class TarCitySwitcher implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly perms = inject(PERMISSIONS_SERVICE);
   protected readonly scope = inject(CityScopeService);

@@ -1,13 +1,12 @@
 // traces_to: L2-021
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { Router } from '@angular/router';
-import { signal } from '@angular/core';
 import { SignOutService } from './sign-out.service';
 import { TOKEN_STORE } from './token-store.contract';
-import { ConfirmService } from 'components';
+import { ConfirmService, SnackbarService } from 'components';
 
 describe('SignOutService (domain library)', () => {
   let svc: SignOutService;
@@ -33,6 +32,10 @@ describe('SignOutService (domain library)', () => {
           provide: ConfirmService,
           useValue: { confirm: () => Promise.resolve(confirmResult) },
         },
+        {
+          provide: SnackbarService,
+          useValue: { show: () => {} },
+        },
       ],
     });
 
@@ -43,27 +46,24 @@ describe('SignOutService (domain library)', () => {
 
   afterEach(() => ctrl.verify());
 
-  it('calls sign-out API and clears token when user confirms', fakeAsync(() => {
+  it('calls sign-out API and clears token when user confirms', async () => {
     setup(true);
     let navigated = false;
-    jest.spyOn(router, 'navigateByUrl').mockImplementation(() => { navigated = true; return Promise.resolve(true); });
+    router.navigateByUrl = () => { navigated = true; return Promise.resolve(true); };
 
-    void svc.signOut();
-    tick();
-
+    const signOutPromise = svc.signOut();
+    await Promise.resolve(); // drain confirm microtask
     ctrl.expectOne('/api/v1/auth/sign-out').flush({});
-    tick();
+    await signOutPromise;
 
     expect(tokenCleared).toBe(true);
     expect(navigated).toBe(true);
-  }));
+  });
 
-  it('does not call sign-out API when user cancels', fakeAsync(() => {
+  it('does not call sign-out API when user cancels', async () => {
     setup(false);
-    void svc.signOut();
-    tick();
-
+    await svc.signOut();
     ctrl.verify();
     expect(tokenCleared).toBe(false);
-  }));
+  });
 });

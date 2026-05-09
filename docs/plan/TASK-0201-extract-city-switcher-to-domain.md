@@ -1,7 +1,7 @@
 ---
 id: TASK-0201
 title: Extract CitySwitcher to domain library
-status: Accepted
+status: Done
 phase: X
 depends_on: [TASK-0051]
 traces_to: []

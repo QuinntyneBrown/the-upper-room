@@ -1,18 +1,29 @@
 // traces_to: L2-022
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IdleService } from './idle.service';
 import { ACCESS_TOKEN_SOURCE } from './access-token-source.contract';
 import { SignOutService } from './sign-out.service';
+
+const IDLE_MS = 30 * 60 * 1000;
+
+class TestIdleService extends IdleService {
+  advanceTime(ms: number): void {
+    // Simulate elapsed time by calling tick with a manipulated lastActivity
+    (this as unknown as { lastActivity: number }).lastActivity = Date.now() - ms;
+    this.tick();
+  }
+}
 
 function setup({ hasToken = true }: { hasToken?: boolean } = {}) {
   let forcedOut = false;
   TestBed.configureTestingModule({
     providers: [
+      { provide: IdleService, useClass: TestIdleService },
       { provide: ACCESS_TOKEN_SOURCE, useValue: { current: () => hasToken ? 'tok' : null } },
       { provide: SignOutService, useValue: { forceSignOut: () => { forcedOut = true; } } },
     ],
   });
-  const svc = TestBed.inject(IdleService);
+  const svc = TestBed.inject(IdleService) as TestIdleService;
   return { svc, getForcedOut: () => forcedOut };
 }
 
@@ -22,25 +33,23 @@ describe('IdleService (domain library)', () => {
     expect(svc.state()).toBe('active');
   });
 
-  it('stays active when no token is present', fakeAsync(() => {
+  it('stays active when no token is present', () => {
     const { svc } = setup({ hasToken: false });
-    tick(31 * 60 * 1000);
+    svc.advanceTime(IDLE_MS + 1000);
     expect(svc.state()).toBe('active');
-  }));
+  });
 
-  it('transitions to warning after idle threshold when token is present', fakeAsync(() => {
+  it('transitions to warning after idle threshold when token is present', () => {
     const { svc } = setup();
-    const IDLE_MS = 30 * 60 * 1000;
-    tick(IDLE_MS + 1000);
+    svc.advanceTime(IDLE_MS + 1000);
     expect(svc.state()).toBe('warning');
-  }));
+  });
 
-  it('resets to active on staySignedIn()', fakeAsync(() => {
+  it('resets to active on staySignedIn()', () => {
     const { svc } = setup();
-    const IDLE_MS = 30 * 60 * 1000;
-    tick(IDLE_MS + 1000);
+    svc.advanceTime(IDLE_MS + 1000);
     expect(svc.state()).toBe('warning');
     svc.staySignedIn();
     expect(svc.state()).toBe('active');
-  }));
+  });
 });
