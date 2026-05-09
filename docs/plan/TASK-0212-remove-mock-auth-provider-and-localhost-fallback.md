@@ -1,7 +1,7 @@
 ---
 id: TASK-0212
 title: Remove MockAuthProvider and localhost redirectUri fallback
-status: Draft
+status: Accepted
 phase: P
 depends_on: []
 traces_to: []
