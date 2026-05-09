@@ -13,6 +13,7 @@ describe('app.routes (TASK-0210 cleanup)', () => {
     expect(paths).not.toContain('__throw');
     expect(paths).not.toContain('__rbac-demo');
     expect(paths).not.toContain('date-formatting-test');
+    expect(paths).not.toContain('dashboard-stub');
   });
 
   it('has no path starting with "__" or ending with "-test"', () => {
