@@ -1,4 +1,4 @@
-// traces_to: L2-057, L2-058
+// traces_to: L2-057, L2-058, L2-113
 namespace TheUpperRoom.Api.Locations;
 
 public sealed record LocationDto(
@@ -12,4 +12,6 @@ public sealed record LocationDto(
     int? Capacity,
     double? Lat,
     double? Lng,
-    bool Archived);
+    bool Archived,
+    string[] Photos,
+    int EventCount);

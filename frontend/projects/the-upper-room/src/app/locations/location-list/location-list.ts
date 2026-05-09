@@ -17,6 +17,8 @@ export interface LocationDto {
   readonly lat: number | null;
   readonly lng: number | null;
   readonly archived: boolean;
+  readonly photos: string[];
+  readonly eventCount: number;
 }
 
 @Component({

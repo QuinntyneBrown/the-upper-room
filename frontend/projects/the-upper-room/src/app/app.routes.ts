@@ -31,6 +31,7 @@ import { IdeaList } from './ideas/idea-list/idea-list';
 import { IdeaDetail } from './ideas/idea-detail/idea-detail';
 import { LocationList } from './locations/location-list/location-list';
 import { LocationForm } from './locations/location-form/location-form';
+import { LocationDetail } from './locations/location-detail/location-detail';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -71,6 +72,7 @@ export const routes: Routes = [
       { path: 'ideas/:id', component: IdeaDetail },
       { path: 'locations', component: LocationList },
       { path: 'locations/new', component: LocationForm },
+      { path: 'locations/:id', component: LocationDetail },
       { path: 'partners', component: Stub },
       { path: 'partners/:id', component: Stub },
       { path: 'boards', component: BoardList },

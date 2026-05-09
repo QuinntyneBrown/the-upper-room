@@ -1,4 +1,4 @@
-// traces_to: L2-057, L2-058
+// traces_to: L2-057, L2-058, L2-113
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
 
@@ -21,8 +21,11 @@ public sealed class LocationsController : ControllerBase
         public double? Lat { get; set; }
         public double? Lng { get; set; }
         public bool Archived { get; set; }
+        public List<string> Photos { get; } = [];
+        public int EventCount { get; set; }
     }
 
+    private const long MaxPhotoBytes = 10L * 1024 * 1024;
     private static readonly List<LocationRecord> _store = [];
     private static readonly HashSet<string> _referencedByFutureEvents = [];
 
@@ -73,6 +76,28 @@ public sealed class LocationsController : ControllerBase
         return Created($"/api/v1/locations/{loc.Id}", ToDto(loc));
     }
 
+    [HttpPost("{id}/photos")]
+    public async Task<IActionResult> UploadPhoto(string id, [FromForm] IFormFile? file)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+
+        var loc = _store.FirstOrDefault(l => l.Id == id);
+        if (loc is null) return NotFound();
+        if (file is null) return BadRequest(new { error = "No file provided." });
+        if (file.Length > MaxPhotoBytes)
+            return UnprocessableEntity(new { error = "Photo is too large (max 10MB)." });
+        if (!file.ContentType.StartsWith("image/"))
+            return UnprocessableEntity(new { error = "Only image files are accepted." });
+        if (loc.Photos.Count >= 10)
+            return UnprocessableEntity(new { error = "Maximum 10 photos allowed." });
+
+        var url = $"https://uploads.example.com/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+        loc.Photos.Add(url);
+        await Task.CompletedTask;
+        return Created(url, ToDto(loc));
+    }
+
     [HttpPatch("{id}")]
     public IActionResult Update(string id, [FromBody] PatchLocationRequest? body)
     {
@@ -106,7 +131,8 @@ public sealed class LocationsController : ControllerBase
     }
 
     private static LocationDto ToDto(LocationRecord l) =>
-        new(l.Id, l.Name, l.Street, l.City, l.State, l.Country, l.PostalCode, l.Capacity, l.Lat, l.Lng, l.Archived);
+        new(l.Id, l.Name, l.Street, l.City, l.State, l.Country, l.PostalCode,
+            l.Capacity, l.Lat, l.Lng, l.Archived, [.. l.Photos], l.EventCount);
 
     private SeedUser? GetCurrentUser()
     {

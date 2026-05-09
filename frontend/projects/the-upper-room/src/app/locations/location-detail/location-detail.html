@@ -1,0 +1,87 @@
+@if (location(); as loc) {
+  <div class="location-detail">
+    <header class="location-detail__header">
+      <h1 class="location-detail__name">{{ loc.name }}</h1>
+      @if (loc.archived) {
+        <span class="location-detail__archived">Archived</span>
+      }
+    </header>
+
+    @if (mapUrl()) {
+      <img
+        data-testid="location-map-image"
+        class="location-detail__map"
+        [src]="mapUrl()"
+        [alt]="'Map for ' + loc.name"
+      />
+    } @else {
+      <div data-testid="location-map-placeholder" class="location-detail__map-placeholder">
+        <span class="material-symbols-outlined">map</span>
+        <p>No coordinates available</p>
+      </div>
+    }
+
+    <div class="location-detail__body">
+      <section class="location-detail__info">
+        @if (loc.street || loc.city) {
+          <p class="location-detail__address">
+            {{ loc.street }}{{ loc.street && loc.city ? ', ' : '' }}{{ loc.city }}
+            @if (loc.state) { , {{ loc.state }} }
+            @if (loc.country) { {{ loc.country }} }
+          </p>
+        }
+        @if (loc.capacity) {
+          <p class="location-detail__capacity">Capacity: {{ loc.capacity }}</p>
+        }
+        @if (loc.eventCount > 0) {
+          <button
+            data-testid="location-events-link"
+            type="button"
+            class="location-detail__events-link"
+            (click)="goToEvents()"
+          >{{ loc.eventCount }} events</button>
+        } @else {
+          <span data-testid="location-events-link" class="location-detail__events-link location-detail__events-link--none">0 events</span>
+        }
+      </section>
+
+      <section class="location-detail__photos">
+        @if (currentPhoto()) {
+          <div class="location-detail__carousel">
+            <button
+              data-testid="location-carousel-prev"
+              type="button"
+              class="carousel-btn"
+              (click)="prevPhoto()"
+              aria-label="Previous photo"
+            >&#8249;</button>
+            <img
+              data-testid="location-carousel-image"
+              class="carousel-img"
+              [src]="currentPhoto()"
+              [alt]="'Photo ' + (photoIndex() + 1) + ' of ' + loc.photos.length"
+            />
+            <button
+              data-testid="location-carousel-next"
+              type="button"
+              class="carousel-btn"
+              (click)="nextPhoto()"
+              aria-label="Next photo"
+            >&#8250;</button>
+          </div>
+        }
+        <label class="photo-upload-label" aria-label="Upload photo">
+          <span class="material-symbols-outlined">add_photo_alternate</span>
+          Add photo
+          <input
+            data-testid="location-photo-input"
+            type="file"
+            accept="image/*"
+            class="photo-upload-input"
+            (change)="onPhotoFileChange($event)"
+          />
+        </label>
+      </section>
+    </div>
+  </div>
+}
