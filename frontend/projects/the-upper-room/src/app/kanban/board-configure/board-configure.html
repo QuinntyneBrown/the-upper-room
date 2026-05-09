@@ -5,19 +5,13 @@
 
   <section class="config-section">
     <h2 class="config-section__heading">Swimlanes</h2>
-    <label class="config-label">
-      Group by
-      <select
-        data-testid="board-configure-swimlane-select"
-        class="config-select"
-        [value]="swimlaneMode()"
-        (change)="onSwimlaneChange($any($event.target).value)"
-      >
-        <option value="None">None</option>
-        <option value="Assignee">Assignee</option>
-        <option value="Priority">Priority</option>
-      </select>
-    </label>
+    <tar-select
+      label="Group by"
+      testId="board-configure-swimlane-select"
+      [value]="swimlaneMode()"
+      [options]="swimlaneModeOptions"
+      (valueChange)="onSwimlaneChange($event)"
+    />
   </section>
 
   <ul class="column-list">
@@ -35,41 +29,35 @@
         <span class="column-row__count">
           {{ cardCountByColumn().get(column.id) ?? 0 }} cards
         </span>
-        <button
-          [attr.data-testid]="'config-column-delete-' + column.name"
+        <tar-button
+          variant="text"
+          [testId]="'config-column-delete-' + column.name"
           type="button"
-          class="btn-text"
-          (click)="onDeleteColumn(column)"
-        >
-          Delete
-        </button>
+          (clicked)="onDeleteColumn(column)"
+        >Delete</tar-button>
       </li>
     }
   </ul>
 
   @if (deleteTarget(); as target) {
-    <div data-testid="config-move-cards-dialog" class="dialog-overlay" role="dialog" aria-modal="true">
-      <div class="dialog">
-        <h2 class="dialog__title">
-          Move {{ cardsInDeleteTarget() }} cards from "{{ target.name }}" to...
-        </h2>
-        <select
-          data-testid="config-move-cards-target"
-          class="dialog__input"
-          [value]="moveCardsTo()"
-          (change)="moveCardsTo.set($any($event.target).value)"
-        >
-          @for (col of otherColumns(); track col.id) {
-            <option [value]="col.id">{{ col.name }}</option>
-          }
-        </select>
-        <div class="dialog__actions">
-          <button type="button" class="btn-text" (click)="cancelMove()">Cancel</button>
-          <button data-testid="config-move-cards-confirm" type="button" class="btn-filled" (click)="confirmMove()">
-            Confirm
-          </button>
-        </div>
+    <tar-dialog
+      [open]="true"
+      [title]="'Move ' + cardsInDeleteTarget() + ' cards from \'' + target.name + '\' to...'"
+      testId="config-move-cards-dialog"
+      [showActions]="false"
+      (closed)="cancelMove()"
+    >
+      <tar-select
+        label="Move to column"
+        testId="config-move-cards-target"
+        [value]="moveCardsTo()"
+        [options]="moveCardsTargetOptions()"
+        (valueChange)="moveCardsTo.set($event)"
+      />
+      <div class="dialog__actions">
+        <tar-button variant="text" type="button" (clicked)="cancelMove()">Cancel</tar-button>
+        <tar-button variant="filled" testId="config-move-cards-confirm" type="button" (clicked)="confirmMove()">Confirm</tar-button>
       </div>
-    </div>
+    </tar-dialog>
   }
 }

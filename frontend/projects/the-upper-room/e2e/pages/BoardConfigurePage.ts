@@ -31,4 +31,9 @@ export class BoardConfigurePage {
   swimlaneModeSelect(): Locator {
     return this.page.getByTestId('board-configure-swimlane-select');
   }
+
+  async selectMoveTarget(name: string): Promise<void> {
+    await this.moveCardsTarget().click();
+    await this.page.locator('mat-option').filter({ hasText: name }).click();
+  }
 }

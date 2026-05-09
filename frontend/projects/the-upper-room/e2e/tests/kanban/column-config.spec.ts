@@ -96,7 +96,7 @@ test('remove column with cards prompts move dialog and confirms move', async ({ 
   await expect(config.moveCardsDialog()).toBeVisible();
   await expect(config.moveCardsDialog()).toContainText('Move 2 cards');
 
-  await config.moveCardsTarget().selectOption('inProgress');
+  await config.selectMoveTarget('In Progress');
   await config.moveCardsConfirm().click();
 
   await expect.poll(() => deletes.length).toBe(1);

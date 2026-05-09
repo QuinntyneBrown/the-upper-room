@@ -2,6 +2,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { TarButton, TarDialog, TarSelect } from 'components';
 
 interface BoardColumn {
   readonly id: string;
@@ -25,6 +26,7 @@ interface BoardDetail {
 
 @Component({
   selector: 'app-board-configure',
+  imports: [TarButton, TarDialog, TarSelect],
   templateUrl: './board-configure.html',
   styleUrl: './board-configure.scss',
 })
@@ -38,6 +40,12 @@ export class BoardConfigure {
   protected readonly moveCardsTo = signal<string>('');
   protected readonly swimlaneMode = signal<string>('None');
 
+  protected readonly swimlaneModeOptions = [
+    { label: 'None', value: 'None' },
+    { label: 'Assignee', value: 'Assignee' },
+    { label: 'Priority', value: 'Priority' },
+  ];
+
   protected readonly cardCountByColumn = computed(() => {
     const counts = new Map<string, number>();
     for (const card of this.board()?.cards ?? []) {
@@ -48,6 +56,10 @@ export class BoardConfigure {
 
   protected readonly otherColumns = computed(() =>
     this.columns().filter((c) => c.id !== this.deleteTarget()?.id),
+  );
+
+  protected readonly moveCardsTargetOptions = computed(() =>
+    this.otherColumns().map((c) => ({ label: c.name, value: c.id })),
   );
 
   protected readonly cardsInDeleteTarget = computed(() => {
