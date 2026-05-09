@@ -24,3 +24,7 @@ export * from './lib/bootstrap/me-bootstrap';
 // Users
 export * from './lib/users/invite-user-dialog/invite-user-dialog';
 export * from './lib/users/user-detail-drawer/user-detail-drawer';
+
+// Tags
+export * from './lib/tags/tag.model';
+export * from './lib/tags/tag-selector/tar-tag-selector';

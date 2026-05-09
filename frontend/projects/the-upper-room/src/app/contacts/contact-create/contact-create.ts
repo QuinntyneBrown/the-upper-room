@@ -4,8 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
-import { TarTagSelector } from '../../tags/tag-selector/tar-tag-selector';
-import type { Tag } from '../../tags/tag-list/tag-list';
+import { TarTagSelector, Tag } from 'domain';
 
 export interface PhoneRow { value: string; label: string; primary: boolean; error: string | null }
 export interface EmailRow { value: string; label: string; primary: boolean }

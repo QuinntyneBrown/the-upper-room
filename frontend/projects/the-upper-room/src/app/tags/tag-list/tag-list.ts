@@ -9,13 +9,7 @@ import {
   TarSelectOption,
   TarTextField,
 } from 'components';
-
-export interface Tag {
-  readonly id: string;
-  readonly name: string;
-  readonly color: string;
-  readonly usageCount: number;
-}
+import type { Tag } from 'domain';
 
 export const COLORS = [
   'red', 'pink', 'purple', 'indigo', 'blue',

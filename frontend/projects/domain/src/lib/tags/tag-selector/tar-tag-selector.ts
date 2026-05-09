@@ -3,8 +3,8 @@ import { Component, EventEmitter, Input, OnDestroy, Output, computed, inject, si
 import { HttpClient } from '@angular/common/http';
 import { Subject, debounceTime, switchMap, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { PERMISSIONS_SERVICE } from 'domain';
-import type { Tag } from '../tag-list/tag-list';
+import { PERMISSIONS_SERVICE } from '../../rbac/permissions.contract';
+import type { Tag } from '../tag.model';
 
 @Component({
   selector: 'tar-tag-selector',

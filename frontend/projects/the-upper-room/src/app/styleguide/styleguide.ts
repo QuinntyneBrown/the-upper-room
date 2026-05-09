@@ -11,8 +11,7 @@ import {
   TarSkeleton,
   TranslocoPipe,
 } from 'components';
-import { TarTagSelector } from '../tags/tag-selector/tar-tag-selector';
-import type { Tag } from '../tags/tag-list/tag-list';
+import { TarTagSelector, Tag } from 'domain';
 
 @Component({
   selector: 'app-styleguide',
