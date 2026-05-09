@@ -32,6 +32,7 @@ import { IdeaDetail } from './ideas/idea-detail/idea-detail';
 import { LocationList } from './locations/location-list/location-list';
 import { LocationForm } from './locations/location-form/location-form';
 import { LocationDetail } from './locations/location-detail/location-detail';
+import { AuditLog } from './admin/audit-log/audit-log';
 
 export const routes: Routes = [
   { path: '', component: Landing, pathMatch: 'full' },
@@ -99,6 +100,12 @@ export const routes: Routes = [
       {
         path: 'admin/tags',
         component: TagList,
+        canActivate: [roleGuard],
+        data: { roles: ['SystemAdmin'] },
+      },
+      {
+        path: 'admin/audit',
+        component: AuditLog,
         canActivate: [roleGuard],
         data: { roles: ['SystemAdmin'] },
       },

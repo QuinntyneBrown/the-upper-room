@@ -1,5 +1,6 @@
 // traces_to: L2-015
 using Microsoft.AspNetCore.Mvc;
+using TheUpperRoom.Api.Audit;
 
 namespace TheUpperRoom.Api.Auth;
 
@@ -18,6 +19,8 @@ public sealed class AuthController : ControllerBase
         {
             return BadRequest(new { code = "auth.invalid_credentials" });
         }
+
+        AuditStore.Record("anonymous", "Session", "exchange", "Login");
 
         Response.Cookies.Append("tar.refresh", "fake-refresh-token", new CookieOptions
         {

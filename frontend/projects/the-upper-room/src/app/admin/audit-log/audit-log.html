@@ -1,0 +1,83 @@
+<header class="audit-log__header">
+  <h1 class="audit-log__title">Audit Log</h1>
+</header>
+
+<section class="audit-log__filters">
+  <input
+    data-testid="audit-filter-actor"
+    type="text"
+    class="audit-log__filter-input"
+    placeholder="Actor"
+    [value]="filterActor()"
+    (input)="filterActor.set($any($event.target).value)"
+  />
+  <input
+    data-testid="audit-filter-entity-type"
+    type="text"
+    class="audit-log__filter-input"
+    placeholder="Entity type"
+    [value]="filterEntityType()"
+    (input)="filterEntityType.set($any($event.target).value)"
+  />
+  <select
+    data-testid="audit-filter-action"
+    class="audit-log__filter-select"
+    [value]="filterAction()"
+    (change)="filterAction.set($any($event.target).value)"
+  >
+    @for (a of actions; track a) {
+      <option [value]="a">{{ a || 'All actions' }}</option>
+    }
+  </select>
+  <button
+    data-testid="audit-filter-apply"
+    type="button"
+    class="btn-primary"
+    (click)="applyFilters()"
+  >Apply</button>
+</section>
+
+@if (entries().length === 0) {
+  <p data-testid="audit-log-empty" class="audit-log__empty">No audit entries found.</p>
+} @else {
+  <table data-testid="audit-log-table" class="audit-log__table">
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>Actor</th>
+        <th>Entity Type</th>
+        <th>Entity ID</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (entry of entries(); track entry.id) {
+        <tr data-testid="audit-log-row">
+          <td>{{ entry.timestamp | date:'short' }}</td>
+          <td>{{ entry.actorUserId }}</td>
+          <td>{{ entry.entityType }}</td>
+          <td>{{ entry.entityId }}</td>
+          <td>{{ entry.action }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="audit-log__pagination">
+    <button
+      data-testid="audit-page-prev"
+      type="button"
+      class="btn-secondary"
+      [disabled]="page() === 1"
+      (click)="prevPage()"
+    >Previous</button>
+    <span class="audit-log__page-info">Page {{ page() }}</span>
+    <button
+      data-testid="audit-page-next"
+      type="button"
+      class="btn-secondary"
+      [disabled]="page() * 20 >= total()"
+      (click)="nextPage()"
+    >Next</button>
+  </div>
+}

@@ -1,7 +1,10 @@
 // traces_to: L2-079
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using TheUpperRoom.Api.Audit;
 using TheUpperRoom.Api.Rbac;
 using TheUpperRoom.Application.Cities;
+using TheUpperRoom.Domain.Cities;
 
 namespace TheUpperRoom.Api.Contacts;
 
@@ -9,10 +12,18 @@ namespace TheUpperRoom.Api.Contacts;
 [Route("api/v1/contacts")]
 public sealed class ContactsController : ControllerBase
 {
-    private static readonly Contact[] Seed =
+    private sealed class ContactMutable : IHasCity
     {
-        new("c1", "Alice", "Toronto"),
-        new("c2", "Bob", "Halifax")
+        public string Id { get; init; } = "";
+        public string Name { get; set; } = "";
+        public string CityId { get; init; } = "";
+        public Contact ToContact() => new(Id, Name, CityId);
+    }
+
+    private static readonly Dictionary<string, ContactMutable> _store = new()
+    {
+        ["c1"] = new() { Id = "c1", Name = "Alice", CityId = "Toronto" },
+        ["c2"] = new() { Id = "c2", Name = "Bob", CityId = "Halifax" },
     };
 
     [HttpGet]
@@ -21,24 +32,20 @@ public sealed class ContactsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        IEnumerable<Contact> items = user.Role == Roles.SystemAdmin
-            ? Seed
-            : Seed.Where(c => c.CityId == user.City);
+        IEnumerable<ContactMutable> items = user.Role == Roles.SystemAdmin
+            ? _store.Values
+            : _store.Values.Where(c => c.CityId == user.City);
 
         if (!string.IsNullOrEmpty(search))
             items = items.Where(c => c.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
 
-        var allItems = items.ToArray();
+        var allItems = items.Select(c => c.ToContact()).ToArray();
         var total = allItems.Length;
 
         if (page.GetValueOrDefault() > 1 && size.GetValueOrDefault() > 0)
-        {
             allItems = allItems.Skip((page!.Value - 1) * size!.Value).Take(size.Value).ToArray();
-        }
         else if (size.GetValueOrDefault() > 0)
-        {
             allItems = allItems.Take(size!.Value).ToArray();
-        }
 
         return Ok(new { items = allItems, total });
     }
@@ -49,15 +56,13 @@ public sealed class ContactsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var contact = Seed.FirstOrDefault(c => c.Id == id);
-        if (contact is null) return NotFound();
+        if (!_store.TryGetValue(id, out var c)) return NotFound();
 
-        var allCities = user.Role == Roles.SystemAdmin
-            && Request.Headers["X-All-Cities"].ToString() == "true";
-        if (allCities) return Ok(contact);
+        var allCities = user.Role == Roles.SystemAdmin && Request.Headers["X-All-Cities"].ToString() == "true";
+        if (allCities) return Ok(c.ToContact());
 
-        var visible = CityScope.VisibleOrNull(contact, user.City);
-        return visible is null ? NotFound() : Ok(visible);
+        var visible = CityScope.VisibleOrNull(c, user.City);
+        return visible is null ? NotFound() : Ok(c.ToContact());
     }
 
     [HttpPost]
@@ -65,13 +70,15 @@ public sealed class ContactsController : ControllerBase
     {
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
-
         if (body is null) return BadRequest();
         if (string.IsNullOrWhiteSpace(body.FirstName))
             return UnprocessableEntity(new { error = "First name is required." });
 
         var id = Guid.NewGuid().ToString("N")[..8];
         var contact = new Contact(id, DisplayName(body), user.City);
+        var mut = new ContactMutable { Id = contact.Id, Name = contact.Name, CityId = contact.CityId };
+        _store[id] = mut;
+        AuditStore.Record(user.Id, "Contact", id, "Create", afterJson: JsonSerializer.Serialize(contact));
         return Created($"/api/v1/contacts/{id}", contact);
     }
 
@@ -80,31 +87,40 @@ public sealed class ContactsController : ControllerBase
     {
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
-
         if (body is null) return BadRequest();
         if (string.IsNullOrWhiteSpace(body.FirstName))
             return UnprocessableEntity(new { error = "First name is required." });
 
-        var contact = Seed.FirstOrDefault(c => c.Id == id);
-        if (contact is null) return NotFound();
-
-        var visible = CityScope.VisibleOrNull(contact, user.City);
+        if (!_store.TryGetValue(id, out var c)) return NotFound();
+        var visible = CityScope.VisibleOrNull(c, user.City);
         if (visible is null) return NotFound();
 
-        return Ok(contact with { Name = DisplayName(body) });
+        var before = JsonSerializer.Serialize(c.ToContact());
+        c.Name = DisplayName(body);
+        var after = JsonSerializer.Serialize(c.ToContact());
+        AuditStore.Record(user.Id, "Contact", id, "Update", before, after);
+        return Ok(c.ToContact());
     }
 
     [HttpPatch("{id}")]
-    public ActionResult<Contact> Patch(string id)
+    public ActionResult<Contact> Patch(string id, [FromBody] PatchContactRequest? body)
     {
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var contact = Seed.FirstOrDefault(c => c.Id == id);
-        if (contact is null) return NotFound();
+        if (!_store.TryGetValue(id, out var c)) return NotFound();
+        var visible = CityScope.VisibleOrNull(c, user.City);
+        if (visible is null) return NotFound();
 
-        var visible = CityScope.VisibleOrNull(contact, user.City);
-        return visible is null ? NotFound() : Ok(contact);
+        if (body?.Name is not null)
+        {
+            var before = JsonSerializer.Serialize(c.ToContact());
+            c.Name = body.Name;
+            var after = JsonSerializer.Serialize(c.ToContact());
+            AuditStore.Record(user.Id, "Contact", id, "Update", before, after);
+        }
+
+        return Ok(c.ToContact());
     }
 
     [HttpDelete("{id}")]
@@ -113,19 +129,19 @@ public sealed class ContactsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var contact = Seed.FirstOrDefault(c => c.Id == id);
-        if (contact is null) return NotFound();
+        if (!_store.TryGetValue(id, out var c)) return NotFound();
+        var visible = CityScope.VisibleOrNull(c, user.City);
+        if (visible is null) return NotFound();
 
-        var visible = CityScope.VisibleOrNull(contact, user.City);
-        return visible is null ? NotFound() : NoContent();
+        AuditStore.Record(user.Id, "Contact", id, "Delete", beforeJson: JsonSerializer.Serialize(c.ToContact()));
+        _store.Remove(id);
+        return NoContent();
     }
 
     private SeedUser? GetCurrentUser()
     {
         var userId = Request.Headers["X-Test-User-Id"].ToString();
-        return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user)
-            ? null
-            : user;
+        return string.IsNullOrEmpty(userId) || !SeedUsers.ById.TryGetValue(userId, out var user) ? null : user;
     }
 
     private static string DisplayName(CreateContactRequest body)
@@ -137,3 +153,5 @@ public sealed class ContactsController : ControllerBase
         return body.DisplayName ?? name;
     }
 }
+
+public sealed record PatchContactRequest(string? Name);
