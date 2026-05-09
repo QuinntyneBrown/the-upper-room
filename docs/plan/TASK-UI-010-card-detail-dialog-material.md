@@ -1,6 +1,6 @@
 # TASK-UI-010 — Migrate `card-detail-dialog.html` to Angular Material / Component Library
 
-**Status:** Accepted  
+**Status:** Complete  
 **Priority:** P2  
 **Effort:** Medium (1–2 days)  
 **File:** `frontend/projects/the-upper-room/src/app/kanban/card-detail-dialog/card-detail-dialog.html`
