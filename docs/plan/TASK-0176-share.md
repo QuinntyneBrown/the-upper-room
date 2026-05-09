@@ -1,7 +1,7 @@
 ---
 id: TASK-0176
 title: Deep link share button + clipboard
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0008]
 traces_to: [L2-118]

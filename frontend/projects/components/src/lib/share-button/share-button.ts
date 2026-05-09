@@ -42,8 +42,6 @@ export class TarShareButton {
     try {
       await nav?.clipboard?.writeText(url);
       this.snackbar.show('Link copied to clipboard.', 'info');
-    } catch {
-      this.snackbar.show('Link copied to clipboard.', 'info');
-    }
+    } catch { /* clipboard permission denied — fail silently */ }
   }
 }
