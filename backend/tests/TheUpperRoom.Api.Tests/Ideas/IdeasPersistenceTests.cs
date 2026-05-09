@@ -3,40 +3,66 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using TheUpperRoom.Api.Contacts;
+using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.Ideas;
+using TheUpperRoom.Api.Kanban;
+using TheUpperRoom.Api.Locations;
+using TheUpperRoom.Api.Notes;
+using TheUpperRoom.Api.Notifications;
 
 namespace TheUpperRoom.Api.Tests.Ideas;
 
 public sealed class IdeasPersistenceTests : IDisposable
 {
-    private readonly string _ideasDbPath;
-    private readonly string _eventsDbPath;
-    private readonly string _contactsDbPath;
+    private readonly Dictionary<Type, string> _paths = new();
 
     public IdeasPersistenceTests()
     {
-        _ideasDbPath = Path.Combine(Path.GetTempPath(), $"tar-ideas-{Guid.NewGuid():N}.db");
-        _eventsDbPath = Path.Combine(Path.GetTempPath(), $"tar-events-{Guid.NewGuid():N}.db");
-        _contactsDbPath = Path.Combine(Path.GetTempPath(), $"tar-contacts-{Guid.NewGuid():N}.db");
+        foreach (var t in new[]
+        {
+            typeof(IdeasDbContext), typeof(EventsDbContext), typeof(ContactsDbContext),
+            typeof(NotesDbContext), typeof(KanbanDbContext), typeof(LocationsDbContext),
+            typeof(NotificationsDbContext), typeof(PushDbContext),
+        })
+        {
+            _paths[t] = Path.Combine(Path.GetTempPath(), $"tar-{t.Name}-{Guid.NewGuid():N}.db");
+        }
     }
 
     public void Dispose()
     {
-        foreach (var p in new[] { _ideasDbPath, _eventsDbPath, _contactsDbPath })
-            if (File.Exists(p)) File.Delete(p);
+        Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
+        foreach (var p in _paths.Values)
+        {
+            try { if (File.Exists(p)) File.Delete(p); }
+            catch { /* OS will reclaim */ }
+        }
     }
 
     private WebApplicationFactory<Program> Factory() =>
         new WebApplicationFactory<Program>().WithWebHostBuilder(b =>
-            b.ConfigureAppConfiguration((_, cfg) =>
-                cfg.AddInMemoryCollection(new Dictionary<string, string?>
-                {
-                    ["IdeasDb:ConnectionString"] = $"Data Source={_ideasDbPath}",
-                    ["EventsDb:ConnectionString"] = $"Data Source={_eventsDbPath}",
-                    ["ContactsDb:ConnectionString"] = $"Data Source={_contactsDbPath}",
-                })));
+            b.ConfigureTestServices(services =>
+            {
+                Replace<IdeasDbContext>(services, _paths[typeof(IdeasDbContext)]);
+                Replace<EventsDbContext>(services, _paths[typeof(EventsDbContext)]);
+                Replace<ContactsDbContext>(services, _paths[typeof(ContactsDbContext)]);
+                Replace<NotesDbContext>(services, _paths[typeof(NotesDbContext)]);
+                Replace<KanbanDbContext>(services, _paths[typeof(KanbanDbContext)]);
+                Replace<LocationsDbContext>(services, _paths[typeof(LocationsDbContext)]);
+                Replace<NotificationsDbContext>(services, _paths[typeof(NotificationsDbContext)]);
+                Replace<PushDbContext>(services, _paths[typeof(PushDbContext)]);
+            }));
+
+    private static void Replace<TContext>(IServiceCollection services, string path) where TContext : DbContext
+    {
+        var d = services.Single(s => s.ServiceType == typeof(DbContextOptions<TContext>));
+        services.Remove(d);
+        services.AddDbContext<TContext>(o => o.UseSqlite($"Data Source={path}"));
+    }
 
     private static HttpClient AuthedClient(WebApplicationFactory<Program> factory, string userId)
     {

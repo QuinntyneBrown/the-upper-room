@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TheUpperRoom.Api.Contacts;
 using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.Ideas;
+using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
@@ -25,6 +26,7 @@ public sealed class NotificationsPersistenceTests : IDisposable
         {
             typeof(NotificationsDbContext), typeof(NotesDbContext), typeof(IdeasDbContext),
             typeof(EventsDbContext), typeof(ContactsDbContext), typeof(LocationsDbContext),
+            typeof(KanbanDbContext), typeof(PushDbContext),
         })
         {
             _paths[t] = Path.Combine(Path.GetTempPath(), $"tar-{t.Name}-{Guid.NewGuid():N}.db");
@@ -51,6 +53,8 @@ public sealed class NotificationsPersistenceTests : IDisposable
                 Replace<EventsDbContext>(services, _paths[typeof(EventsDbContext)]);
                 Replace<ContactsDbContext>(services, _paths[typeof(ContactsDbContext)]);
                 Replace<LocationsDbContext>(services, _paths[typeof(LocationsDbContext)]);
+                Replace<KanbanDbContext>(services, _paths[typeof(KanbanDbContext)]);
+                Replace<PushDbContext>(services, _paths[typeof(PushDbContext)]);
             }));
 
     private static void Replace<TContext>(IServiceCollection services, string path) where TContext : DbContext

@@ -17,15 +17,28 @@ namespace TheUpperRoom.Api.Tests.Contacts;
 public sealed class ContactsPersistenceTests : IDisposable
 {
     private readonly string _dbPath;
+    private readonly string _eventsDbPath;
+    private readonly string _ideasDbPath;
+    private readonly string _notesDbPath;
+    private readonly string _kanbanDbPath;
+    private readonly string _locationsDbPath;
+    private readonly string _notificationsDbPath;
 
     public ContactsPersistenceTests()
     {
         _dbPath = Path.Combine(Path.GetTempPath(), $"tar-contacts-{Guid.NewGuid():N}.db");
+        _eventsDbPath = Path.Combine(Path.GetTempPath(), $"tar-events-{Guid.NewGuid():N}.db");
+        _ideasDbPath = Path.Combine(Path.GetTempPath(), $"tar-ideas-{Guid.NewGuid():N}.db");
+        _notesDbPath = Path.Combine(Path.GetTempPath(), $"tar-notes-{Guid.NewGuid():N}.db");
+        _kanbanDbPath = Path.Combine(Path.GetTempPath(), $"tar-kanban-{Guid.NewGuid():N}.db");
+        _locationsDbPath = Path.Combine(Path.GetTempPath(), $"tar-locations-{Guid.NewGuid():N}.db");
+        _notificationsDbPath = Path.Combine(Path.GetTempPath(), $"tar-notifications-{Guid.NewGuid():N}.db");
     }
 
     public void Dispose()
     {
-        if (File.Exists(_dbPath)) File.Delete(_dbPath);
+        foreach (var p in new[] { _dbPath, _eventsDbPath, _ideasDbPath, _notesDbPath, _kanbanDbPath, _locationsDbPath, _notificationsDbPath })
+            if (File.Exists(p)) File.Delete(p);
     }
 
     private WebApplicationFactory<Program> Factory() =>
@@ -34,6 +47,12 @@ public sealed class ContactsPersistenceTests : IDisposable
                 cfg.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     ["ContactsDb:ConnectionString"] = $"Data Source={_dbPath}",
+                    ["EventsDb:ConnectionString"] = $"Data Source={_eventsDbPath}",
+                    ["IdeasDb:ConnectionString"] = $"Data Source={_ideasDbPath}",
+                    ["NotesDb:ConnectionString"] = $"Data Source={_notesDbPath}",
+                    ["KanbanDb:ConnectionString"] = $"Data Source={_kanbanDbPath}",
+                    ["LocationsDb:ConnectionString"] = $"Data Source={_locationsDbPath}",
+                    ["NotificationsDb:ConnectionString"] = $"Data Source={_notificationsDbPath}",
                 })));
 
     private HttpClient AuthedClient(WebApplicationFactory<Program> factory, string userId)

@@ -15,6 +15,8 @@ public sealed class KanbanPersistenceTests : IDisposable
     private readonly string _eventsDbPath;
     private readonly string _ideasDbPath;
     private readonly string _locationsDbPath;
+    private readonly string _notesDbPath;
+    private readonly string _notificationsDbPath;
 
     public KanbanPersistenceTests()
     {
@@ -23,15 +25,14 @@ public sealed class KanbanPersistenceTests : IDisposable
         _eventsDbPath = Path.Combine(Path.GetTempPath(), $"tar-events-{Guid.NewGuid():N}.db");
         _ideasDbPath = Path.Combine(Path.GetTempPath(), $"tar-ideas-{Guid.NewGuid():N}.db");
         _locationsDbPath = Path.Combine(Path.GetTempPath(), $"tar-locations-{Guid.NewGuid():N}.db");
+        _notesDbPath = Path.Combine(Path.GetTempPath(), $"tar-notes-{Guid.NewGuid():N}.db");
+        _notificationsDbPath = Path.Combine(Path.GetTempPath(), $"tar-notifications-{Guid.NewGuid():N}.db");
     }
 
     public void Dispose()
     {
-        if (File.Exists(_kanbanDbPath)) File.Delete(_kanbanDbPath);
-        if (File.Exists(_contactsDbPath)) File.Delete(_contactsDbPath);
-        if (File.Exists(_eventsDbPath)) File.Delete(_eventsDbPath);
-        if (File.Exists(_ideasDbPath)) File.Delete(_ideasDbPath);
-        if (File.Exists(_locationsDbPath)) File.Delete(_locationsDbPath);
+        foreach (var p in new[] { _kanbanDbPath, _contactsDbPath, _eventsDbPath, _ideasDbPath, _locationsDbPath, _notesDbPath, _notificationsDbPath })
+            if (File.Exists(p)) File.Delete(p);
     }
 
     private WebApplicationFactory<Program> Factory() =>
@@ -44,6 +45,8 @@ public sealed class KanbanPersistenceTests : IDisposable
                     ["EventsDb:ConnectionString"] = $"Data Source={_eventsDbPath}",
                     ["IdeasDb:ConnectionString"] = $"Data Source={_ideasDbPath}",
                     ["LocationsDb:ConnectionString"] = $"Data Source={_locationsDbPath}",
+                    ["NotesDb:ConnectionString"] = $"Data Source={_notesDbPath}",
+                    ["NotificationsDb:ConnectionString"] = $"Data Source={_notificationsDbPath}",
                 })));
 
     private HttpClient AuthedClient(WebApplicationFactory<Program> factory, string userId)

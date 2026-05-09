@@ -20,10 +20,12 @@ public sealed class NotificationsDbContext(DbContextOptions<NotificationsDbConte
         var n = b.Entity<NotificationRow>();
         n.ToTable("Notifications");
         n.HasKey(x => x.Id);
+        n.Property(x => x.Id).HasMaxLength(64);
         n.Property(x => x.UserId).HasMaxLength(100).IsRequired();
         n.Property(x => x.Code).HasMaxLength(100).IsRequired();
         n.Property(x => x.Title).HasMaxLength(500).IsRequired();
         n.Property(x => x.Severity).HasMaxLength(50).IsRequired();
+        n.Property(x => x.DeepLink).HasMaxLength(500);
         n.Property(x => x.Data).HasConversion(dataConverter);
 
         var p = b.Entity<PreferenceRow>();

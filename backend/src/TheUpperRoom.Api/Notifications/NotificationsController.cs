@@ -1,4 +1,5 @@
 // traces_to: L2-062, L2-063
+// Traces to: TASK-0229
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Rbac;
@@ -109,6 +110,7 @@ public sealed class NotificationsController(NotificationsDbContext db, MailStore
         if (user is null) return Unauthorized();
 
         var stored = db.Preferences.Where(p => p.UserId == user.Id).ToList();
+
         var result = NotificationCatalog.All.Select(t =>
         {
             var s = stored.FirstOrDefault(p => p.Code == t.Code);

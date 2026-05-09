@@ -10,7 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using TheUpperRoom.Api.Contacts;
 using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.Ideas;
+using TheUpperRoom.Api.Kanban;
+using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Api.Notes;
+using TheUpperRoom.Api.Notifications;
 
 namespace TheUpperRoom.Api.Tests.Notes;
 
@@ -20,6 +23,10 @@ public sealed class NotesPersistenceTests : IDisposable
     private readonly string _ideasDbPath;
     private readonly string _eventsDbPath;
     private readonly string _contactsDbPath;
+    private readonly string _kanbanDbPath;
+    private readonly string _locationsDbPath;
+    private readonly string _notificationsDbPath;
+    private readonly string _pushDbPath;
 
     public NotesPersistenceTests()
     {
@@ -27,12 +34,16 @@ public sealed class NotesPersistenceTests : IDisposable
         _ideasDbPath = Path.Combine(Path.GetTempPath(), $"tar-ideas-{Guid.NewGuid():N}.db");
         _eventsDbPath = Path.Combine(Path.GetTempPath(), $"tar-events-{Guid.NewGuid():N}.db");
         _contactsDbPath = Path.Combine(Path.GetTempPath(), $"tar-contacts-{Guid.NewGuid():N}.db");
+        _kanbanDbPath = Path.Combine(Path.GetTempPath(), $"tar-kanban-{Guid.NewGuid():N}.db");
+        _locationsDbPath = Path.Combine(Path.GetTempPath(), $"tar-locations-{Guid.NewGuid():N}.db");
+        _notificationsDbPath = Path.Combine(Path.GetTempPath(), $"tar-notifications-{Guid.NewGuid():N}.db");
+        _pushDbPath = Path.Combine(Path.GetTempPath(), $"tar-push-{Guid.NewGuid():N}.db");
     }
 
     public void Dispose()
     {
         Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
-        foreach (var p in new[] { _notesDbPath, _ideasDbPath, _eventsDbPath, _contactsDbPath })
+        foreach (var p in new[] { _notesDbPath, _ideasDbPath, _eventsDbPath, _contactsDbPath, _kanbanDbPath, _locationsDbPath, _notificationsDbPath, _pushDbPath })
         {
             try { if (File.Exists(p)) File.Delete(p); }
             catch { /* OS will clean tmp files eventually */ }
@@ -47,6 +58,10 @@ public sealed class NotesPersistenceTests : IDisposable
                 Replace<IdeasDbContext>(services, $"Data Source={_ideasDbPath}");
                 Replace<EventsDbContext>(services, $"Data Source={_eventsDbPath}");
                 Replace<ContactsDbContext>(services, $"Data Source={_contactsDbPath}");
+                Replace<KanbanDbContext>(services, $"Data Source={_kanbanDbPath}");
+                Replace<LocationsDbContext>(services, $"Data Source={_locationsDbPath}");
+                Replace<NotificationsDbContext>(services, $"Data Source={_notificationsDbPath}");
+                Replace<PushDbContext>(services, $"Data Source={_pushDbPath}");
             }));
 
     private static void Replace<TContext>(IServiceCollection services, string connectionString) where TContext : DbContext
