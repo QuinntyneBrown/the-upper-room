@@ -1,7 +1,7 @@
 ---
 id: TASK-0103
 title: Idea cover image upload + partner linking
-status: Draft
+status: Done
 phase: I
 depends_on: [TASK-0101, TASK-0070]
 traces_to: [L2-051, L2-048]

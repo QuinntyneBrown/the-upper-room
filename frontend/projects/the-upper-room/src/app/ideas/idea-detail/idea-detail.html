@@ -16,6 +16,17 @@
         <span data-testid="idea-status-chip" class="idea-status-chip">{{ i.status }}</span>
       </div>
       <div class="idea-content__actions">
+        <label data-testid="idea-cover-upload-button" class="btn-outlined idea-cover-label" aria-label="Upload cover image">
+          <span class="material-symbols-outlined">image</span>
+          Cover
+          <input
+            data-testid="idea-cover-input"
+            type="file"
+            accept="image/*"
+            class="visually-hidden"
+            (change)="onCoverFileChange($event)"
+          />
+        </label>
         <button
           data-testid="idea-detail-vote"
           type="button"
@@ -75,5 +86,69 @@
         <button type="button" class="btn-outlined" (click)="cancelEdit()">Cancel</button>
       </div>
     }
+
+    <section class="idea-partners">
+      <div class="idea-partners__header">
+        <h2 class="idea-partners__heading">Partners</h2>
+        <div class="idea-partners__link-wrap">
+          <button
+            data-testid="idea-link-partner-button"
+            type="button"
+            class="btn-outlined btn-sm"
+            (click)="showPartnerSearch.set(true)"
+          >Link partner</button>
+
+          @if (showPartnerSearch()) {
+            <div class="partner-search-popup">
+              <input
+                data-testid="idea-partner-search"
+                class="partner-search-popup__input"
+                type="search"
+                placeholder="Search partners…"
+                [value]="partnerQuery()"
+                (input)="onPartnerSearch($any($event.target).value)"
+                autocomplete="off"
+              />
+              @if (partnerResults().length > 0) {
+                <ul class="partner-search-popup__results">
+                  @for (p of partnerResults(); track p.id) {
+                    <li
+                      [attr.data-testid]="'idea-partner-result-' + p.name"
+                      class="partner-search-popup__result"
+                      (click)="selectPartner(p)"
+                    >{{ p.name }}</li>
+                  }
+                </ul>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (linkedPartners().length > 0) {
+        <div class="idea-partners__grid">
+          @for (p of linkedPartners(); track p.id) {
+            <div
+              [attr.data-testid]="'idea-partner-card-' + p.id"
+              class="idea-partner-card"
+              (click)="goToPartner(p.id)"
+              role="button"
+              tabindex="0"
+            >
+              <span class="idea-partner-card__name">{{ p.name }}</span>
+              <button
+                [attr.data-testid]="'idea-unlink-partner-' + p.id"
+                type="button"
+                class="btn-icon"
+                aria-label="Unlink partner"
+                (click)="$event.stopPropagation(); unlinkPartner(p.id)"
+              >
+                <span class="material-symbols-outlined">link_off</span>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </section>
   </div>
 }

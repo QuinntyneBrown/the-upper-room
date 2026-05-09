@@ -34,6 +34,14 @@
   <div class="ideas-grid">
     @for (idea of ideas(); track idea.id) {
       <article data-testid="idea-card" class="idea-card">
+        @if (idea.coverImageUrl) {
+          <img
+            [attr.data-testid]="'idea-card-cover-' + idea.id"
+            class="idea-card__cover"
+            [src]="idea.coverImageUrl"
+            [alt]="idea.title"
+          />
+        }
         <h2 class="idea-card__title">{{ idea.title }}</h2>
         @if (idea.description) {
           <p class="idea-card__description">{{ idea.description }}</p>

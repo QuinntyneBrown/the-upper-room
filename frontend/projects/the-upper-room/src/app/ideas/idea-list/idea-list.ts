@@ -4,6 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import { SnackbarService, optimisticMutation } from 'components';
 import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
 
+export interface LinkedPartnerRef {
+  readonly id: string;
+  readonly name: string;
+}
+
 export interface IdeaDto {
   readonly id: string;
   readonly title: string;
@@ -18,6 +23,7 @@ export interface IdeaDto {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly tags: string[];
+  readonly linkedPartners?: LinkedPartnerRef[];
 }
 
 @Component({

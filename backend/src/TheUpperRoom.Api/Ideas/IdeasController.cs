@@ -30,6 +30,7 @@ public sealed class IdeasController : ControllerBase
     private static readonly HtmlSanitizer _sanitizer = BuildSanitizer();
     private static readonly List<IdeaRecord> _store = [];
     private static readonly List<(string IdeaId, string UserId)> _votes = [];
+    private static readonly List<(string IdeaId, string PartnerId, string PartnerName)> _ideaPartners = [];
 
     private static readonly Dictionary<string, string[]> _proposerTransitions = new()
     {
@@ -160,13 +161,70 @@ public sealed class IdeasController : ControllerBase
         return Ok(ToDto(idea, user.Id));
     }
 
+    [HttpPost("{id}/cover")]
+    public IActionResult UploadCover(string id, IFormFile? file)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+
+        var idea = _store.FirstOrDefault(i => i.Id == id);
+        if (idea is null) return NotFound();
+
+        var url = $"/uploads/cover-{id}-{Guid.NewGuid():N}.jpg";
+        idea.CoverImageUrl = url;
+        return Ok(ToDto(idea, user.Id));
+    }
+
+    [HttpGet("{id}/partners")]
+    public IActionResult ListPartners(string id)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+
+        var items = _ideaPartners
+            .Where(p => p.IdeaId == id)
+            .Select(p => new LinkedPartnerRefDto(p.PartnerId, p.PartnerName))
+            .ToArray();
+        return Ok(new { items });
+    }
+
+    [HttpPost("{id}/partners")]
+    public IActionResult LinkPartner(string id, [FromBody] LinkIdeaPartnerRequest? body)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+        if (body is null) return BadRequest();
+
+        if (_ideaPartners.Any(p => p.IdeaId == id && p.PartnerId == body.PartnerId))
+            return Conflict(new { error = "Partner already linked." });
+
+        _ideaPartners.Add((id, body.PartnerId, body.PartnerName ?? body.PartnerId));
+        return StatusCode(201, new { partnerId = body.PartnerId });
+    }
+
+    [HttpDelete("{id}/partners/{partnerId}")]
+    public IActionResult UnlinkPartner(string id, string partnerId)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+
+        var idx = _ideaPartners.FindIndex(p => p.IdeaId == id && p.PartnerId == partnerId);
+        if (idx < 0) return NotFound();
+        _ideaPartners.RemoveAt(idx);
+        return NoContent();
+    }
+
     private IdeaDto ToDto(IdeaRecord idea, string userId) => new(
         idea.Id, idea.Title, idea.Description,
         idea.BodyMarkdown, idea.BodyHtmlSanitized, idea.CoverImageUrl,
         idea.Status,
         VoteCount: _votes.Count(v => v.IdeaId == idea.Id),
         HasVoted: _votes.Any(v => v.IdeaId == idea.Id && v.UserId == userId),
-        idea.ProposedBy, idea.CreatedAt, idea.UpdatedAt, idea.Tags);
+        idea.ProposedBy, idea.CreatedAt, idea.UpdatedAt, idea.Tags,
+        LinkedPartners: _ideaPartners
+            .Where(p => p.IdeaId == idea.Id)
+            .Select(p => new LinkedPartnerRefDto(p.PartnerId, p.PartnerName))
+            .ToArray());
 
     private SeedUser? GetCurrentUser()
     {
@@ -179,3 +237,4 @@ public sealed class IdeasController : ControllerBase
 
 public sealed record UpdateIdeaRequest(string? BodyMarkdown, string? CoverImageUrl);
 public sealed record ChangeStatusRequest(string Status);
+public sealed record LinkIdeaPartnerRequest(string PartnerId, string? PartnerName = null);
