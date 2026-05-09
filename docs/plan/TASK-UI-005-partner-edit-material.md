@@ -1,6 +1,6 @@
 # TASK-UI-005 — Migrate `partner-edit.html` to Angular Material / Component Library
 
-**Status:** Draft  
+**Status:** Complete  
 **Priority:** P2  
 **Effort:** Medium (1–2 days)  
 **File:** `frontend/projects/the-upper-room/src/app/partners/partner-edit/partner-edit.html`
