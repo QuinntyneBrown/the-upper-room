@@ -3,8 +3,8 @@
     <div class="save-bar">
       <span data-testid="partner-unsaved-dot" class="unsaved-dot" [class.unsaved-dot--visible]="isDirty()"></span>
       <h1 class="save-bar__title">Edit Partner</h1>
-      <button data-testid="partner-cancel" type="button" class="btn-outlined" (click)="onCancel()">Cancel</button>
-      <button data-testid="partner-submit" type="submit" class="btn-filled" [disabled]="submitting()">Save</button>
+      <tar-button variant="outlined" type="button" testId="partner-cancel" (clicked)="onCancel()">Cancel</tar-button>
+      <tar-button variant="filled" type="submit" testId="partner-submit" [disabled]="submitting()">Save</tar-button>
     </div>
 
     @if (formBanner()) {
@@ -15,51 +15,39 @@
       <section class="form-section">
         <h2 class="form-section__heading">Basic info</h2>
 
-        <div class="field">
-          <label class="field__label" for="partner-name">Name *</label>
-          <input
-            id="partner-name"
-            data-testid="partner-name"
-            class="field__input"
-            [class.field__input--error]="nameError()"
-            type="text"
-            autocomplete="organization"
-            [value]="name()"
-            (input)="name.set($any($event.target).value)"
-          />
-          @if (nameError()) {
-            <span data-testid="partner-error-name" class="field__error">{{ nameError() }}</span>
-          }
-        </div>
+        <tar-text-field
+          label="Name"
+          testId="partner-name"
+          errorTestId="partner-error-name"
+          [required]="true"
+          autocomplete="organization"
+          [value]="name()"
+          [error]="nameError()"
+          (valueChange)="name.set($event)"
+        />
 
-        <div class="field">
-          <label class="field__label" for="partner-website">Website</label>
-          <div class="field__input-group">
-            <input
-              id="partner-website"
-              data-testid="partner-website"
-              class="field__input"
-              [class.field__input--error]="websiteError()"
-              type="url"
-              placeholder="https://example.org"
-              [value]="website()"
-              (input)="website.set($any($event.target).value)"
-            />
-            @if (websiteValid() && website()) {
-              <a
-                data-testid="partner-visit-link"
-                class="field__trailing-link"
-                [href]="website()"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Visit website"
-              >
-                <span class="material-symbols-outlined">open_in_new</span>
-              </a>
-            }
-          </div>
-          @if (websiteError()) {
-            <span data-testid="partner-error-website" class="field__error">{{ websiteError() }}</span>
+        <div class="field__input-group">
+          <tar-text-field
+            label="Website"
+            testId="partner-website"
+            errorTestId="partner-error-website"
+            type="url"
+            placeholder="https://example.org"
+            [value]="website()"
+            [error]="websiteError()"
+            (valueChange)="website.set($event)"
+          />
+          @if (websiteValid() && website()) {
+            <a
+              data-testid="partner-visit-link"
+              class="field__trailing-link"
+              [href]="website()"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit website"
+            >
+              <mat-icon>open_in_new</mat-icon>
+            </a>
           }
         </div>
       </section>
@@ -69,64 +57,46 @@
 
         @for (link of socialLinks(); track $index; let i = $index) {
           <div [attr.data-testid]="'social-link-' + i" class="social-link-row">
-            <select
-              [attr.data-testid]="'social-platform-' + i"
-              class="field__select"
+            <tar-select
+              label="Platform"
+              [testId]="'social-platform-' + i"
               [value]="link.platform"
-              (change)="updatePlatform(i, $any($event.target).value)"
-            >
-              @for (p of platforms; track p) {
-                <option [value]="p">{{ p }}</option>
-              }
-            </select>
+              [options]="platformOptions"
+              (valueChange)="updatePlatform(i, $event)"
+            />
 
-            <div class="field social-link-row__url">
-              <input
-                [attr.data-testid]="'social-url-' + i"
-                class="field__input"
-                [class.field__input--error]="socialErrors()[i]?.urlError"
-                type="url"
-                placeholder="https://..."
-                [value]="link.url"
-                (input)="updateUrl(i, $any($event.target).value)"
-              />
-              @if (socialErrors()[i]?.urlError) {
-                <span [attr.data-testid]="'social-url-error-' + i" class="field__error">{{ socialErrors()[i]?.urlError }}</span>
-              }
-            </div>
+            <tar-text-field
+              label="URL"
+              [testId]="'social-url-' + i"
+              [errorTestId]="'social-url-error-' + i"
+              type="url"
+              placeholder="https://..."
+              [value]="link.url"
+              [error]="socialErrors()[i]?.urlError ?? null"
+              (valueChange)="updateUrl(i, $event)"
+            />
 
             @if (link.platform === 'Other') {
-              <div class="field social-link-row__label">
-                <input
-                  [attr.data-testid]="'social-label-' + i"
-                  class="field__input"
-                  [class.field__input--error]="socialErrors()[i]?.labelError"
-                  type="text"
-                  placeholder="Custom label"
-                  [value]="link.label"
-                  (input)="updateLabel(i, $any($event.target).value)"
-                />
-                @if (socialErrors()[i]?.labelError) {
-                  <span [attr.data-testid]="'social-label-error-' + i" class="field__error">{{ socialErrors()[i]?.labelError }}</span>
-                }
-              </div>
+              <tar-text-field
+                label="Custom label"
+                [testId]="'social-label-' + i"
+                [errorTestId]="'social-label-error-' + i"
+                [value]="link.label"
+                [error]="socialErrors()[i]?.labelError ?? null"
+                (valueChange)="updateLabel(i, $event)"
+              />
             }
 
-            <button
-              [attr.data-testid]="'social-remove-' + i"
-              type="button"
-              class="btn-icon"
-              aria-label="Remove link"
-              (click)="removeLink(i)"
-            >
-              <span class="material-symbols-outlined">close</span>
-            </button>
+            <tar-icon-button
+              icon="close"
+              ariaLabel="Remove link"
+              [testId]="'social-remove-' + i"
+              (clicked)="removeLink(i)"
+            />
           </div>
         }
 
-        <button data-testid="social-add-button" type="button" class="btn-outlined btn-sm" (click)="addLink()">
-          Add link
-        </button>
+        <tar-button variant="outlined" icon="add" type="button" testId="social-add-button" (clicked)="addLink()">Add link</tar-button>
       </section>
     </div>
   </form>

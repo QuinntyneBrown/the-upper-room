@@ -2,7 +2,8 @@
 import { Component, ElementRef, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmService, SnackbarService } from 'components';
+import { MatIconModule } from '@angular/material/icon';
+import { ConfirmService, SnackbarService, TarButton, TarIconButton, TarSelect, TarTextField } from 'components';
 
 const URL_RE = /^https?:\/\//i;
 
@@ -21,7 +22,7 @@ interface SocialLinkError {
 
 @Component({
   selector: 'app-partner-edit',
-  imports: [],
+  imports: [TarButton, TarTextField, TarIconButton, TarSelect, MatIconModule],
   templateUrl: './partner-edit.html',
   styleUrl: './partner-edit.scss',
 })
@@ -43,6 +44,7 @@ export class PartnerEdit implements OnInit {
   protected readonly socialErrors = signal<SocialLinkError[]>([]);
 
   protected readonly platforms = SOCIAL_PLATFORMS;
+  protected readonly platformOptions = SOCIAL_PLATFORMS.map((p) => ({ label: p, value: p }));
 
   protected readonly nameError = signal<string | null>(null);
   protected readonly websiteError = signal<string | null>(null);
