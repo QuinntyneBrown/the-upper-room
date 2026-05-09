@@ -1,7 +1,7 @@
 ---
 id: TASK-0174
 title: Print stylesheet
-status: Draft
+status: Accepted
 phase: X
 depends_on: [TASK-0005]
 traces_to: [L2-119]
