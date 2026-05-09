@@ -8,6 +8,7 @@ using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Api.Partners;
 using TheUpperRoom.Api.Rbac;
 
+
 namespace TheUpperRoom.Api.Search;
 
 public sealed record SearchResult(string Id, string Type, string Title, string? Subtitle, string Url);
@@ -15,7 +16,7 @@ public sealed record SearchResult(string Id, string Type, string Title, string? 
 [ApiController]
 [Authorize]
 [Route("api/v1/search")]
-public sealed class SearchController(ContactsDbContext contactsDb, EventsDbContext eventsDb, IdeasDbContext ideasDb) : ControllerBase
+public sealed class SearchController(ContactsDbContext contactsDb, EventsDbContext eventsDb, IdeasDbContext ideasDb, LocationsDbContext locationsDb) : ControllerBase
 {
     private const int MaxPerGroup = 5;
 
@@ -50,7 +51,7 @@ public sealed class SearchController(ContactsDbContext contactsDb, EventsDbConte
             .Select(i => new SearchResult(i.Id, "idea", i.Title, i.Status, $"/ideas/{i.Id}"))
             .ToList();
 
-        var locations = LocationsController.Search(term)
+        var locations = LocationsController.Search(term, locationsDb)
             .Take(MaxPerGroup)
             .Select(l => new SearchResult(l.Id, "location", l.Name, l.City, $"/locations/{l.Id}"))
             .ToList();

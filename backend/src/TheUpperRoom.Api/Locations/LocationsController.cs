@@ -1,6 +1,8 @@
 // traces_to: L2-057, L2-058, L2-113
+// Traces to: TASK-0227
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.Rbac;
 
 namespace TheUpperRoom.Api.Locations;
@@ -8,32 +10,16 @@ namespace TheUpperRoom.Api.Locations;
 [ApiController]
 [Authorize]
 [Route("api/v1/locations")]
-public sealed class LocationsController : ControllerBase
+public sealed class LocationsController(LocationsDbContext db, EventsDbContext eventsDb) : ControllerBase
 {
-    private sealed class LocationRecord
-    {
-        public string Id { get; } = Guid.NewGuid().ToString();
-        public string Name { get; set; } = "";
-        public string Street { get; set; } = "";
-        public string City { get; set; } = "";
-        public string State { get; set; } = "";
-        public string Country { get; set; } = "";
-        public string PostalCode { get; set; } = "";
-        public int? Capacity { get; set; }
-        public double? Lat { get; set; }
-        public double? Lng { get; set; }
-        public bool Archived { get; set; }
-        public List<string> Photos { get; } = [];
-        public int EventCount { get; set; }
-    }
-
     private const long MaxPhotoBytes = 10L * 1024 * 1024;
-    private static readonly List<LocationRecord> _store = [];
-    private static readonly HashSet<string> _referencedByFutureEvents = [];
 
-    internal static IEnumerable<(string Id, string Name, string City)> Search(string term) =>
-        _store.Where(l => !l.Archived && l.Name.Contains(term, StringComparison.OrdinalIgnoreCase))
-              .Select(l => (l.Id, l.Name, l.City));
+    internal static IEnumerable<(string Id, string Name, string City)> Search(string term, LocationsDbContext db) =>
+        db.Locations
+          .Where(l => !l.Archived && l.Name.Contains(term))
+          .AsEnumerable()
+          .Where(l => l.Name.Contains(term, StringComparison.OrdinalIgnoreCase))
+          .Select(l => (l.Id, l.Name, l.City));
 
     [HttpGet]
     public IActionResult List()
@@ -41,7 +27,7 @@ public sealed class LocationsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var items = _store.Select(ToDto).ToList();
+        var items = db.Locations.Select(l => l.ToDto()).ToList();
         return Ok(new { items, total = items.Count });
     }
 
@@ -51,8 +37,8 @@ public sealed class LocationsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var loc = _store.FirstOrDefault(l => l.Id == id);
-        return loc is null ? NotFound() : Ok(ToDto(loc));
+        var loc = db.Locations.Find(id);
+        return loc is null ? NotFound() : Ok(loc.ToDto());
     }
 
     [HttpPost]
@@ -66,8 +52,9 @@ public sealed class LocationsController : ControllerBase
         if (body.Capacity.HasValue && body.Capacity.Value <= 0)
             return UnprocessableEntity(new { error = "Capacity must be a positive integer." });
 
-        var loc = new LocationRecord
+        var row = new LocationRow
         {
+            Id = Guid.NewGuid().ToString(),
             Name = body.Name,
             Street = body.Street ?? "",
             City = body.City ?? "",
@@ -78,8 +65,9 @@ public sealed class LocationsController : ControllerBase
             Lat = body.Lat,
             Lng = body.Lng,
         };
-        _store.Add(loc);
-        return Created($"/api/v1/locations/{loc.Id}", ToDto(loc));
+        db.Locations.Add(row);
+        db.SaveChanges();
+        return Created($"/api/v1/locations/{row.Id}", row.ToDto());
     }
 
     [HttpPost("{id}/photos")]
@@ -88,20 +76,20 @@ public sealed class LocationsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var loc = _store.FirstOrDefault(l => l.Id == id);
+        var loc = db.Locations.Find(id);
         if (loc is null) return NotFound();
         if (file is null) return BadRequest(new { error = "No file provided." });
         if (file.Length > MaxPhotoBytes)
             return UnprocessableEntity(new { error = "Photo is too large (max 10MB)." });
         if (!file.ContentType.StartsWith("image/"))
             return UnprocessableEntity(new { error = "Only image files are accepted." });
-        if (loc.Photos.Count >= 10)
+        if (loc.Photos.Length >= 10)
             return UnprocessableEntity(new { error = "Maximum 10 photos allowed." });
 
         var url = $"https://uploads.example.com/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-        loc.Photos.Add(url);
-        await Task.CompletedTask;
-        return Created(url, ToDto(loc));
+        loc.Photos = [.. loc.Photos, url];
+        await db.SaveChangesAsync();
+        return Created(url, loc.ToDto());
     }
 
     [HttpPatch("{id}")]
@@ -110,14 +98,15 @@ public sealed class LocationsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var loc = _store.FirstOrDefault(l => l.Id == id);
+        var loc = db.Locations.Find(id);
         if (loc is null) return NotFound();
         if (body is null) return BadRequest();
 
         if (body.Archived.HasValue) loc.Archived = body.Archived.Value;
         if (body.Name is not null) loc.Name = body.Name;
 
-        return Ok(ToDto(loc));
+        db.SaveChanges();
+        return Ok(loc.ToDto());
     }
 
     [HttpDelete("{id}")]
@@ -126,19 +115,18 @@ public sealed class LocationsController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var loc = _store.FirstOrDefault(l => l.Id == id);
+        var loc = db.Locations.Find(id);
         if (loc is null) return NotFound();
 
-        if (_referencedByFutureEvents.Contains(id))
+        var now = DateTimeOffset.UtcNow;
+        var hasFutureEvents = eventsDb.Events.Where(e => e.LocationId == id).AsEnumerable().Any(e => e.StartAt > now);
+        if (hasFutureEvents)
             return Conflict(new { error = "Location is used by upcoming events." });
 
-        _store.Remove(loc);
+        db.Locations.Remove(loc);
+        db.SaveChanges();
         return NoContent();
     }
-
-    private static LocationDto ToDto(LocationRecord l) =>
-        new(l.Id, l.Name, l.Street, l.City, l.State, l.Country, l.PostalCode,
-            l.Capacity, l.Lat, l.Lng, l.Archived, [.. l.Photos], l.EventCount);
 
     private SeedUser? GetCurrentUser()
     {

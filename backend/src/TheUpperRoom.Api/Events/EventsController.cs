@@ -102,6 +102,7 @@ public sealed class EventsController(EventsDbContext db) : ControllerBase
             StartAt = body.StartAt ?? DateTimeOffset.UtcNow.AddDays(7),
             EndAt = body.EndAt ?? DateTimeOffset.UtcNow.AddDays(7).AddHours(2),
             Location = body.Location,
+            LocationId = body.LocationId,
             IsVirtual = body.IsVirtual,
             Capacity = body.Capacity,
             RequiresApproval = body.RequiresApproval,

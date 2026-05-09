@@ -22,6 +22,7 @@ public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) :
         e.Property(x => x.Title).HasMaxLength(300).IsRequired();
         e.Property(x => x.Status).HasMaxLength(50).IsRequired();
         e.Property(x => x.Location).HasMaxLength(500);
+        e.Property(x => x.LocationId).HasMaxLength(64);
         e.Property(x => x.Description);
         e.Property(x => x.RecurrenceRule).HasMaxLength(500);
         e.Property(x => x.Timezone).HasMaxLength(100);
@@ -45,6 +46,7 @@ public sealed class EventRow
     public DateTimeOffset StartAt { get; set; }
     public DateTimeOffset EndAt { get; set; }
     public string? Location { get; set; }
+    public string? LocationId { get; set; }
     public bool IsVirtual { get; set; }
     public int? Capacity { get; set; }
     public bool RequiresApproval { get; set; }
