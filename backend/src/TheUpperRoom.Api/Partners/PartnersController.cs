@@ -97,6 +97,23 @@ public sealed class PartnersController : ControllerBase
         return Ok(updated);
     }
 
+    [HttpPatch("{id}")]
+    public ActionResult<PartnerDto> Patch(string id, [FromBody] PatchPartnerRequest? body)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+        if (body is null) return BadRequest();
+
+        var partner = _store.FirstOrDefault(p => p.Id == id);
+        if (partner is null) return NotFound();
+        if (user.Role != Roles.SystemAdmin && partner.CityId != user.City) return NotFound();
+
+        var updated = partner with { Archived = body.Archived };
+        var idx = _store.IndexOf(partner);
+        _store[idx] = updated;
+        return Ok(updated);
+    }
+
     [HttpDelete("{id}")]
     public IActionResult Delete(string id)
     {

@@ -25,7 +25,54 @@
         </a>
       }
     </div>
+
+    <div class="partner-header__actions">
+      <a data-testid="partner-edit-button" [href]="'/partners/' + p.id + '/edit'" class="btn-outlined">Edit</a>
+      @if (!p.archived) {
+        <button data-testid="partner-archive-button" type="button" class="btn-outlined" (click)="archive()">Archive</button>
+      } @else {
+        <button data-testid="partner-restore-button" type="button" class="btn-outlined" (click)="archive()">Restore</button>
+      }
+      <button data-testid="partner-delete-button" type="button" class="btn-danger" (click)="openDeleteDialog()">Delete</button>
+    </div>
   </header>
+
+  @if (showDeleteDialog()) {
+    <div class="dialog-backdrop" (click)="closeDeleteDialog()">
+      <div class="dialog" (click)="$event.stopPropagation()">
+        @if (!deleteBlockedMessage()) {
+          <h2 class="dialog__title">Delete partner?</h2>
+          <p class="dialog__body">
+            Type <strong>{{ p.name }}</strong> to confirm permanent deletion.
+          </p>
+          <input
+            data-testid="delete-confirm-input"
+            class="dialog__input"
+            type="text"
+            [placeholder]="p.name"
+            [value]="deleteConfirmName()"
+            (input)="deleteConfirmName.set($any($event.target).value)"
+          />
+          <div class="dialog__actions">
+            <button type="button" class="btn-outlined" (click)="closeDeleteDialog()">Cancel</button>
+            <button
+              type="button"
+              class="btn-danger"
+              [disabled]="deleteConfirmName() !== p.name"
+              (click)="confirmDelete()"
+            >Delete</button>
+          </div>
+        } @else {
+          <h2 class="dialog__title">Cannot delete</h2>
+          <p class="dialog__body">{{ deleteBlockedMessage() }}</p>
+          <div class="dialog__actions">
+            <button type="button" class="btn-outlined" (click)="closeDeleteDialog()">Cancel</button>
+            <button type="button" class="btn-filled" (click)="archiveInstead()">Archive instead</button>
+          </div>
+        }
+      </div>
+    </div>
+  }
 
   <nav class="partner-tabs" role="tablist">
     <button

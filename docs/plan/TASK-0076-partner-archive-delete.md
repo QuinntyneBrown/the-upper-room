@@ -1,7 +1,7 @@
 ---
 id: TASK-0076
 title: Partner archive / delete
-status: Draft
+status: Done
 phase: P
 depends_on: [TASK-0073, TASK-0009]
 traces_to: [L2-034]
