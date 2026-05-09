@@ -1,7 +1,7 @@
 ---
 id: TASK-0228
 title: Persist Kanban boards (and dependent entities) in database
-status: Draft
+status: Accepted
 phase: P
 depends_on: []
 traces_to: []
