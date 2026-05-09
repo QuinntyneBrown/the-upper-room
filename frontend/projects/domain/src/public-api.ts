@@ -43,3 +43,7 @@ export * from './lib/auth/inactivity-dialog/inactivity-dialog';
 // Cities
 export * from './lib/cities/city-scope.service';
 export * from './lib/cities/city-switcher/tar-city-switcher';
+
+// Notifications
+export * from './lib/notifications/notification-bell/tar-notification-bell';
+export * from './lib/notifications/notification-preferences/tar-notification-preferences';

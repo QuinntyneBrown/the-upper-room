@@ -1,11 +1,12 @@
+// traces_to: L2-064
 .np__table {
   width: 100%;
   border-collapse: collapse;
 
   th, td {
-    padding: 8px 12px;
+    padding: var(--md-sys-space-2) var(--md-sys-space-3);
     text-align: left;
-    border-bottom: 1px solid var(--color-border, #e0e0e0);
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
   }
 
   th {
@@ -20,6 +21,6 @@
 }
 
 .np__saved {
-  font-size: 0.75rem;
-  color: var(--color-success, #2e7d32);
+  font: var(--md-sys-typescale-label-small);
+  color: var(--md-sys-color-secondary);
 }

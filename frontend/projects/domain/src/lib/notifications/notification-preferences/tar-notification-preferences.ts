@@ -11,11 +11,11 @@ export interface PrefDto {
 }
 
 @Component({
-  selector: 'app-notification-preferences',
-  templateUrl: './notification-preferences.html',
-  styleUrl: './notification-preferences.scss',
+  selector: 'tar-notification-preferences',
+  templateUrl: './tar-notification-preferences.html',
+  styleUrl: './tar-notification-preferences.scss',
 })
-export class NotificationPreferences implements OnInit {
+export class TarNotificationPreferences implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly doc = inject(DOCUMENT);
 

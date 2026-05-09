@@ -19,12 +19,12 @@ export interface NotificationDto {
 type Tab = 'unread' | 'all';
 
 @Component({
-  selector: 'app-notification-bell',
+  selector: 'tar-notification-bell',
   imports: [DatePipe, LowerCasePipe, RouterLink],
-  templateUrl: './notification-bell.html',
-  styleUrl: './notification-bell.scss',
+  templateUrl: './tar-notification-bell.html',
+  styleUrl: './tar-notification-bell.scss',
 })
-export class NotificationBell implements OnInit {
+export class TarNotificationBell implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
 
@@ -39,7 +39,7 @@ export class NotificationBell implements OnInit {
     return n > 99 ? '99+' : String(n);
   });
   protected readonly visibleRows = computed(() =>
-    this.activeTab() === 'unread' ? this.unread() : this.notifications()
+    this.activeTab() === 'unread' ? this.unread() : this.notifications(),
   );
 
   ngOnInit(): void {

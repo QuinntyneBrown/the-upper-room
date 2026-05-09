@@ -33,7 +33,7 @@ import { LocationList } from './locations/location-list/location-list';
 import { LocationForm } from './locations/location-form/location-form';
 import { LocationDetail } from './locations/location-detail/location-detail';
 import { AuditLog } from './admin/audit-log/audit-log';
-import { NotificationPreferences } from './notifications/notification-preferences/notification-preferences';
+import { TarNotificationPreferences } from 'domain';
 import { DateFormattingTest } from './date-formatting-test/date-formatting-test';
 
 export const routes: Routes = [
@@ -87,7 +87,7 @@ export const routes: Routes = [
         data: { permissions: ['KanbanBoard:Configure'] },
       },
       { path: 'profile', component: MyProfile },
-      { path: 'settings/notifications', component: NotificationPreferences },
+      { path: 'settings/notifications', component: TarNotificationPreferences },
       { path: 'date-formatting-test', component: DateFormattingTest },
       {
         path: 'admin/users',
