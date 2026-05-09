@@ -1,7 +1,7 @@
 ---
 id: TASK-0231
 title: Remove TestLogsController and /test/* endpoints
-status: Draft
+status: Accepted
 phase: P
 depends_on: [TASK-0229, TASK-0230, TASK-0232]
 traces_to: []
