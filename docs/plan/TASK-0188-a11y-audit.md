@@ -1,7 +1,7 @@
 ---
 id: TASK-0188
 title: Accessibility audit (axe-playwright + manual keyboard)
-status: Draft
+status: Accepted
 phase: Z
 depends_on: [TASK-0005]
 traces_to: [L2-085, L2-086, L2-087, L2-088]

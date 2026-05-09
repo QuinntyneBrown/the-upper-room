@@ -29,6 +29,7 @@
     "@angular/build": "^21.2.10",
     "@angular/cli": "^21.2.7",
     "@angular/compiler-cli": "^21.2.0",
+    "@axe-core/playwright": "^4.11.3",
     "@playwright/test": "^1.49.0",
     "eslint": "^9.16.0",
     "eslint-plugin-the-upper-room": "file:../tools/eslint-plugin-the-upper-room",
