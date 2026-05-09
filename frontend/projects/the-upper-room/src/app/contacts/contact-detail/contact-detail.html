@@ -19,7 +19,7 @@
     </div>
   </header>
 
-  <tar-tabs [tabs]="TABS" [selectedIndex]="tabIndex()" (selectedIndexChange)="onTabChange($event)">
+  <tar-tabs [tabs]="TABS" [selectedIndex]="tabIndex()" (selectedIndexChange)="onTabChange($event)" testId="contact">
     <ng-template let-tab>
       @if (tab.id === 'overview') {
         <div data-testid="contact-panel-overview" class="overview-panel">

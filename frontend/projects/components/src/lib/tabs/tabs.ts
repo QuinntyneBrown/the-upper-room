@@ -1,7 +1,9 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   ContentChild,
+  ElementRef,
   EventEmitter,
   Input,
   Output,
@@ -21,7 +23,7 @@ export interface TarTab {
   templateUrl: './tabs.html',
   styleUrl: './tabs.scss',
 })
-export class TarTabs {
+export class TarTabs implements AfterViewInit {
   @Input({ required: true }) tabs: readonly TarTab[] = [];
   @Input() selectedIndex = 0;
   @Input() color: 'primary' | 'accent' | 'warn' | undefined = undefined;
@@ -30,4 +32,14 @@ export class TarTabs {
   @ContentChild(TemplateRef) contentTemplate!: TemplateRef<{ $implicit: TarTab }>;
 
   @Output() readonly selectedIndexChange = new EventEmitter<number>();
+
+  constructor(private readonly el: ElementRef<HTMLElement>) {}
+
+  ngAfterViewInit(): void {
+    if (!this.testId) return;
+    const tabButtons = this.el.nativeElement.querySelectorAll<HTMLElement>('.mat-mdc-tab');
+    this.tabs.forEach((tab, i) => {
+      if (tabButtons[i]) tabButtons[i].setAttribute('data-testid', `${this.testId}-tab-${tab.id}`);
+    });
+  }
 }
