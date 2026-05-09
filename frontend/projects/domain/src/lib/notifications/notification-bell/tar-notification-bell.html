@@ -1,16 +1,15 @@
 <div class="notification-bell">
-  <button
-    data-testid="notification-bell"
-    type="button"
-    class="notification-bell__btn"
-    aria-label="Notifications"
-    (click)="toggleMenu()"
-  >
-    <span class="material-symbols-outlined">notifications</span>
+  <div class="notification-bell__btn-wrapper">
+    <tar-icon-button
+      testId="notification-bell"
+      icon="notifications"
+      ariaLabel="Notifications"
+      (clicked)="toggleMenu()"
+    />
     @if (unreadCount() > 0) {
       <span data-testid="notification-badge" class="notification-bell__badge">{{ badgeLabel() }}</span>
     }
-  </button>
+  </div>
 
   @if (open()) {
     <div data-testid="notification-menu" class="notification-bell__menu" role="dialog" aria-label="Notifications">
@@ -20,6 +19,7 @@
 
       <div class="notification-bell__tabs" role="tablist">
         <button
+          mat-button
           data-testid="notification-tab-unread"
           type="button"
           class="notification-bell__tab"
@@ -29,6 +29,7 @@
           (click)="setTab('unread')"
         >Unread</button>
         <button
+          mat-button
           data-testid="notification-tab-all"
           type="button"
           class="notification-bell__tab"
@@ -42,21 +43,22 @@
       <div class="notification-bell__list" role="tabpanel">
         @if (visibleRows().length === 0) {
           <div data-testid="notification-empty" class="notification-bell__empty">
-            <span class="material-symbols-outlined notification-bell__empty-icon">notifications_off</span>
+            <mat-icon class="notification-bell__empty-icon">notifications_off</mat-icon>
             <p>You're all caught up</p>
           </div>
         } @else {
           @for (n of visibleRows(); track n.id) {
             <button
+              mat-button
               data-testid="notification-row"
               type="button"
               class="notification-bell__row"
               [class.notification-bell__row--unread]="!n.read"
               (click)="onRowClick(n)"
             >
-              <span class="material-symbols-outlined notification-bell__row-icon notification-bell__row-icon--{{ n.severity | lowercase }}">
+              <mat-icon class="notification-bell__row-icon notification-bell__row-icon--{{ n.severity | lowercase }}">
                 {{ n.severity === 'Warning' ? 'warning' : n.severity === 'Success' ? 'check_circle' : 'info' }}
-              </span>
+              </mat-icon>
               <div class="notification-bell__row-content">
                 <span class="notification-bell__row-title">{{ n.title }}</span>
                 <span class="notification-bell__row-body">{{ n.body }}</span>
@@ -68,12 +70,7 @@
       </div>
 
       <footer class="notification-bell__menu-footer">
-        <button
-          data-testid="notification-mark-all-read"
-          type="button"
-          class="notification-bell__footer-btn"
-          (click)="markAllRead()"
-        >Mark all as read</button>
+        <tar-button variant="text" testId="notification-mark-all-read" type="button" (clicked)="markAllRead()">Mark all as read</tar-button>
         <a
           data-testid="notification-settings-link"
           class="notification-bell__footer-link"

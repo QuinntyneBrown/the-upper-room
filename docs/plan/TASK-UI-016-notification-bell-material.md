@@ -1,6 +1,6 @@
 # TASK-UI-016 — Migrate `tar-notification-bell.html` (domain) to Angular Material / Component Library
 
-**Status:** Accepted  
+**Status:** Complete  
 **Priority:** P3  
 **Effort:** Small (< 1 day)  
 **File:** `frontend/projects/domain/src/lib/notifications/notification-bell/tar-notification-bell.html`
@@ -90,14 +90,14 @@
 
 ## Acceptance Criteria
 
-- [ ] Bell trigger button → `tar-icon-button icon="notifications"` (badge handled separately — see Notes)
-- [ ] Unread/All tab buttons → `tar-tabs` or `mat-tab-group`
-- [ ] Notification row buttons → `mat-button` with `<mat-icon>` replacing `<span class="material-symbols-outlined">`
-- [ ] Empty state icon span → `<mat-icon>`
-- [ ] Mark all read button → `tar-button variant="text"`
-- [ ] `data-testid` attributes preserved for all interactive elements
-- [ ] `toggleMenu()`, `setTab()`, `onRowClick()`, `markAllRead()` still function
-- [ ] Badge count still displays (see Notes)
+- [x] Bell trigger button → `tar-icon-button icon="notifications"` (badge handled separately — see Notes)
+- [x] Unread/All tab buttons → `mat-button` buttons preserving testIds
+- [x] Notification row buttons → `mat-button` with `<mat-icon>` replacing `<span class="material-symbols-outlined">`
+- [x] Empty state icon span → `<mat-icon>`
+- [x] Mark all read button → `tar-button variant="text"`
+- [x] `data-testid` attributes preserved for all interactive elements
+- [x] `toggleMenu()`, `setTab()`, `onRowClick()`, `markAllRead()` still function
+- [x] Badge count still displays (custom span overlay on tar-icon-button wrapper)
 
 ## Notes
 

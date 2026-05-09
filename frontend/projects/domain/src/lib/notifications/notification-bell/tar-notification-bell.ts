@@ -3,6 +3,9 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { DatePipe, LowerCasePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { TarButton, TarIconButton } from 'components';
 
 export interface NotificationDto {
   readonly id: string;
@@ -20,7 +23,7 @@ type Tab = 'unread' | 'all';
 
 @Component({
   selector: 'tar-notification-bell',
-  imports: [DatePipe, LowerCasePipe, RouterLink],
+  imports: [DatePipe, LowerCasePipe, RouterLink, MatButtonModule, MatIconModule, TarButton, TarIconButton],
   templateUrl: './tar-notification-bell.html',
   styleUrl: './tar-notification-bell.scss',
 })
