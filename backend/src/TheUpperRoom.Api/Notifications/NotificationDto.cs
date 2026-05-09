@@ -8,4 +8,6 @@ public sealed record NotificationDto(
     string Body,
     Dictionary<string, string> Data,
     bool Read,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    string? DeepLink,
+    string Severity);

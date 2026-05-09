@@ -19,6 +19,8 @@ public sealed class NotificationsController : ControllerBase
         public Dictionary<string, string> Data { get; init; } = [];
         public bool Read { get; set; }
         public DateTimeOffset CreatedAt { get; init; }
+        public string? DeepLink { get; init; }
+        public string Severity { get; init; } = "Info";
     }
 
     private sealed class PreferenceRecord
@@ -48,6 +50,31 @@ public sealed class NotificationsController : ControllerBase
         return Ok(new { items, total = items.Count });
     }
 
+    [HttpPost("{id}/read")]
+    public IActionResult MarkRead(string id)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+
+        var n = _store.FirstOrDefault(x => x.Id == id && x.UserId == user.Id);
+        if (n is null) return NotFound();
+
+        n.Read = true;
+        return Ok(ToDto(n));
+    }
+
+    [HttpPost("read-all")]
+    public IActionResult MarkAllRead()
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+
+        foreach (var n in _store.Where(x => x.UserId == user.Id && !x.Read))
+            n.Read = true;
+
+        return NoContent();
+    }
+
     [HttpPost("dispatch")]
     public IActionResult Dispatch([FromBody] DispatchRequest? body)
     {
@@ -74,6 +101,7 @@ public sealed class NotificationsController : ControllerBase
                 Data = data,
                 Read = false,
                 CreatedAt = DateTimeOffset.UtcNow,
+                Severity = type.Severity.ToString(),
             });
         }
 
@@ -113,7 +141,7 @@ public sealed class NotificationsController : ControllerBase
         data.Aggregate(template, (t, kv) => t.Replace("{" + kv.Key + "}", kv.Value));
 
     private static NotificationDto ToDto(NotificationRecord n) =>
-        new(n.Id, n.Code, n.Title, n.Body, n.Data, n.Read, n.CreatedAt);
+        new(n.Id, n.Code, n.Title, n.Body, n.Data, n.Read, n.CreatedAt, n.DeepLink, n.Severity);
 
     private SeedUser? GetCurrentUser()
     {
