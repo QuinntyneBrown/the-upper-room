@@ -10,9 +10,9 @@ namespace TheUpperRoom.Api.Notes;
 [ApiController]
 [Authorize]
 [Route("api/v1/notes")]
-public sealed class NotesController : ControllerBase
+public sealed class NotesController(NotesDbContext db) : ControllerBase
 {
-    private static readonly List<Note> _store = [];
+    private const int MaxHistoryVersions = 20;
 
     private static readonly HtmlSanitizer _sanitizer = BuildSanitizer();
 
@@ -34,9 +34,11 @@ public sealed class NotesController : ControllerBase
         if (!Enum.TryParse<NoteSubjectType>(subjectType, ignoreCase: true, out var type))
             return BadRequest(new { error = "Invalid subjectType." });
 
-        var items = _store
-            .Where(n => n.SubjectType == type && n.SubjectId == subjectId)
-            .Select(NoteDto.From)
+        var typeName = type.ToString();
+        var items = db.Notes
+            .Where(n => n.SubjectType == typeName && n.SubjectId == subjectId)
+            .AsEnumerable()
+            .Select(ToDto)
             .ToArray();
 
         return Ok(new { items, total = items.Length });
@@ -48,8 +50,8 @@ public sealed class NotesController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var note = _store.FirstOrDefault(n => n.Id == id);
-        return note is null ? NotFound() : Ok(NoteDto.From(note));
+        var row = db.Notes.Find(id);
+        return row is null ? NotFound() : Ok(ToDto(row));
     }
 
     [HttpPost]
@@ -65,10 +67,22 @@ public sealed class NotesController : ControllerBase
             return UnprocessableEntity(new { error = "Invalid subjectType." });
 
         var sanitized = _sanitizer.Sanitize(body.BodyMarkdown);
-        var note = new Note(subjectType, body.SubjectId, body.BodyMarkdown, sanitized, user.Id, DateTimeOffset.UtcNow);
-        _store.Add(note);
-
-        return Created($"/api/v1/notes/{note.Id}", NoteDto.From(note));
+        var now = DateTimeOffset.UtcNow;
+        var row = new NoteRow
+        {
+            Id = Guid.NewGuid().ToString("N"),
+            SubjectType = subjectType.ToString(),
+            SubjectId = body.SubjectId,
+            BodyMarkdown = body.BodyMarkdown,
+            BodyHtmlSanitized = sanitized,
+            CreatedBy = user.Id,
+            CreatedAt = now,
+            UpdatedBy = user.Id,
+            UpdatedAt = now,
+        };
+        db.Notes.Add(row);
+        db.SaveChanges();
+        return Created($"/api/v1/notes/{row.Id}", ToDto(row));
     }
 
     [HttpPut("{id}")]
@@ -77,17 +91,27 @@ public sealed class NotesController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var note = _store.FirstOrDefault(n => n.Id == id);
-        if (note is null) return NotFound();
+        var row = db.Notes.Find(id);
+        if (row is null) return NotFound();
 
         if (body is null) return BadRequest();
         if (string.IsNullOrWhiteSpace(body.BodyMarkdown))
             return UnprocessableEntity(new { error = "Body is required." });
 
-        var sanitized = _sanitizer.Sanitize(body.BodyMarkdown);
-        note.UpdateBody(body.BodyMarkdown, sanitized, user.Id, DateTimeOffset.UtcNow);
+        var now = DateTimeOffset.UtcNow;
+        var newHistory = new List<NoteHistoryEntry>(row.History.Count + 1)
+        {
+            new(Guid.NewGuid().ToString("N"), row.BodyMarkdown, row.BodyHtmlSanitized, row.UpdatedAt, row.UpdatedBy),
+        };
+        newHistory.AddRange(row.History.Take(MaxHistoryVersions - 1));
+        row.History = newHistory;
 
-        return Ok(NoteDto.From(note));
+        row.BodyMarkdown = body.BodyMarkdown;
+        row.BodyHtmlSanitized = _sanitizer.Sanitize(body.BodyMarkdown);
+        row.UpdatedBy = user.Id;
+        row.UpdatedAt = now;
+        db.SaveChanges();
+        return Ok(ToDto(row));
     }
 
     [HttpDelete("{id}")]
@@ -96,12 +120,24 @@ public sealed class NotesController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var note = _store.FirstOrDefault(n => n.Id == id);
-        if (note is null) return NotFound();
+        var row = db.Notes.Find(id);
+        if (row is null) return NotFound();
 
-        _store.Remove(note);
+        db.Notes.Remove(row);
+        db.SaveChanges();
         return NoContent();
     }
+
+    private static NoteDto ToDto(NoteRow r) => new(
+        r.Id,
+        r.SubjectType,
+        r.SubjectId,
+        r.BodyMarkdown,
+        r.BodyHtmlSanitized,
+        r.CreatedBy,
+        r.CreatedAt,
+        r.UpdatedAt,
+        r.History.Select(h => new NoteVersionDto(h.Id, h.BodyMarkdown, h.BodyHtmlSanitized, h.CreatedAt, h.CreatedBy)).ToArray());
 
     private SeedUser? GetCurrentUser()
     {

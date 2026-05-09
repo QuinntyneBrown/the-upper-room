@@ -11,6 +11,7 @@ using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Api.Logging;
+using TheUpperRoom.Api.Notes;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -74,6 +75,11 @@ var locationsConn = builder.Configuration["LocationsDb:ConnectionString"]
 EnsureSqliteDirectoryExists(locationsConn);
 builder.Services.AddDbContext<LocationsDbContext>(o => o.UseSqlite(locationsConn));
 
+var notesConn = builder.Configuration["NotesDb:ConnectionString"]
+                ?? "Data Source=Data/notes.db";
+EnsureSqliteDirectoryExists(notesConn);
+builder.Services.AddDbContext<NotesDbContext>(o => o.UseSqlite(notesConn));
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -85,6 +91,7 @@ using (var scope = app.Services.CreateScope())
     scope.ServiceProvider.GetRequiredService<EventsDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<IdeasDbContext>().Database.EnsureCreated();
     scope.ServiceProvider.GetRequiredService<LocationsDbContext>().Database.EnsureCreated();
+    scope.ServiceProvider.GetRequiredService<NotesDbContext>().Database.EnsureCreated();
 }
 
 static void SeedSeedContactsIfMissing(ContactsDbContext db)

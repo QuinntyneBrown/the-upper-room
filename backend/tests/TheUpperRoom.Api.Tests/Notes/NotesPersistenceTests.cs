@@ -3,8 +3,14 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TheUpperRoom.Api.Contacts;
+using TheUpperRoom.Api.Events;
+using TheUpperRoom.Api.Ideas;
+using TheUpperRoom.Api.Notes;
 
 namespace TheUpperRoom.Api.Tests.Notes;
 
@@ -25,20 +31,30 @@ public sealed class NotesPersistenceTests : IDisposable
 
     public void Dispose()
     {
+        Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
         foreach (var p in new[] { _notesDbPath, _ideasDbPath, _eventsDbPath, _contactsDbPath })
-            if (File.Exists(p)) File.Delete(p);
+        {
+            try { if (File.Exists(p)) File.Delete(p); }
+            catch { /* OS will clean tmp files eventually */ }
+        }
     }
 
     private WebApplicationFactory<Program> Factory() =>
         new WebApplicationFactory<Program>().WithWebHostBuilder(b =>
-            b.ConfigureAppConfiguration((_, cfg) =>
-                cfg.AddInMemoryCollection(new Dictionary<string, string?>
-                {
-                    ["NotesDb:ConnectionString"] = $"Data Source={_notesDbPath}",
-                    ["IdeasDb:ConnectionString"] = $"Data Source={_ideasDbPath}",
-                    ["EventsDb:ConnectionString"] = $"Data Source={_eventsDbPath}",
-                    ["ContactsDb:ConnectionString"] = $"Data Source={_contactsDbPath}",
-                })));
+            b.ConfigureTestServices(services =>
+            {
+                Replace<NotesDbContext>(services, $"Data Source={_notesDbPath}");
+                Replace<IdeasDbContext>(services, $"Data Source={_ideasDbPath}");
+                Replace<EventsDbContext>(services, $"Data Source={_eventsDbPath}");
+                Replace<ContactsDbContext>(services, $"Data Source={_contactsDbPath}");
+            }));
+
+    private static void Replace<TContext>(IServiceCollection services, string connectionString) where TContext : DbContext
+    {
+        var d = services.Single(s => s.ServiceType == typeof(DbContextOptions<TContext>));
+        services.Remove(d);
+        services.AddDbContext<TContext>(o => o.UseSqlite(connectionString));
+    }
 
     private static HttpClient AuthedClient(WebApplicationFactory<Program> factory, string userId)
     {
