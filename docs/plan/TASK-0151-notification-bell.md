@@ -1,7 +1,7 @@
 ---
 id: TASK-0151
 title: Notification bell + inbox menu
-status: Draft
+status: Accepted
 phase: No
 depends_on: [TASK-0150, TASK-0005]
 traces_to: [L2-062]
