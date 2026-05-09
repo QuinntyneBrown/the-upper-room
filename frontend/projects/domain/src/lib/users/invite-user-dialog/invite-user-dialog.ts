@@ -1,11 +1,13 @@
 // traces_to: L2-027
 import { Component, EventEmitter, Input, Output, computed, signal } from '@angular/core';
 import { InvitePayload } from 'api';
+import { TarButton, TarDialog, TarSelect, TarTextarea, TarTextField } from 'components';
 
 const ROLES = ['Member', 'CityLead', 'SystemAdmin'];
 
 @Component({
   selector: 'tar-invite-user-dialog',
+  imports: [TarButton, TarDialog, TarSelect, TarTextarea, TarTextField],
   templateUrl: './invite-user-dialog.html',
   styleUrl: './invite-user-dialog.scss',
 })
@@ -21,6 +23,7 @@ export class InviteUserDialog {
   protected readonly city = signal('');
   protected readonly message = signal('');
   protected readonly roles = ROLES;
+  protected readonly roleOptions = ROLES.map((r) => ({ label: r, value: r }));
 
   protected readonly canSubmit = computed(() =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email()) &&

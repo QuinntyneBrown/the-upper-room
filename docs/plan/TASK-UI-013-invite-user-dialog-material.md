@@ -1,6 +1,6 @@
 # TASK-UI-013 — Migrate `invite-user-dialog.html` (domain) to Angular Material / Component Library
 
-**Status:** Accepted  
+**Status:** Complete  
 **Priority:** P1  
 **Effort:** Small (< 1 day)  
 **File:** `frontend/projects/domain/src/lib/users/invite-user-dialog/invite-user-dialog.html`
@@ -108,17 +108,17 @@
 
 ## Acceptance Criteria
 
-- [ ] Dialog shell → `tar-dialog` or `MatDialog` approach (coordinate with TASK-UI-011 caller)
-- [ ] Email input → `tar-text-field` with `type="email"`, `error` binding
-- [ ] First name / last name → `tar-text-field`
-- [ ] Role select → `tar-select` with computed `roleOptions`
-- [ ] City input → `tar-text-field`
-- [ ] Personal message → `tar-textarea`
-- [ ] Cancel button → `tar-button variant="text"`
-- [ ] Send invitation button → `tar-button variant="filled"` with `[disabled]`
-- [ ] All `data-testid` attributes preserved
-- [ ] `cancelled` and `submitted` outputs still emit correctly
-- [ ] `emailError` input prop still wires error display via `tar-text-field`
+- [x] Dialog shell → `tar-dialog` or `MatDialog` approach (coordinate with TASK-UI-011 caller)
+- [x] Email input → `tar-text-field` with `type="email"`, `error` binding
+- [x] First name / last name → `tar-text-field`
+- [x] Role select → `tar-select` with computed `roleOptions`
+- [x] City input → `tar-text-field`
+- [x] Personal message → `tar-textarea`
+- [x] Cancel button → `tar-button variant="text"`
+- [x] Send invitation button → `tar-button variant="filled"` with `[disabled]`
+- [x] All `data-testid` attributes preserved
+- [x] `cancelled` and `submitted` outputs still emit correctly
+- [x] `emailError` input prop still wires error display via `tar-text-field`
 
 ## Notes
 
