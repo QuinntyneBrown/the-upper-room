@@ -1,7 +1,7 @@
 ---
 id: TASK-0198
 title: Extract SignOutService to domain library
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0026]
 traces_to: []
