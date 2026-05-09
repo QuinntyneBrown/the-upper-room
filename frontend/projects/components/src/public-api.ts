@@ -77,3 +77,4 @@ export * from './lib/relative-time/relative-time';
 
 // Utilities
 export * from './lib/optimistic-mutation/optimistic-mutation';
+export * from './lib/share-button/share-button';

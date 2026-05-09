@@ -8,6 +8,7 @@
       }
     </div>
     <div class="contact-header__actions">
+      <tar-share-button />
       <a data-testid="contact-edit-button" [href]="'/contacts/' + c.id + '/edit'" class="btn-outlined">Edit</a>
       @if (!c.archived) {
         <button data-testid="contact-archive-button" type="button" class="btn-outlined" (click)="archive()">Archive</button>

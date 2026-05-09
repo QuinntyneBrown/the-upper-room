@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { TarAvatar } from '../../../../../components/src/lib/avatar/tar-avatar';
+import { TarShareButton } from '../../../../../components/src/lib/share-button/share-button';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
 import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
 import { TarNotes } from '../../notes/tar-notes';
@@ -13,7 +14,7 @@ type Tab = 'overview' | 'notes' | 'activity';
 
 @Component({
   selector: 'app-contact-detail',
-  imports: [TarAvatar, TarNotes],
+  imports: [TarAvatar, TarShareButton, TarNotes],
   templateUrl: './contact-detail.html',
   styleUrl: './contact-detail.scss',
 })
