@@ -1,7 +1,7 @@
 ---
 id: TASK-0197
 title: Extract IdleService and InactivityDialog to domain library
-status: Accepted
+status: Completed
 phase: X
 depends_on: [TASK-0027, TASK-0198]
 traces_to: []
