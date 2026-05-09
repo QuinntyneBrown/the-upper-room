@@ -13,4 +13,14 @@ export class CalendarMonthPom {
   monthLabel(): Locator { return this.page.getByTestId('calendar-month-label'); }
   moreButton(isoDate: string): Locator { return this.page.getByTestId(`calendar-more-${isoDate}`); }
   popover(): Locator { return this.page.getByTestId('calendar-popover'); }
+
+  viewTab(name: 'month' | 'week' | 'day' | 'agenda'): Locator { return this.page.getByTestId(`calendar-view-tab-${name}`); }
+  weekView(): Locator { return this.page.getByTestId('calendar-week-view'); }
+  dayView(): Locator { return this.page.getByTestId('calendar-day-view'); }
+  agendaView(): Locator { return this.page.getByTestId('calendar-agenda-view'); }
+  hourRow(time: string): Locator { return this.page.getByTestId(`calendar-hour-row-${time}`); }
+  weekColumn(index: number): Locator { return this.page.getByTestId(`calendar-week-col-${index}`); }
+  daySlot(time: string): Locator { return this.page.getByTestId(`calendar-day-slot-${time}`); }
+  agendaDateHeader(isoDate: string): Locator { return this.page.getByTestId(`calendar-agenda-date-${isoDate}`); }
+  agendaEvent(id: string): Locator { return this.page.getByTestId(`agenda-event-${id}`); }
 }
