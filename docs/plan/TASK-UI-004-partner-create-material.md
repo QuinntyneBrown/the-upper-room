@@ -1,6 +1,6 @@
 # TASK-UI-004 — Migrate `partner-create.html` to Angular Material / Component Library
 
-**Status:** Draft  
+**Status:** Accepted  
 **Priority:** P2  
 **Effort:** Small (< 1 day)  
 **File:** `frontend/projects/the-upper-room/src/app/partners/partner-create/partner-create.html`
