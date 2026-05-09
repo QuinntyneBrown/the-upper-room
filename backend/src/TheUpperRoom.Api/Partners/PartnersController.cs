@@ -72,6 +72,31 @@ public sealed class PartnersController : ControllerBase
         return Created($"/api/v1/partners/{id}", partner);
     }
 
+    [HttpPut("{id}")]
+    public ActionResult<PartnerDto> Update(string id, [FromBody] CreatePartnerRequest? body)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+        if (body is null || string.IsNullOrWhiteSpace(body.Name)) return BadRequest();
+
+        var partner = _store.FirstOrDefault(p => p.Id == id);
+        if (partner is null) return NotFound();
+        if (user.Role != Roles.SystemAdmin && partner.CityId != user.City) return NotFound();
+
+        var sameCityName = _store.Any(p =>
+            p.Id != id &&
+            p.CityId == partner.CityId &&
+            p.Name.Equals(body.Name, StringComparison.OrdinalIgnoreCase));
+
+        if (sameCityName)
+            return Conflict(new { error = "A partner with this name already exists in your city." });
+
+        var updated = partner with { Name = body.Name, Website = body.Website };
+        var idx = _store.IndexOf(partner);
+        _store[idx] = updated;
+        return Ok(updated);
+    }
+
     [HttpDelete("{id}")]
     public IActionResult Delete(string id)
     {

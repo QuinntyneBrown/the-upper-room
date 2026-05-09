@@ -1,7 +1,7 @@
 ---
 id: TASK-0073
 title: Partner edit
-status: Draft
+status: Done
 phase: P
 depends_on: [TASK-0071]
 traces_to: [L2-037]

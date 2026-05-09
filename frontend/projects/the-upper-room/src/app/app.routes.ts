@@ -37,6 +37,7 @@ import { TarNotificationPreferences } from 'domain';
 import { PartnerList } from './partners/partner-list/partner-list';
 import { PartnerCreate } from './partners/partner-create/partner-create';
 import { PartnerDetail } from './partners/partner-detail/partner-detail';
+import { PartnerEdit } from './partners/partner-edit/partner-edit';
 import { DateFormattingTest } from './date-formatting-test/date-formatting-test';
 
 export const routes: Routes = [
@@ -81,6 +82,7 @@ export const routes: Routes = [
       { path: 'locations/:id', component: LocationDetail },
       { path: 'partners', component: PartnerList },
       { path: 'partners/new', component: PartnerCreate },
+      { path: 'partners/:id/edit', component: PartnerEdit },
       { path: 'partners/:id', component: PartnerDetail },
       { path: 'boards', component: BoardList },
       { path: 'boards/:id', component: BoardView },
