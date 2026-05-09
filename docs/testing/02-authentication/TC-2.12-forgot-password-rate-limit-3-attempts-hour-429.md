@@ -1,7 +1,7 @@
 ---
 id: TASK-TC-2.12
 title: 'Run TC-2.12 - Forgot-password rate limit: 3 attempts/hour -> 429'
-status: Idle
+status: Completed
 test_id: TC-2.12
 source: ../../test-plan/02-authentication.md
 ---
@@ -19,7 +19,30 @@ Run `TC-2.12` from `docs/test-plan/02-authentication.md` and record the result.
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.
 
+## Result
+
+| Field | Value |
+|---|---|
+| Result | **PASS** |
+| Browser | curl (direct API) |
+| Viewport | N/A |
+| Build SHA | a1a6dc3 |
+| Tester | Claude (automated) |
+| Run at | 2026-05-09T15:34:00Z |
+
+### Evidence
+
+Posted 4 times to `POST /api/v1/auth/forgot-password` with `ratelimitcheck@test.local`:
+
+| Attempt | Status |
+|---|---|
+| 1 | 204 ✅ |
+| 2 | 204 ✅ |
+| 3 | 204 ✅ |
+| 4 | 429 ✅ |
+
+Rate limit bucket is in-memory in `AuthController` as documented.

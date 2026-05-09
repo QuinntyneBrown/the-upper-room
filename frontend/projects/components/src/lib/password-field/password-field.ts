@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Output, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,20 +11,20 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './password-field.scss',
 })
 export class TarPasswordField {
-  @Input() label: string | null = 'Password';
-  @Input() value = '';
-  @Input() placeholder = '';
-  @Input() hint: string | null = null;
-  @Input() error: string | null = null;
-  @Input() ariaLabel: string | null = null;
-  @Input() autocomplete = 'current-password';
-  @Input() maxLength: number | null = null;
-  @Input() required = false;
-  @Input() disabled = false;
-  @Input() fullWidth = true;
-  @Input() testId: string | null = null;
-  @Input() errorTestId: string | null = null;
-  @Input() toggleTestId: string | null = null;
+  readonly label = input<string | null>('Password');
+  readonly value = input('');
+  readonly placeholder = input('');
+  readonly hint = input<string | null>(null);
+  readonly error = input<string | null>(null);
+  readonly ariaLabel = input<string | null>(null);
+  readonly autocomplete = input('current-password');
+  readonly maxLength = input<number | null>(null);
+  readonly required = input(false);
+  readonly disabled = input(false);
+  readonly fullWidth = input(true);
+  readonly testId = input<string | null>(null);
+  readonly errorTestId = input<string | null>(null);
+  readonly toggleTestId = input<string | null>(null);
 
   @Output() readonly valueChange = new EventEmitter<string>();
   @Output() readonly blurred = new EventEmitter<void>();

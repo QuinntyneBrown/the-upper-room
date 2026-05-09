@@ -1,41 +1,44 @@
 <mat-form-field
   class="tar-text-field"
-  [class.tar-text-field--full-width]="fullWidth"
-  [appearance]="appearance"
-  [hideRequiredMarker]="hideRequiredMarker"
+  [class.tar-text-field--full-width]="fullWidth()"
+  [appearance]="appearance()"
+  [hideRequiredMarker]="hideRequiredMarker()"
+  subscriptSizing="dynamic"
 >
-  @if (label) {
-    <mat-label>{{ label }}</mat-label>
+  @if (label()) {
+    <mat-label>{{ label() }}</mat-label>
   }
-  @if (prefixIcon) {
-    <mat-icon matIconPrefix class="tar-text-field__prefix">{{ prefixIcon }}</mat-icon>
+  @if (prefixIcon()) {
+    <mat-icon matIconPrefix class="tar-text-field__prefix">{{ prefixIcon() }}</mat-icon>
   }
   <input
     matInput
     class="tar-text-field__input"
-    [type]="type"
-    [value]="value"
-    [placeholder]="placeholder"
-    [readonly]="readonly"
-    [required]="required"
-    [disabled]="disabled"
-    [attr.autocomplete]="autocomplete"
-    [attr.inputmode]="inputmode"
-    [attr.maxlength]="maxLength"
-    [attr.data-testid]="testId"
-    [attr.aria-label]="ariaLabel || label"
+    [type]="type()"
+    [value]="value() ?? ''"
+    [placeholder]="placeholder()"
+    [readonly]="readonly()"
+    [required]="required()"
+    [disabled]="disabled()"
+    [attr.autocomplete]="autocomplete()"
+    [attr.inputmode]="inputmode()"
+    [attr.maxlength]="maxLength()"
+    [attr.data-testid]="testId()"
+    [attr.aria-label]="ariaLabel() || label()"
     (input)="onInput($event)"
     (blur)="blurred.emit()"
   />
-  @if (suffixIcon) {
-    <mat-icon matIconSuffix class="tar-text-field__suffix">{{ suffixIcon }}</mat-icon>
+  @if (suffixIcon()) {
+    <mat-icon matIconSuffix class="tar-text-field__suffix">{{ suffixIcon() }}</mat-icon>
   }
-  @if (hint) {
-    <mat-hint class="tar-text-field__hint" [attr.data-testid]="hintTestId">{{ hint }}</mat-hint>
-  }
-  @if (error) {
-    <mat-error class="tar-text-field__error" [attr.data-testid]="errorTestId ?? (testId ? testId + '-error' : null)">
-      {{ error }}
-    </mat-error>
+  @if (hint()) {
+    <mat-hint class="tar-text-field__hint" [attr.data-testid]="hintTestId()">{{ hint() }}</mat-hint>
   }
 </mat-form-field>
+@if (error()) {
+  <span
+    class="tar-text-field__error"
+    role="alert"
+    [attr.data-testid]="errorTestId() ?? (testId() ? testId() + '-error' : null)"
+  >{{ error() }}</span>
+}

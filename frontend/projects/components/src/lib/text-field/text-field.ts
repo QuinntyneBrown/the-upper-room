@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -13,27 +13,27 @@ export type TarTextFieldType = 'text' | 'email' | 'tel' | 'url' | 'number' | 'se
   styleUrl: './text-field.scss',
 })
 export class TarTextField {
-  @Input() label: string | null = null;
-  @Input() value: string | number | null = '';
-  @Input() type: TarTextFieldType = 'text';
-  @Input() placeholder = '';
-  @Input() hint: string | null = null;
-  @Input() error: string | null = null;
-  @Input() ariaLabel: string | null = null;
-  @Input() autocomplete: string | null = null;
-  @Input() inputmode: string | null = null;
-  @Input() maxLength: number | null = null;
-  @Input() prefixIcon: string | null = null;
-  @Input() suffixIcon: string | null = null;
-  @Input() appearance: TarFieldAppearance = 'outline';
-  @Input() required = false;
-  @Input() readonly = false;
-  @Input() disabled = false;
-  @Input() fullWidth = true;
-  @Input() hideRequiredMarker = false;
-  @Input() testId: string | null = null;
-  @Input() errorTestId: string | null = null;
-  @Input() hintTestId: string | null = null;
+  readonly label = input<string | null>(null);
+  readonly value = input<string | number | null>('');
+  readonly type = input<TarTextFieldType>('text');
+  readonly placeholder = input('');
+  readonly hint = input<string | null>(null);
+  readonly error = input<string | null>(null);
+  readonly ariaLabel = input<string | null>(null);
+  readonly autocomplete = input<string | null>(null);
+  readonly inputmode = input<string | null>(null);
+  readonly maxLength = input<number | null>(null);
+  readonly prefixIcon = input<string | null>(null);
+  readonly suffixIcon = input<string | null>(null);
+  readonly appearance = input<TarFieldAppearance>('outline');
+  readonly required = input(false);
+  readonly readonly = input(false);
+  readonly disabled = input(false);
+  readonly fullWidth = input(true);
+  readonly hideRequiredMarker = input(false);
+  readonly testId = input<string | null>(null);
+  readonly errorTestId = input<string | null>(null);
+  readonly hintTestId = input<string | null>(null);
 
   @Output() readonly valueChange = new EventEmitter<string>();
   @Output() readonly blurred = new EventEmitter<void>();
