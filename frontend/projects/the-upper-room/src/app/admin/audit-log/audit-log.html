@@ -76,7 +76,7 @@
       data-testid="audit-page-next"
       type="button"
       class="btn-secondary"
-      [disabled]="page() * 20 >= total()"
+      [disabled]="page() * pageSize >= total()"
       (click)="nextPage()"
     >Next</button>
   </div>

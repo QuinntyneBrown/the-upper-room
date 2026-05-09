@@ -1,7 +1,7 @@
 ---
 id: TASK-0160
 title: Audit trail persistence + admin log page
-status: Accepted
+status: Completed
 phase: Au
 depends_on: [TASK-0033]
 traces_to: [L2-098]
