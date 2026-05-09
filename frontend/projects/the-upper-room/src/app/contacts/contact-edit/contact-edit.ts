@@ -2,9 +2,7 @@
 import { Component, ElementRef, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
-import { TarButton, TarTextField } from 'components';
+import { TarButton, TarTextField, ConfirmService, SnackbarService } from 'components';
 import { TarTagSelector, Tag } from 'domain';
 import type { PhoneRow, EmailRow, AddressRow } from '../contact-create/contact-create';
 

@@ -1,8 +1,7 @@
 // traces_to: L2-048, L2-049
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SnackbarService, optimisticMutation } from 'components';
-import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
+import { SnackbarService, optimisticMutation, TarEmptyState } from 'components';
 
 export interface LinkedPartnerRef {
   readonly id: string;

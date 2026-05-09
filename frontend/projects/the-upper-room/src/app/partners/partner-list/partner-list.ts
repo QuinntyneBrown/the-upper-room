@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PERMISSIONS_SERVICE } from 'domain';
-import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
+import { TarEmptyState } from 'components';
 
 export interface Partner {
   readonly id: string;

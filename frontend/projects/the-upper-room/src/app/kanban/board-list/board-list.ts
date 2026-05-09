@@ -3,7 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { PERMISSIONS_SERVICE } from 'domain';
-import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
+import { TarEmptyState } from 'components';
 import { CreateBoardWizard, CreateBoardForm } from '../create-board-wizard/create-board-wizard';
 
 export interface Board {

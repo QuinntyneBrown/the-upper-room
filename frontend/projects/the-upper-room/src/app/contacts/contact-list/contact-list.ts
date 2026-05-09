@@ -4,8 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PERMISSIONS_SERVICE } from 'domain';
-import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
-import { TarAvatar } from '../../../../../components/src/lib/avatar/tar-avatar';
+import { TarEmptyState, TarAvatar } from 'components';
 
 export interface ContactPhone {
   readonly value: string;

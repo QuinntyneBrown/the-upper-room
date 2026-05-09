@@ -2,9 +2,7 @@
 import { Component, ElementRef, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ConfirmService } from '../../../../../components/src/lib/confirm-dialog/confirm.service';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
-import { TarButton, TarTextField, TarIconButton, TarCheckbox } from 'components';
+import { TarButton, TarTextField, TarIconButton, TarCheckbox, ConfirmService, SnackbarService } from 'components';
 import { TarTagSelector, Tag } from 'domain';
 
 export interface PhoneRow { value: string; label: string; primary: boolean; error: string | null }

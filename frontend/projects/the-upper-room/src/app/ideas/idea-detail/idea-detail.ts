@@ -2,9 +2,7 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
-import { optimisticMutation } from 'components';
-import { TarMarkdownEditor } from '../../../../../components/src/lib/markdown-editor/tar-markdown-editor';
+import { optimisticMutation, SnackbarService, TarMarkdownEditor } from 'components';
 import type { IdeaDto, LinkedPartnerRef } from '../idea-list/idea-list';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 

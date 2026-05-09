@@ -2,8 +2,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
-import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
+import { SnackbarService, TarEmptyState } from 'components';
 
 export interface LocationDto {
   readonly id: string;

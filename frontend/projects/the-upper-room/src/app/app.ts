@@ -2,7 +2,7 @@
 import { Component, effect, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { TarSnackbar } from '../../../components/src/lib/snackbar/tar-snackbar';
+import { TarSnackbar } from 'components';
 import { ErrorBoundary } from './error/error-boundary/error-boundary';
 import { IdleService, InactivityDialog } from 'domain';
 

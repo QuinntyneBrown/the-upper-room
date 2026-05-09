@@ -1,7 +1,7 @@
 // traces_to: L2-052, L2-053
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { TarEmptyState } from '../../../../../components/src/lib/states/tar-empty-state';
+import { TarEmptyState } from 'components';
 import { CalendarMonth } from '../calendar-month/calendar-month';
 
 export interface EventDto {

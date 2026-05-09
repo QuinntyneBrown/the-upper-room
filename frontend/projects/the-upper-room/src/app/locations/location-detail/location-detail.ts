@@ -2,7 +2,7 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { SnackbarService } from 'components';
 
 export interface LocationDetailDto {
   readonly id: string;

@@ -2,7 +2,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { SnackbarService } from 'components';
 import type { LocationDto } from '../location-list/location-list';
 
 @Component({
