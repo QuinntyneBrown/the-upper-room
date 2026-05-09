@@ -42,6 +42,9 @@ export class AppShell {
       e.preventDefault();
       this.openSearch();
     }
+    if (e.key === 'Escape' && this.drawerOpen()) {
+      this.closeDrawer();
+    }
   }
 
   private openSearch(): void {
