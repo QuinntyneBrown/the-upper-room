@@ -1,7 +1,7 @@
 ---
 id: TASK-0210
 title: Remove debug & demo routes from frontend
-status: Accepted
+status: Done
 phase: P
 depends_on: []
 traces_to: []
