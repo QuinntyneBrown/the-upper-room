@@ -16,6 +16,9 @@ export interface EventDto {
   readonly rsvpCount: number;
   readonly capacity: number | null;
   readonly tags: string[];
+  readonly recurrenceRule?: string | null;
+  readonly recurrenceId?: string | null;
+  readonly occurrenceDate?: string | null;
 }
 
 @Component({

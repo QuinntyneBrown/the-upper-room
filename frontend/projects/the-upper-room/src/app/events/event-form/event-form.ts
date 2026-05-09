@@ -53,6 +53,10 @@ export class EventForm implements OnInit, OnDestroy {
   protected readonly requiresApproval = signal(false);
   protected readonly tagInput = signal('');
   protected readonly tags = signal<string[]>([]);
+  protected readonly recurrenceType = signal<'none' | 'daily' | 'weekly' | 'monthly'>('none');
+  protected readonly recurrenceEditScope = signal<'single' | 'following' | 'series' | null>(null);
+  protected readonly showRecurrenceDialog = signal(false);
+  protected readonly isRecurring = signal(false);
 
   protected readonly timezones = TIMEZONES;
 
@@ -75,7 +79,13 @@ export class EventForm implements OnInit, OnDestroy {
     if (id) {
       this.eventId.set(id);
       this.http.get<EventDetailDto>(`/api/v1/events/${id}`)
-        .subscribe(ev => this.populateForm(ev));
+        .subscribe(ev => {
+          this.populateForm(ev);
+          if (ev.recurrenceId) {
+            this.isRecurring.set(true);
+            this.showRecurrenceDialog.set(true);
+          }
+        });
     }
     const qp = this.route.snapshot.queryParamMap;
     const start = qp.get('start');
@@ -100,6 +110,17 @@ export class EventForm implements OnInit, OnDestroy {
     this.isVirtual.set(ev.isVirtual);
     if (ev.capacity) this.capacity.set(String(ev.capacity));
     this.tags.set([...(ev.tags ?? [])]);
+    if (ev.recurrenceRule) {
+      const freq = ev.recurrenceRule.match(/FREQ=(\w+)/)?.[1]?.toLowerCase();
+      if (freq === 'daily' || freq === 'weekly' || freq === 'monthly') {
+        this.recurrenceType.set(freq);
+      }
+    }
+  }
+
+  protected chooseEditScope(scope: 'single' | 'following' | 'series'): void {
+    this.recurrenceEditScope.set(scope);
+    this.showRecurrenceDialog.set(false);
   }
 
   protected onLocationInput(v: string): void {

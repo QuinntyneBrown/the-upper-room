@@ -1,6 +1,75 @@
 // traces_to: L2-056
 :host { display: block; }
 
+.recurrence-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0,0,0,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--md-sys-space-3);
+}
+
+.recurrence-dialog {
+  background: var(--md-sys-color-surface);
+  border-radius: var(--md-sys-shape-corner-large);
+  padding: var(--md-sys-space-5);
+  width: min(480px, 100%);
+}
+
+.recurrence-dialog__title {
+  font: var(--md-sys-typescale-title-large);
+  color: var(--md-sys-color-on-surface);
+  margin: 0 0 var(--md-sys-space-2);
+}
+
+.recurrence-dialog__body {
+  font: var(--md-sys-typescale-body-medium);
+  color: var(--md-sys-color-on-surface-variant);
+  margin: 0 0 var(--md-sys-space-4);
+}
+
+.recurrence-dialog__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--md-sys-space-2);
+}
+
+.btn-filled {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border: none;
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: var(--md-sys-space-2) var(--md-sys-space-4);
+  font: var(--md-sys-typescale-label-large);
+  cursor: pointer;
+  text-align: left;
+}
+
+.btn-tonal {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border: none;
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: var(--md-sys-space-2) var(--md-sys-space-4);
+  font: var(--md-sys-typescale-label-large);
+  cursor: pointer;
+  text-align: left;
+}
+
+.btn-outlined {
+  background: transparent;
+  color: var(--md-sys-color-primary);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: var(--md-sys-space-2) var(--md-sys-space-4);
+  font: var(--md-sys-typescale-label-large);
+  cursor: pointer;
+  text-align: left;
+}
+
 .event-form-layout {
   display: grid;
   grid-template-columns: 1fr;

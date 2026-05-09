@@ -27,6 +27,9 @@ export interface EventDetailDto {
   readonly description: string | null;
   readonly attendees: AttendeeDto[];
   readonly requiresApproval: boolean;
+  readonly recurrenceRule?: string | null;
+  readonly recurrenceId?: string | null;
+  readonly occurrenceDate?: string | null;
 }
 
 interface RsvpResponse {
