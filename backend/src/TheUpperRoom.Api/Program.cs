@@ -16,6 +16,16 @@ builder.Host.UseSerilog();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IPkceVerifier, PkceVerifier>();
 
+var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>() ?? new JwtSettings();
+if (string.IsNullOrWhiteSpace(jwt.SigningKey))
+{
+    if (builder.Environment.IsProduction())
+        throw new InvalidOperationException("Jwt:SigningKey must be configured in Production.");
+    jwt.SigningKey = "dev-only-signing-key-not-for-production-use-32-bytes-min";
+}
+builder.Services.AddSingleton(jwt);
+builder.Services.AddSingleton<ITokenService, TokenService>();
+
 var app = builder.Build();
 
 // traces_to: L2-096

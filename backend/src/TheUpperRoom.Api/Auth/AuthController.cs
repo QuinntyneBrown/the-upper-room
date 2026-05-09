@@ -13,8 +13,13 @@ public sealed class AuthController : ControllerBase
     private static readonly Dictionary<string, ForgotBucket> _forgotBuckets = new(StringComparer.OrdinalIgnoreCase);
 
     private readonly IPkceVerifier _verifier;
+    private readonly ITokenService _tokens;
 
-    public AuthController(IPkceVerifier verifier) => _verifier = verifier;
+    public AuthController(IPkceVerifier verifier, ITokenService tokens)
+    {
+        _verifier = verifier;
+        _tokens = tokens;
+    }
 
     [HttpPost("sign-in")]
     public IActionResult SignIn([FromBody] SignInRequest? body)
@@ -84,7 +89,7 @@ public sealed class AuthController : ControllerBase
 
         AuditStore.Record("anonymous", "Session", "exchange", "Login");
 
-        Response.Cookies.Append("tar.refresh", "fake-refresh-token", new CookieOptions
+        Response.Cookies.Append("tar.refresh", _tokens.IssueRefreshToken(), new CookieOptions
         {
             HttpOnly = true,
             Secure = true,
@@ -92,7 +97,7 @@ public sealed class AuthController : ControllerBase
             Path = "/api/v1/auth"
         });
 
-        return Ok(new ExchangeResponse("fake-access-token"));
+        return Ok(new ExchangeResponse(_tokens.IssueAccessToken("anonymous")));
     }
 
     private sealed class SignInBucket

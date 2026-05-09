@@ -17,8 +17,7 @@ public sealed record CreateEventRequest(
     int? Capacity = null,
     bool RequiresApproval = false,
     string[]? Tags = null,
-    string? RecurrenceRule = null,
-    string? Timezone = null);
+    string? RecurrenceRule = null);
 
 [ApiController]
 [Route("api/v1/events")]
