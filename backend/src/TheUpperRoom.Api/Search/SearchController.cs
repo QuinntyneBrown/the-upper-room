@@ -15,7 +15,7 @@ public sealed record SearchResult(string Id, string Type, string Title, string? 
 [ApiController]
 [Authorize]
 [Route("api/v1/search")]
-public sealed class SearchController(ContactsDbContext contactsDb, EventsDbContext eventsDb) : ControllerBase
+public sealed class SearchController(ContactsDbContext contactsDb, EventsDbContext eventsDb, IdeasDbContext ideasDb) : ControllerBase
 {
     private const int MaxPerGroup = 5;
 
@@ -45,7 +45,7 @@ public sealed class SearchController(ContactsDbContext contactsDb, EventsDbConte
             .Select(e => new SearchResult(e.Id, "event", e.Title, e.StartAt.ToString("MMM d"), $"/events/{e.Id}"))
             .ToList();
 
-        var ideas = IdeasController.Search(term)
+        var ideas = IdeasController.Search(term, ideasDb)
             .Take(MaxPerGroup)
             .Select(i => new SearchResult(i.Id, "idea", i.Title, i.Status, $"/ideas/{i.Id}"))
             .ToList();

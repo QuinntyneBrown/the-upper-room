@@ -13,7 +13,7 @@ namespace TheUpperRoom.Api.Dashboard;
 [ApiController]
 [Authorize]
 [Route("api/v1/dashboard")]
-public sealed class DashboardController(ContactsDbContext contactsDb, EventsDbContext eventsDb) : ControllerBase
+public sealed class DashboardController(ContactsDbContext contactsDb, EventsDbContext eventsDb, IdeasDbContext ideasDb) : ControllerBase
 {
     [HttpGet]
     public IActionResult Get()
@@ -27,7 +27,7 @@ public sealed class DashboardController(ContactsDbContext contactsDb, EventsDbCo
         var partnerCount = PartnersController.StoreCount();
         var upcomingEventCount = eventsDb.Events
             .Count(e => e.StartAt > now && e.Status != "Cancelled");
-        var openIdeaCount = IdeasController.StoreCount();
+        var openIdeaCount = IdeasController.StoreCount(ideasDb);
 
         var upcomingEvents = eventsDb.Events
             .Where(e => e.StartAt > now && e.Status != "Cancelled")

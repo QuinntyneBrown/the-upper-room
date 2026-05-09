@@ -8,6 +8,7 @@ using Serilog.Context;
 using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Contacts;
 using TheUpperRoom.Api.Events;
+using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Logging;
 
 Log.Logger = new LoggerConfiguration()
@@ -62,6 +63,11 @@ var eventsConn = builder.Configuration["EventsDb:ConnectionString"]
 EnsureSqliteDirectoryExists(eventsConn);
 builder.Services.AddDbContext<EventsDbContext>(o => o.UseSqlite(eventsConn));
 
+var ideasConn = builder.Configuration["IdeasDb:ConnectionString"]
+                ?? "Data Source=Data/ideas.db";
+EnsureSqliteDirectoryExists(ideasConn);
+builder.Services.AddDbContext<IdeasDbContext>(o => o.UseSqlite(ideasConn));
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -71,6 +77,7 @@ using (var scope = app.Services.CreateScope())
     SeedSeedContactsIfMissing(contactsDb);
 
     scope.ServiceProvider.GetRequiredService<EventsDbContext>().Database.EnsureCreated();
+    scope.ServiceProvider.GetRequiredService<IdeasDbContext>().Database.EnsureCreated();
 }
 
 static void SeedSeedContactsIfMissing(ContactsDbContext db)

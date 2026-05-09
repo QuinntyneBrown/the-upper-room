@@ -9,37 +9,17 @@ namespace TheUpperRoom.Api.Ideas;
 [ApiController]
 [Authorize]
 [Route("api/v1/ideas")]
-public sealed class IdeasController : ControllerBase
+public sealed class IdeasController(IdeasDbContext db) : ControllerBase
 {
-    private sealed class IdeaRecord(
-        string id, string title, string description,
-        string bodyMarkdown, string bodyHtmlSanitized, string? coverImageUrl,
-        string status, string proposedBy, DateTimeOffset createdAt, DateTimeOffset updatedAt, string[] tags)
-    {
-        public string Id { get; } = id;
-        public string Title { get; } = title;
-        public string Description { get; } = description;
-        public string BodyMarkdown { get; set; } = bodyMarkdown;
-        public string BodyHtmlSanitized { get; set; } = bodyHtmlSanitized;
-        public string? CoverImageUrl { get; set; } = coverImageUrl;
-        public string Status { get; set; } = status;
-        public string ProposedBy { get; } = proposedBy;
-        public DateTimeOffset CreatedAt { get; } = createdAt;
-        public DateTimeOffset UpdatedAt { get; } = updatedAt;
-        public string[] Tags { get; } = tags;
-    }
-
     private static readonly HtmlSanitizer _sanitizer = BuildSanitizer();
-    private static readonly List<IdeaRecord> _store = [];
-    private static readonly List<(string IdeaId, string UserId)> _votes = [];
-    private static readonly List<(string IdeaId, string PartnerId, string PartnerName)> _ideaPartners = [];
 
-    internal static int StoreCount() =>
-        _store.Count(i => i.Status != "Archived" && i.Status != "Completed");
+    internal static int StoreCount(IdeasDbContext db) =>
+        db.Ideas.Count(i => i.Status != "Archived" && i.Status != "Completed");
 
-    internal static IEnumerable<(string Id, string Title, string Status)> Search(string term) =>
-        _store.Where(i => i.Title.Contains(term, StringComparison.OrdinalIgnoreCase))
-              .Select(i => (i.Id, i.Title, i.Status));
+    internal static IEnumerable<(string Id, string Title, string Status)> Search(string term, IdeasDbContext db) =>
+        db.Ideas.AsEnumerable()
+            .Where(i => i.Title.Contains(term, StringComparison.OrdinalIgnoreCase))
+            .Select(i => (i.Id, i.Title, i.Status));
 
     private static readonly Dictionary<string, string[]> _proposerTransitions = new()
     {
@@ -74,7 +54,7 @@ public sealed class IdeasController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var query = _store.AsEnumerable();
+        var query = db.Ideas.AsEnumerable();
 
         if (!string.IsNullOrEmpty(status))
             query = query.Where(i => i.Status.Equals(status, StringComparison.OrdinalIgnoreCase));
@@ -103,7 +83,7 @@ public sealed class IdeasController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var idea = _store.FirstOrDefault(i => i.Id == id);
+        var idea = db.Ideas.Find(id);
         if (idea is null) return NotFound();
 
         return Ok(ToDto(idea, user.Id));
@@ -115,14 +95,15 @@ public sealed class IdeasController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var idea = _store.FirstOrDefault(i => i.Id == id);
+        var idea = db.Ideas.Find(id);
         if (idea is null) return NotFound();
 
-        var existing = _votes.FirstOrDefault(v => v.IdeaId == id && v.UserId == user.Id);
-        if (existing != default)
-            _votes.Remove(existing);
+        var existing = db.Votes.Find(id, user.Id);
+        if (existing is not null)
+            db.Votes.Remove(existing);
         else
-            _votes.Add((id, user.Id));
+            db.Votes.Add(new IdeaVoteRow { IdeaId = id, UserId = user.Id });
+        db.SaveChanges();
 
         return Ok(ToDto(idea, user.Id));
     }
@@ -133,7 +114,7 @@ public sealed class IdeasController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var idea = _store.FirstOrDefault(i => i.Id == id);
+        var idea = db.Ideas.Find(id);
         if (idea is null) return NotFound();
         if (body is null) return BadRequest();
 
@@ -146,6 +127,7 @@ public sealed class IdeasController : ControllerBase
             return UnprocessableEntity(new { error = "Invalid status transition." });
 
         idea.Status = body.Status;
+        db.SaveChanges();
         return Ok(ToDto(idea, user.Id));
     }
 
@@ -155,7 +137,7 @@ public sealed class IdeasController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var idea = _store.FirstOrDefault(i => i.Id == id);
+        var idea = db.Ideas.Find(id);
         if (idea is null) return NotFound();
 
         if (body?.BodyMarkdown is not null)
@@ -167,6 +149,7 @@ public sealed class IdeasController : ControllerBase
         if (body?.CoverImageUrl is not null)
             idea.CoverImageUrl = body.CoverImageUrl;
 
+        db.SaveChanges();
         return Ok(ToDto(idea, user.Id));
     }
 
@@ -176,11 +159,12 @@ public sealed class IdeasController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var idea = _store.FirstOrDefault(i => i.Id == id);
+        var idea = db.Ideas.Find(id);
         if (idea is null) return NotFound();
 
         var url = $"/uploads/cover-{id}-{Guid.NewGuid():N}.jpg";
         idea.CoverImageUrl = url;
+        db.SaveChanges();
         return Ok(ToDto(idea, user.Id));
     }
 
@@ -190,7 +174,7 @@ public sealed class IdeasController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var items = _ideaPartners
+        var items = db.Partners
             .Where(p => p.IdeaId == id)
             .Select(p => new LinkedPartnerRefDto(p.PartnerId, p.PartnerName))
             .ToArray();
@@ -204,10 +188,16 @@ public sealed class IdeasController : ControllerBase
         if (user is null) return Unauthorized();
         if (body is null) return BadRequest();
 
-        if (_ideaPartners.Any(p => p.IdeaId == id && p.PartnerId == body.PartnerId))
+        if (db.Partners.Find(id, body.PartnerId) is not null)
             return Conflict(new { error = "Partner already linked." });
 
-        _ideaPartners.Add((id, body.PartnerId, body.PartnerName ?? body.PartnerId));
+        db.Partners.Add(new IdeaPartnerRow
+        {
+            IdeaId = id,
+            PartnerId = body.PartnerId,
+            PartnerName = body.PartnerName ?? body.PartnerId,
+        });
+        db.SaveChanges();
         return StatusCode(201, new { partnerId = body.PartnerId });
     }
 
@@ -217,20 +207,21 @@ public sealed class IdeasController : ControllerBase
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        var idx = _ideaPartners.FindIndex(p => p.IdeaId == id && p.PartnerId == partnerId);
-        if (idx < 0) return NotFound();
-        _ideaPartners.RemoveAt(idx);
+        var link = db.Partners.Find(id, partnerId);
+        if (link is null) return NotFound();
+        db.Partners.Remove(link);
+        db.SaveChanges();
         return NoContent();
     }
 
-    private IdeaDto ToDto(IdeaRecord idea, string userId) => new(
+    private IdeaDto ToDto(IdeaRow idea, string userId) => new(
         idea.Id, idea.Title, idea.Description,
         idea.BodyMarkdown, idea.BodyHtmlSanitized, idea.CoverImageUrl,
         idea.Status,
-        VoteCount: _votes.Count(v => v.IdeaId == idea.Id),
-        HasVoted: _votes.Any(v => v.IdeaId == idea.Id && v.UserId == userId),
+        VoteCount: db.Votes.Count(v => v.IdeaId == idea.Id),
+        HasVoted: db.Votes.Any(v => v.IdeaId == idea.Id && v.UserId == userId),
         idea.ProposedBy, idea.CreatedAt, idea.UpdatedAt, idea.Tags,
-        LinkedPartners: _ideaPartners
+        LinkedPartners: db.Partners
             .Where(p => p.IdeaId == idea.Id)
             .Select(p => new LinkedPartnerRefDto(p.PartnerId, p.PartnerName))
             .ToArray());

@@ -23,4 +23,10 @@
     <ProjectReference Include="..\..\src\TheUpperRoom.Api\TheUpperRoom.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
