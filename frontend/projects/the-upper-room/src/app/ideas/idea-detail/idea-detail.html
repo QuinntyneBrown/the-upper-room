@@ -66,7 +66,7 @@
         [innerHTML]="i.bodyHtmlSanitized"
       ></div>
     } @else {
-      <app-markdown-editor
+      <tar-markdown-editor
         [value]="editBody()"
         (valueChange)="editBody.set($event)"
       />

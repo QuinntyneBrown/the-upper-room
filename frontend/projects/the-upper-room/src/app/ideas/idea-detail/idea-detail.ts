@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
 import { optimisticMutation } from 'components';
-import { MarkdownEditor } from '../markdown-editor/markdown-editor';
+import { TarMarkdownEditor } from '../../../../../components/src/lib/markdown-editor/tar-markdown-editor';
 import type { IdeaDto } from '../idea-list/idea-list';
 
 export type IdeaDetailDto = IdeaDto;
@@ -13,7 +13,7 @@ interface MeDto { id: string; roles: string[] }
 
 @Component({
   selector: 'app-idea-detail',
-  imports: [MarkdownEditor],
+  imports: [TarMarkdownEditor],
   templateUrl: './idea-detail.html',
   styleUrl: './idea-detail.scss',
 })

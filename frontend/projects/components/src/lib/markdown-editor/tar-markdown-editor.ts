@@ -1,16 +1,17 @@
 // traces_to: L2-050, L2-051
 import { Component, ViewChild, ElementRef, computed, signal, inject, input, output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SnackbarService } from '../../../../../components/src/lib/snackbar/tar-snackbar.service';
+import { SnackbarService } from '../snackbar/tar-snackbar.service';
 
 type Tab = 'write' | 'preview';
 
 @Component({
-  selector: 'app-markdown-editor',
-  templateUrl: './markdown-editor.html',
-  styleUrl: './markdown-editor.scss',
+  selector: 'tar-markdown-editor',
+  imports: [],
+  templateUrl: './tar-markdown-editor.html',
+  styleUrl: './tar-markdown-editor.scss',
 })
-export class MarkdownEditor {
+export class TarMarkdownEditor {
   private readonly http = inject(HttpClient);
   private readonly snackbar = inject(SnackbarService);
 

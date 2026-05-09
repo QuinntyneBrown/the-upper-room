@@ -81,3 +81,6 @@ export * from './lib/share-button/share-button';
 
 // Notes
 export * from './lib/notes/tar-notes';
+
+// Markdown editor
+export * from './lib/markdown-editor/tar-markdown-editor';
