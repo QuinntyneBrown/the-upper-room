@@ -29,6 +29,7 @@ builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddSingleton<IPkceVerifier, PkceVerifier>();
+builder.Services.AddSingleton<IAuthorizationCodeStore, InMemoryAuthorizationCodeStore>();
 var authRateLimitRedis = builder.Configuration["AuthRateLimit:RedisConnectionString"]
     ?? builder.Configuration["Redis:ConnectionString"];
 if (string.IsNullOrWhiteSpace(authRateLimitRedis))

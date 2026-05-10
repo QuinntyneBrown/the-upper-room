@@ -1,9 +1,14 @@
-# BUG-003 — Token issued by `/auth/exchange` is rejected by every authorized controller
+# BUG-003 — Token issued by `/auth/exchange` is rejected by every authorized controller (RESOLVED 2026-05-10)
 
 **Severity**: Critical
 **Component**: backend
 **Found in test**: TC-2.1 (post-sign-in API access), every protected resource test
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-10
+- New `IAuthorizationCodeStore` (singleton, in-memory) maps short-lived single-use authorization codes to `(userId, codeChallenge)` records.
+- New dev `POST /__idp/authorize` endpoint validates email/password against the real user store via `SignInCommand`, then issues a code bound to the supplied PKCE `code_challenge`.
+- `AuthController.Exchange` now `Consume`s the code, verifies the PKCE `code_verifier` against the stored challenge, and issues `IssueAccessToken(record.UserId)` for the **real** user (no more hard-coded `"anonymous"`).
+- 4 new xUnit tests in `Auth/PkceExchangeRoundTripTests.cs` plus updated `Auth/ExchangeEndpointTests.cs`. The full round-trip now produces a JWT whose `sub` is the real user id and whose `Bearer` token authenticates against `/api/v1/auth/me`. All 13 auth tests across PkceExchange / Exchange / SignIn / AuthFlow suites pass.
 
 ## Description
 

@@ -1,6 +1,7 @@
 // traces_to: L2-015, L2-094
 using System.Text.Json;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Audit;
 using TheUpperRoom.Application.Auth;
@@ -15,17 +16,48 @@ public sealed class AuthController : ControllerBase
     private readonly ITokenService _tokens;
     private readonly IMediator _mediator;
     private readonly IAuthRateLimiter _rateLimiter;
+    private readonly ICurrentUser _currentUser;
+    private readonly IAuthorizationCodeStore _codes;
 
     public AuthController(
         IPkceVerifier verifier,
         ITokenService tokens,
         IMediator mediator,
-        IAuthRateLimiter rateLimiter)
+        IAuthRateLimiter rateLimiter,
+        ICurrentUser currentUser,
+        IAuthorizationCodeStore codes)
     {
         _verifier = verifier;
         _tokens = tokens;
         _mediator = mediator;
         _rateLimiter = rateLimiter;
+        _currentUser = currentUser;
+        _codes = codes;
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(
+        [FromBody] RegisterRequest? body,
+        CancellationToken cancellationToken)
+    {
+        if (body is null) return BadRequest();
+
+        var result = await _mediator.Send(
+            new RegisterCommand(body.Email, body.Password, body.City),
+            cancellationToken);
+
+        return result.Outcome switch
+        {
+            AuthMutationOutcome.Created => Created(
+                $"/api/v1/auth/users/{result.UserId}",
+                new
+                {
+                    userId = result.UserId,
+                    emailVerificationToken = result.EmailVerificationToken,
+                }),
+            AuthMutationOutcome.Conflict => Conflict(new { code = "auth.email_already_registered" }),
+            _ => StatusCode(500),
+        };
     }
 
     [HttpPost("sign-in")]
@@ -85,7 +117,87 @@ public sealed class AuthController : ControllerBase
             return StatusCode(429, new { error = "rate_limit_exceeded" });
         }
 
+        await _mediator.Send(new RequestPasswordResetCommand(body.Email), cancellationToken);
         return NoContent();
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword(
+        [FromBody] ResetPasswordRequest? body,
+        CancellationToken cancellationToken)
+    {
+        if (body is null) return BadRequest();
+
+        var result = await _mediator.Send(
+            new ResetPasswordCommand(body.Token, body.NewPassword),
+            cancellationToken);
+
+        return result.Outcome switch
+        {
+            AuthMutationOutcome.Success => NoContent(),
+            AuthMutationOutcome.InvalidToken => BadRequest(new { code = "auth.invalid_or_expired_token" }),
+            _ => StatusCode(500),
+        };
+    }
+
+    [HttpPost("verify-email")]
+    public async Task<IActionResult> VerifyEmail(
+        [FromBody] VerifyEmailRequest? body,
+        CancellationToken cancellationToken)
+    {
+        if (body is null) return BadRequest();
+
+        var result = await _mediator.Send(new VerifyEmailCommand(body.Token), cancellationToken);
+        return result.Outcome switch
+        {
+            AuthMutationOutcome.Success => NoContent(),
+            AuthMutationOutcome.InvalidToken => BadRequest(new { code = "auth.invalid_or_expired_token" }),
+            _ => StatusCode(500),
+        };
+    }
+
+    [Authorize]
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword(
+        [FromBody] ChangePasswordRequest? body,
+        CancellationToken cancellationToken)
+    {
+        if (body is null) return BadRequest();
+        if (_currentUser.UserId is null) return Unauthorized();
+
+        var result = await _mediator.Send(
+            new ChangePasswordCommand(_currentUser.UserId, body.CurrentPassword, body.NewPassword),
+            cancellationToken);
+
+        return result.Outcome switch
+        {
+            AuthMutationOutcome.Success => NoContent(),
+            AuthMutationOutcome.InvalidCredentials => Unauthorized(new { code = "auth.invalid_credentials" }),
+            AuthMutationOutcome.NotFound => NotFound(),
+            _ => StatusCode(500),
+        };
+    }
+
+    [Authorize]
+    [HttpDelete("account")]
+    public async Task<IActionResult> DeleteAccount(
+        [FromBody] DeleteAccountRequest? body,
+        CancellationToken cancellationToken)
+    {
+        if (body is null) return BadRequest();
+        if (_currentUser.UserId is null) return Unauthorized();
+
+        var result = await _mediator.Send(
+            new DeleteAccountCommand(_currentUser.UserId, body.CurrentPassword),
+            cancellationToken);
+
+        return result.Outcome switch
+        {
+            AuthMutationOutcome.Success => DeleteAccountResponse(),
+            AuthMutationOutcome.InvalidCredentials => Unauthorized(new { code = "auth.invalid_credentials" }),
+            AuthMutationOutcome.NotFound => NotFound(),
+            _ => StatusCode(500),
+        };
     }
 
     [HttpPost("sign-out")]
@@ -99,15 +211,22 @@ public sealed class AuthController : ControllerBase
     [HttpPost("exchange")]
     public ActionResult<ExchangeResponse> Exchange(ExchangeRequest req)
     {
-        if (!_verifier.Verify(req.CodeVerifier, req.ExpectedChallenge))
+        var record = _codes.Consume(req.Code);
+        if (record is null)
         {
             AuditStore.Record("anonymous", "Session", "exchange", "Failure", afterJson: AuditMetadata());
             return BadRequest(new { code = "auth.invalid_credentials" });
         }
 
+        if (!_verifier.Verify(req.CodeVerifier, record.CodeChallenge))
+        {
+            AuditStore.Record(record.UserId, "Session", "exchange", "Failure", afterJson: AuditMetadata());
+            return BadRequest(new { code = "auth.invalid_credentials" });
+        }
+
         var auditMetadata = AuditMetadata();
-        AuditStore.Record("anonymous", "Session", "exchange", "Login", afterJson: auditMetadata);
-        AuditStore.Record("anonymous", "Session", "exchange", "Success", afterJson: auditMetadata);
+        AuditStore.Record(record.UserId, "Session", "exchange", "Login", afterJson: auditMetadata);
+        AuditStore.Record(record.UserId, "Session", "exchange", "Success", afterJson: auditMetadata);
 
         Response.Cookies.Append("tar.refresh", _tokens.IssueRefreshToken(), new CookieOptions
         {
@@ -117,7 +236,7 @@ public sealed class AuthController : ControllerBase
             Path = "/api/v1/auth"
         });
 
-        return Ok(new ExchangeResponse(_tokens.IssueAccessToken("anonymous")));
+        return Ok(new ExchangeResponse(_tokens.IssueAccessToken(record.UserId)));
     }
 
     private string AuditMetadata() =>
@@ -125,6 +244,12 @@ public sealed class AuthController : ControllerBase
         {
             ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
         });
+
+    private IActionResult DeleteAccountResponse()
+    {
+        Response.Cookies.Delete("tar.refresh", new CookieOptions { Path = "/api/v1/auth" });
+        return NoContent();
+    }
 }
 
 public sealed record SignInRequest(string Email, string? Password);
