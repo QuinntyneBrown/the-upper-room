@@ -3,3 +3,4 @@
 .env.local
 .env.*.local
 *.env.secret
+frontend/.playwright-cli/

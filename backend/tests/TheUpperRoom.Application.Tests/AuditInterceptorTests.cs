@@ -1,6 +1,8 @@
 // traces_to: L2-098
 using System.Net;
 using System.Net.Http.Json;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace TheUpperRoom.Application.Tests;
@@ -36,10 +38,15 @@ public sealed class AuditInterceptorTests : IClassFixture<WebApplicationFactory<
     {
         var client = _factory.CreateClient();
 
-        const string verifier = "abc123";
-        const string challenge = "bKE9UspwyIPg8LsQHkJaiehiTeUdstI5JZOvaoQRgJA";
+        var (verifier, challenge) = NewPkcePair();
+        var authorize = await client.PostAsJsonAsync(
+            "/__idp/authorize",
+            new { email = "admin@test.local", password = "UpperRoomDev!42", codeChallenge = challenge });
+        authorize.EnsureSuccessStatusCode();
+        var authorized = await authorize.Content.ReadFromJsonAsync<AuthorizeBody>();
+
         var loginResp = await client.PostAsJsonAsync("/api/v1/auth/exchange",
-            new { code = "auth-code", codeVerifier = verifier, expectedChallenge = challenge });
+            new { code = authorized!.code, codeVerifier = verifier });
         Assert.Equal(HttpStatusCode.OK, loginResp.StatusCode);
 
         var auditResp = await client.SendAsync(GetReq("/api/v1/admin/audit?action=Login", "admin"));
@@ -49,7 +56,7 @@ public sealed class AuditInterceptorTests : IClassFixture<WebApplicationFactory<
         Assert.NotNull(audit);
         Assert.Contains(audit.Items, e => e.Action == "Login");
 
-        var successResp = await client.SendAsync(GetReq("/api/v1/admin/audit?actor=anonymous&entityType=Session&action=Success", "admin"));
+        var successResp = await client.SendAsync(GetReq("/api/v1/admin/audit?entityType=Session&action=Success", "admin"));
         Assert.Equal(HttpStatusCode.OK, successResp.StatusCode);
 
         var successAudit = await successResp.Content.ReadFromJsonAsync<AuditEnvelope>();
@@ -59,6 +66,19 @@ public sealed class AuditInterceptorTests : IClassFixture<WebApplicationFactory<
             e.Action == "Success" &&
             e.AfterJson?.Contains("ip", StringComparison.OrdinalIgnoreCase) == true);
     }
+
+    private static (string verifier, string challenge) NewPkcePair()
+    {
+        var bytes = RandomNumberGenerator.GetBytes(32);
+        var verifier = Convert.ToBase64String(bytes)
+            .TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        var hash = SHA256.HashData(Encoding.ASCII.GetBytes(verifier));
+        var challenge = Convert.ToBase64String(hash)
+            .TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        return (verifier, challenge);
+    }
+
+    private sealed record AuthorizeBody(string code);
 
     [Fact]
     public async Task Failed_exchange_records_audit_entry()

@@ -42,8 +42,3 @@ public sealed class IdpController(
         return Ok(new { code });
     }
 }
-
-public sealed record AuthorizeRequest(
-    string Email,
-    string? Password,
-    string CodeChallenge);

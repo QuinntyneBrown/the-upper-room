@@ -11,5 +11,3 @@ public interface IAuthorizationCodeStore
     string Issue(string userId, string codeChallenge);
     AuthorizationCodeRecord? Consume(string code);
 }
-
-public sealed record AuthorizationCodeRecord(string UserId, string CodeChallenge, DateTimeOffset IssuedAt);
