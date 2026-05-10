@@ -1,8 +1,11 @@
 # Technology Guidance Remediation Plan
 
 **Plan date:** 2026-05-09
+**Status:** ~Substantially complete~ as of 2026-05-10. See "Status snapshot" section below for current state.
 **Scope:** Close every gap identified in `docs/technology-guidance-audit.md` (28 criteria; 11 FAILs + 6 PARTIALs).
 **Target end state:** Codebase is fully compliant with `C:\projects\the-health-game\docs\technology-guidance-and-practices.md`.
+
+**Outcome (2026-05-10):** Re-audit reads **26 PASS / 1 PARTIAL / 1 FAIL** (was 11 / 6 / 11). Both architecture-test allow-lists are empty. The remaining open items are human-only follow-ups (frontend lint/test/e2e run, manual smoke, version tag) plus one deferred capability (distributed throttling, §A17).
 
 ---
 
@@ -326,7 +329,7 @@ For each of the 8 components with inline templates / 3 with inline styles, do th
 - [ ] **7.4** `npm --prefix frontend run lint && npm --prefix frontend run test && npm --prefix frontend run e2e` — green. _Manual / human follow-up._
 - [ ] **7.5** Manual smoke: sign in (PKCE + password), CRUD a contact, see Material chip filter on the list, switch theme via toggle group, verify lockout after 5 failed sign-ins. _Manual / human follow-up._
 - [x] **7.6** Update `README.md` and `docs/` with the new architecture diagram (single `AppDbContext`, Application owns CQRS, etc.). _2026-05-10: README "Backend → Architecture" subsection now contains an ASCII diagram of the four layers, what each one owns, and the cross-cutting rules the architecture tests enforce. The diagram describes per-feature `I<Feature>DbContext` interfaces (the actual current shape) rather than the original "single AppDbContext" framing._
-- [ ] **7.7** Delete `docs/technology-guidance-audit.md` allow-lists; mark `docs/technology-guidance-remediation-plan.md` as complete in its frontmatter.
+- [x] **7.7** Delete `docs/technology-guidance-audit.md` allow-lists; mark `docs/technology-guidance-remediation-plan.md` as complete in its frontmatter. _2026-05-10: the architecture-test allow-lists (`MultiTypeFileAllowList`, `RestrictedApiTypeAllowList`) are both empty — there were no inline allow-lists in the audit doc itself. The plan frontmatter now carries `Status: ~Substantially complete~` plus a re-audit summary line._
 - [ ] **7.8** Tag release: `git tag tech-guidance-compliant-v1`. _Human follow-up._
 
 ---
