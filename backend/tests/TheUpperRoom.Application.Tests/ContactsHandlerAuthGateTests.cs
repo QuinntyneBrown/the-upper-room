@@ -79,6 +79,27 @@ public sealed class ContactsHandlerAuthGateTests
     }
 
     [Fact]
+    public async Task UpdateContact_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new UpdateContactCommand("missing", "c-1",
+            new CreateContactRequest("Ada", "Lovelace", null, null, null, null)));
+
+        Assert.Equal(ContactsOutcome.Unauthorized, result.Outcome);
+    }
+
+    [Fact]
+    public async Task UpdateContact_returns_BadRequest_when_body_is_null()
+    {
+        var sender = NewSender(userKnown: true);
+
+        var result = await sender.Send(new UpdateContactCommand("user-1", "c-1", Body: null));
+
+        Assert.Equal(ContactsOutcome.BadRequest, result.Outcome);
+    }
+
+    [Fact]
     public async Task ListContacts_returns_Forbidden_when_cross_city_scope_without_switch()
     {
         var sender = NewSender(userKnown: true, canSwitchCity: false);
