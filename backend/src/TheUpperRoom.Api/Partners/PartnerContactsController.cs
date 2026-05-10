@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TheUpperRoom.Api.Partners;
 
-public sealed record LinkedContactDto(string Id, string Name, string CityId, string? Role = null);
-public sealed record LinkContactRequest(string ContactId, string? Role = null);
-
 [ApiController]
 [Route("api/v1/partners/{partnerId}/contacts")]
 public sealed class PartnerContactsController : ControllerBase

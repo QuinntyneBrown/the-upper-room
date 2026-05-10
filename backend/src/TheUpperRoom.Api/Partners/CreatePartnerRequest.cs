@@ -6,5 +6,3 @@ public sealed record CreatePartnerRequest(
     string? Website = null,
     string? LegalName = null,
     IReadOnlyList<SocialLinkDto>? SocialLinks = null);
-
-public sealed record PatchPartnerRequest(bool Archived);

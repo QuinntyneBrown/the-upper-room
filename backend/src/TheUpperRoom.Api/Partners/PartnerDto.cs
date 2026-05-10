@@ -1,9 +1,6 @@
 // traces_to: L2-034
 namespace TheUpperRoom.Api.Partners;
 
-public sealed record TagRef(string Id, string Name, string Color);
-public sealed record SocialLinkDto(string Platform, string Url, string? Label = null);
-
 public sealed record PartnerDto(
     string Id,
     string Name,
