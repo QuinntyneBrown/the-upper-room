@@ -1,13 +1,16 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using TheUpperRoom.Application;
+using TheUpperRoom.Infrastructure.Seeding;
 
 namespace TheUpperRoom.Application.Tests;
 
 public sealed class TechnologyGuidanceArchitectureTests
 {
     private static readonly Regex TypeDeclarationPattern = new(
-        @"^\s*(?:public|internal|private|protected)?\s*(?:sealed|abstract|static|partial)?\s*(?:record|class|interface|enum)\s+([A-Za-z_][A-Za-z0-9_]*)",
+        @"^\s*(?:(?:public|internal|private|protected|sealed|abstract|static|partial|readonly|file)\s+)*(?:(?:record\s+(?:class\s+|struct\s+)?)|class\s+|interface\s+|enum\s+|struct\s+)([A-Za-z_][A-Za-z0-9_]*)",
         RegexOptions.Compiled);
 
     private static readonly string[] RestrictedApiSuffixes =
@@ -180,6 +183,35 @@ public sealed class TechnologyGuidanceArchitectureTests
             .ToArray();
 
         Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void Seeder_registration_is_centralized_through_infrastructure_extension()
+    {
+        var root = FindRepoRoot();
+        var program = File.ReadAllText(Path.Combine(root, "backend", "src", "TheUpperRoom.Api", "Program.cs"));
+
+        Assert.DoesNotContain("AddScoped<IDataSeeder", program, StringComparison.Ordinal);
+        Assert.Contains(".AddSeeders(", program, StringComparison.Ordinal);
+
+        var services = new ServiceCollection();
+        TheUpperRoom.Infrastructure.DependencyInjection.AddSeeders(services, typeof(Program).Assembly);
+        TheUpperRoom.Infrastructure.DependencyInjection.AddSeeders(
+            services,
+            typeof(TheUpperRoom.Infrastructure.DependencyInjection).Assembly);
+
+        var seederNames = services
+            .Where(descriptor => descriptor.ServiceType == typeof(IDataSeeder))
+            .Select(descriptor => descriptor.ImplementationType?.Name)
+            .OfType<string>()
+            .OrderBy(name => name, StringComparer.Ordinal)
+            .ToArray();
+
+        Assert.Equal(["CitiesDataSeeder", "ContactsDataSeeder", "UserDataSeeder"], seederNames);
+        Assert.Single(services, descriptor => descriptor.ServiceType == typeof(ISeedingService));
+        Assert.Single(services, descriptor =>
+            descriptor.ServiceType == typeof(IHostedService)
+            && descriptor.ImplementationType?.Name == "SeedingHostedService");
     }
 
     [Fact]

@@ -15,7 +15,6 @@ using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
 using TheUpperRoom.Application;
 using TheUpperRoom.Infrastructure;
-using TheUpperRoom.Infrastructure.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -66,13 +65,11 @@ var citiesConn = builder.Configuration["CitiesDb:ConnectionString"]
                  ?? "Data Source=Data/cities.db";
 EnsureSqliteDirectoryExists(citiesConn);
 builder.Services.AddDbContext<CitiesDbContext>(o => o.UseSqlite(citiesConn));
-builder.Services.AddScoped<IDataSeeder, CitiesDataSeeder>();
 
 var contactsConn = builder.Configuration["ContactsDb:ConnectionString"]
                    ?? "Data Source=Data/contacts.db";
 EnsureSqliteDirectoryExists(contactsConn);
 builder.Services.AddDbContext<ContactsDbContext>(o => o.UseSqlite(contactsConn));
-builder.Services.AddScoped<IDataSeeder, ContactsDataSeeder>();
 
 var eventsConn = builder.Configuration["EventsDb:ConnectionString"]
                  ?? "Data Source=Data/events.db";
@@ -110,6 +107,7 @@ var pushConn = builder.Configuration["PushDb:ConnectionString"]
 EnsureSqliteDirectoryExists(pushConn);
 builder.Services.AddDbContext<PushDbContext>(o => o.UseSqlite(pushConn));
 builder.Services.AddScoped<PushDispatcher>();
+builder.Services.AddSeeders(typeof(Program).Assembly);
 
 var pushSettings = builder.Configuration.GetSection("Push").Get<PushSettings>() ?? new PushSettings();
 if (string.IsNullOrWhiteSpace(pushSettings.VapidPublicKey))

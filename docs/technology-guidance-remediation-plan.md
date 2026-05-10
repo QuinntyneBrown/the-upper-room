@@ -43,8 +43,8 @@ Calendar time will be longer if reviews are async; plan for 3 weeks elapsed.
 - [ ] **0.1** Create branch `refactor/tech-guidance-compliance` off `main`.
 - [ ] **0.2** Confirm test baseline: run all backend tests (`dotnet test backend/TheUpperRoom.sln`) and Playwright E2E (`npm --prefix frontend run e2e`) and record pass counts.
 - [ ] **0.3** Capture a SQL Server schema snapshot (`dotnet ef migrations script` from each existing context, or a `SELECT … INFORMATION_SCHEMA` dump) so we can verify the eventual single-context schema is equivalent.
-- [ ] **0.4** Add a Roslyn analyzer or test that fails when a `.cs` file declares more than one top-level type. Suggested: a unit test in `TheUpperRoom.Architecture.Tests` (new project) that walks every `.cs` file under `backend/src/` and asserts exactly one top-level type per file. Mark currently-failing files as a known-allowed list that shrinks over time. **This is the rail that keeps §B13 from regressing.**
-- [ ] **0.5** Add an architecture test (NetArchTest or hand-rolled) asserting:
+- [x] **0.4** Add a Roslyn analyzer or test that fails when a `.cs` file declares more than one top-level type. Suggested: a unit test in `TheUpperRoom.Architecture.Tests` (new project) that walks every `.cs` file under `backend/src/` and asserts exactly one top-level type per file. Mark currently-failing files as a known-allowed list that shrinks over time. **This is the rail that keeps §B13 from regressing.**
+- [x] **0.5** Add an architecture test (NetArchTest or hand-rolled) asserting:
    - `TheUpperRoom.Api` does **not** contain types named `*Handler`, `*Command`, `*Query`, `*Validator`, `*DbContext`, or `*DataSeeder` (with an initial allow-list that shrinks).
    - `TheUpperRoom.Application` does **not** reference `Microsoft.EntityFrameworkCore.SqlServer` or `Microsoft.AspNetCore.*`.
 - [ ] **0.6** Tag baseline: `git tag pre-refactor`.
@@ -207,7 +207,7 @@ For feature `X`:
 ### 4B. Seeding consolidation
 
 - [ ] **4.6** Verify no `*DataSeeder` lives in `Api/`. Move any stragglers to `Infrastructure/Seeding/<Feature>/`.
-- [ ] **4.7** Replace seeder DI registrations in `Program.cs` with a single call to `services.AddSeeders()` defined in `Infrastructure.DependencyInjection`.
+- [x] **4.7** Replace seeder DI registrations in `Program.cs` with a single call to `services.AddSeeders()` defined in `Infrastructure.DependencyInjection`.
 
 ### 4C. RBAC into Domain
 
@@ -230,10 +230,10 @@ For feature `X`:
 
 ### 5A. Password hashing
 
-- [ ] **5.1** Decide hasher: recommended `Microsoft.AspNetCore.Identity.PasswordHasher<TUser>` (PBKDF2 ≥ 100k iterations, no extra deps). Alternative: `Konscious.Security.Cryptography.Argon2` for Argon2id.
-- [ ] **5.2** Define `Application/Auth/IPasswordHasher.cs` (`Hash(plain) → string`, `Verify(plain, hash) → enum {Success, Rehash, Failed}`).
-- [ ] **5.3** Implement `Infrastructure/Auth/PasswordHasher.cs` wrapping the chosen library.
-- [ ] **5.4** Register the hasher in `Infrastructure.DependencyInjection`.
+- [x] **5.1** Decide hasher: recommended `Microsoft.AspNetCore.Identity.PasswordHasher<TUser>` (PBKDF2 ≥ 100k iterations, no extra deps). Alternative: `Konscious.Security.Cryptography.Argon2` for Argon2id.
+- [x] **5.2** Define `Application/Auth/IPasswordHasher.cs` (`Hash(plain) → string`, `Verify(plain, hash) → enum {Success, Rehash, Failed}`).
+- [x] **5.3** Implement `Infrastructure/Auth/PasswordHasher.cs` wrapping the chosen library.
+- [x] **5.4** Register the hasher in `Infrastructure.DependencyInjection`.
 
 ### 5B. User schema
 
