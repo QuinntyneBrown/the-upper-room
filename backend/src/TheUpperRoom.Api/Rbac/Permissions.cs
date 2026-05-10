@@ -1,53 +1,16 @@
 // traces_to: L2-023
+using TheUpperRoom.Domain.Rbac;
+
 namespace TheUpperRoom.Api.Rbac;
 
+/// <summary>
+/// Thin facade that returns a role's permissions formatted as the
+/// "Resource:Action" strings the frontend currently consumes via /api/me.
+/// Sourced from <see cref="RoleCatalog"/> so there is a single source of
+/// truth for the role/permission mapping.
+/// </summary>
 public static class Permissions
 {
-    private static readonly string[] CityLeadResources =
-    {
-        "Contact", "Partner", "Tag", "Note", "KanbanBoard", "Idea", "Event", "Location"
-    };
-
-    private static readonly string[] CityLeadActions = { "Read", "Create", "Update", "Delete" };
-
-    private static readonly string[] MemberResources = CityLeadResources;
-
-    public static IReadOnlyList<string> For(string role) => role switch
-    {
-        Roles.SystemAdmin => SystemAdminPermissions(),
-        Roles.CityLead => CityLeadPermissions(),
-        Roles.Member => MemberPermissions(),
-        Roles.Guest => new[] { "Event:Read", "Event:RSVP" },
-        _ => Array.Empty<string>()
-    };
-
-    private static string[] SystemAdminPermissions()
-    {
-        var list = new List<string>(CityLeadPermissions())
-        {
-            "User:Manage",
-            "Role:Manage",
-            "Audit:Read",
-            "City:Switch"
-        };
-        return list.ToArray();
-    }
-
-    private static string[] CityLeadPermissions()
-    {
-        var list = (from r in CityLeadResources
-                    from a in CityLeadActions
-                    select $"{r}:{a}").ToList();
-        list.Add("KanbanBoard:Configure");
-        return list.ToArray();
-    }
-
-    private static string[] MemberPermissions()
-    {
-        var perms = MemberResources.Select(r => $"{r}:Read").ToList();
-        perms.Add("Note:Create");
-        perms.Add("Idea:Create");
-        perms.Add("Event:RSVP");
-        return perms.ToArray();
-    }
+    public static IReadOnlyList<string> For(string role) =>
+        RoleCatalog.PermissionsFor(role).Select(p => p.ToString()).ToArray();
 }

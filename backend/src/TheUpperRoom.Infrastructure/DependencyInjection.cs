@@ -6,9 +6,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using TheUpperRoom.Application.Auth;
 using TheUpperRoom.Application.Data;
+using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Infrastructure.Auth;
 using TheUpperRoom.Infrastructure.Data;
+using TheUpperRoom.Infrastructure.Rbac;
 using TheUpperRoom.Infrastructure.Seeding;
 using TheUpperRoom.Infrastructure.Users;
 
@@ -36,6 +38,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthEmailSender, NoOpAuthEmailSender>();
         services.AddScoped<IUserDirectory, UserDirectory>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddSingleton<IPermissionChecker, PermissionChecker>();
 
         services.AddSeeders(typeof(DependencyInjection).Assembly);
 

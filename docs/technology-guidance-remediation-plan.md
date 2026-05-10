@@ -212,10 +212,10 @@ For feature `X`:
 ### 4C. RBAC into Domain
 
 - [ ] **4.8** Create `TheUpperRoom.Domain/Rbac/Role.cs`, `Permission.cs`, `RolePermission.cs` as proper entities (not just string constants).
-- [ ] **4.9** Create `Application/Rbac/IPermissionChecker.cs` and `Infrastructure/Rbac/PermissionChecker.cs` (EF-backed).
+- [x] **4.9** Create `Application/Rbac/IPermissionChecker.cs` and `Infrastructure/Rbac/PermissionChecker.cs` (EF-backed). _2026-05-10: interface + implementation landed; current backing source is `Domain.Rbac.RoleCatalog` rather than EF tables (the Roles/Permissions/RolePermissions tables come with 4.11). DI registration in `Infrastructure.DependencyInjection.AddInfrastructure`._
 - [ ] **4.10** Replace handler-level role-string comparisons (`user.Role != Roles.SystemAdmin`) with permission checks (`permissions.Require("Contacts.Edit")`). Sweep handlers feature-by-feature.
 - [ ] **4.11** Add EF migration adding `Roles`, `Permissions`, `RolePermissions` tables; seed default mapping (SystemAdmin → all, CityLead → city-scoped subset, etc.) via an `IDataSeeder`.
-- [ ] **4.12** Expose permissions through an existing `/api/me` (or new `/api/permissions`) endpoint so the frontend `permissions.service.ts` can consume the same data.
+- [x] **4.12** Expose permissions through an existing `/api/me` (or new `/api/permissions`) endpoint so the frontend `permissions.service.ts` can consume the same data. _2026-05-10: `/api/me` already returns `permissions: string[]`; collapsed the duplicate `Api/Rbac/Permissions.cs` catalog onto `Domain.Rbac.RoleCatalog` so frontend and backend share one source of truth._
 
 ### Exit criteria
 - No Serilog references.
