@@ -1,10 +1,14 @@
-# BUG-002 — `POST /api/v1/auth/sign-in` always returns 401
+# BUG-002 — `POST /api/v1/auth/sign-in` always returns 401 (RESOLVED 2026-05-10)
 
 **Severity**: Critical
 **Component**: backend
 **Found in test**: TC-2.1 (Signing in)
 **User-guide refs**: §2.1
 **Found**: 2026-05-09
+**Status**: FIXED — the auth-hashing-foundation refactor (commit `b647468`) wired `AuthController.SignIn` to dispatch `SignInCommand`, and `SignInHandler` now looks up the user via `IAuthUserStore.FindByEmailAsync`, verifies the hash via `IPasswordHasher`, and on success returns a JWT issued by `ITokenService.IssueAccessToken(userId)`. Verified end-to-end this iteration with three new xUnit tests in `Auth/SignInEndpointTests.cs`:
+- `Sign_in_with_seeded_admin_credentials_returns_200_and_access_token` (admin@test.local / UpperRoomDev!42 → 200 + token).
+- `Sign_in_with_wrong_password_returns_401_with_invalid_credentials_code`.
+- `Sign_in_with_unknown_email_returns_401`.
 
 ## Description
 
