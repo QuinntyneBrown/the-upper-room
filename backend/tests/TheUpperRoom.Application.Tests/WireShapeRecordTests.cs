@@ -1,3 +1,5 @@
+using TheUpperRoom.Application.Contacts;
+using TheUpperRoom.Application.Dashboard;
 using TheUpperRoom.Application.Events;
 using TheUpperRoom.Application.Notifications;
 
@@ -47,6 +49,53 @@ public sealed class WireShapeRecordTests
         Assert.Equal("u-1", dto.UserId);
         Assert.Equal("Ada Lovelace", dto.UserName);
         Assert.Equal("2026-05-10T12:00:00Z", dto.RequestedAt);
+    }
+
+    [Fact]
+    public void Contact_record_implements_IHasCity_with_positional_order()
+    {
+        var c = new Contact("c-1", "Ada Lovelace", "city-1");
+        Assert.Equal("c-1", c.Id);
+        Assert.Equal("Ada Lovelace", c.Name);
+        Assert.Equal("city-1", c.CityId);
+
+        // IHasCity contract: city-scoped queries narrow by CityId.
+        TheUpperRoom.Domain.Cities.IHasCity asCity = c;
+        Assert.Equal("city-1", asCity.CityId);
+    }
+
+    [Fact]
+    public void NotificationDto_positional_order_pinned()
+    {
+        var t = new DateTimeOffset(2026, 5, 10, 12, 0, 0, TimeSpan.Zero);
+        var dto = new NotificationDto(
+            "n-1", "welcome", "Welcome", "Hi there",
+            new Dictionary<string, string> { ["k"] = "v" },
+            Read: false,
+            CreatedAt: t,
+            DeepLink: "/home",
+            Severity: "Info");
+
+        Assert.Equal("n-1", dto.Id);
+        Assert.Equal("welcome", dto.Code);
+        Assert.Equal("Welcome", dto.Title);
+        Assert.Equal("Hi there", dto.Body);
+        Assert.False(dto.Read);
+        Assert.Equal(t, dto.CreatedAt);
+        Assert.Equal("/home", dto.DeepLink);
+        Assert.Equal("Info", dto.Severity);
+    }
+
+    [Fact]
+    public void DashboardStats_record_value_equality_and_field_order()
+    {
+        var a = new DashboardStats(Contacts: 12, Partners: 3, UpcomingEvents: 5, OpenIdeas: 2);
+        var b = new DashboardStats(12, 3, 5, 2);
+        Assert.Equal(a, b);
+        Assert.Equal(12, a.Contacts);
+        Assert.Equal(3, a.Partners);
+        Assert.Equal(5, a.UpcomingEvents);
+        Assert.Equal(2, a.OpenIdeas);
     }
 
     [Fact]
