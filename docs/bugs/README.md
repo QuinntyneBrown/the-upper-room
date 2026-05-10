@@ -28,6 +28,7 @@ Bugs filed while executing `docs/test-plan/` against the locally running app on 
 | [BUG-012](BUG-012-frontend-build-requires-libs-first.md) | High | docs | Frontend dev server fails to compile on a fresh clone without first building workspace libs |
 | [BUG-013](BUG-013-user-guide-credentials-stale.md) | High | docs | User guide credentials block (added earlier today) is stale — `MockAuthProvider` was removed by `TASK-0212` |
 | [BUG-014](BUG-014-test-plan-stale-persistence.md) | Medium | docs | Test plan describes in-memory persistence, but backend now uses SQLite (`ContactsDbContext`, `EventsDbContext`, etc.) |
+| [BUG-035](BUG-035-e2e-auth-bypass-lost-on-page-goto.md) | High | frontend e2e | `page.goto()` after seeding `__setTestToken`/`__setRbac` reloads the SPA and drops the token; 48 of 49 kanban tests fail at the auth-guard redirect |
 
 ## What passed
 
