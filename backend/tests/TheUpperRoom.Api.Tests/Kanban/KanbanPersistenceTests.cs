@@ -282,4 +282,62 @@ public sealed class KanbanPersistenceTests : IDisposable
         var col = detail2!.Columns.First(c => c.Id == columnId);
         Assert.Equal(3, col.WipLimit);
     }
+
+    [Fact]
+    public async Task Reorder_columns_persists_new_order_across_restart()
+    {
+        string boardId;
+        string[] reversedOrder;
+
+        await using (var factory = Factory())
+        {
+            var client = AuthedClient(factory, "lead");
+
+            var boardResp = await client.PostAsJsonAsync("/api/v1/boards", new { name = "Reorder Board", defaultColumns = true });
+            boardId = (await boardResp.Content.ReadFromJsonAsync<BoardLite>())!.Id;
+
+            var detail = await client.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+            var originalIds = detail!.Columns.Select(c => c.Id).ToArray();
+            Assert.True(originalIds.Length >= 3);
+
+            reversedOrder = originalIds.Reverse().ToArray();
+
+            var resp = await client.PostAsJsonAsync($"/api/v1/boards/{boardId}/columns/order", new { order = reversedOrder });
+            Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
+        }
+
+        await using var factory2 = Factory();
+        var client2 = AuthedClient(factory2, "lead");
+
+        var detail2 = await client2.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+        var afterIds = detail2!.Columns.Select(c => c.Id).ToArray();
+        Assert.Equal(reversedOrder, afterIds);
+    }
+
+    [Fact]
+    public async Task Reorder_columns_with_unknown_id_in_payload_is_ignored()
+    {
+        await using var factory = Factory();
+        var client = AuthedClient(factory, "lead");
+
+        var boardResp = await client.PostAsJsonAsync("/api/v1/boards", new { name = "Reorder Bad Board", defaultColumns = true });
+        var boardId = (await boardResp.Content.ReadFromJsonAsync<BoardLite>())!.Id;
+
+        var detail = await client.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+        var originalIds = detail!.Columns.Select(c => c.Id).ToArray();
+
+        var payloadWithBogus = new[] { originalIds[1], "ghost-column", originalIds[0], originalIds[2] };
+
+        var resp = await client.PostAsJsonAsync($"/api/v1/boards/{boardId}/columns/order", new { order = payloadWithBogus });
+        Assert.Equal(HttpStatusCode.OK, resp.StatusCode);
+
+        var detail2 = await client.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+        var afterIds = detail2!.Columns.Select(c => c.Id).ToArray();
+
+        // Real ids should be reordered to match their position in the payload; the bogus one
+        // is ignored. So expected order is originalIds[1], originalIds[0], originalIds[2].
+        Assert.Equal(originalIds[1], afterIds[0]);
+        Assert.Equal(originalIds[0], afterIds[1]);
+        Assert.Equal(originalIds[2], afterIds[2]);
+    }
 }
