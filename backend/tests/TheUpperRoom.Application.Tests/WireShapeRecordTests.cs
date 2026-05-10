@@ -1,7 +1,9 @@
+using TheUpperRoom.Application.Auth;
 using TheUpperRoom.Application.Contacts;
 using TheUpperRoom.Application.Dashboard;
 using TheUpperRoom.Application.Events;
 using TheUpperRoom.Application.Notifications;
+using TheUpperRoom.Application.Notes;
 
 namespace TheUpperRoom.Application.Tests;
 
@@ -96,6 +98,53 @@ public sealed class WireShapeRecordTests
         Assert.Equal(3, a.Partners);
         Assert.Equal(5, a.UpcomingEvents);
         Assert.Equal(2, a.OpenIdeas);
+    }
+
+    [Fact]
+    public void NoteVersionDto_positional_order_pinned()
+    {
+        var t = new DateTimeOffset(2026, 5, 10, 12, 0, 0, TimeSpan.Zero);
+        var dto = new NoteVersionDto("v-1", "raw", "<p>raw</p>", t, "creator");
+        Assert.Equal("v-1", dto.Id);
+        Assert.Equal("raw", dto.BodyMarkdown);
+        Assert.Equal("<p>raw</p>", dto.BodyHtmlSanitized);
+        Assert.Equal(t, dto.CreatedAt);
+        Assert.Equal("creator", dto.CreatedBy);
+    }
+
+    [Fact]
+    public void RegisterResult_optional_token_and_user_id_default_to_null()
+    {
+        var conflict = new RegisterResult(AuthMutationOutcome.Conflict);
+        Assert.Equal(AuthMutationOutcome.Conflict, conflict.Outcome);
+        Assert.Null(conflict.UserId);
+        Assert.Null(conflict.EmailVerificationToken);
+
+        var created = new RegisterResult(AuthMutationOutcome.Created, "u-1", "tok");
+        Assert.Equal("u-1", created.UserId);
+        Assert.Equal("tok", created.EmailVerificationToken);
+    }
+
+    [Fact]
+    public void SignInResult_optional_user_id_defaults_to_null()
+    {
+        var failure = new SignInResult(SignInOutcome.InvalidCredentials);
+        Assert.Null(failure.UserId);
+
+        var success = new SignInResult(SignInOutcome.Success, "u-1");
+        Assert.Equal("u-1", success.UserId);
+    }
+
+    [Fact]
+    public void AuthUser_record_positional_order_with_nullable_password()
+    {
+        var external = new AuthUser("u-1", "ada@example.com", PasswordHash: null, EmailVerified: false);
+        Assert.Null(external.PasswordHash);
+        Assert.False(external.EmailVerified);
+
+        var local = new AuthUser("u-2", "bob@example.com", "hash::pw", true);
+        Assert.Equal("hash::pw", local.PasswordHash);
+        Assert.True(local.EmailVerified);
     }
 
     [Fact]
