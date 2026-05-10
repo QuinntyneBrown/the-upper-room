@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using TheUpperRoom.Infrastructure.Seeding;
+using TheUpperRoom.Infrastructure.Contacts;
 
-namespace TheUpperRoom.Api.Contacts;
+namespace TheUpperRoom.Infrastructure.Seeding.Contacts;
 
 internal sealed class ContactsDataSeeder : IDataSeeder
 {

@@ -1,8 +1,6 @@
-// Traces to: TASK-0223
 using Microsoft.EntityFrameworkCore;
-using TheUpperRoom.Domain.Cities;
 
-namespace TheUpperRoom.Api.Contacts;
+namespace TheUpperRoom.Infrastructure.Contacts;
 
 public sealed class ContactsDbContext(DbContextOptions<ContactsDbContext> options) : DbContext(options)
 {
@@ -17,13 +15,4 @@ public sealed class ContactsDbContext(DbContextOptions<ContactsDbContext> option
         e.Property(x => x.Name).HasMaxLength(200).IsRequired();
         e.Property(x => x.CityId).HasMaxLength(100).IsRequired();
     }
-}
-
-public sealed class ContactRow : IHasCity
-{
-    public string Id { get; set; } = "";
-    public string Name { get; set; } = "";
-    public string CityId { get; set; } = "";
-
-    public Contact ToContact() => new(Id, Name, CityId);
 }

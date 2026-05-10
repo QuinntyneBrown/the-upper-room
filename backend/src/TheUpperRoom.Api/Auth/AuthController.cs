@@ -1,6 +1,9 @@
 // traces_to: L2-015, L2-094
+using System.Text.Json;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Audit;
+using TheUpperRoom.Application.Auth;
 
 namespace TheUpperRoom.Api.Auth;
 
@@ -8,64 +11,78 @@ namespace TheUpperRoom.Api.Auth;
 [Route("api/v1/auth")]
 public sealed class AuthController : ControllerBase
 {
-    // In-memory rate limit buckets keyed by email
-    private static readonly Dictionary<string, SignInBucket> _signInBuckets = new(StringComparer.OrdinalIgnoreCase);
-    private static readonly Dictionary<string, ForgotBucket> _forgotBuckets = new(StringComparer.OrdinalIgnoreCase);
-
     private readonly IPkceVerifier _verifier;
     private readonly ITokenService _tokens;
+    private readonly IMediator _mediator;
+    private readonly IAuthRateLimiter _rateLimiter;
 
-    public AuthController(IPkceVerifier verifier, ITokenService tokens)
+    public AuthController(
+        IPkceVerifier verifier,
+        ITokenService tokens,
+        IMediator mediator,
+        IAuthRateLimiter rateLimiter)
     {
         _verifier = verifier;
         _tokens = tokens;
+        _mediator = mediator;
+        _rateLimiter = rateLimiter;
     }
 
     [HttpPost("sign-in")]
-    public IActionResult SignIn([FromBody] SignInRequest? body)
+    public async Task<IActionResult> SignIn([FromBody] SignInRequest? body, CancellationToken cancellationToken)
     {
         if (body?.Email is null) return BadRequest();
 
-        lock (_signInBuckets)
+        var now = DateTimeOffset.UtcNow;
+        if (await _rateLimiter.IsSignInLockedAsync(body.Email, now, cancellationToken))
         {
-            if (!_signInBuckets.TryGetValue(body.Email, out var bucket))
-                bucket = _signInBuckets[body.Email] = new SignInBucket();
-
-            if (bucket.IsLocked(DateTimeOffset.UtcNow))
-            {
-                Response.Headers["Retry-After"] = "1800";
-                return StatusCode(429, new { error = "rate_limit_exceeded" });
-            }
-
-            bucket.Record(DateTimeOffset.UtcNow);
-
-            if (bucket.AttemptCount >= 5)
-            {
-                bucket.LockUntil = DateTimeOffset.UtcNow.AddMinutes(30);
-                Response.Headers["Retry-After"] = "1800";
-                return StatusCode(429, new { error = "rate_limit_exceeded" });
-            }
+            Response.Headers["Retry-After"] = "1800";
+            AuditStore.Record(body.Email, "Session", "sign-in", "Locked", afterJson: AuditMetadata());
+            return StatusCode(429, new { error = "rate_limit_exceeded" });
         }
 
-        return Unauthorized(new { code = "auth.invalid_credentials" });
+        var result = await _mediator.Send(new SignInCommand(body.Email, body.Password), cancellationToken);
+        if (result.Outcome != SignInOutcome.Success || result.UserId is null)
+        {
+            if (await _rateLimiter.RecordFailedSignInAsync(body.Email, DateTimeOffset.UtcNow, cancellationToken))
+            {
+                Response.Headers["Retry-After"] = "1800";
+                AuditStore.Record(body.Email, "Session", "sign-in", "Locked", afterJson: AuditMetadata());
+                return StatusCode(429, new { error = "rate_limit_exceeded" });
+            }
+
+            AuditStore.Record(body.Email, "Session", "sign-in", "Failure", afterJson: AuditMetadata());
+            return Unauthorized(new { code = "auth.invalid_credentials" });
+        }
+
+        await _rateLimiter.ClearSignInAsync(body.Email, cancellationToken);
+
+        AuditStore.Record(result.UserId, "Session", "sign-in", "Success", afterJson: AuditMetadata());
+        Response.Cookies.Append("tar.refresh", _tokens.IssueRefreshToken(), new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Path = "/api/v1/auth"
+        });
+
+        return Ok(new ExchangeResponse(_tokens.IssueAccessToken(result.UserId)));
     }
 
     [HttpPost("forgot-password")]
-    public IActionResult ForgotPassword([FromBody] ForgotPasswordRequest? body)
+    public async Task<IActionResult> ForgotPassword(
+        [FromBody] ForgotPasswordRequest? body,
+        CancellationToken cancellationToken)
     {
         if (body?.Email is null) return BadRequest();
 
-        lock (_forgotBuckets)
+        var accepted = await _rateLimiter.TryRecordForgotPasswordAsync(
+            body.Email,
+            DateTimeOffset.UtcNow,
+            cancellationToken);
+        if (!accepted)
         {
-            if (!_forgotBuckets.TryGetValue(body.Email, out var bucket))
-                bucket = _forgotBuckets[body.Email] = new ForgotBucket();
-
-            bucket.Purge(DateTimeOffset.UtcNow);
-
-            if (bucket.Count >= 3)
-                return StatusCode(429, new { error = "rate_limit_exceeded" });
-
-            bucket.Record(DateTimeOffset.UtcNow);
+            return StatusCode(429, new { error = "rate_limit_exceeded" });
         }
 
         return NoContent();
@@ -84,10 +101,13 @@ public sealed class AuthController : ControllerBase
     {
         if (!_verifier.Verify(req.CodeVerifier, req.ExpectedChallenge))
         {
+            AuditStore.Record("anonymous", "Session", "exchange", "Failure", afterJson: AuditMetadata());
             return BadRequest(new { code = "auth.invalid_credentials" });
         }
 
-        AuditStore.Record("anonymous", "Session", "exchange", "Login");
+        var auditMetadata = AuditMetadata();
+        AuditStore.Record("anonymous", "Session", "exchange", "Login", afterJson: auditMetadata);
+        AuditStore.Record("anonymous", "Session", "exchange", "Success", afterJson: auditMetadata);
 
         Response.Cookies.Append("tar.refresh", _tokens.IssueRefreshToken(), new CookieOptions
         {
@@ -100,28 +120,11 @@ public sealed class AuthController : ControllerBase
         return Ok(new ExchangeResponse(_tokens.IssueAccessToken("anonymous")));
     }
 
-    private sealed class SignInBucket
-    {
-        public int AttemptCount { get; private set; }
-        public DateTimeOffset? LockUntil { get; set; }
-        private DateTimeOffset _windowStart = DateTimeOffset.UtcNow;
-
-        public bool IsLocked(DateTimeOffset now) => LockUntil.HasValue && now < LockUntil.Value;
-
-        public void Record(DateTimeOffset now)
+    private string AuditMetadata() =>
+        JsonSerializer.Serialize(new
         {
-            if (now - _windowStart > TimeSpan.FromMinutes(15)) { AttemptCount = 0; _windowStart = now; }
-            AttemptCount++;
-        }
-    }
-
-    private sealed class ForgotBucket
-    {
-        private readonly List<DateTimeOffset> _times = [];
-        public int Count => _times.Count;
-        public void Purge(DateTimeOffset now) => _times.RemoveAll(t => now - t > TimeSpan.FromHours(1));
-        public void Record(DateTimeOffset now) => _times.Add(now);
-    }
+            ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        });
 }
 
 public sealed record SignInRequest(string Email, string? Password);

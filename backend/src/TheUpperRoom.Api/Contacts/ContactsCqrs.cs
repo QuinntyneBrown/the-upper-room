@@ -5,6 +5,7 @@ using TheUpperRoom.Api.Rbac;
 using TheUpperRoom.Application.Cities;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Cities;
+using TheUpperRoom.Infrastructure.Contacts;
 
 namespace TheUpperRoom.Api.Contacts;
 
@@ -51,6 +52,11 @@ internal static class ContactsDisplayName
     }
 }
 
+internal static class ContactsMapping
+{
+    public static Contact ToContact(ContactRow row) => new(row.Id, row.Name, row.CityId);
+}
+
 internal sealed class ListContactsHandler : IRequestHandler<ListContactsQuery, ListContactsResult>
 {
     private readonly ContactsDbContext _db;
@@ -87,7 +93,7 @@ internal sealed class ListContactsHandler : IRequestHandler<ListContactsQuery, L
         if (!string.IsNullOrEmpty(request.Search))
             items = items.Where(c => c.Name.Contains(request.Search, StringComparison.OrdinalIgnoreCase));
 
-        var allItems = items.Select(c => c.ToContact()).ToArray();
+        var allItems = items.Select(ContactsMapping.ToContact).ToArray();
         var total = allItems.Length;
 
         if (request.Page.GetValueOrDefault() > 1 && request.Size.GetValueOrDefault() > 0)
@@ -123,12 +129,12 @@ internal sealed class GetContactHandler : IRequestHandler<GetContactQuery, GetCo
         var c = _db.Contacts.Find(request.Id);
         if (c is null) return Task.FromResult(new GetContactResult(null, ContactsOutcome.NotFound));
 
-        if (allCities) return Task.FromResult(new GetContactResult(c.ToContact(), ContactsOutcome.Ok));
+        if (allCities) return Task.FromResult(new GetContactResult(ContactsMapping.ToContact(c), ContactsOutcome.Ok));
 
         var visible = CityScope.VisibleOrNull(c, user.City);
         return Task.FromResult(visible is null
             ? new GetContactResult(null, ContactsOutcome.NotFound)
-            : new GetContactResult(c.ToContact(), ContactsOutcome.Ok));
+            : new GetContactResult(ContactsMapping.ToContact(c), ContactsOutcome.Ok));
     }
 }
 
@@ -156,7 +162,7 @@ internal sealed class CreateContactHandler : IRequestHandler<CreateContactComman
         _db.Contacts.Add(row);
         _db.SaveChanges();
 
-        var contact = row.ToContact();
+        var contact = ContactsMapping.ToContact(row);
         AuditStore.Record(user.Id, "Contact", id, "Create", afterJson: JsonSerializer.Serialize(contact));
         return Task.FromResult(new MutateContactResult(contact, ContactsOutcome.Created, null));
     }
@@ -186,12 +192,12 @@ internal sealed class UpdateContactHandler : IRequestHandler<UpdateContactComman
         if (CityScope.VisibleOrNull(c, user.City) is null)
             return Task.FromResult(new MutateContactResult(null, ContactsOutcome.NotFound, null));
 
-        var before = JsonSerializer.Serialize(c.ToContact());
+        var before = JsonSerializer.Serialize(ContactsMapping.ToContact(c));
         c.Name = ContactsDisplayName.Build(request.Body);
         _db.SaveChanges();
-        var after = JsonSerializer.Serialize(c.ToContact());
+        var after = JsonSerializer.Serialize(ContactsMapping.ToContact(c));
         AuditStore.Record(user.Id, "Contact", request.Id, "Update", before, after);
-        return Task.FromResult(new MutateContactResult(c.ToContact(), ContactsOutcome.Ok, null));
+        return Task.FromResult(new MutateContactResult(ContactsMapping.ToContact(c), ContactsOutcome.Ok, null));
     }
 }
 
@@ -218,14 +224,14 @@ internal sealed class PatchContactHandler : IRequestHandler<PatchContactCommand,
 
         if (request.Body?.Name is not null)
         {
-            var before = JsonSerializer.Serialize(c.ToContact());
+            var before = JsonSerializer.Serialize(ContactsMapping.ToContact(c));
             c.Name = request.Body.Name;
             _db.SaveChanges();
-            var after = JsonSerializer.Serialize(c.ToContact());
+            var after = JsonSerializer.Serialize(ContactsMapping.ToContact(c));
             AuditStore.Record(user.Id, "Contact", request.Id, "Update", before, after);
         }
 
-        return Task.FromResult(new MutateContactResult(c.ToContact(), ContactsOutcome.Ok, null));
+        return Task.FromResult(new MutateContactResult(ContactsMapping.ToContact(c), ContactsOutcome.Ok, null));
     }
 }
 
@@ -250,7 +256,7 @@ internal sealed class DeleteContactHandler : IRequestHandler<DeleteContactComman
         if (CityScope.VisibleOrNull(c, user.City) is null)
             return Task.FromResult(new MutateContactResult(null, ContactsOutcome.NotFound, null));
 
-        AuditStore.Record(user.Id, "Contact", request.Id, "Delete", beforeJson: JsonSerializer.Serialize(c.ToContact()));
+        AuditStore.Record(user.Id, "Contact", request.Id, "Delete", beforeJson: JsonSerializer.Serialize(ContactsMapping.ToContact(c)));
         _db.Contacts.Remove(c);
         _db.SaveChanges();
         return Task.FromResult(new MutateContactResult(null, ContactsOutcome.NoContent, null));

@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using TheUpperRoom.Infrastructure.Seeding;
+using TheUpperRoom.Infrastructure.Cities;
 
-namespace TheUpperRoom.Api.Cities;
+namespace TheUpperRoom.Infrastructure.Seeding.Cities;
 
 internal sealed class CitiesDataSeeder : IDataSeeder
 {
@@ -23,12 +23,13 @@ internal sealed class CitiesDataSeeder : IDataSeeder
 
         var seeds = new[]
         {
-            new CityRow { Id = "toronto",  Name = "Toronto",  Slug = "toronto",  Archived = false },
-            new CityRow { Id = "halifax",  Name = "Halifax",  Slug = "halifax",  Archived = false },
+            new CityRow { Id = "toronto", Name = "Toronto", Slug = "toronto", Archived = false },
+            new CityRow { Id = "halifax", Name = "Halifax", Slug = "halifax", Archived = false },
         };
 
+        var seedIds = seeds.Select(s => s.Id).ToArray();
         var existingIds = await _db.Cities
-            .Where(c => seeds.Select(s => s.Id).Contains(c.Id))
+            .Where(c => seedIds.Contains(c.Id))
             .Select(c => c.Id)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);

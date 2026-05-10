@@ -32,6 +32,7 @@ public static class DependencyInjection
         var usersConn = configuration[UsersDbConnectionKey] ?? "Data Source=Data/users.db";
         services.AddDbContext<UsersDbContext>(o => o.UseSqlite(usersConn));
 
+        services.AddScoped<IAuthUserStore, AuthUserStore>();
         services.AddScoped<IUserDirectory, UserDirectory>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 

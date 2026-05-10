@@ -48,6 +48,35 @@ public sealed class AuditInterceptorTests : IClassFixture<WebApplicationFactory<
         var audit = await auditResp.Content.ReadFromJsonAsync<AuditEnvelope>();
         Assert.NotNull(audit);
         Assert.Contains(audit.Items, e => e.Action == "Login");
+
+        var successResp = await client.SendAsync(GetReq("/api/v1/admin/audit?actor=anonymous&entityType=Session&action=Success", "admin"));
+        Assert.Equal(HttpStatusCode.OK, successResp.StatusCode);
+
+        var successAudit = await successResp.Content.ReadFromJsonAsync<AuditEnvelope>();
+        Assert.NotNull(successAudit);
+        Assert.Contains(successAudit.Items, e =>
+            e.EntityId == "exchange" &&
+            e.Action == "Success" &&
+            e.AfterJson?.Contains("ip", StringComparison.OrdinalIgnoreCase) == true);
+    }
+
+    [Fact]
+    public async Task Failed_exchange_records_audit_entry()
+    {
+        var client = _factory.CreateClient();
+
+        var loginResp = await client.PostAsJsonAsync("/api/v1/auth/exchange",
+            new { code = "auth-code", codeVerifier = "wrong", expectedChallenge = "challenge" });
+        Assert.Equal(HttpStatusCode.BadRequest, loginResp.StatusCode);
+
+        var auditResp = await client.SendAsync(GetReq("/api/v1/admin/audit?actor=anonymous&entityType=Session&action=Failure", "admin"));
+        Assert.Equal(HttpStatusCode.OK, auditResp.StatusCode);
+
+        var audit = await auditResp.Content.ReadFromJsonAsync<AuditEnvelope>();
+        Assert.NotNull(audit);
+        Assert.Contains(audit.Items, e =>
+            e.EntityId == "exchange" &&
+            e.AfterJson?.Contains("ip", StringComparison.OrdinalIgnoreCase) == true);
     }
 
     [Fact]

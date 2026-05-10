@@ -6,6 +6,7 @@ using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Rbac;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Cities;
+using TheUpperRoom.Infrastructure.Contacts;
 
 namespace TheUpperRoom.Api.Contacts;
 
@@ -28,7 +29,7 @@ public sealed class ContactsController(IMediator mediator, ICurrentUser currentU
             ? db.Contacts.AsEnumerable()
             : db.Contacts.Where(c => c.CityId == user.City).AsEnumerable();
         return query.Where(c => c.Name.Contains(term, StringComparison.OrdinalIgnoreCase))
-                    .Select(c => c.ToContact());
+                    .Select(ContactsMapping.ToContact);
     }
 
     [HttpGet]

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace TheUpperRoom.Api.Cities;
+namespace TheUpperRoom.Infrastructure.Cities;
 
 public sealed class CitiesDbContext(DbContextOptions<CitiesDbContext> options) : DbContext(options)
 {
@@ -16,12 +16,4 @@ public sealed class CitiesDbContext(DbContextOptions<CitiesDbContext> options) :
         e.Property(x => x.Slug).HasMaxLength(200).IsRequired();
         e.Property(x => x.Archived).IsRequired();
     }
-}
-
-public sealed class CityRow
-{
-    public string Id { get; set; } = "";
-    public string Name { get; set; } = "";
-    public string Slug { get; set; } = "";
-    public bool Archived { get; set; }
 }

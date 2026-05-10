@@ -21,7 +21,13 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(e => e.Locale).HasMaxLength(20).IsRequired();
         builder.Property(e => e.AvatarUrl).HasMaxLength(2048);
         builder.Property(e => e.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
+        builder.Property(e => e.PasswordHash).HasMaxLength(512);
+        builder.Property(e => e.PasswordUpdatedUtc);
+        builder.Property(e => e.EmailVerified);
         builder.Property(e => e.EmailVerifiedAt);
+        builder.Property(e => e.EmailVerificationTokenHash).HasMaxLength(512);
+        builder.Property(e => e.PasswordResetTokenHash).HasMaxLength(512);
+        builder.Property(e => e.PasswordResetExpiresUtc);
         builder.Property(e => e.LastSignInAt);
 
         builder.Ignore(e => e.DisplayName);

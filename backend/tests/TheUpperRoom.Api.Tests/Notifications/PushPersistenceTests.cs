@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TheUpperRoom.Api.Contacts;
 using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
+using TheUpperRoom.Infrastructure.Contacts;
 
 namespace TheUpperRoom.Api.Tests.Notifications;
 

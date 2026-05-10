@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TheUpperRoom.Api.Auth;
-using TheUpperRoom.Api.Cities;
 using TheUpperRoom.Api.Contacts;
 using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.ExceptionHandling;
@@ -15,6 +14,8 @@ using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
 using TheUpperRoom.Application;
 using TheUpperRoom.Infrastructure;
+using TheUpperRoom.Infrastructure.Cities;
+using TheUpperRoom.Infrastructure.Contacts;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -23,10 +24,29 @@ builder.Logging.AddJsonConsole(options =>
     options.IncludeScopes = true;
     options.TimestampFormat = "O";
 });
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore", LogLevel.Warning);
 builder.Services.AddControllers();
 builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
 builder.Services.AddProblemDetails();
 builder.Services.AddSingleton<IPkceVerifier, PkceVerifier>();
+var authRateLimitRedis = builder.Configuration["AuthRateLimit:RedisConnectionString"]
+    ?? builder.Configuration["Redis:ConnectionString"];
+if (string.IsNullOrWhiteSpace(authRateLimitRedis))
+{
+    if (builder.Environment.IsProduction())
+        throw new InvalidOperationException("AuthRateLimit:RedisConnectionString or Redis:ConnectionString must be configured in Production.");
+
+    builder.Services.AddDistributedMemoryCache();
+}
+else
+{
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = authRateLimitRedis;
+        options.InstanceName = "the-upper-room:auth:";
+    });
+}
+builder.Services.AddSingleton<IAuthRateLimiter, AuthRateLimiter>();
 
 builder.Services.AddApplication(typeof(Program).Assembly);
 builder.Services.AddInfrastructure(builder.Configuration);

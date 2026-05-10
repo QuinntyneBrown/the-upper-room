@@ -8,6 +8,7 @@ using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Api.Partners;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Infrastructure.Contacts;
 
 
 namespace TheUpperRoom.Api.Search;

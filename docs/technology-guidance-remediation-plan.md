@@ -127,7 +127,7 @@ Why Contacts: medium complexity (CRUD + soft delete + scoping), already has a Db
    Each handler now depends on `IAppDbContext`.
 - [ ] **2.6** Create `*CommandValidator.cs` for each Create/Update/Patch/Delete command. Move all inline `if (...) return Outcome.Invalid` checks from handlers into validators. Handlers should now only contain business logic and persistence.
 - [ ] **2.7** Split `Api/Contacts/ContactsController.cs` so `PatchContactRequest` lives in its own file under `Api/Contacts/Requests/PatchContactRequest.cs`.
-- [ ] **2.8** Move `Api/Contacts/ContactsDataSeeder.cs` → `TheUpperRoom.Infrastructure/Seeding/Contacts/ContactsDataSeeder.cs`. Move its DI registration from `Program.cs` into `Infrastructure.DependencyInjection`.
+- [x] **2.8** Move `Api/Contacts/ContactsDataSeeder.cs` → `TheUpperRoom.Infrastructure/Seeding/Contacts/ContactsDataSeeder.cs`. Move its DI registration from `Program.cs` into `Infrastructure.DependencyInjection`.
 - [ ] **2.9** Remove `Api/Contacts/` allow-list entries from the architecture and file-shape tests added in Phase 0; tests should now pass for everything in `Contacts`.
 - [ ] **2.10** Update `TheUpperRoom.Application.Tests` and `TheUpperRoom.Api.Tests` for the new namespaces and types. Re-run full test suite — it must be green.
 - [ ] **2.11** Manual smoke test: `GET /api/contacts`, `POST /api/contacts` with valid + invalid body (verify 400 ValidationProblemDetails), `PATCH`, `DELETE`.
@@ -206,7 +206,7 @@ For feature `X`:
 
 ### 4B. Seeding consolidation
 
-- [ ] **4.6** Verify no `*DataSeeder` lives in `Api/`. Move any stragglers to `Infrastructure/Seeding/<Feature>/`.
+- [x] **4.6** Verify no `*DataSeeder` lives in `Api/`. Move any stragglers to `Infrastructure/Seeding/<Feature>/`.
 - [x] **4.7** Replace seeder DI registrations in `Program.cs` with a single call to `services.AddSeeders()` defined in `Infrastructure.DependencyInjection`.
 
 ### 4C. RBAC into Domain
@@ -237,28 +237,28 @@ For feature `X`:
 
 ### 5B. User schema
 
-- [ ] **5.5** Add `PasswordHash` (nullable for OIDC-only users), `PasswordUpdatedUtc`, `EmailVerified`, `EmailVerificationTokenHash`, `PasswordResetTokenHash`, `PasswordResetExpiresUtc` columns to the user entity.
+- [x] **5.5** Add `PasswordHash` (nullable for OIDC-only users), `PasswordUpdatedUtc`, `EmailVerified`, `EmailVerificationTokenHash`, `PasswordResetTokenHash`, `PasswordResetExpiresUtc` columns to the user entity.
 - [ ] **5.6** EF migration.
 
 ### 5C. Real sign-in
 
-- [ ] **5.7** Implement `SignInCommand` + `SignInHandler` in `Application/Auth/`:
+- [x] **5.7** Implement `SignInCommand` + `SignInHandler` in `Application/Auth/`:
    - Look up user by email.
    - On hit, call `passwordHasher.Verify(...)`.
    - On success, issue JWT (delegate to existing `JwtIssuer`).
    - On failure, throw a typed `InvalidCredentialsException` mapped to 401 by an exception handler.
    - Always emit `AuditStore.Record(...)` (success or failure), with email + IP.
-- [ ] **5.8** Replace `AuthController.SignIn`'s body so it goes through MediatR.
+- [x] **5.8** Replace `AuthController.SignIn`'s body so it goes through MediatR.
 - [ ] **5.9** Implement `RegisterCommand`, `RequestPasswordResetCommand`, `ResetPasswordCommand`, `VerifyEmailCommand`, `ChangePasswordCommand`, `DeleteAccountCommand` — these are required by the guidance ("Full user management"). Each gets a validator.
 - [ ] **5.10** Wire controller endpoints for each. Reuse existing email-sending plumbing if any; otherwise add a stub `IEmailSender` with a no-op implementation registered behind a feature flag (real provider configured per-environment).
 
 ### 5D. Distributed throttling + audit
 
-- [ ] **5.11** Replace static in-memory `SignInBucket` / `ForgotBucket` with one of:
+- [x] **5.11** Replace static in-memory `SignInBucket` / `ForgotBucket` with one of:
    - **Preferred:** ASP.NET Core 8 rate-limiting middleware (`AddRateLimiter`) keyed by email + IP, applied to sign-in/reset endpoints via `RequireRateLimiting("auth")`. Use `IDistributedCache` partition key for multi-instance.
    - Fallback: an `AuthThrottle` table tracking attempts per email.
-- [ ] **5.12** Ensure every sign-in attempt (and PKCE exchange) writes an `AuditStore` entry: `Success`, `Failure`, `Locked`. Include actor identifier (email or sub) and IP.
-- [ ] **5.13** Add tests: 5 failed attempts → 6th locked; lockout window release; audit entries for each event.
+- [x] **5.12** Ensure every sign-in attempt (and PKCE exchange) writes an `AuditStore` entry: `Success`, `Failure`, `Locked`. Include actor identifier (email or sub) and IP.
+- [x] **5.13** Add tests: 5 failed attempts → 6th locked; lockout window release; audit entries for each event.
 
 ### 5E. Defensive cleanup
 

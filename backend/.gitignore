@@ -375,6 +375,9 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 
+# Local API SQLite databases
+src/TheUpperRoom.Api/Data/*.db
+
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
 

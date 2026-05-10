@@ -57,7 +57,19 @@ public sealed class User : CityScopedAuditableEntity
 
     public UserStatus Status { get; private set; } = UserStatus.Pending;
 
+    public string? PasswordHash { get; private set; }
+
+    public DateTimeOffset? PasswordUpdatedUtc { get; private set; }
+
+    public bool EmailVerified { get; private set; }
+
     public DateTimeOffset? EmailVerifiedAt { get; private set; }
+
+    public string? EmailVerificationTokenHash { get; private set; }
+
+    public string? PasswordResetTokenHash { get; private set; }
+
+    public DateTimeOffset? PasswordResetExpiresUtc { get; private set; }
 
     public DateTimeOffset? LastSignInAt { get; private set; }
 
@@ -95,12 +107,42 @@ public sealed class User : CityScopedAuditableEntity
     public void VerifyEmail(DateTimeOffset verifiedAt, string updatedBy)
     {
         EmailVerifiedAt = Guard.Utc(verifiedAt, nameof(verifiedAt));
+        EmailVerified = true;
+        EmailVerificationTokenHash = null;
         if (Status == UserStatus.Pending)
         {
             Status = UserStatus.Active;
         }
 
         Touch(updatedBy, verifiedAt);
+    }
+
+    public void SetPasswordHash(string passwordHash, DateTimeOffset updatedAt, string updatedBy)
+    {
+        PasswordHash = Guard.Required(passwordHash, nameof(passwordHash), 512);
+        PasswordUpdatedUtc = Guard.Utc(updatedAt, nameof(updatedAt));
+        PasswordResetTokenHash = null;
+        PasswordResetExpiresUtc = null;
+        Touch(updatedBy, PasswordUpdatedUtc.Value);
+    }
+
+    public void SetEmailVerificationToken(string tokenHash, DateTimeOffset updatedAt, string updatedBy)
+    {
+        EmailVerificationTokenHash = Guard.Required(tokenHash, nameof(tokenHash), 512);
+        EmailVerified = false;
+        EmailVerifiedAt = null;
+        Touch(updatedBy, updatedAt);
+    }
+
+    public void SetPasswordResetToken(
+        string tokenHash,
+        DateTimeOffset expiresUtc,
+        DateTimeOffset updatedAt,
+        string updatedBy)
+    {
+        PasswordResetTokenHash = Guard.Required(tokenHash, nameof(tokenHash), 512);
+        PasswordResetExpiresUtc = Guard.Utc(expiresUtc, nameof(expiresUtc));
+        Touch(updatedBy, updatedAt);
     }
 
     public void SignIn(DateTimeOffset signedInAt, string sessionId, string device, string ip, string userAgent)

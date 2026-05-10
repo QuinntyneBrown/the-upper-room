@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TheUpperRoom.Infrastructure.Cities;
 
 namespace TheUpperRoom.Api.Cities;
 

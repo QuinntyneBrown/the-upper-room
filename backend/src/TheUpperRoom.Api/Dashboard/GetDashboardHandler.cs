@@ -5,6 +5,7 @@ using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Partners;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Infrastructure.Contacts;
 
 namespace TheUpperRoom.Api.Dashboard;
 
