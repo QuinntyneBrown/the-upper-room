@@ -56,18 +56,6 @@ public sealed class TechnologyGuidanceArchitectureTests
         "ApproveRsvpHandler",
         "DenyRsvpHandler",
         "ValidationExceptionHandler",
-        "ListNotificationsQuery",
-        "MarkNotificationReadCommand",
-        "MarkAllNotificationsReadCommand",
-        "DispatchNotificationCommand",
-        "ListNotificationPreferencesQuery",
-        "UpsertNotificationPreferenceCommand",
-        "ListNotificationsHandler",
-        "MarkNotificationReadHandler",
-        "MarkAllNotificationsReadHandler",
-        "DispatchNotificationHandler",
-        "ListNotificationPreferencesHandler",
-        "UpsertNotificationPreferenceHandler",
     };
 
     [Fact]

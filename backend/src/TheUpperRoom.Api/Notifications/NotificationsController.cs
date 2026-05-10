@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Auth;
+using TheUpperRoom.Application.Notifications;
 using TheUpperRoom.Infrastructure.Notifications;
 
 namespace TheUpperRoom.Api.Notifications;

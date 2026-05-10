@@ -1,15 +1,14 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
-using TheUpperRoom.Infrastructure.Notifications;
 
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
 internal sealed class MarkAllNotificationsReadHandler : IRequestHandler<MarkAllNotificationsReadCommand, NotificationsOutcome>
 {
-    private readonly NotificationsDbContext _db;
+    private readonly INotificationsDbContext _db;
     private readonly IUserDirectory _users;
 
-    public MarkAllNotificationsReadHandler(NotificationsDbContext db, IUserDirectory users)
+    public MarkAllNotificationsReadHandler(INotificationsDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;

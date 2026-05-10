@@ -1,20 +1,18 @@
 using MediatR;
-using TheUpperRoom.Application.Notifications;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Notifications;
-using TheUpperRoom.Infrastructure.Notifications;
 
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
 internal sealed class DispatchNotificationHandler : IRequestHandler<DispatchNotificationCommand, DispatchNotificationResult>
 {
-    private readonly NotificationsDbContext _db;
+    private readonly INotificationsDbContext _db;
     private readonly MailStore _mail;
     private readonly PushDispatcher _push;
     private readonly IUserDirectory _users;
 
     public DispatchNotificationHandler(
-        NotificationsDbContext db,
+        INotificationsDbContext db,
         MailStore mail,
         PushDispatcher push,
         IUserDirectory users)

@@ -1,5 +1,5 @@
 // traces_to: L2-062, L2-063
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
 public sealed record NotificationDto(
     string Id,

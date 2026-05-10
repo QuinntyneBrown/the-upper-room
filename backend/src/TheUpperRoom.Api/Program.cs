@@ -132,6 +132,7 @@ var notificationsConn = builder.Configuration["NotificationsDb:ConnectionString"
                         ?? "Data Source=Data/notifications.db";
 EnsureSqliteDirectoryExists(notificationsConn);
 builder.Services.AddDbContext<NotificationsDbContext>(o => o.UseSqlite(notificationsConn));
+builder.Services.AddScoped<INotificationsDbContext>(sp => sp.GetRequiredService<NotificationsDbContext>());
 builder.Services.AddScoped<MailStore>();
 
 var pushConn = builder.Configuration["PushDb:ConnectionString"]

@@ -2,10 +2,12 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using TheUpperRoom.Application.Notifications;
 
 namespace TheUpperRoom.Infrastructure.Notifications;
 
-public sealed class NotificationsDbContext(DbContextOptions<NotificationsDbContext> options) : DbContext(options)
+public sealed class NotificationsDbContext(DbContextOptions<NotificationsDbContext> options)
+    : DbContext(options), INotificationsDbContext
 {
     public DbSet<NotificationRow> Notifications => Set<NotificationRow>();
     public DbSet<PreferenceRow> Preferences => Set<PreferenceRow>();

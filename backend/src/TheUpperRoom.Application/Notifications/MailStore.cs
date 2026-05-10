@@ -1,10 +1,8 @@
 // traces_to: L2-063
 // Traces to: TASK-0229
-using TheUpperRoom.Infrastructure.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
-namespace TheUpperRoom.Api.Notifications;
-
-public sealed class MailStore(NotificationsDbContext db)
+public sealed class MailStore(INotificationsDbContext db)
 {
     public void Send(string toUserId, string subject, string body)
     {

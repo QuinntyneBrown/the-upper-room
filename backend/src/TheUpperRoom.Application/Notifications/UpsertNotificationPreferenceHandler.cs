@@ -1,15 +1,14 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
-using TheUpperRoom.Infrastructure.Notifications;
 
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
 internal sealed class UpsertNotificationPreferenceHandler : IRequestHandler<UpsertNotificationPreferenceCommand, UpsertNotificationPreferenceResult>
 {
-    private readonly NotificationsDbContext _db;
+    private readonly INotificationsDbContext _db;
     private readonly IUserDirectory _users;
 
-    public UpsertNotificationPreferenceHandler(NotificationsDbContext db, IUserDirectory users)
+    public UpsertNotificationPreferenceHandler(INotificationsDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;

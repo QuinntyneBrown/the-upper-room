@@ -1,5 +1,5 @@
 using MediatR;
 
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
 public sealed record ListNotificationPreferencesQuery(string UserId) : IRequest<ListNotificationPreferencesResult>;

@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
 public enum NotificationsOutcome
 {

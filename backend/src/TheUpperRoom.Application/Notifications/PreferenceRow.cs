@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Infrastructure.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
 public sealed class PreferenceRow
 {
