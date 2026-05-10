@@ -117,6 +117,44 @@ public sealed class TechnologyGuidanceArchitectureTests
     }
 
     [Fact]
+    public void Every_infrastructure_feature_dbcontext_implements_an_application_interface()
+    {
+        // Every <Feature>DbContext under TheUpperRoom.Infrastructure that is
+        // consumed by an Application-layer handler should implement an
+        // Application-defined I<Feature>DbContext interface so handlers can
+        // depend on the abstraction. The exempt contexts are consumed only
+        // by Infrastructure-side services or by Api controllers directly:
+        //   UsersDbContext     — used by UserDirectory + AuthUserStore in
+        //                        Infrastructure.
+        //   CitiesDbContext    — read directly by Api/CitiesController.
+        //   LocationsDbContext — read directly by Api/LocationsController.
+        // None of those have a handler that needs the seam.
+        var infraAssembly = typeof(TheUpperRoom.Infrastructure.DependencyInjection).Assembly;
+        var appAssembly = typeof(DependencyInjection).Assembly;
+
+        var appInterfaces = appAssembly.GetTypes()
+            .Where(t => t.IsInterface && t.Name.EndsWith("DbContext", StringComparison.Ordinal))
+            .ToHashSet();
+
+        var allowed = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "UsersDbContext",
+            "CitiesDbContext",
+            "LocationsDbContext",
+        };
+
+        var violations = infraAssembly.GetTypes()
+            .Where(t => t is { IsClass: true, IsAbstract: false }
+                && t.Name.EndsWith("DbContext", StringComparison.Ordinal)
+                && !allowed.Contains(t.Name))
+            .Where(t => !t.GetInterfaces().Any(i => appInterfaces.Contains(i)))
+            .Select(t => t.FullName)
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void Application_handlers_that_need_a_db_context_use_iappdbcontext()
     {
         var root = FindRepoRoot();
