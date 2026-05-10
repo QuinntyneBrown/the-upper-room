@@ -233,6 +233,43 @@ public sealed class TechnologyGuidanceArchitectureTests
     }
 
     [Fact]
+    public void Every_application_command_or_query_is_a_public_sealed_record()
+    {
+        // Project convention: MediatR request types (IRequest<T>) are
+        // sealed records. Records give value-equality + concise
+        // definition; sealed because there's no inheritance use case.
+        // Catches a regression where someone defines a class or forgets
+        // `sealed`.
+        var appAssembly = typeof(DependencyInjection).Assembly;
+        var iRequestOpen = typeof(MediatR.IRequest<>);
+        var iRequestUnit = typeof(MediatR.IRequest);
+
+        var requests = appAssembly.GetTypes()
+            .Where(t => t is { IsClass: true, IsAbstract: false })
+            .Where(t => t.GetInterfaces().Any(i =>
+                i == iRequestUnit ||
+                (i.IsGenericType && i.GetGenericTypeDefinition() == iRequestOpen)))
+            .ToArray();
+
+        Assert.NotEmpty(requests);
+
+        const System.Reflection.BindingFlags allInstance =
+            System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.Public |
+            System.Reflection.BindingFlags.NonPublic;
+
+        var violations = requests
+            .Where(t => !t.IsPublic
+                || !t.IsSealed
+                // Records emit a synthesised <Clone>$ method; classes do not.
+                || t.GetMethod("<Clone>$", allInstance) is null)
+            .Select(t => $"{t.FullName} (IsPublic={t.IsPublic}, IsSealed={t.IsSealed})")
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void Every_application_handler_is_internal_sealed()
     {
         // Project convention: MediatR handlers are internal sealed. Internal
