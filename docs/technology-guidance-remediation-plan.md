@@ -417,10 +417,9 @@ Full Api.Tests suite stays **105/105 PASS** after every split. The "every multi-
 
 In rough priority order:
 
-1. **Phase 3 sweep prep**: pick a strategy for the `<X>DbContext` → `IAppDbContext` migration that doesn't require rewriting handlers against rich Domain entities. Two viable paths: (a) `IAppDbContext` exposes the existing infrastructure POCOs as DbSets so the move is purely the project boundary; (b) commit to the rich Domain model and rewrite handlers feature-by-feature. Path (a) is cheaper for the sweep; path (b) is what the original audit envisioned.
-2. **Phase 2 finish**: once a path is picked, complete tasks 2.1/2.2/2.3/2.6/2.9/2.10/2.11/2.12 for Contacts as the template.
-3. **Phase 3 sweep**: apply the chosen pattern to Audit, Locations, Cities, Partners, Notes, Ideas, Notifications, Events, Kanban, Dashboard, Search, Rbac. ~half a day each.
-4. **Phase 4C RBAC entities**: 4.8–4.12. Smaller than the sweep but blocked behind it for sequencing.
-5. **Phase 7 acceptance pass**: after the sweep, re-run the full audit and tick the checklist.
+1. **Phase 3 sweep**: ~mostly DONE per path-(a). Each feature DbContext now lives in `Infrastructure/<Feature>/`, every Row type has been lifted to `Application/<Feature>/`, and handlers depend on per-feature `I<Feature>DbContext` interfaces. Audit, Rbac, Notes, Push, Notifications, Kanban, Events (incl. RSVP + Cancel), Contacts, Ideas, Locations all migrated. Remaining: **Dashboard** (cross-feature aggregator that fans into 4 contexts + the in-memory Partners store) — kept in `Api/` until the partners store gets its own service boundary.
+2. **Phase 2 finish**: Contacts is fully migrated this iteration as the template — handlers consume `IContactsDbContext`, all DTOs live in Application, and a single allow-list entry remains for the Dashboard handler.
+3. **Phase 4C RBAC entities**: 4.8–4.12. Smaller than the sweep but blocked behind it for sequencing.
+4. **Phase 7 acceptance pass**: after the sweep, re-run the full audit and tick the checklist.
 
-Best estimate of remaining effort with the chosen path-(a) shortcut: ~5 working days.
+Best estimate of remaining effort: ~1–2 working days (Dashboard cross-cutting move + Phase 4C + acceptance).

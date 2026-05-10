@@ -25,11 +25,15 @@ public sealed class TechnologyGuidanceArchitectureTests
 
     private static readonly HashSet<string> MultiTypeFileAllowList = new(StringComparer.OrdinalIgnoreCase);
 
+    // Cross-feature aggregator that fans out to four feature DbContexts plus
+    // a handful of in-process Api stores (Partners). Moving it to Application
+    // would require porting every static helper it depends on; left in Api as
+    // the documented exception until the partners store has its own service
+    // boundary.
     private static readonly HashSet<string> RestrictedApiTypeAllowList = new(StringComparer.Ordinal)
     {
         "GetDashboardHandler",
         "GetDashboardQuery",
-        "ValidationExceptionHandler",
     };
 
     [Fact]
@@ -58,10 +62,22 @@ public sealed class TechnologyGuidanceArchitectureTests
         var apiRoot = Path.Combine(root, "backend", "src", "TheUpperRoom.Api");
         var violations = Directory.GetFiles(apiRoot, "*.cs", SearchOption.AllDirectories)
             .Where(file => !IsBuildArtifact(file))
-            .SelectMany(file => File.ReadLines(file).Select(line => TypeDeclarationPattern.Match(line)))
-            .Where(match => match.Success)
-            .Select(match => match.Groups[1].Value)
-            .Where(name => RestrictedApiSuffixes.Any(suffix => name.EndsWith(suffix, StringComparison.Ordinal)))
+            .SelectMany(file =>
+            {
+                // ASP.NET HTTP-pipeline handlers (e.g. IExceptionHandler) are not
+                // CQRS handlers and intentionally live in Api/. Filter those out by
+                // requiring the file to mention MediatR's IRequestHandler before
+                // counting "*Handler" suffixes as Application-shape types.
+                var content = File.ReadAllText(file);
+                var isMediatRFile = content.Contains("IRequestHandler", StringComparison.Ordinal);
+                return File.ReadLines(file).Select(line => (line, isMediatRFile));
+            })
+            .Select(t => (Match: TypeDeclarationPattern.Match(t.line), t.isMediatRFile))
+            .Where(t => t.Match.Success)
+            .Select(t => (Name: t.Match.Groups[1].Value, t.isMediatRFile))
+            .Where(t => RestrictedApiSuffixes.Any(suffix => t.Name.EndsWith(suffix, StringComparison.Ordinal)))
+            .Where(t => t.Name.EndsWith("Handler", StringComparison.Ordinal) ? t.isMediatRFile : true)
+            .Select(t => t.Name)
             .Where(name => !RestrictedApiTypeAllowList.Contains(name))
             .ToArray();
 
