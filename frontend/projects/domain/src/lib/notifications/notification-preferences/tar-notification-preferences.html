@@ -8,6 +8,24 @@
   }
 </div>
 
+<section class="np__digest-section">
+  <label for="digest-frequency-select" class="np__digest-label">Email digest frequency</label>
+  <select
+    id="digest-frequency-select"
+    data-testid="digest-frequency-select"
+    class="np__digest-select"
+    [value]="digestFrequency()"
+    (change)="onDigestChange($any($event.target).value)"
+  >
+    @for (opt of digestOptions; track opt) {
+      <option [value]="opt">{{ opt }}</option>
+    }
+  </select>
+  @if (digestSaved()) {
+    <span data-testid="digest-saved" class="np__saved">Saved</span>
+  }
+</section>
+
 <table mat-table [dataSource]="prefs()" class="np__table">
   <ng-container matColumnDef="notification">
     <th mat-header-cell *matHeaderCellDef>Notification</th>

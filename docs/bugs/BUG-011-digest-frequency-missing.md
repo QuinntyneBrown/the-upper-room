@@ -1,10 +1,11 @@
-# BUG-011 — Notification preferences page has no digest-frequency control
+# BUG-011 — Notification preferences page has no digest-frequency control (RESOLVED 2026-05-10)
 
 **Severity**: Low
-**Component**: frontend
+**Component**: frontend + backend
 **Found in test**: TC-11.11 (Notification preferences — digest frequency)
 **User-guide refs**: §11.4
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-10 — DigestPreferenceRow added to NotificationsDbContext; GET/PUT `/api/v1/notifications/digest` (xUnit covered: default-off + persist across restart, 422 on invalid value); tar-notification-preferences renders the digest-frequency select with off|daily|weekly|monthly. TC-11.11 PASS.
 
 ## Description
 

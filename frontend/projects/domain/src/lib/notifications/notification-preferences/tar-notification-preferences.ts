@@ -26,6 +26,11 @@ export class TarNotificationPreferences implements OnInit {
   protected readonly savedCode = signal<string | null>(null);
   protected readonly pushSubscribed = signal(false);
   protected readonly displayedColumns = ['notification', 'inApp', 'email', 'push', 'saved'];
+  protected readonly digestFrequency = signal<'off' | 'daily' | 'weekly' | 'monthly'>('off');
+  protected readonly digestSaved = signal(false);
+  protected readonly digestOptions: Array<'off' | 'daily' | 'weekly' | 'monthly'> = [
+    'off', 'daily', 'weekly', 'monthly',
+  ];
 
   private readonly debounces = new Map<string, ReturnType<typeof setTimeout>>();
 
@@ -33,7 +38,28 @@ export class TarNotificationPreferences implements OnInit {
     this.http
       .get<PrefDto[]>('/api/v1/notifications/preferences')
       .subscribe((data) => this.prefs.set(data));
+    this.http
+      .get<{ digestFrequency: 'off' | 'daily' | 'weekly' | 'monthly' }>(
+        '/api/v1/notifications/digest',
+      )
+      .subscribe({
+        next: (r) => this.digestFrequency.set(r.digestFrequency ?? 'off'),
+        error: () => { /* default 'off' */ },
+      });
     this.checkPushStatus();
+  }
+
+  protected onDigestChange(value: string): void {
+    const next = (this.digestOptions as string[]).includes(value)
+      ? (value as 'off' | 'daily' | 'weekly' | 'monthly')
+      : 'off';
+    this.digestFrequency.set(next);
+    this.http
+      .put('/api/v1/notifications/digest', { digestFrequency: next })
+      .subscribe(() => {
+        this.digestSaved.set(true);
+        setTimeout(() => this.digestSaved.set(false), 2000);
+      });
   }
 
   private checkPushStatus(): void {

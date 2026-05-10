@@ -125,4 +125,36 @@ public sealed class NotificationsPersistenceTests : IDisposable
         var db = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
         Assert.Contains(db.SentMail.ToList(), m => m.ToUserId == "admin");
     }
+
+    [Fact]
+    public async Task Digest_default_is_off_then_put_persists_across_restart()
+    {
+        await using (var factory1 = Factory())
+        {
+            var initial = await AuthedClient(factory1, "lead").GetAsync("/api/v1/notifications/digest");
+            Assert.Equal(HttpStatusCode.OK, initial.StatusCode);
+            var initialJson = await initial.Content.ReadAsStringAsync();
+            Assert.Contains("\"digestFrequency\":\"off\"", initialJson);
+
+            var put = await AuthedClient(factory1, "lead").PutAsJsonAsync(
+                "/api/v1/notifications/digest",
+                new { digestFrequency = "weekly" });
+            Assert.Equal(HttpStatusCode.OK, put.StatusCode);
+        }
+
+        await using var factory2 = Factory();
+        var resp = await AuthedClient(factory2, "lead").GetAsync("/api/v1/notifications/digest");
+        var json = await resp.Content.ReadAsStringAsync();
+        Assert.Contains("\"digestFrequency\":\"weekly\"", json);
+    }
+
+    [Fact]
+    public async Task Digest_invalid_frequency_returns_422()
+    {
+        await using var factory = Factory();
+        var resp = await AuthedClient(factory, "lead").PutAsJsonAsync(
+            "/api/v1/notifications/digest",
+            new { digestFrequency = "yearly" });
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, resp.StatusCode);
+    }
 }

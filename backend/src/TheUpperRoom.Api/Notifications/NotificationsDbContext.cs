@@ -10,6 +10,7 @@ public sealed class NotificationsDbContext(DbContextOptions<NotificationsDbConte
     public DbSet<NotificationRow> Notifications => Set<NotificationRow>();
     public DbSet<PreferenceRow> Preferences => Set<PreferenceRow>();
     public DbSet<SentMailRow> SentMail => Set<SentMailRow>();
+    public DbSet<DigestPreferenceRow> DigestPreferences => Set<DigestPreferenceRow>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -39,6 +40,12 @@ public sealed class NotificationsDbContext(DbContextOptions<NotificationsDbConte
         m.HasKey(x => x.Id);
         m.Property(x => x.ToUserId).HasMaxLength(100).IsRequired();
         m.Property(x => x.Subject).HasMaxLength(500).IsRequired();
+
+        var d = b.Entity<DigestPreferenceRow>();
+        d.ToTable("DigestPreferences");
+        d.HasKey(x => x.UserId);
+        d.Property(x => x.UserId).HasMaxLength(100);
+        d.Property(x => x.Frequency).HasMaxLength(20).IsRequired();
     }
 }
 
@@ -72,4 +79,10 @@ public sealed class SentMailRow
     public string Subject { get; set; } = "";
     public string Body { get; set; } = "";
     public DateTimeOffset SentAt { get; set; }
+}
+
+public sealed class DigestPreferenceRow
+{
+    public string UserId { get; set; } = "";
+    public string Frequency { get; set; } = "off";
 }

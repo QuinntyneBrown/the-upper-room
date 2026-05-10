@@ -93,7 +93,41 @@ public sealed class NotificationsController(IMediator mediator, ICurrentUser cur
             _ => StatusCode(500),
         };
     }
+
+    [HttpGet("digest")]
+    public IActionResult GetDigest([FromServices] NotificationsDbContext db)
+    {
+        var userId = currentUser.UserId ?? "";
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var row = db.DigestPreferences.Find(userId);
+        return Ok(new { digestFrequency = row?.Frequency ?? "off" });
+    }
+
+    [HttpPut("digest")]
+    public IActionResult UpsertDigest(
+        [FromBody] UpsertDigestRequest? body,
+        [FromServices] NotificationsDbContext db)
+    {
+        var userId = currentUser.UserId ?? "";
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var freq = body?.DigestFrequency?.Trim().ToLowerInvariant();
+        if (freq is null || (freq != "off" && freq != "daily" && freq != "weekly" && freq != "monthly"))
+            return UnprocessableEntity(new { error = "digestFrequency must be one of off|daily|weekly|monthly." });
+
+        var row = db.DigestPreferences.Find(userId);
+        if (row is null)
+        {
+            db.DigestPreferences.Add(new DigestPreferenceRow { UserId = userId, Frequency = freq });
+        }
+        else
+        {
+            row.Frequency = freq;
+        }
+        db.SaveChanges();
+        return Ok(new { digestFrequency = freq });
+    }
 }
 
 public sealed record DispatchRequest(string Code, string[] RecipientIds, Dictionary<string, string>? Data);
 public sealed record UpsertPreferenceRequest(string Code, bool InApp, bool Email, bool Push);
+public sealed record UpsertDigestRequest(string? DigestFrequency);
