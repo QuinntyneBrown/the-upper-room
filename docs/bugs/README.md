@@ -34,6 +34,7 @@ Bugs filed while executing `docs/test-plan/` against the locally running app on 
 | [BUG-038](BUG-038-idea-list-sort-dropdown-not-applied.md) | Low (RESOLVED) | e2e | Idea sort-dropdown spec was racing the second response; component was correct. Spec fixed with `waitForResponse`. |
 | [BUG-039](BUG-039-idea-status-chip-no-per-status-styling.md) | Low | frontend | Idea status chip uses one secondary-container colour for every status; TC-8.9 expects per-status colour tokens |
 | [BUG-040](BUG-040-ics-download-filename-missing-extension.md) | Medium | frontend | Add-to-calendar download offers `ics.txt` instead of `{slug}.ics` because `<a download="">` overrides server `Content-Disposition` |
+| [BUG-041](BUG-041-location-delete-409-no-archive-action.md) | Medium | frontend | Location delete 409 (referenced by future event) surfaces generic error snackbar; expected "Archive instead" recovery action missing |
 
 ## What passed
 
