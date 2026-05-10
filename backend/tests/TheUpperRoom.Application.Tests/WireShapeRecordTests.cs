@@ -3,8 +3,10 @@ using TheUpperRoom.Application.Auth;
 using TheUpperRoom.Application.Contacts;
 using TheUpperRoom.Application.Dashboard;
 using TheUpperRoom.Application.Events;
+using TheUpperRoom.Application.Kanban;
 using TheUpperRoom.Application.Notifications;
 using TheUpperRoom.Application.Notes;
+using TheUpperRoom.Application.Uploads;
 
 namespace TheUpperRoom.Application.Tests;
 
@@ -309,6 +311,52 @@ public sealed class WireShapeRecordTests
 
         var ok = new SubmitRsvpResult(new RsvpResponse("Going"), RsvpOutcome.Ok);
         Assert.NotNull(ok.Response);
+    }
+
+    [Fact]
+    public void Kanban_card_results_share_payload_or_outcome_shape()
+    {
+        var move = new MoveCardResult(new { id = "c-1" }, KanbanOutcome.Ok);
+        Assert.NotNull(move.Payload);
+        Assert.Equal(KanbanOutcome.Ok, move.Outcome);
+
+        var patch = new PatchCardResult(null, KanbanOutcome.NotFound);
+        Assert.Null(patch.Payload);
+
+        // DeleteCardResult is outcome-only (the controller maps Ok -> 204).
+        Assert.Single(typeof(DeleteCardResult).GetProperties());
+    }
+
+    [Fact]
+    public void CancelEventResult_event_is_null_when_outcome_not_cancelled()
+    {
+        var notFound = new CancelEventResult(null, CancelEventOutcome.NotFound);
+        Assert.Null(notFound.Event);
+        Assert.Equal(CancelEventOutcome.NotFound, notFound.Outcome);
+    }
+
+    [Fact]
+    public void GetMyRsvpResult_optional_status_and_waitlist_position()
+    {
+        var unanswered = new GetMyRsvpResult(null, null, RsvpOutcome.Ok);
+        Assert.Null(unanswered.Status);
+        Assert.Null(unanswered.WaitlistPosition);
+
+        var waitlisted = new GetMyRsvpResult("Waitlisted", 5, RsvpOutcome.Ok);
+        Assert.Equal("Waitlisted", waitlisted.Status);
+        Assert.Equal(5, waitlisted.WaitlistPosition);
+    }
+
+    [Fact]
+    public void UploadFileResult_url_and_error_are_mutually_exclusive_in_practice()
+    {
+        var ok = new UploadFileResult("https://cdn.example.com/x.png", UploadFileOutcome.Uploaded, null);
+        Assert.NotNull(ok.Url);
+        Assert.Null(ok.Error);
+
+        var rejected = new UploadFileResult(null, UploadFileOutcome.TooLarge, "10MB max");
+        Assert.Null(rejected.Url);
+        Assert.NotNull(rejected.Error);
     }
 
     [Fact]
