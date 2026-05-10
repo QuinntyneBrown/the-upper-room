@@ -336,6 +336,7 @@ export class BoardView implements AfterViewInit, OnDestroy {
         const target = this.board()?.cards.find((c) => c.id === card.id) ?? card;
         if (result?.kind === 'archive') this.archiveCard(target);
         else if (result?.kind === 'delete') this.deleteCard(target);
+        else if (result?.kind === 'move') this.openMoveSheet(target);
       });
   }
 

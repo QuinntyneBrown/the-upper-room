@@ -6,6 +6,7 @@
     (blurred)="onTitleBlur()"
   />
   <div class="dialog__header-actions">
+    <tar-button variant="text" testId="card-detail-move" type="button" (clicked)="onMove()">Move</tar-button>
     <tar-button variant="text" testId="card-detail-archive" type="button" (clicked)="onArchive()">Archive</tar-button>
     <tar-button variant="text" color="warn" testId="card-detail-delete" type="button" (clicked)="onDelete()">Delete</tar-button>
     <tar-icon-button icon="close" ariaLabel="Close" testId="card-detail-close" (clicked)="onClose()" />

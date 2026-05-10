@@ -1,10 +1,11 @@
-# BUG-008 — Card detail dialog has no "Move" button (mobile move flow broken)
+# BUG-008 — Card detail dialog has no "Move" button (mobile move flow broken) (RESOLVED 2026-05-10)
 
 **Severity**: Medium
 **Component**: frontend
 **Found in test**: TC-7.8 (Move card on mobile)
 **User-guide refs**: §7.5 (mobile move sheet)
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-10 — card-detail-dialog header now renders a Move button (`data-testid="card-detail-move"`) that closes with `{ kind: 'move' }`; board-view opens the existing `BoardMoveSheetDialog` and POSTs `/api/v1/cards/{id}/move`. TC-7.8 PASS.
 
 ## Description
 

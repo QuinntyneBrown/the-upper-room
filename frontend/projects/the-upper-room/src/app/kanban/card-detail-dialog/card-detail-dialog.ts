@@ -25,7 +25,8 @@ export interface CardDetailDialogData {
 export type CardDetailDialogResult =
   | { kind: 'close' }
   | { kind: 'archive' }
-  | { kind: 'delete' };
+  | { kind: 'delete' }
+  | { kind: 'move' };
 
 @Component({
   selector: 'app-card-detail-dialog',
@@ -99,6 +100,10 @@ export class CardDetailDialog implements OnInit {
 
   protected onArchive(): void {
     this.ref.close({ kind: 'archive' });
+  }
+
+  protected onMove(): void {
+    this.ref.close({ kind: 'move' });
   }
 
   protected async onDelete(): Promise<void> {
