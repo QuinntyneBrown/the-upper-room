@@ -1,10 +1,15 @@
-# BUG-001 — Sign-up, password-reset, and email-verification endpoints return 404
+# BUG-001 — Sign-up, password-reset, and email-verification endpoints return 404 (RESOLVED 2026-05-10)
 
 **Severity**: Critical
 **Component**: backend
 **Found in test**: TC-2.2 (Sign up), TC-2.4 (Forgot password — reset step), implicitly any "verify your email" flow
 **User-guide refs**: §2.2, §2.3, §2.4
 **Found**: 2026-05-09
+**Status**: FIXED — `AuthController` exposes `register`, `forgot-password`, `reset-password`, `verify-email`, `change-password`, and `delete-account`; `IAuthUserStore` has full implementations of `CreatePasswordUserAsync`, `SetPasswordResetTokenAsync`, `ResetPasswordAsync`, `VerifyEmailAsync`, `DeleteAccountAsync`, `FindByIdAsync` against the SQLite-backed `UserRow`. Verified end-to-end this iteration with 4 new xUnit tests in `Auth/AuthFlowEndToEndTests.cs`:
+- `Register_then_verify_then_sign_in_round_trip` (register → 201 with token, sign-in pre-verify → 401, verify → 204, sign-in post-verify → 200 + access token).
+- `Verify_email_with_invalid_token_returns_400`.
+- `Reset_password_with_invalid_token_returns_400`.
+- `Forgot_password_does_not_leak_account_existence` (both unknown and known emails return 204).
 
 ## Description
 
