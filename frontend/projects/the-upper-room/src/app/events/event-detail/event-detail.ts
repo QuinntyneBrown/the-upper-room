@@ -154,11 +154,15 @@ export class EventDetail implements OnInit {
   }
 
   protected addToCalendar(): void {
-    const id = this.event()?.id;
-    if (!id) return;
+    const ev = this.event();
+    if (!ev) return;
+    const slug = (ev.title ?? 'event')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
     const a = document.createElement('a');
-    a.href = `/api/v1/events/${id}/ics`;
-    a.download = '';
+    a.href = `/api/v1/events/${ev.id}/ics`;
+    a.download = `${slug || 'event'}.ics`;
     a.click();
   }
 
