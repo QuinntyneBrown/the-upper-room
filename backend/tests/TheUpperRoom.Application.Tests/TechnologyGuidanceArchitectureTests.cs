@@ -117,6 +117,35 @@ public sealed class TechnologyGuidanceArchitectureTests
     }
 
     [Fact]
+    public void Domain_does_not_reference_ef_aspnet_mediatr_or_validation_packages()
+    {
+        // Domain is the innermost layer: framework-free C#. Catch the
+        // accidental `<PackageReference>` slip in the .csproj that would
+        // pull EF / ASP.NET / MediatR / FluentValidation into Domain.
+        var domainAssembly = typeof(TheUpperRoom.Domain.Rbac.RoleCatalog).Assembly;
+        var references = domainAssembly.GetReferencedAssemblies()
+            .Select(reference => reference.Name)
+            .Where(name => name is not null)
+            .ToArray();
+
+        var forbidden = new[]
+        {
+            "Microsoft.EntityFrameworkCore",
+            "Microsoft.AspNetCore",
+            "MediatR",
+            "FluentValidation",
+            "Microsoft.Extensions.DependencyInjection",
+            "Microsoft.Extensions.Logging",
+        };
+
+        foreach (var prefix in forbidden)
+        {
+            Assert.DoesNotContain(references, name =>
+                name!.StartsWith(prefix, StringComparison.Ordinal));
+        }
+    }
+
+    [Fact]
     public void Every_infrastructure_feature_dbcontext_implements_an_application_interface()
     {
         // Every <Feature>DbContext under TheUpperRoom.Infrastructure that is
