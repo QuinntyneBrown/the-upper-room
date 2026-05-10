@@ -23,6 +23,21 @@ The original audit below was conducted on **2026-05-09**. After ~30 loop iterati
 
 The single **PARTIAL** is §B3 (per-feature `I<Feature>DbContext` abstractions instead of one literal `IAppDbContext` — handlers depend on Application-defined interfaces, which satisfies the spirit of the rule; consolidating into one context is an optional follow-up). The remaining **FAIL** is §A17's distributed throttling clause (the in-process `AuthRateLimiter` is fine for single-instance; cross-instance Redis-backed throttling is the deferred work).
 
+### Test surface (2026-05-10)
+
+The backend test suite grew from 167 to **211 tests** during the remediation:
+
+- **Domain.Tests**:        9
+- **Infrastructure.Tests**: 3
+- **Application.Tests**:   92 (was 50)
+- **Api.Tests**:          107 (was 105)
+
+The 44 new tests split as:
+
+- **Architecture tests** (12): file-shape rule, Api-shape rule, seeder centralisation, Application/Domain reference graph, Domain framework purity, Application→Infrastructure dependency inversion, Domain→outer-layer inversion, Infrastructure→Api inversion, every Infrastructure DbContext implements an Application interface, every Application handler depends on `I<Feature>DbContext`, every Application handler is `internal sealed`, every Application validator is `public sealed AbstractValidator<T>`.
+- **Validator unit tests** (33): SubmitRsvp status enum, ListAuditEntries paging bounds, CreateContact field shapes, MoveCard, DispatchNotification.
+- **HTTP-level validation integration** (4): RegisterCommand (short password / bad email) + Create / Update Contact (empty FirstName) all return RFC-7807 `application/problem+json` 400s end-to-end through the FluentValidation → ValidationException → ValidationExceptionHandler pipeline.
+
 The original section-by-section breakdown follows for historical reference. **Treat the per-section "PASS / PARTIAL / FAIL" verdicts in the headings below as the 2026-05-09 snapshot, not the current state.**
 
 ---
