@@ -1,8 +1,6 @@
 // traces_to: L2-052, L2-053, L2-055, L2-056
 namespace TheUpperRoom.Api.Events;
 
-public sealed record AttendeeDto(string Id, string Name, string? AvatarUrl, string RsvpStatus);
-
 public sealed record EventDto(
     string Id,
     string Title,

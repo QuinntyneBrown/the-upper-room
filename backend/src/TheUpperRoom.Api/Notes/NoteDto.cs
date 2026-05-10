@@ -25,5 +25,3 @@ public sealed record NoteDto(
         note.UpdatedAt,
         note.History.Select(v => new NoteVersionDto(v.Id, v.BodyMarkdown, v.BodyHtmlSanitized, v.CreatedAt, v.CreatedBy)).ToArray());
 }
-
-public sealed record NoteVersionDto(string Id, string BodyMarkdown, string BodyHtmlSanitized, DateTimeOffset CreatedAt, string CreatedBy);
