@@ -403,8 +403,10 @@ In addition to Contacts (2.5), this iteration applied the one-type-per-file spli
 - [x] **3.K (Kanban)** — `PatchCardCommand.cs` (10 types) → `KanbanOutcome.cs`, `PatchCardCommand.cs`, `PatchCardResult.cs`, `PatchCardHandler.cs`, `MoveCardCommand.cs`, `MoveCardResult.cs`, `MoveCardHandler.cs`, `DeleteCardCommand.cs`, `DeleteCardResult.cs`, `DeleteCardHandler.cs`. 10/10 KanbanPersistenceTests pass.
 - [x] **3.E (Events)** — `CancelEventCommand.cs` (4 types) → `CancelEventCommand.cs`, `CancelEventResult.cs`, `CancelEventOutcome.cs`, `CancelEventHandler.cs`.
 - [x] **3.A (Audit)** — `ListAuditEntriesQuery.cs` (4 types) → `ListAuditEntriesQuery.cs`, `ListAuditEntriesResult.cs`, `ListAuditEntriesOutcome.cs`, `ListAuditEntriesHandler.cs`.
+- [x] **3.K2 (Kanban DbContext + DTO split)** — `KanbanDbContext.cs` (4 types) → `KanbanDbContext.cs`, `BoardRow.cs`, `BoardColumnRow.cs`, `CardRow.cs`. `BoardDetailDto.cs` (4 types) → `BoardDetailDto.cs`, `BoardColumnDto.cs`, `BoardCardTagDto.cs`, `BoardCardDto.cs`.
+- [x] **3.N (Notes)** — `NotesCqrs.cs` (13 types) → 13 files (`NotesOutcome`, `ListNotesQuery`/`Result`, `GetNoteQuery`, `CreateNoteCommand`, `UpdateNoteCommand`, `DeleteNoteCommand`, `NoteResult`, `NotesSanitizer` helper, plus 5 handler files).
 
-Full Api.Tests suite stays **105/105 PASS** after the splits. Remaining multi-type files to sweep: `Notifications/NotificationsCqrs.cs` (19 types), `Events/EventRsvpCqrs.cs` (14), `Notes/NotesCqrs.cs` (13), `Notifications/PushCommands.cs` (7), plus a handful of 3-5 type files in DbContext / Controller / DTO sites where the secondary types are tightly cohesive.
+Full Api.Tests suite stays **105/105 PASS** after every split. Remaining multi-type files to sweep: `Notifications/NotificationsCqrs.cs` (19 types), `Events/EventRsvpCqrs.cs` (14), `Notifications/PushCommands.cs` (7), plus a few 3-5 type files in DbContext / Controller sites where secondary types are tightly cohesive.
 
 ## Genuinely-remaining engineering work
 
