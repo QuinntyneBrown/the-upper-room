@@ -117,6 +117,40 @@ public sealed class TechnologyGuidanceArchitectureTests
     }
 
     [Fact]
+    public void Application_does_not_reference_infrastructure_or_api_assemblies()
+    {
+        // Clean Architecture inversion: Application owns interfaces;
+        // Infrastructure implements them. A Project/Package reference from
+        // Application back to Infrastructure or Api would invert the
+        // dependency graph.
+        var appAssembly = typeof(DependencyInjection).Assembly;
+        var references = appAssembly.GetReferencedAssemblies()
+            .Select(reference => reference.Name)
+            .Where(name => name is not null)
+            .ToArray();
+
+        Assert.DoesNotContain(references, name => name == "TheUpperRoom.Infrastructure");
+        Assert.DoesNotContain(references, name => name == "TheUpperRoom.Api");
+    }
+
+    [Fact]
+    public void Domain_does_not_reference_application_infrastructure_or_api_assemblies()
+    {
+        // Domain is the innermost layer and must not depend on any of the
+        // outer layers. Catches the accidental ProjectReference slip in
+        // Domain.csproj.
+        var domainAssembly = typeof(TheUpperRoom.Domain.Rbac.RoleCatalog).Assembly;
+        var references = domainAssembly.GetReferencedAssemblies()
+            .Select(reference => reference.Name)
+            .Where(name => name is not null)
+            .ToArray();
+
+        Assert.DoesNotContain(references, name => name == "TheUpperRoom.Application");
+        Assert.DoesNotContain(references, name => name == "TheUpperRoom.Infrastructure");
+        Assert.DoesNotContain(references, name => name == "TheUpperRoom.Api");
+    }
+
+    [Fact]
     public void Domain_does_not_reference_ef_aspnet_mediatr_or_validation_packages()
     {
         // Domain is the innermost layer: framework-free C#. Catch the
