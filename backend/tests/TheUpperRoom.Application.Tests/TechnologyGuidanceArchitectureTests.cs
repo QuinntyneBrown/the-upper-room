@@ -23,14 +23,7 @@ public sealed class TechnologyGuidanceArchitectureTests
         "DataSeeder",
     ];
 
-    private static readonly HashSet<string> MultiTypeFileAllowList = new(StringComparer.OrdinalIgnoreCase)
-    {
-        "backend/src/TheUpperRoom.Api/Auth/AuthController.cs",
-        "backend/src/TheUpperRoom.Api/Events/EventRsvpController.cs",
-        "backend/src/TheUpperRoom.Api/Ideas/IdeasController.cs",
-        "backend/src/TheUpperRoom.Api/Kanban/BoardsController.cs",
-        "backend/src/TheUpperRoom.Api/Notifications/NotificationsController.cs",
-    };
+    private static readonly HashSet<string> MultiTypeFileAllowList = new(StringComparer.OrdinalIgnoreCase);
 
     private static readonly HashSet<string> RestrictedApiTypeAllowList = new(StringComparer.Ordinal)
     {

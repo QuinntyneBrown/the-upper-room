@@ -198,9 +198,3 @@ public sealed class BoardsController(
     private AppUser? CurrentUser() =>
         userDirectory.GetById(currentUser.UserId ?? "");
 }
-
-public sealed record PatchBoardRequest(string? Name, string? SwimlaneMode);
-public sealed record CreateCardRequest(string Title, string ColumnId);
-public sealed record ColumnOrderRequest(string[] Order);
-public sealed record PatchColumnRequest(int? WipLimit, string? Name, string? Color);
-public sealed record DeleteColumnRequest(string? TargetColumnId);

@@ -318,13 +318,3 @@ public sealed class IdeasController(
     private AppUser? GetCurrentUser() =>
         userDirectory.GetById(currentUser.UserId ?? "");
 }
-
-public sealed record CreateIdeaRequest(
-    string? Title,
-    string? Description = null,
-    string? BodyMarkdown = null,
-    string[]? Tags = null);
-public sealed record CreateCommentRequest(string? Body);
-public sealed record UpdateIdeaRequest(string? BodyMarkdown, string? CoverImageUrl);
-public sealed record ChangeStatusRequest(string Status);
-public sealed record LinkIdeaPartnerRequest(string PartnerId, string? PartnerName = null);

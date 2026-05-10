@@ -251,6 +251,3 @@ public sealed class AuthController : ControllerBase
         return NoContent();
     }
 }
-
-public sealed record SignInRequest(string Email, string? Password);
-public sealed record ForgotPasswordRequest(string Email);

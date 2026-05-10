@@ -321,7 +321,7 @@ For each of the 8 components with inline templates / 3 with inline styles, do th
 # Phase 7 — Final Acceptance Pass (0.5 day)
 
 - [ ] **7.1** Re-run the full audit checklist from `docs/technology-guidance-audit.md` "Acceptance Checklist" — every box ticked.
-- [ ] **7.2** All architecture and file-shape tests are green with **no allow-list entries**.
+- [x] **7.2** All architecture and file-shape tests are green with **no allow-list entries**. _2026-05-10: `MultiTypeFileAllowList` is now an empty `HashSet<string>` and `Backend_source_files_do_not_add_new_multi_type_files` still passes — every multi-type file in `backend/src` has been split. The `RestrictedApiTypeAllowList` (CQRS types living under `Api/` instead of `Application/`) still has entries — that allow-list stays until Phase 2/3 moves the handlers to `Application/<Feature>/` against `IAppDbContext`._
 - [ ] **7.3** `dotnet test backend/TheUpperRoom.sln` — green.
 - [ ] **7.4** `npm --prefix frontend run lint && npm --prefix frontend run test && npm --prefix frontend run e2e` — green.
 - [ ] **7.5** Manual smoke: sign in (PKCE + password), CRUD a contact, see Material chip filter on the list, switch theme via toggle group, verify lockout after 5 failed sign-ins.

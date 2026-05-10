@@ -6,10 +6,6 @@ using TheUpperRoom.Api.Auth;
 
 namespace TheUpperRoom.Api.Events;
 
-public sealed record RsvpRequest(string Status);
-public sealed record RsvpResponse(string RsvpStatus, int? WaitlistPosition = null, string? PromotedUser = null);
-public sealed record PendingRsvpDto(string Id, string UserId, string UserName, string RequestedAt);
-
 [ApiController]
 [Authorize]
 [Route("api/v1/events/{eventId}/rsvp")]

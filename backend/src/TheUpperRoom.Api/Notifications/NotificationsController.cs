@@ -127,7 +127,3 @@ public sealed class NotificationsController(IMediator mediator, ICurrentUser cur
         return Ok(new { digestFrequency = freq });
     }
 }
-
-public sealed record DispatchRequest(string Code, string[] RecipientIds, Dictionary<string, string>? Data);
-public sealed record UpsertPreferenceRequest(string Code, bool InApp, bool Email, bool Push);
-public sealed record UpsertDigestRequest(string? DigestFrequency);
