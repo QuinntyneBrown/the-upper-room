@@ -12,7 +12,8 @@ public sealed record BoardCardDto(
     BoardCardTagDto[] Tags,
     string? AssigneeName,
     string? DueDate,
-    string? SwimlaneKey = null);
+    string? SwimlaneKey = null,
+    bool Archived = false);
 
 public sealed record BoardDetailDto(
     string Id,

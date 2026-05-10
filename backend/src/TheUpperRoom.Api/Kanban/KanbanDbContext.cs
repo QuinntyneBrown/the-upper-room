@@ -67,4 +67,5 @@ public sealed class CardRow
     public string? AssigneeName { get; set; }
     public string? DueDate { get; set; }
     public int CardOrder { get; set; }
+    public bool Archived { get; set; }
 }

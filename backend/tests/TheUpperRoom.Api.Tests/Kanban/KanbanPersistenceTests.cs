@@ -60,7 +60,7 @@ public sealed class KanbanPersistenceTests : IDisposable
     private sealed record BoardLite(string Id, string Name);
     private sealed record BoardDetailResponse(string Id, string Name, ColumnLite[] Columns, CardLite[] Cards);
     private sealed record ColumnLite(string Id, string Name, string Color, int? WipLimit);
-    private sealed record CardLite(string Id, string ColumnId, string Title);
+    private sealed record CardLite(string Id, string ColumnId, string Title, bool Archived = false);
     private sealed record ListResponse(BoardLite[] Items, int Total);
     private sealed record MoveResponse(string Id, string ColumnId);
 
@@ -134,6 +134,60 @@ public sealed class KanbanPersistenceTests : IDisposable
 
         var detail2 = await client2.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
         Assert.Contains(detail2!.Cards, c => c.Id == cardId && c.ColumnId == targetColumnId);
+    }
+
+    [Fact]
+    public async Task Patch_archived_true_persists_archived_flag_across_restart()
+    {
+        string boardId;
+        string cardId;
+
+        await using (var factory = Factory())
+        {
+            var client = AuthedClient(factory, "lead");
+
+            var boardResp = await client.PostAsJsonAsync("/api/v1/boards", new { name = "Archive Board", defaultColumns = true });
+            boardId = (await boardResp.Content.ReadFromJsonAsync<BoardLite>())!.Id;
+
+            var detail = await client.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+            var columnId = detail!.Columns[0].Id;
+
+            var cardResp = await client.PostAsJsonAsync($"/api/v1/boards/{boardId}/cards", new { title = "Archive Me", columnId });
+            cardId = (await cardResp.Content.ReadFromJsonAsync<CardLite>())!.Id;
+
+            var patch = await client.PatchAsJsonAsync($"/api/v1/cards/{cardId}", new Dictionary<string, object?> { ["archived"] = true });
+            Assert.Equal(HttpStatusCode.OK, patch.StatusCode);
+        }
+
+        await using var factory2 = Factory();
+        var client2 = AuthedClient(factory2, "lead");
+
+        var detail2 = await client2.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+        var card2 = detail2!.Cards.First(c => c.Id == cardId);
+        Assert.True(card2.Archived);
+    }
+
+    [Fact]
+    public async Task Patch_archived_false_unarchives_card()
+    {
+        await using var factory = Factory();
+        var client = AuthedClient(factory, "lead");
+
+        var boardResp = await client.PostAsJsonAsync("/api/v1/boards", new { name = "Unarchive Board", defaultColumns = true });
+        var boardId = (await boardResp.Content.ReadFromJsonAsync<BoardLite>())!.Id;
+
+        var detail = await client.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+        var columnId = detail!.Columns[0].Id;
+
+        var cardResp = await client.PostAsJsonAsync($"/api/v1/boards/{boardId}/cards", new { title = "Toggle Archive", columnId });
+        var cardId = (await cardResp.Content.ReadFromJsonAsync<CardLite>())!.Id;
+
+        await client.PatchAsJsonAsync($"/api/v1/cards/{cardId}", new Dictionary<string, object?> { ["archived"] = true });
+        await client.PatchAsJsonAsync($"/api/v1/cards/{cardId}", new Dictionary<string, object?> { ["archived"] = false });
+
+        var detail2 = await client.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+        var card2 = detail2!.Cards.First(c => c.Id == cardId);
+        Assert.False(card2.Archived);
     }
 
     [Fact]

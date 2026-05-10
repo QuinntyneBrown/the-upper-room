@@ -4,33 +4,37 @@ title: 'Run TC-7.11 - Archive card'
 status: Completed
 test_id: TC-7.11
 source: ../../test-plan/07-kanban-boards.md
-result: PASS-WITH-CAVEAT
-run_at: 2026-05-09T23:14:00Z
+result: PASS
+run_at: 2026-05-10T01:25:00Z
 ---
 
 # TASK-TC-7.11: Run TC-7.11 - Archive card
 
-## Result: PASS (frontend) — backend persistence still incomplete (BUG-005-adjacent)
+## Result: PASS (frontend + backend now persisted)
 
 | Field      | Value                       |
 |------------|-----------------------------|
 | Browser    | Chromium (Playwright)       |
 | Viewport   | 1280×720                    |
-| Build SHA  | ac993f4                     |
-| Run at     | 2026-05-09T23:14:00Z        |
+| Build SHA  | b024f43 + Archived backend  |
+| Run at     | 2026-05-10T01:25:00Z        |
 
 ### Evidence
 
-`e2e/tests/kanban/card-archive-delete.spec.ts:28` — "archive card → disappears from board; visible under Show archived toggle" PASSES after BUG-035/036/037 fixes.
+Frontend: `e2e/tests/kanban/card-archive-delete.spec.ts:28` PASS — open dialog → Archive →
+card disappears → Show archived chip reveals it.
 
-- Open card detail dialog, click `[data-testid="card-detail-archive"]`.
-- Dialog closes, card disappears from default view.
-- Toggle Show archived chip → card reappears with archived styling.
+Backend (now persisted):
+- `CardRow.Archived` (bool) added to `KanbanDbContext`.
+- `BoardCardDto.Archived` exposed on the board detail response.
+- `PatchCardHandler` accepts `{ "archived": true|false }` (handles bool, JsonElement, string).
 
-Frontend behaviour matches the test plan. The test plan still notes the backend caveat:
-`PatchCardHandler` only persists `title`, `assigneeName`, `dueDate` — not `archived`. This means
-the optimistic UI is correct but the change does not survive a hard reload. Test plan acceptance
-allows this since archive flow on backend is tracked separately.
+ATDD via xUnit:
+- `Patch_archived_true_persists_archived_flag_across_restart` PASS — archive survives
+  factory restart (hard reload).
+- `Patch_archived_false_unarchives_card` PASS — toggle off works.
+
+Optimistic UI now converges to server truth on reload.
 
 ## Definition of Done
 
