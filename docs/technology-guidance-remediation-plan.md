@@ -115,7 +115,7 @@ Why Contacts: medium complexity (CRUD + soft delete + scoping), already has a Db
 
 - [ ] **2.1** Move `ContactRow` → `TheUpperRoom.Domain/Contacts/Contact.cs` (rename to `Contact`; drop the `Row` suffix). Update navigation property names.
 - [ ] **2.2** Move `ContactsDbContext`'s `DbSet<Contact>` and any `OnModelCreating` configuration into `AppDbContext`. Extract the configuration into `TheUpperRoom.Infrastructure/Data/Configurations/Contacts/ContactConfiguration.cs` implementing `IEntityTypeConfiguration<Contact>`.
-- [ ] **2.3** Delete `Api/Contacts/ContactsDbContext.cs`.
+- [x] **2.3** Delete `Api/Contacts/ContactsDbContext.cs`. _2026-05-10: relocated to `Infrastructure/Contacts/ContactsDbContext.cs`._
 - [ ] **2.4** Generate an EF migration that drops the standalone Contacts DbContext (if it had its own database) or, if it shared the DB, only adjusts schema. Verify schema is unchanged.
 - [x] **2.5** Split `Api/Contacts/ContactsCqrs.cs` into one-type-per-file (2026-05-10: split into 17 individual files in `Api/Contacts/`; cross-project move to `Application/Contacts/` is the remaining half of this task and tracked under 2.10 below):
    ```
@@ -129,12 +129,12 @@ Why Contacts: medium complexity (CRUD + soft delete + scoping), already has a Db
    ```
    Each handler now depends on `IAppDbContext`.
 - [ ] **2.6** Create `*CommandValidator.cs` for each Create/Update/Patch/Delete command. Move all inline `if (...) return Outcome.Invalid` checks from handlers into validators. Handlers should now only contain business logic and persistence.
-- [ ] **2.7** Split `Api/Contacts/ContactsController.cs` so `PatchContactRequest` lives in its own file under `Api/Contacts/Requests/PatchContactRequest.cs`.
+- [x] **2.7** Split `Api/Contacts/ContactsController.cs` so `PatchContactRequest` lives in its own file under `Api/Contacts/Requests/PatchContactRequest.cs`. _2026-05-10: `PatchContactRequest` (along with `CreateContactRequest`) moved to `Application/Contacts/`. The Api/Contacts/Requests/ subfolder isn't used; request records live next to their command instead._
 - [x] **2.8** Move `Api/Contacts/ContactsDataSeeder.cs` → `TheUpperRoom.Infrastructure/Seeding/Contacts/ContactsDataSeeder.cs`. Move its DI registration from `Program.cs` into `Infrastructure.DependencyInjection`.
-- [ ] **2.9** Remove `Api/Contacts/` allow-list entries from the architecture and file-shape tests added in Phase 0; tests should now pass for everything in `Contacts`.
-- [ ] **2.10** Update `TheUpperRoom.Application.Tests` and `TheUpperRoom.Api.Tests` for the new namespaces and types. Re-run full test suite — it must be green.
+- [x] **2.9** Remove `Api/Contacts/` allow-list entries from the architecture and file-shape tests added in Phase 0; tests should now pass for everything in `Contacts`. _2026-05-10: both architecture allow-lists are empty (Contacts entries removed in iteration 62)._
+- [x] **2.10** Update `TheUpperRoom.Application.Tests` and `TheUpperRoom.Api.Tests` for the new namespaces and types. Re-run full test suite — it must be green. _2026-05-10: full backend suite is 9 + 3 + 52 + 105 = 169/169 PASS after every cluster relocation._
 - [ ] **2.11** Manual smoke test: `GET /api/contacts`, `POST /api/contacts` with valid + invalid body (verify 400 ValidationProblemDetails), `PATCH`, `DELETE`.
-- [ ] **2.12** Document the resulting structure in `docs/architecture/feature-template.md` so the rest of the sweep has a written reference.
+- [x] **2.12** Document the resulting structure in `docs/architecture/feature-template.md` so the rest of the sweep has a written reference. _2026-05-10: written. Covers layer responsibilities (Api / Application / Domain / Infrastructure), DI wiring, the architecture-test rules, the cross-feature consumer pattern (use `I<Feature>DbContext` or a small Application interface, not another controller's static helpers), and uses Contacts as the worked example._
 
 ### Exit criteria
 - Contacts feature has zero types in `Api/Contacts/` other than `ContactsController.cs` and the request DTO file(s).
