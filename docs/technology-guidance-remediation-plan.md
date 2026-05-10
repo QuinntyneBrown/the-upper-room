@@ -96,7 +96,7 @@ Calendar time will be longer if reviews are async; plan for 3 weeks elapsed.
   builder.Services.AddProblemDetails();
   app.UseExceptionHandler();
   ```
-- [ ] **1.11** Integration test: `POST /api/contacts` (or any existing endpoint) with invalid body returns HTTP 400 + RFC-7807 body once the first real validator exists (covered in Phase 2).
+- [x] **1.11** Integration test: `POST /api/contacts` (or any existing endpoint) with invalid body returns HTTP 400 + RFC-7807 body once the first real validator exists (covered in Phase 2). _2026-05-10: `tests/TheUpperRoom.Application.Tests/ValidationProblemDetailsTests` covers `POST /api/v1/auth/register` with (a) too-short password and (b) malformed email — both assert HTTP 400, `Content-Type: application/problem+json`, and an `errors` dictionary keyed by the offending property._
 
 ### Exit criteria
 - Solution builds.
