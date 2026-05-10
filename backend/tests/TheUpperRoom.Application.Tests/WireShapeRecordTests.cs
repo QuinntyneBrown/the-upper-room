@@ -148,6 +148,51 @@ public sealed class WireShapeRecordTests
     }
 
     [Fact]
+    public void RequestPasswordResetResult_default_token_is_null()
+    {
+        // Used to hide email-existence: handler returns the default
+        // (no token) when the store declines to issue one.
+        var blank = new RequestPasswordResetResult();
+        Assert.Null(blank.ResetToken);
+
+        var issued = new RequestPasswordResetResult("plain-token");
+        Assert.Equal("plain-token", issued.ResetToken);
+    }
+
+    [Fact]
+    public void PushKeys_record_value_equality()
+    {
+        var a = new PushKeys("p256-x", "auth-y");
+        var b = new PushKeys("p256-x", "auth-y");
+        Assert.Equal(a, b);
+        Assert.NotEqual(a, new PushKeys("p256-x", "different-auth"));
+    }
+
+    [Fact]
+    public void PushSubscribeRequest_keys_can_be_null()
+    {
+        var partial = new PushSubscribeRequest("https://push.example.com/sub", Keys: null);
+        Assert.Null(partial.Keys);
+
+        var full = new PushSubscribeRequest("https://push.example.com/sub", new PushKeys("p", "a"));
+        Assert.NotNull(full.Keys);
+    }
+
+    [Fact]
+    public void RsvpResponse_optional_waitlist_and_promoted_user_default_to_null()
+    {
+        var simple = new RsvpResponse("Going");
+        Assert.Null(simple.WaitlistPosition);
+        Assert.Null(simple.PromotedUser);
+
+        var waitlisted = new RsvpResponse("Waitlisted", WaitlistPosition: 3);
+        Assert.Equal(3, waitlisted.WaitlistPosition);
+
+        var cancelled = new RsvpResponse("Cancelled", null, PromotedUser: "u-2");
+        Assert.Equal("u-2", cancelled.PromotedUser);
+    }
+
+    [Fact]
     public void EventDto_optional_arguments_default_to_null_or_false()
     {
         var dto = new EventDto(
