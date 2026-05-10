@@ -62,7 +62,6 @@ public sealed class TechnologyGuidanceArchitectureTests
         "PatchCardHandler",
         "MoveCardHandler",
         "DeleteCardHandler",
-        "LocationsDbContext",
         "ListNotesQuery",
         "GetNoteQuery",
         "CreateNoteCommand",

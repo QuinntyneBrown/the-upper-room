@@ -13,6 +13,7 @@ using TheUpperRoom.Domain.Rbac;
 using TheUpperRoom.Infrastructure.Contacts;
 using TheUpperRoom.Infrastructure.Events;
 using TheUpperRoom.Infrastructure.Ideas;
+using TheUpperRoom.Infrastructure.Locations;
 
 
 namespace TheUpperRoom.Api.Search;

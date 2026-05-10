@@ -6,6 +6,7 @@ using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Events;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Infrastructure.Events;
+using TheUpperRoom.Infrastructure.Locations;
 
 namespace TheUpperRoom.Api.Locations;
 

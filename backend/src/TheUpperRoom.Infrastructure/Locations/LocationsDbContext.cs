@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace TheUpperRoom.Api.Locations;
+namespace TheUpperRoom.Infrastructure.Locations;
 
 public sealed class LocationsDbContext(DbContextOptions<LocationsDbContext> options) : DbContext(options)
 {

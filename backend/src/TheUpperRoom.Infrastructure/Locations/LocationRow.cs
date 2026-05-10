@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Locations;
+namespace TheUpperRoom.Infrastructure.Locations;
 
 public sealed class LocationRow
 {
@@ -15,7 +15,4 @@ public sealed class LocationRow
     public bool Archived { get; set; }
     public string[] Photos { get; set; } = Array.Empty<string>();
     public int EventCount { get; set; }
-
-    public LocationDto ToDto() => new(Id, Name, Street, City, State, Country, PostalCode,
-        Capacity, Lat, Lng, Archived, Photos, EventCount);
 }
