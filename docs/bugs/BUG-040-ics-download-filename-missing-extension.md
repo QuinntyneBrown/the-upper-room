@@ -1,9 +1,10 @@
-# BUG-040 — Add to calendar download has no .ics filename
+# BUG-040 — Add to calendar download has no .ics filename (RESOLVED 2026-05-09)
 
 **Severity**: Medium
 **Component**: frontend (`projects/the-upper-room/src/app/events/event-detail/event-detail.ts`)
 **Found in test**: TC-9.12 (ics.spec.ts:51, :90, :131)
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-09 — `addToCalendar()` now derives a slug from the event title and sets `a.download = "{slug}.ics"`, so Chromium honours the extension instead of falling back to the URL last segment + `.txt` (commit `44ba599`).
 
 ## Description
 

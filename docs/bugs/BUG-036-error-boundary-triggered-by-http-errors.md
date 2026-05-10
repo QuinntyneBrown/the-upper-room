@@ -1,9 +1,10 @@
-# BUG-036 — Global error boundary triggered by every HTTP error, intercepting all clicks
+# BUG-036 — Global error boundary triggered by every HTTP error, intercepting all clicks (RESOLVED 2026-05-09)
 
 **Severity**: High
 **Component**: frontend (`projects/the-upper-room/src/app/error/global-error-handler.ts`)
 **Found in test**: TC-7.16 (board-view.spec.ts:100 — Tag=VIP filter), and ~28 other kanban e2e tests
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-09 — `GlobalErrorHandler.handleError` now returns early when the error is (or wraps) an `HttpErrorResponse`. HTTP errors are surfaced by `errorInterceptor` snackbars; only genuinely uncaught application errors raise the catastrophic boundary now (commit `205dd5e`).
 
 ## Description
 

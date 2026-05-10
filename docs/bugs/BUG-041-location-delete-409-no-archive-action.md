@@ -1,9 +1,10 @@
-# BUG-041 — Location delete 409 surfaces generic error; no "Archive instead" action
+# BUG-041 — Location delete 409 surfaces generic error; no "Archive instead" action (RESOLVED 2026-05-09)
 
 **Severity**: Medium
 **Component**: frontend (`projects/the-upper-room/src/app/locations/`)
 **Found in test**: TC-10.6 (location-crud.spec.ts:95)
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-09 — `LocationList.deleteLocation` now sets `SKIP_ERROR_SNACKBAR` on the DELETE so the global interceptor doesn't queue a generic error in front, and explicitly handles the 409 with a `SnackbarService.show(..., { label: "Archive instead", onClick: () => archiveLocation(...) })` action. Test seedUser also mocks `/users/me`/`/notifications`/`/cities` so page-load doesn't pre-empt the queue. `location-crud.spec.ts` now 4/4 PASS (commit `bf65789`).
 
 ## Description
 

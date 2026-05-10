@@ -1,12 +1,14 @@
-# BUG-029 — Delete confirmation input has wrong data-testid in test plan
+# BUG-029 — Delete confirmation input has wrong data-testid in test plan (RESOLVED)
 
 | Field | Value |
 |---|---|
 | ID | BUG-029 |
 | Severity | Low |
-| Status | Open |
+| Status | FIXED |
 | Discovered | TC-6.13 |
 | Component | `tar-confirm-dialog` / test plan doc |
+
+Verified: `docs/test-plan/06-partners.md:279` now reads `data-testid="confirm-typed-input"` (matches the actual component testid).
 
 ## Description
 

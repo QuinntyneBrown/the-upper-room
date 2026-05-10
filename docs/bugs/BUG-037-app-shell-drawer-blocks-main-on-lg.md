@@ -1,9 +1,10 @@
-# BUG-037 — At lg+ the sticky drawer overlaps page content; ~28 kanban e2e tests time out on click
+# BUG-037 — At lg+ the sticky drawer overlaps page content; ~28 kanban e2e tests time out on click (RESOLVED 2026-05-09)
 
 **Severity**: High
 **Component**: frontend (`projects/the-upper-room/src/app/shell/app-shell/app-shell.scss` and `.html`)
 **Found in test**: TC-7.16 (board-view.spec.ts:100 Tag=VIP filter), and many other kanban tests post BUG-035/036 fixes
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-09 — wrapped drawer + breadcrumbs/main/footer in `app-shell__layout` with `display:flex` at lg+, made the drawer `flex: 0 0 280px`, and let `app-shell__content` consume the remaining width. Main now sits at `x=280` instead of `y=760`. Kanban e2e went from 20/49 to 38/49 passing on this fix (commit `ac993f4`).
 
 ## Description
 

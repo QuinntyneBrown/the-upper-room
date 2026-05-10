@@ -1,9 +1,10 @@
-# BUG-035 — e2e auth bypass lost on `page.goto()` full reload (48 of 49 kanban tests fail)
+# BUG-035 — e2e auth bypass lost on `page.goto()` full reload (48 of 49 kanban tests fail) (RESOLVED 2026-05-09)
 
 **Severity**: High
 **Component**: frontend e2e infrastructure (`frontend/projects/the-upper-room/e2e/`)
 **Found in test**: TC-7.1 attempt via existing `kanban/board-crud.spec.ts`
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-09 — `AccessTokenStore` and `PermissionsService` now persist the test token / RBAC snapshot to `sessionStorage` when set via `window.__setTestToken` / `window.__setRbac`, and re-hydrate from `sessionStorage` in their constructors. Kanban e2e went from 1/49 to 18/49 passing on this fix alone (commit `91a3c86`).
 
 ## Description
 

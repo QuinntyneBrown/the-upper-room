@@ -1,10 +1,11 @@
-# BUG-004 — App brand "The Upper Room" in the top bar is not clickable
+# BUG-004 — App brand "The Upper Room" in the top bar is not clickable (RESOLVED)
 
 **Severity**: Medium
 **Component**: frontend
 **Found in test**: TC-3.6 (Top bar — title link)
 **User-guide refs**: §3.1
 **Found**: 2026-05-09
+**Status**: FIXED — the brand is now `<a routerLink="/dashboard" class="app-shell__app-name">The Upper Room</a>` (resolved as part of the BUG-019 frontend nav fixes; commit `82f6fa9`).
 
 ## Description
 

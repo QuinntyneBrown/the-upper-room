@@ -1,9 +1,10 @@
-# BUG-014 — Test plan describes in-memory persistence; backend is on SQLite
+# BUG-014 — Test plan describes in-memory persistence; backend is on SQLite (RESOLVED)
 
 **Severity**: Medium
 **Component**: docs (`docs/test-plan/`)
 **Found in test**: pre-flight (test plan §0)
 **Found**: 2026-05-09
+**Status**: FIXED — `docs/test-plan/00-overview.md` now describes the SQLite-backed `DbContext`s (`UsersDbContext`, plus the feature-specific contexts for contacts, events, ideas, locations, notes, kanban, notifications, push). Only the few genuinely-in-memory stores (`AuditStore`, rate-limit buckets) are still called out as such.
 
 ## Description
 
