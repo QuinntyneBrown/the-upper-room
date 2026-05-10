@@ -33,6 +33,7 @@ Bugs filed while executing `docs/test-plan/` against the locally running app on 
 | [BUG-037](BUG-037-app-shell-drawer-blocks-main-on-lg.md) | High | frontend | At lg+ the sticky drawer occupies a 280×viewport-height block on the left at z:20, overlapping main; clicks on left-side controls intercepted |
 | [BUG-038](BUG-038-idea-list-sort-dropdown-not-applied.md) | Low (RESOLVED) | e2e | Idea sort-dropdown spec was racing the second response; component was correct. Spec fixed with `waitForResponse`. |
 | [BUG-039](BUG-039-idea-status-chip-no-per-status-styling.md) | Low | frontend | Idea status chip uses one secondary-container colour for every status; TC-8.9 expects per-status colour tokens |
+| [BUG-040](BUG-040-ics-download-filename-missing-extension.md) | Medium | frontend | Add-to-calendar download offers `ics.txt` instead of `{slug}.ics` because `<a download="">` overrides server `Content-Disposition` |
 
 ## What passed
 

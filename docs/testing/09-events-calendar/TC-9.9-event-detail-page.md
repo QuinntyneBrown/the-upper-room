@@ -1,25 +1,27 @@
 ---
 id: TASK-TC-9.9
 title: 'Run TC-9.9 - Event detail page'
-status: Idle
+status: Completed
 test_id: TC-9.9
 source: ../../test-plan/09-events-calendar.md
+result: PASS
+run_at: 2026-05-09T23:50:00Z
 ---
 
 # TASK-TC-9.9: Run TC-9.9 - Event detail page
 
-## Goal
+## Result: PASS
 
-Run `TC-9.9` from `docs/test-plan/09-events-calendar.md` and record the result.
+- `event-detail.spec.ts:46` — status chip shows "Scheduled" with `data-status` attribute PASS.
+- `event-detail.spec.ts:57` — attendees grid shows avatars; clicking more opens full list dialog PASS.
+- `event-detail.spec.ts:72` — "Add to calendar" button is visible PASS.
+- `event-detail.spec.ts:80` — share button is visible PASS.
 
-## Execution
-
-- Follow the source test case steps, verification notes, pass criteria, and severity.
-- Capture browser, viewport, build SHA, result, tester, run timestamp, and defect link if the result fails.
+Hero, title, status chip, share button, attendees grid, RSVP buttons, and "Add to calendar"
+all match the test plan.
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
-
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.

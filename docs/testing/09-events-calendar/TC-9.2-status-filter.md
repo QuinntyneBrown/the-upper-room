@@ -1,25 +1,23 @@
 ---
 id: TASK-TC-9.2
 title: 'Run TC-9.2 - Status filter'
-status: Idle
+status: Completed
 test_id: TC-9.2
 source: ../../test-plan/09-events-calendar.md
+result: PASS
+run_at: 2026-05-09T23:50:00Z
 ---
 
 # TASK-TC-9.2: Run TC-9.2 - Status filter
 
-## Goal
+## Result: PASS
 
-Run `TC-9.2` from `docs/test-plan/09-events-calendar.md` and record the result.
-
-## Execution
-
-- Follow the source test case steps, verification notes, pass criteria, and severity.
-- Capture browser, viewport, build SHA, result, tester, run timestamp, and defect link if the result fails.
+`event-list.spec.ts:74` — "filter Status=Scheduled hides cancelled events" PASS. Status select
+options match the plan exactly: All statuses (""), Scheduled, Cancelled, Completed. List
+narrows on selection; API call carries `?status=...`.
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
-
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.

@@ -1,25 +1,26 @@
 ---
 id: TASK-TC-9.11
 title: 'Run TC-9.11 - Cancel event dialog'
-status: Idle
+status: Completed
 test_id: TC-9.11
 source: ../../test-plan/09-events-calendar.md
+result: PASS
+run_at: 2026-05-09T23:50:00Z
 ---
 
 # TASK-TC-9.11: Run TC-9.11 - Cancel event dialog
 
-## Goal
+## Result: PASS
 
-Run `TC-9.11` from `docs/test-plan/09-events-calendar.md` and record the result.
+- `cancel-approval.spec.ts:40` — Cancel event shows confirm dialog with optional message field PASS.
+- `cancel-approval.spec.ts:61` — Confirming cancel flips status to Cancelled and shows ribbon PASS.
 
-## Execution
-
-- Follow the source test case steps, verification notes, pass criteria, and severity.
-- Capture browser, viewport, build SHA, result, tester, run timestamp, and defect link if the result fails.
+Dialog `[data-testid="event-cancel-dialog"]` opens with title "Cancel event", message textarea
+`[data-testid="event-cancel-message"]`, "Keep event" + "Yes, cancel" buttons. Confirming sets
+status to Cancelled and renders the cancelled ribbon on the event card.
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
-
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.

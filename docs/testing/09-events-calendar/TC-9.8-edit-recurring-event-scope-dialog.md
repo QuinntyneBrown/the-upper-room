@@ -1,25 +1,25 @@
 ---
 id: TASK-TC-9.8
 title: 'Run TC-9.8 - Edit recurring event scope dialog'
-status: Idle
+status: Completed
 test_id: TC-9.8
 source: ../../test-plan/09-events-calendar.md
+result: PASS
+run_at: 2026-05-09T23:50:00Z
 ---
 
 # TASK-TC-9.8: Run TC-9.8 - Edit recurring event scope dialog
 
-## Goal
+## Result: PASS
 
-Run `TC-9.8` from `docs/test-plan/09-events-calendar.md` and record the result.
+- `recurrence.spec.ts:60` — "Editing recurring occurrence shows edit scope dialog" PASS.
+- `recurrence.spec.ts:93` — "Choosing 'This event only' from edit dialog dismisses dialog and shows form" PASS.
 
-## Execution
-
-- Follow the source test case steps, verification notes, pass criteria, and severity.
-- Capture browser, viewport, build SHA, result, tester, run timestamp, and defect link if the result fails.
+Dialog `[data-testid="recurrence-edit-dialog"]` opens with title "Edit recurring event" and the
+three scope buttons (single / following / series) present.
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
-
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.
