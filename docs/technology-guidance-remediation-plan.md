@@ -407,8 +407,11 @@ In addition to Contacts (2.5), this iteration applied the one-type-per-file spli
 - [x] **3.N (Notes)** — `NotesCqrs.cs` (13 types) → 13 files (`NotesOutcome`, `ListNotesQuery`/`Result`, `GetNoteQuery`, `CreateNoteCommand`, `UpdateNoteCommand`, `DeleteNoteCommand`, `NoteResult`, `NotesSanitizer` helper, plus 5 handler files).
 - [x] **3.E2 (Event RSVP)** — `EventRsvpCqrs.cs` (14 types) → 14 files (`RsvpOutcome`, `GetMyRsvpQuery`/`Result`, `SubmitRsvpCommand`/`Result`, `GetRsvpRequestsQuery`/`Result`, `ApproveRsvpCommand`, `DenyRsvpCommand`, plus 5 handler files).
 - [x] **3.Nf (Notifications)** — `NotificationsCqrs.cs` (20 types) → 20 individual files: `NotificationsOutcome`, six query/command records (`ListNotificationsQuery`, `MarkNotificationReadCommand`, `MarkAllNotificationsReadCommand`, `DispatchNotificationCommand`, `ListNotificationPreferencesQuery`, `UpsertNotificationPreferenceCommand`), six result records, `NotificationPreferenceDto`, `NotificationMapping` helper, plus 6 handler files.
+- [x] **3.P (Push)** — `PushCommands.cs` (7 types) → 7 files (`PushOutcome`, `GetVapidPublicKeyQuery`/`Handler`, `SubscribePushCommand`/`Handler`, `UnsubscribePushCommand`/`Handler`).
+- [x] **3.Nf2 (Notifications DbContext)** — `NotificationsDbContext.cs` (5 types) → 5 files (`NotificationsDbContext`, `NotificationRow`, `PreferenceRow`, `SentMailRow`, `DigestPreferenceRow`).
+- [x] **3.I2 (Ideas DbContext)** — `IdeasDbContext.cs` (5 types) → 5 files (`IdeasDbContext`, `IdeaRow`, `IdeaVoteRow`, `IdeaPartnerRow`, `IdeaCommentRow`).
 
-Full Api.Tests suite stays **105/105 PASS** after every split. Remaining multi-type files to sweep: `Notifications/PushCommands.cs` (7), plus a few 3-5 type files in DbContext / Controller sites where secondary types are tightly cohesive.
+Full Api.Tests suite stays **105/105 PASS** after every split. The "every multi-type CQRS / DbContext file in `Api/` is now one-type-per-file" goal from §B13 / Phase 0.4 is essentially met — remaining multi-type files are controller files (which legitimately co-locate the controller class with its request DTO record(s)) and the handful of remaining 3-type DbContext files.
 
 ## Genuinely-remaining engineering work
 
