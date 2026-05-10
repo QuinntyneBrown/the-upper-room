@@ -2,7 +2,7 @@ using Ganss.Xss;
 
 namespace TheUpperRoom.Application.Notes;
 
-internal static class NotesSanitizer
+public static class NotesSanitizer
 {
     private static readonly HtmlSanitizer _sanitizer = Build();
 
