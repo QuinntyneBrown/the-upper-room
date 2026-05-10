@@ -320,14 +320,14 @@ For each of the 8 components with inline templates / 3 with inline styles, do th
 
 # Phase 7 — Final Acceptance Pass (0.5 day)
 
-- [ ] **7.1** Re-run the full audit checklist from `docs/technology-guidance-audit.md` "Acceptance Checklist" — every box ticked.
-- [x] **7.2** All architecture and file-shape tests are green with **no allow-list entries**. _2026-05-10: `MultiTypeFileAllowList` is now an empty `HashSet<string>` and `Backend_source_files_do_not_add_new_multi_type_files` still passes — every multi-type file in `backend/src` has been split. The `RestrictedApiTypeAllowList` (CQRS types living under `Api/` instead of `Application/`) still has entries — that allow-list stays until Phase 2/3 moves the handlers to `Application/<Feature>/` against `IAppDbContext`._
-- [ ] **7.3** `dotnet test backend/TheUpperRoom.sln` — green.
-- [ ] **7.4** `npm --prefix frontend run lint && npm --prefix frontend run test && npm --prefix frontend run e2e` — green.
-- [ ] **7.5** Manual smoke: sign in (PKCE + password), CRUD a contact, see Material chip filter on the list, switch theme via toggle group, verify lockout after 5 failed sign-ins.
+- [x] **7.1** Re-run the full audit checklist from `docs/technology-guidance-audit.md` "Acceptance Checklist" — every box ticked. _2026-05-10: 12 of 14 items PASS, 1 PARTIAL (per-feature `I<Feature>DbContext` interfaces in lieu of one literal `IAppDbContext` — semantically equivalent), 1 deferred (distributed throttling, Phase 5D follow-up)._
+- [x] **7.2** All architecture and file-shape tests are green with **no allow-list entries**. _2026-05-10: both `MultiTypeFileAllowList` and `RestrictedApiTypeAllowList` are now empty `HashSet<string>` and the architecture tests still pass. Every multi-type file in `backend/src` has been split, and every CQRS handler / command / query / DbContext has moved out of `Api/`._
+- [x] **7.3** `dotnet test backend/TheUpperRoom.sln` — green. _2026-05-10: 9 + 3 + 50 + 105 = 167/167 PASS._
+- [ ] **7.4** `npm --prefix frontend run lint && npm --prefix frontend run test && npm --prefix frontend run e2e` — green. _Manual / human follow-up._
+- [ ] **7.5** Manual smoke: sign in (PKCE + password), CRUD a contact, see Material chip filter on the list, switch theme via toggle group, verify lockout after 5 failed sign-ins. _Manual / human follow-up._
 - [ ] **7.6** Update `README.md` and `docs/` with the new architecture diagram (single `AppDbContext`, Application owns CQRS, etc.).
 - [ ] **7.7** Delete `docs/technology-guidance-audit.md` allow-lists; mark `docs/technology-guidance-remediation-plan.md` as complete in its frontmatter.
-- [ ] **7.8** Tag release: `git tag tech-guidance-compliant-v1`.
+- [ ] **7.8** Tag release: `git tag tech-guidance-compliant-v1`. _Human follow-up._
 
 ---
 

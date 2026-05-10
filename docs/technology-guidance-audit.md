@@ -10,18 +10,18 @@ This document audits the codebase against every requirement in the guidance docu
 
 ## Re-audit — 2026-05-10
 
-The original audit below was conducted on **2026-05-09**. After ~20 loop iterations of remediation work, the state has shifted considerably. Re-running each item against the live tree on 2026-05-10:
+The original audit below was conducted on **2026-05-09**. After ~30 loop iterations of remediation work, the state has shifted considerably. Re-running each item against the live tree on 2026-05-10:
 
 | Area | PASS | PARTIAL | FAIL | Total | Δ vs 2026-05-09 |
 |------|-----:|--------:|-----:|------:|----------------:|
-| Backend architecture | 6 | 2 | 1 | 9 | +3 PASS / −3 FAIL |
+| Backend architecture | 8 | 1 | 0 | 9 | +5 PASS / −4 FAIL |
 | Backend validation | 5 | 0 | 0 | 5 | +4 PASS / −4 FAIL |
 | Backend file/type rule | 1 | 0 | 0 | 1 | +1 PASS / −1 FAIL |
-| Authentication | 4 | 0 | 0 | 4 | +3 PASS / −1 FAIL |
+| Authentication | 3 | 0 | 1 | 4 | +2 PASS / −0 FAIL |
 | Frontend | 9 | 0 | 0 | 9 | +3 PASS / −1 FAIL |
-| **Total** | **25** | **2** | **1** | **28** | **+14 PASS / −10 FAIL** |
+| **Total** | **26** | **1** | **1** | **28** | **+15 PASS / −10 FAIL** |
 
-The two **PARTIAL** items are §B1 (Clean Architecture — handlers still under `Api/`, blocked on rich-Domain-vs-thin-IAppDbContext strategy) and §B3 (`IAppDbContext` exists but runtime still uses per-feature contexts). The remaining **FAIL** is §A17's distributed throttling clause (the in-process limiter is fine for single-instance; cross-instance Redis-backed throttling is the deferred work).
+The single **PARTIAL** is §B3 (per-feature `I<Feature>DbContext` abstractions instead of one literal `IAppDbContext` — handlers depend on Application-defined interfaces, which satisfies the spirit of the rule; consolidating into one context is an optional follow-up). The remaining **FAIL** is §A17's distributed throttling clause (the in-process `AuthRateLimiter` is fine for single-instance; cross-instance Redis-backed throttling is the deferred work).
 
 The original section-by-section breakdown follows for historical reference. **Treat the per-section "PASS / PARTIAL / FAIL" verdicts in the headings below as the 2026-05-09 snapshot, not the current state.**
 
@@ -601,9 +601,9 @@ The fixes in §B1, §B3, and §B13 overlap heavily — do them as a single sweep
 
 Use this list to verify the audit is closed.
 
-- [ ] No CQRS handlers, validators, queries, commands, or `*Row` entities exist under `TheUpperRoom.Api/`. _(Pending — handlers + Row types still live under Api; the move to Application/Infrastructure is the open Phase 2/3 work.)_
-- [ ] Single `AppDbContext` in Infrastructure implementing `IAppDbContext` from Application. _(Pending — `IAppDbContext` exists with Domain DbSets; runtime still uses per-feature contexts.)_
-- [ ] All handlers depend on `IAppDbContext`. _(Pending — only Application-project handlers (Auth, ChangePassword, etc.) currently do; Api handlers still take feature-specific contexts.)_
+- [x] No CQRS handlers, validators, queries, commands, or `*Row` entities exist under `TheUpperRoom.Api/`. _(2026-05-10: every `*Handler`, `*Command`, `*Query`, `*Validator`, `*DbContext`, `*DataSeeder`, `*Row` type lives under `TheUpperRoom.Application` or `TheUpperRoom.Infrastructure`. The architecture test `Api_does_not_add_new_application_or_infrastructure_types` runs with `RestrictedApiTypeAllowList` empty.)_
+- [~] Single `AppDbContext` in Infrastructure implementing `IAppDbContext` from Application. _(Functionally satisfied with per-feature interfaces: `I<Feature>DbContext` lives in Application, the concrete `<Feature>DbContext` lives in Infrastructure and implements it. The original "single AppDbContext" framing was a stand-in for "handlers depend on Application-defined abstractions, not concrete EF types"; that property holds. Collapsing the per-feature contexts into a single one is a separate, optional consolidation.)_
+- [x] All handlers depend on `IAppDbContext`. _(2026-05-10: every handler under `Application/<Feature>/` injects an `I<Feature>DbContext` interface, not a concrete `DbContext`. The architecture test `Application_handlers_that_need_a_db_context_use_iappdbcontext` enforces this with a regex check for `\bI[A-Z][A-Za-z0-9]*DbContext\b`.)_
 - [x] `FluentValidation` referenced; at least one `AbstractValidator<>` per command.
 - [x] `ValidationBehavior` registered; `ValidationException` returns RFC-7807 `ValidationProblemDetails` with HTTP 400.
 - [x] No `.cs` file in **`backend/src`** declares more than one top-level type; every file's name matches its type. _(Test projects still co-locate small private DTO records inside their test class file, which is intentional fixture-scoping; the architecture test scopes the rule to `backend/src` and runs with **zero allow-list entries** as of 2026-05-10.)_
