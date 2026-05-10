@@ -22,9 +22,8 @@ public sealed class IdeasController(
 {
     private static readonly HtmlSanitizer _sanitizer = BuildSanitizer();
 
-    internal static int StoreCount(IdeasDbContext db) =>
-        db.Ideas.Count(i => i.Status != "Archived" && i.Status != "Completed");
-
+    // Helper retained for SearchController; the dashboard now reads the open-
+    // ideas count directly through IIdeasDbContext.
     internal static IEnumerable<(string Id, string Title, string Status)> Search(string term, IdeasDbContext db) =>
         db.Ideas.AsEnumerable()
             .Where(i => i.Title.Contains(term, StringComparison.OrdinalIgnoreCase))

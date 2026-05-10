@@ -17,11 +17,6 @@ public sealed class BoardsController(
     ICurrentUser currentUser,
     IUserDirectory userDirectory) : ControllerBase
 {
-    internal static IReadOnlyList<(string BoardId, string BoardTitle, object[] Cards)> GetMyBoardGroups(string userId, KanbanDbContext db) =>
-        db.Boards.Select(b => new { b.Id, b.Name }).AsEnumerable()
-                 .Select(b => (b.Id, b.Name, Array.Empty<object>()))
-                 .ToList();
-
     [HttpGet]
     public IActionResult List()
     {

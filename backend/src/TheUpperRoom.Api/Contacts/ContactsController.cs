@@ -15,14 +15,8 @@ namespace TheUpperRoom.Api.Contacts;
 [Route("api/v1/contacts")]
 public sealed class ContactsController(IMediator mediator, ICurrentUser currentUser) : ControllerBase
 {
-    // Helpers retained for cross-controller usage (Dashboard, Search). They
-    // are pure functions over an injected DbContext and the caller's
-    // city-scope visibility; they do not reach into the http context.
-    internal static int StoreCount(AppUser user, ContactsDbContext db, bool canSeeAllCities) =>
-        canSeeAllCities
-            ? db.Contacts.Count()
-            : db.Contacts.Count(c => c.CityId == user.City);
-
+    // Helper retained for SearchController; the dashboard now reads contacts
+    // count directly through IContactsDbContext.
     internal static IEnumerable<Contact> Search(string term, AppUser user, ContactsDbContext db, bool canSeeAllCities)
     {
         var query = canSeeAllCities
