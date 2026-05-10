@@ -126,6 +126,49 @@ public sealed class ContactsPersistenceTests : IDisposable
     }
 
     [Fact]
+    public async Task Archive_contact_hides_from_default_list_then_unarchive_restores_it_across_restart()
+    {
+        string id;
+
+        await using (var factory = Factory())
+        {
+            var client = AuthedClient(factory, "lead");
+            id = await CreateContact(client, "Frank", "Lee");
+
+            var archive = await client.PostAsync($"/api/v1/contacts/{id}/archive", null);
+            Assert.Equal(HttpStatusCode.NoContent, archive.StatusCode);
+        }
+
+        await using (var factory2 = Factory())
+        {
+            var client = AuthedClient(factory2, "lead");
+            var defaultList = await client.GetFromJsonAsync<ListResponse>("/api/v1/contacts");
+            Assert.DoesNotContain(defaultList!.Items, c => c.Id == id);
+
+            var includeArchived = await client.GetFromJsonAsync<ListResponse>(
+                "/api/v1/contacts?includeArchived=true");
+            Assert.Contains(includeArchived!.Items, c => c.Id == id);
+
+            var unarchive = await client.PostAsync($"/api/v1/contacts/{id}/unarchive", null);
+            Assert.Equal(HttpStatusCode.NoContent, unarchive.StatusCode);
+        }
+
+        await using var factory3 = Factory();
+        var client3 = AuthedClient(factory3, "lead");
+        var afterUnarchive = await client3.GetFromJsonAsync<ListResponse>("/api/v1/contacts");
+        Assert.Contains(afterUnarchive!.Items, c => c.Id == id);
+    }
+
+    [Fact]
+    public async Task Archive_unknown_contact_returns_404()
+    {
+        await using var factory = Factory();
+        var client = AuthedClient(factory, "lead");
+        var resp = await client.PostAsync("/api/v1/contacts/no-such-contact/archive", null);
+        Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
+    }
+
+    [Fact]
     public async Task Deleted_contact_does_not_reappear_after_host_restart()
     {
         string id;

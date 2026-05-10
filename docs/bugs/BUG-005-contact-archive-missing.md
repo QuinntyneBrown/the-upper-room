@@ -1,10 +1,11 @@
-# BUG-005 — Contact archive flow not implemented
+# BUG-005 — Contact archive flow not implemented (BACKEND RESOLVED 2026-05-10)
 
 **Severity**: High
 **Component**: backend + frontend
 **Found in test**: TC-5.4 (Archive contact), TC-5.12 (Archived filter chip)
 **User-guide refs**: §5.1 (Archived chip), §5.4 (Archive)
 **Found**: 2026-05-09
+**Status**: BACKEND FIXED 2026-05-10 — `ContactRow.IsArchived` flag, `POST /api/v1/contacts/{id}/archive` + `/unarchive` actions, `?includeArchived=true` query param on the list, audit row recorded. xUnit covered: archive hides from default list + unarchive restores across factory restart, archive of unknown contact returns 404. Frontend wiring (Archive button + Archived chip) is the remaining piece.
 
 ## Description
 

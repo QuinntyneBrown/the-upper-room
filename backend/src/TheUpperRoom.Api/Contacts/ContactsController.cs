@@ -38,10 +38,11 @@ public sealed class ContactsController(IMediator mediator, ICurrentUser currentU
         [FromQuery] int? page,
         [FromQuery] int? size,
         [FromQuery] string? scope,
+        [FromQuery] bool includeArchived,
         CancellationToken cancellationToken)
     {
         var result = await mediator.Send(
-            new ListContactsQuery(currentUser.UserId ?? "", search, page, size, scope),
+            new ListContactsQuery(currentUser.UserId ?? "", search, page, size, scope, includeArchived),
             cancellationToken);
 
         return result.Outcome switch
@@ -86,6 +87,32 @@ public sealed class ContactsController(IMediator mediator, ICurrentUser currentU
     {
         var result = await mediator.Send(new PatchContactCommand(currentUser.UserId ?? "", id, body), cancellationToken);
         return MapMutate(result);
+    }
+
+    [HttpPost("{id}/archive")]
+    public async Task<IActionResult> Archive(string id, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new SetContactArchivedCommand(currentUser.UserId ?? "", id, true), cancellationToken);
+        return result.Outcome switch
+        {
+            ContactsOutcome.Unauthorized => Unauthorized(),
+            ContactsOutcome.NotFound => NotFound(),
+            ContactsOutcome.NoContent => NoContent(),
+            _ => StatusCode(500),
+        };
+    }
+
+    [HttpPost("{id}/unarchive")]
+    public async Task<IActionResult> Unarchive(string id, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new SetContactArchivedCommand(currentUser.UserId ?? "", id, false), cancellationToken);
+        return result.Outcome switch
+        {
+            ContactsOutcome.Unauthorized => Unauthorized(),
+            ContactsOutcome.NotFound => NotFound(),
+            ContactsOutcome.NoContent => NoContent(),
+            _ => StatusCode(500),
+        };
     }
 
     [HttpDelete("{id}")]

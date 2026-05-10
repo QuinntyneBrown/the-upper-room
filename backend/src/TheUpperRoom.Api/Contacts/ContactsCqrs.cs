@@ -21,7 +21,7 @@ public enum ContactsOutcome
     Unprocessable,
 }
 
-public sealed record ListContactsQuery(string UserId, string? Search, int? Page, int? Size, string? Scope)
+public sealed record ListContactsQuery(string UserId, string? Search, int? Page, int? Size, string? Scope, bool IncludeArchived = false)
     : IRequest<ListContactsResult>;
 
 public sealed record ListContactsResult(Contact[] Items, int Total, ContactsOutcome Outcome);
@@ -37,6 +37,8 @@ public sealed record UpdateContactCommand(string UserId, string Id, CreateContac
 public sealed record PatchContactCommand(string UserId, string Id, PatchContactRequest? Body) : IRequest<MutateContactResult>;
 
 public sealed record DeleteContactCommand(string UserId, string Id) : IRequest<MutateContactResult>;
+
+public sealed record SetContactArchivedCommand(string UserId, string Id, bool Archived) : IRequest<MutateContactResult>;
 
 public sealed record MutateContactResult(Contact? Contact, ContactsOutcome Outcome, string? Error);
 
@@ -89,6 +91,9 @@ internal sealed class ListContactsHandler : IRequestHandler<ListContactsQuery, L
             items = _db.Contacts.AsEnumerable();
         else
             items = _db.Contacts.AsEnumerable().Where(c => c.CityId.Equals(user.City, StringComparison.OrdinalIgnoreCase));
+
+        if (!request.IncludeArchived)
+            items = items.Where(c => !c.IsArchived);
 
         if (!string.IsNullOrEmpty(request.Search))
             items = items.Where(c => c.Name.Contains(request.Search, StringComparison.OrdinalIgnoreCase));
@@ -232,6 +237,40 @@ internal sealed class PatchContactHandler : IRequestHandler<PatchContactCommand,
         }
 
         return Task.FromResult(new MutateContactResult(ContactsMapping.ToContact(c), ContactsOutcome.Ok, null));
+    }
+}
+
+internal sealed class SetContactArchivedHandler : IRequestHandler<SetContactArchivedCommand, MutateContactResult>
+{
+    private readonly ContactsDbContext _db;
+    private readonly IUserDirectory _users;
+
+    public SetContactArchivedHandler(ContactsDbContext db, IUserDirectory users)
+    {
+        _db = db;
+        _users = users;
+    }
+
+    public Task<MutateContactResult> Handle(SetContactArchivedCommand request, CancellationToken cancellationToken)
+    {
+        var user = _users.GetById(request.UserId);
+        if (user is null) return Task.FromResult(new MutateContactResult(null, ContactsOutcome.Unauthorized, null));
+
+        var c = _db.Contacts.Find(request.Id);
+        if (c is null) return Task.FromResult(new MutateContactResult(null, ContactsOutcome.NotFound, null));
+        if (CityScope.VisibleOrNull(c, user.City) is null)
+            return Task.FromResult(new MutateContactResult(null, ContactsOutcome.NotFound, null));
+
+        if (c.IsArchived != request.Archived)
+        {
+            var before = JsonSerializer.Serialize(new { c.Id, c.Name, c.CityId, c.IsArchived });
+            c.IsArchived = request.Archived;
+            _db.SaveChanges();
+            var after = JsonSerializer.Serialize(new { c.Id, c.Name, c.CityId, c.IsArchived });
+            AuditStore.Record(user.Id, "Contact", request.Id, request.Archived ? "Archive" : "Unarchive", before, after);
+        }
+
+        return Task.FromResult(new MutateContactResult(null, ContactsOutcome.NoContent, null));
     }
 }
 
