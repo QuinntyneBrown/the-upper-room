@@ -53,8 +53,16 @@ Startup still uses `Database.EnsureCreated()` for these runtime SQLite contexts.
 ```powershell
 cd C:\projects\the-upper-room\frontend
 npm install
+npm run start            # builds api + domain + components libs first via prestart, then serves
+# or, equivalently:
+npm run build:libs       # one-shot library build
 npx ng serve the-upper-room
 ```
+
+The `prestart` script automatically runs `npm run build:libs` (`ng build api && ng build
+domain && ng build components`) before `ng serve`, because `tsconfig.json` resolves the
+workspace libraries from `dist/`. Skipping the lib build (e.g. running `npx ng serve` directly
+on a fresh clone) breaks compilation with `TS2307: Cannot find module 'components'` etc.
 
 Default URL: `http://localhost:4200`.
 

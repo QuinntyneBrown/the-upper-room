@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "build:libs": "ng build api && ng build domain && ng build components",
+    "prestart": "npm run build:libs",
     "start": "ng serve",
+    "prebuild": "npm run build:libs",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

@@ -1,9 +1,10 @@
-# BUG-012 — Frontend dev server fails to compile on a fresh clone without first building workspace libs
+# BUG-012 — Frontend dev server fails to compile on a fresh clone without first building workspace libs (RESOLVED 2026-05-10)
 
 **Severity**: High
 **Component**: docs / dev-experience
 **Found in test**: pre-flight (test plan §0 setup)
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-10 — `frontend/package.json` now defines `build:libs` and `prestart` / `prebuild` hooks that run `ng build api && ng build domain && ng build components` automatically before `ng serve` / `ng build`. `docs/test-plan/00-overview.md` documents the new `npm run start` flow and explains why the lib build is required.
 
 ## Description
 
