@@ -25,17 +25,18 @@ The single **PARTIAL** is §B3 (per-feature `I<Feature>DbContext` abstractions i
 
 ### Test surface (2026-05-10)
 
-The backend test suite grew from 167 to **242 tests** during the remediation:
+The backend test suite grew from 167 to **275 tests** during the remediation:
 
-- **Domain.Tests**:        9
+- **Domain.Tests**:       16 (was 9)
 - **Infrastructure.Tests**: 3
-- **Application.Tests**:  123 (was 50)
+- **Application.Tests**:  149 (was 50)
 - **Api.Tests**:          107 (was 105)
 
-The 75 new tests split as:
+The 108 new tests split as:
 
 - **Architecture tests** (13): file-shape rule, Api-shape rule, seeder centralisation, Application/Domain reference graph, Domain framework purity, Application→Infrastructure dependency inversion, Domain→outer-layer inversion, Infrastructure→Api inversion, every Infrastructure DbContext implements an Application interface, every Application handler depends on `I<Feature>DbContext`, every Application handler is `internal sealed`, every Application validator is `public sealed AbstractValidator<T>`, every Application command/query is a `public sealed record` implementing `IRequest<T>`.
-- **Validator unit tests** (58): every Application validator (24 of them) has at least one failing-input case pinned, including all 7 Auth validators (Register / SignIn / ChangePassword / RequestPasswordReset / ResetPassword / VerifyEmail / DeleteAccount), the SubmitRsvp status enum (10 inlines), ListAuditEntries paging bounds (multiple inlines), CreateContact field shapes, MoveCard, DispatchNotification, plus smoke cases for the 13 ID-bearing validators across Contacts/Notes/Kanban/Events/Notifications.
+- **Validator unit tests** (58): every Application validator (24 of them) has at least one failing-input case pinned, including all 7 Auth validators, SubmitRsvp status enum, ListAuditEntries paging bounds, CreateContact field shapes, MoveCard, DispatchNotification, plus smoke cases for the 13 ID-bearing validators.
+- **Pure-helper unit tests** (33): `ContactsDisplayName.Build` (Contacts), `CityScope.ForCity` / `VisibleOrNull` (Cities), `NotificationMapping.Render` / `ToDto` (Notifications), `NotesSanitizer.Instance` allow-list + `ToDto` (Notes), and `RoleCatalog.HasPermission` / `PermissionsFor` (Domain.Rbac).
 - **HTTP-level validation integration** (4): RegisterCommand (short password / bad email) + Create / Update Contact (empty FirstName) all return RFC-7807 `application/problem+json` 400s end-to-end through the FluentValidation → ValidationException → ValidationExceptionHandler pipeline.
 
 The original section-by-section breakdown follows for historical reference. **Treat the per-section "PASS / PARTIAL / FAIL" verdicts in the headings below as the 2026-05-09 snapshot, not the current state.**
