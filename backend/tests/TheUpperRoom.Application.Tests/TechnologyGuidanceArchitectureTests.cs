@@ -27,7 +27,6 @@ public sealed class TechnologyGuidanceArchitectureTests
     {
         "backend/src/TheUpperRoom.Api/Auth/AuthController.cs",
         "backend/src/TheUpperRoom.Api/Contacts/ContactsController.cs",
-        "backend/src/TheUpperRoom.Api/Dashboard/GetDashboardQuery.cs",
         "backend/src/TheUpperRoom.Api/Events/EventCancelController.cs",
         "backend/src/TheUpperRoom.Api/Events/EventRsvpController.cs",
         "backend/src/TheUpperRoom.Api/Events/EventsController.cs",
@@ -40,8 +39,6 @@ public sealed class TechnologyGuidanceArchitectureTests
         "backend/src/TheUpperRoom.Api/Partners/PartnerContactsController.cs",
         "backend/src/TheUpperRoom.Api/Sanitization/SanitizeController.cs",
         "backend/src/TheUpperRoom.Api/Search/SearchController.cs",
-        "backend/src/TheUpperRoom.Api/Uploads/UploadFileCommand.cs",
-        "backend/src/TheUpperRoom.Infrastructure/Users/UsersDbContext.cs",
     };
 
     private static readonly HashSet<string> RestrictedApiTypeAllowList = new(StringComparer.Ordinal)
