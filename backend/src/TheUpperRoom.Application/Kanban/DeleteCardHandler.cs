@@ -1,15 +1,14 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
-using TheUpperRoom.Infrastructure.Kanban;
 
-namespace TheUpperRoom.Api.Kanban;
+namespace TheUpperRoom.Application.Kanban;
 
 internal sealed class DeleteCardHandler : IRequestHandler<DeleteCardCommand, DeleteCardResult>
 {
-    private readonly KanbanDbContext _db;
+    private readonly IKanbanDbContext _db;
     private readonly IUserDirectory _users;
 
-    public DeleteCardHandler(KanbanDbContext db, IUserDirectory users)
+    public DeleteCardHandler(IKanbanDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;

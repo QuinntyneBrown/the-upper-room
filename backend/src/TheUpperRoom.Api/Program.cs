@@ -10,6 +10,7 @@ using TheUpperRoom.Api.ExceptionHandling;
 using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
+using TheUpperRoom.Application.Kanban;
 using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
 using TheUpperRoom.Application;
@@ -122,6 +123,7 @@ var kanbanConn = builder.Configuration["KanbanDb:ConnectionString"]
                  ?? "Data Source=Data/kanban.db";
 EnsureSqliteDirectoryExists(kanbanConn);
 builder.Services.AddDbContext<KanbanDbContext>(o => o.UseSqlite(kanbanConn));
+builder.Services.AddScoped<IKanbanDbContext>(sp => sp.GetRequiredService<KanbanDbContext>());
 
 var notificationsConn = builder.Configuration["NotificationsDb:ConnectionString"]
                         ?? "Data Source=Data/notifications.db";

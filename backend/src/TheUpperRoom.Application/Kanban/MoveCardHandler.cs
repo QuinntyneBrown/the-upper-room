@@ -1,15 +1,14 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
-using TheUpperRoom.Infrastructure.Kanban;
 
-namespace TheUpperRoom.Api.Kanban;
+namespace TheUpperRoom.Application.Kanban;
 
 internal sealed class MoveCardHandler : IRequestHandler<MoveCardCommand, MoveCardResult>
 {
-    private readonly KanbanDbContext _db;
+    private readonly IKanbanDbContext _db;
     private readonly IUserDirectory _users;
 
-    public MoveCardHandler(KanbanDbContext db, IUserDirectory users)
+    public MoveCardHandler(IKanbanDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;

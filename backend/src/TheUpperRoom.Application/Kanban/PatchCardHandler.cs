@@ -1,15 +1,14 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
-using TheUpperRoom.Infrastructure.Kanban;
 
-namespace TheUpperRoom.Api.Kanban;
+namespace TheUpperRoom.Application.Kanban;
 
 internal sealed class PatchCardHandler : IRequestHandler<PatchCardCommand, PatchCardResult>
 {
-    private readonly KanbanDbContext _db;
+    private readonly IKanbanDbContext _db;
     private readonly IUserDirectory _users;
 
-    public PatchCardHandler(KanbanDbContext db, IUserDirectory users)
+    public PatchCardHandler(IKanbanDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;

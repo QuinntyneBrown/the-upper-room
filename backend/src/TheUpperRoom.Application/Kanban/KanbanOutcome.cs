@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Kanban;
+namespace TheUpperRoom.Application.Kanban;
 
 public enum KanbanOutcome
 {

@@ -56,12 +56,6 @@ public sealed class TechnologyGuidanceArchitectureTests
         "ApproveRsvpHandler",
         "DenyRsvpHandler",
         "ValidationExceptionHandler",
-        "PatchCardCommand",
-        "MoveCardCommand",
-        "DeleteCardCommand",
-        "PatchCardHandler",
-        "MoveCardHandler",
-        "DeleteCardHandler",
         "ListNotesQuery",
         "GetNoteQuery",
         "CreateNoteCommand",
@@ -174,13 +168,15 @@ public sealed class TechnologyGuidanceArchitectureTests
     {
         var root = FindRepoRoot();
         var appRoot = Path.Combine(root, "backend", "src", "TheUpperRoom.Application");
+        var dbContextInterface = new Regex(@"\bI[A-Z][A-Za-z0-9]*DbContext\b", RegexOptions.Compiled);
         var violations = Directory.GetFiles(appRoot, "*Handler.cs", SearchOption.AllDirectories)
             .Where(file => !IsBuildArtifact(file))
             .Where(file =>
             {
                 var content = File.ReadAllText(file);
-                return content.Contains("DbContext", StringComparison.Ordinal)
-                    && !content.Contains("IAppDbContext", StringComparison.Ordinal);
+                if (!content.Contains("DbContext", StringComparison.Ordinal)) return false;
+                // Handler must depend on an I*DbContext abstraction, not a concrete EF context.
+                return !dbContextInterface.IsMatch(content);
             })
             .Select(file => NormalizePath(root, file))
             .ToArray();
