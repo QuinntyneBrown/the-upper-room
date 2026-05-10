@@ -325,7 +325,7 @@ For each of the 8 components with inline templates / 3 with inline styles, do th
 - [x] **7.3** `dotnet test backend/TheUpperRoom.sln` — green. _2026-05-10: 9 + 3 + 50 + 105 = 167/167 PASS._
 - [ ] **7.4** `npm --prefix frontend run lint && npm --prefix frontend run test && npm --prefix frontend run e2e` — green. _Manual / human follow-up._
 - [ ] **7.5** Manual smoke: sign in (PKCE + password), CRUD a contact, see Material chip filter on the list, switch theme via toggle group, verify lockout after 5 failed sign-ins. _Manual / human follow-up._
-- [ ] **7.6** Update `README.md` and `docs/` with the new architecture diagram (single `AppDbContext`, Application owns CQRS, etc.).
+- [x] **7.6** Update `README.md` and `docs/` with the new architecture diagram (single `AppDbContext`, Application owns CQRS, etc.). _2026-05-10: README "Backend → Architecture" subsection now contains an ASCII diagram of the four layers, what each one owns, and the cross-cutting rules the architecture tests enforce. The diagram describes per-feature `I<Feature>DbContext` interfaces (the actual current shape) rather than the original "single AppDbContext" framing._
 - [ ] **7.7** Delete `docs/technology-guidance-audit.md` allow-lists; mark `docs/technology-guidance-remediation-plan.md` as complete in its frontmatter.
 - [ ] **7.8** Tag release: `git tag tech-guidance-compliant-v1`. _Human follow-up._
 

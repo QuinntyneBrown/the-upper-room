@@ -85,6 +85,62 @@ Then follow the [Backend](#backend) or [Frontend](#frontend) instructions below.
 
 The backend is a layered .NET solution under [`backend/`](backend).
 
+### Architecture
+
+The backend follows a Clean Architecture layout. Dependencies point inward — outer layers know about inner layers, never the reverse.
+
+```text
+┌────────────────────────────────────────────────────────────────────┐
+│ TheUpperRoom.Api  (HTTP boundary)                                  │
+│  - Controllers, [Authorize], [FromBody], JWT/PKCE auth wiring      │
+│  - ExceptionHandling: ValidationProblemDetails mapping             │
+│  - Hosts MediatR, FluentValidation, OpenAPI, DI composition        │
+│  - Owns request DTOs that bind from HTTP only                      │
+└────────────────────────────────────────────────────────────────────┘
+                              ▲
+                              │ depends on
+                              │
+┌────────────────────────────────────────────────────────────────────┐
+│ TheUpperRoom.Application  (use cases / CQRS)                       │
+│  - <Feature>/I<Feature>DbContext  (e.g. IContactsDbContext)        │
+│  - <Feature>/<Action>Command + Result + Handler                    │
+│  - <Feature>/<Action>Query + Result + Handler                      │
+│  - <Feature>/<Action>CommandValidator (FluentValidation)           │
+│  - Application-shape DTOs returned by handlers                     │
+│  - Cross-feature aggregators (e.g. Dashboard) consume the          │
+│    per-feature interfaces, not concrete EF contexts                │
+└────────────────────────────────────────────────────────────────────┘
+                              ▲
+                              │ depends on
+                              │
+┌────────────────────────────────────────────────────────────────────┐
+│ TheUpperRoom.Domain  (entities, value objects, business rules)     │
+│  - Domain.<Feature>/* entities + value objects                     │
+│  - Domain.Rbac (Permission, RoleDefinition, RoleCatalog)           │
+│  - No EF, no ASP.NET, no MediatR — pure C#                         │
+└────────────────────────────────────────────────────────────────────┘
+                              ▲
+                              │ implements interfaces from
+                              │
+┌────────────────────────────────────────────────────────────────────┐
+│ TheUpperRoom.Infrastructure  (persistence + external integrations) │
+│  - <Feature>/<Feature>DbContext : DbContext, I<Feature>DbContext   │
+│  - Auth/PasswordHasher : IPasswordHasher                           │
+│  - Rbac/PermissionChecker : IPermissionChecker                     │
+│  - Seeding/<Feature>/<Feature>DataSeeder : IDataSeeder             │
+│  - Users/UsersDbContext + UserDirectory                            │
+│  - References Application (down-stream interfaces); never Api      │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+Cross-cutting rules enforced by `tests/TheUpperRoom.Application.Tests/TechnologyGuidanceArchitectureTests`:
+
+- Every `.cs` file in `backend/src/` declares exactly one top-level type.
+- No `*Handler` / `*Command` / `*Query` / `*Validator` / `*DbContext` / `*DataSeeder` / `*Row` types under `TheUpperRoom.Api/` (the test runs with no allow-list entries).
+- Application handlers depend on an `I<Feature>DbContext` interface, not a concrete EF context.
+- Seeders are registered through `Infrastructure.DependencyInjection.AddSeeders`, never one-off `AddScoped<IDataSeeder, ...>` lines in `Program.cs`.
+- `TheUpperRoom.Application` does not reference `Microsoft.EntityFrameworkCore.SqlServer` or any `Microsoft.AspNetCore.*` package.
+
 ### Restore and Build
 
 ```bash
