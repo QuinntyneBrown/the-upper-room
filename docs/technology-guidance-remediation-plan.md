@@ -396,6 +396,16 @@ Audit pass conducted by Claude (loop iteration 27/28) against the live codebase.
 | 6 — Frontend | **DONE** (except 6.17) | Domain service contracts/tokens, file-per-type extraction, Material-component adoption all landed in earlier `tech-guidance` commits. 6.17 (visual regression pass) is human work. |
 | 7 — Final acceptance | **Not started** | Pending Phase 3 + 4C completion. |
 
+## Phase 3 sweep — file-shape progress (in-place split, project-move pending)
+
+In addition to Contacts (2.5), this iteration applied the one-type-per-file split to the next worst offenders that didn't depend on the `<X>DbContext` migration:
+
+- [x] **3.K (Kanban)** — `PatchCardCommand.cs` (10 types) → `KanbanOutcome.cs`, `PatchCardCommand.cs`, `PatchCardResult.cs`, `PatchCardHandler.cs`, `MoveCardCommand.cs`, `MoveCardResult.cs`, `MoveCardHandler.cs`, `DeleteCardCommand.cs`, `DeleteCardResult.cs`, `DeleteCardHandler.cs`. 10/10 KanbanPersistenceTests pass.
+- [x] **3.E (Events)** — `CancelEventCommand.cs` (4 types) → `CancelEventCommand.cs`, `CancelEventResult.cs`, `CancelEventOutcome.cs`, `CancelEventHandler.cs`.
+- [x] **3.A (Audit)** — `ListAuditEntriesQuery.cs` (4 types) → `ListAuditEntriesQuery.cs`, `ListAuditEntriesResult.cs`, `ListAuditEntriesOutcome.cs`, `ListAuditEntriesHandler.cs`.
+
+Full Api.Tests suite stays **105/105 PASS** after the splits. Remaining multi-type files to sweep: `Notifications/NotificationsCqrs.cs` (19 types), `Events/EventRsvpCqrs.cs` (14), `Notes/NotesCqrs.cs` (13), `Notifications/PushCommands.cs` (7), plus a handful of 3-5 type files in DbContext / Controller / DTO sites where the secondary types are tightly cohesive.
+
 ## Genuinely-remaining engineering work
 
 In rough priority order:
