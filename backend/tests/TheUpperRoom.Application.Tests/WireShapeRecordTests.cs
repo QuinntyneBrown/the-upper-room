@@ -227,6 +227,45 @@ public sealed class WireShapeRecordTests
     }
 
     [Fact]
+    public void Note_request_records_carry_only_minimal_data()
+    {
+        var create = new CreateNoteRequest("Contact", "c-1", "body");
+        Assert.Equal("Contact", create.SubjectType);
+        Assert.Equal("c-1", create.SubjectId);
+        Assert.Equal("body", create.BodyMarkdown);
+
+        var update = new UpdateNoteRequest("new body");
+        Assert.Equal("new body", update.BodyMarkdown);
+
+        // Update is intentionally narrower than Create -- subject type
+        // and id are immutable after creation.
+        Assert.Single(typeof(UpdateNoteRequest).GetProperties());
+    }
+
+    [Fact]
+    public void PatchContactRequest_name_is_nullable_for_partial_updates()
+    {
+        // Patch semantics: a missing field means "don't change".
+        var nameOnly = new PatchContactRequest("New Name");
+        Assert.Equal("New Name", nameOnly.Name);
+
+        var noFields = new PatchContactRequest(null);
+        Assert.Null(noFields.Name);
+    }
+
+    [Fact]
+    public void Auth_outcome_only_results_carry_no_payload()
+    {
+        // ChangePassword/DeleteAccount/Reset/VerifyEmail all return just
+        // the outcome -- no payload, no error string. Confirming the
+        // 1-property record shape so a future addition is deliberate.
+        Assert.Single(typeof(ChangePasswordResult).GetProperties());
+        Assert.Single(typeof(DeleteAccountResult).GetProperties());
+        Assert.Single(typeof(ResetPasswordResult).GetProperties());
+        Assert.Single(typeof(VerifyEmailResult).GetProperties());
+    }
+
+    [Fact]
     public void EventDto_optional_arguments_default_to_null_or_false()
     {
         var dto = new EventDto(
