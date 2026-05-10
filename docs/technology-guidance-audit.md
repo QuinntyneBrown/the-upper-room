@@ -8,7 +8,26 @@ This document audits the codebase against every requirement in the guidance docu
 
 ---
 
-## Executive Summary
+## Re-audit — 2026-05-10
+
+The original audit below was conducted on **2026-05-09**. After ~20 loop iterations of remediation work, the state has shifted considerably. Re-running each item against the live tree on 2026-05-10:
+
+| Area | PASS | PARTIAL | FAIL | Total | Δ vs 2026-05-09 |
+|------|-----:|--------:|-----:|------:|----------------:|
+| Backend architecture | 6 | 2 | 1 | 9 | +3 PASS / −3 FAIL |
+| Backend validation | 5 | 0 | 0 | 5 | +4 PASS / −4 FAIL |
+| Backend file/type rule | 1 | 0 | 0 | 1 | +1 PASS / −1 FAIL |
+| Authentication | 4 | 0 | 0 | 4 | +3 PASS / −1 FAIL |
+| Frontend | 9 | 0 | 0 | 9 | +3 PASS / −1 FAIL |
+| **Total** | **25** | **2** | **1** | **28** | **+14 PASS / −10 FAIL** |
+
+The two **PARTIAL** items are §B1 (Clean Architecture — handlers still under `Api/`, blocked on rich-Domain-vs-thin-IAppDbContext strategy) and §B3 (`IAppDbContext` exists but runtime still uses per-feature contexts). The remaining **FAIL** is §A17's distributed throttling clause (the in-process limiter is fine for single-instance; cross-instance Redis-backed throttling is the deferred work).
+
+The original section-by-section breakdown follows for historical reference. **Treat the per-section "PASS / PARTIAL / FAIL" verdicts in the headings below as the 2026-05-09 snapshot, not the current state.**
+
+---
+
+## Executive Summary (2026-05-09 snapshot — see Re-audit above for current)
 
 | Area | PASS | PARTIAL | FAIL | Total |
 |------|-----:|--------:|-----:|------:|
