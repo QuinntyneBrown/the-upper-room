@@ -1,25 +1,40 @@
 ---
 id: TASK-TC-8.9
 title: 'Run TC-8.9 - Status chip styling per status'
-status: Idle
+status: Completed
 test_id: TC-8.9
 source: ../../test-plan/08-ideas.md
+result: FAIL
+run_at: 2026-05-09T23:40:00Z
+defect: BUG-039
 ---
 
 # TASK-TC-8.9: Run TC-8.9 - Status chip styling per status
 
-## Goal
+## Result: FAIL — chip text correct but no per-status colour token
 
-Run `TC-8.9` from `docs/test-plan/08-ideas.md` and record the result.
+| Field      | Value                       |
+|------------|-----------------------------|
+| Browser    | Chromium (Playwright)       |
+| Viewport   | 1280×720                    |
+| Build SHA  | 1821089                     |
+| Run at     | 2026-05-09T23:40:00Z        |
 
-## Execution
+### Evidence
 
-- Follow the source test case steps, verification notes, pass criteria, and severity.
-- Capture browser, viewport, build SHA, result, tester, run timestamp, and defect link if the result fails.
+- `idea-detail.html:16` renders `<span data-testid="idea-status-chip" class="idea-status-chip">{{ i.status }}</span>` — text is correct.
+- `idea-detail.scss:96-104` defines a single `.idea-status-chip` rule (background:
+  `var(--md-sys-color-secondary-container)`) — no per-status modifier.
+- No `idea-status-chip--Proposed/Submitted/Selected/...` classes exist anywhere in the ideas
+  tree (verified via grep).
+- All chips render with the same colour regardless of status.
+
+Severity per test plan: Low.
+
+Defect: [BUG-039](../../bugs/BUG-039-idea-status-chip-no-per-status-styling.md).
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
-
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.

@@ -1,25 +1,34 @@
 ---
 id: TASK-TC-8.5
 title: 'Run TC-8.5 - Submit a new idea'
-status: Idle
+status: Completed
 test_id: TC-8.5
 source: ../../test-plan/08-ideas.md
+result: BLOCKED
+run_at: 2026-05-09T23:38:00Z
 ---
 
 # TASK-TC-8.5: Run TC-8.5 - Submit a new idea
 
-## Goal
+## Result: BLOCKED — submission flow missing (BUG-009)
 
-Run `TC-8.5` from `docs/test-plan/08-ideas.md` and record the result.
+| Field      | Value                       |
+|------------|-----------------------------|
+| Browser    | Chromium (Playwright)       |
+| Viewport   | 1280×720                    |
+| Build SHA  | 1821089                     |
+| Run at     | 2026-05-09T23:38:00Z        |
 
-## Execution
+### Evidence
 
-- Follow the source test case steps, verification notes, pass criteria, and severity.
-- Capture browser, viewport, build SHA, result, tester, run timestamp, and defect link if the result fails.
+Test plan acknowledges current state: `idea-list.html` does not render a New Idea button;
+`IdeasController` does not expose `POST /api/v1/ideas`; backend does not write idea audit
+entries. No submission flow exists end-to-end.
+
+Defect: [BUG-009](../../bugs/BUG-009-new-idea-button-missing.md).
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
-
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.
