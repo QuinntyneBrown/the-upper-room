@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Api.Events;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Infrastructure.Events;
 
 namespace TheUpperRoom.Api.Locations;
 

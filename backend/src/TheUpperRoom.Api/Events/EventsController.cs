@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheUpperRoom.Api.Auth;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Infrastructure.Events;
 
 namespace TheUpperRoom.Api.Events;
 

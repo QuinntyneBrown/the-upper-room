@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace TheUpperRoom.Api.Events;
+namespace TheUpperRoom.Infrastructure.Events;
 
 public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) : DbContext(options)
 {

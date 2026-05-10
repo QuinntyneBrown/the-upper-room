@@ -1,5 +1,6 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Infrastructure.Events;
 
 namespace TheUpperRoom.Api.Events;
 

@@ -11,6 +11,7 @@ using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Rbac;
 using TheUpperRoom.Infrastructure.Contacts;
+using TheUpperRoom.Infrastructure.Events;
 using TheUpperRoom.Infrastructure.Ideas;
 
 

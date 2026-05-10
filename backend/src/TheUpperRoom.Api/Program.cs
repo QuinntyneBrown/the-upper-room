@@ -16,6 +16,7 @@ using TheUpperRoom.Application;
 using TheUpperRoom.Infrastructure;
 using TheUpperRoom.Infrastructure.Cities;
 using TheUpperRoom.Infrastructure.Contacts;
+using TheUpperRoom.Infrastructure.Events;
 using TheUpperRoom.Infrastructure.Ideas;
 using TheUpperRoom.Infrastructure.Kanban;
 

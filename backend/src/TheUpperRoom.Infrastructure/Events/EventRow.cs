@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Events;
+namespace TheUpperRoom.Infrastructure.Events;
 
 public sealed class EventRow
 {
@@ -17,10 +17,4 @@ public sealed class EventRow
     public string? RecurrenceRule { get; set; }
     public string[] ExceptionDates { get; set; } = Array.Empty<string>();
     public string? Timezone { get; set; }
-
-    public EventDto ToDto(int rsvpCount = 0, IReadOnlyList<AttendeeDto>? attendees = null) => new(
-        Id, Title, null, Status, StartAt, EndAt, Location, IsVirtual,
-        rsvpCount, Capacity, Tags, Description, attendees,
-        RequiresApproval, RecurrenceRule, null, null,
-        ExceptionDates.Length == 0 ? null : ExceptionDates, Timezone);
 }
