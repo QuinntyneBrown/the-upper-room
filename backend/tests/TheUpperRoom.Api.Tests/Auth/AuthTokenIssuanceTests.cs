@@ -1,6 +1,11 @@
 // Traces to: TASK-0220
+// Updated 2026-05-10 (BUG-003 fix): exchange now requires a code issued by
+// the dev IdP and resolves a real user; the legacy hard-coded
+// (auth-code, abc123, fixed challenge) no longer works. ExchangeAsync now
+// calls /__idp/authorize first to get a fresh code bound to the PKCE pair.
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Json;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,18 +15,34 @@ namespace TheUpperRoom.Api.Tests.Auth;
 
 public sealed class AuthTokenIssuanceTests : IClassFixture<WebApplicationFactory<Program>>
 {
-    private const string Verifier = "abc123";
-    private const string Challenge = "bKE9UspwyIPg8LsQHkJaiehiTeUdstI5JZOvaoQRgJA";
-
     private readonly WebApplicationFactory<Program> _factory;
 
     public AuthTokenIssuanceTests(WebApplicationFactory<Program> factory) => _factory = factory;
 
+    private static (string verifier, string challenge) NewPkcePair()
+    {
+        var bytes = RandomNumberGenerator.GetBytes(32);
+        var verifier = Convert.ToBase64String(bytes)
+            .TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        var hash = SHA256.HashData(Encoding.ASCII.GetBytes(verifier));
+        var challenge = Convert.ToBase64String(hash)
+            .TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        return (verifier, challenge);
+    }
+
     private async Task<(string accessToken, string refreshCookieValue)> ExchangeAsync(HttpClient client)
     {
+        var (verifier, challenge) = NewPkcePair();
+
+        var authorize = await client.PostAsJsonAsync(
+            "/__idp/authorize",
+            new { email = "admin@test.local", password = "UpperRoomDev!42", codeChallenge = challenge });
+        authorize.EnsureSuccessStatusCode();
+        var authorized = await authorize.Content.ReadFromJsonAsync<AuthorizeBody>();
+
         var response = await client.PostAsJsonAsync(
             "/api/v1/auth/exchange",
-            new { code = "auth-code", codeVerifier = Verifier, expectedChallenge = Challenge });
+            new { code = authorized!.code, codeVerifier = verifier });
         response.EnsureSuccessStatusCode();
         var body = await response.Content.ReadFromJsonAsync<ExchangeBody>();
         var setCookie = response.Headers.GetValues("Set-Cookie").First();
@@ -29,6 +50,7 @@ public sealed class AuthTokenIssuanceTests : IClassFixture<WebApplicationFactory
         return (body!.accessToken, refreshValue);
     }
 
+    private sealed record AuthorizeBody(string code);
     private sealed record ExchangeBody(string accessToken);
 
     [Fact]
