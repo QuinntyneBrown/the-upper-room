@@ -1,10 +1,11 @@
-# BUG-006 — Partner-create form has no Logo upload field
+# BUG-006 — Partner-create form has no Logo upload field (RESOLVED 2026-05-10)
 
 **Severity**: High
 **Component**: frontend
 **Found in test**: TC-6.6 (Create partner — Logo upload)
 **User-guide refs**: §6.2 ("**Logo** — upload an image if you have one")
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-10 — partner-create form now renders a Logo field (`partner-logo-input` file picker → POSTs `/api/v1/uploads`, shows `partner-logo-preview` thumbnail, `partner-logo-clear` removes it). Selected logo URL is included in the create POST so the resulting partner has `logo` populated and the existing partner-detail render path picks it up.
 
 ## Description
 

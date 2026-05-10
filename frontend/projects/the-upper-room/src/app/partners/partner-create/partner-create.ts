@@ -22,6 +22,8 @@ export class PartnerCreate {
 
   protected readonly name = signal('');
   protected readonly website = signal('');
+  protected readonly logoUrl = signal<string | null>(null);
+  protected readonly logoUploading = signal(false);
 
   protected readonly nameError = signal<string | null>(null);
   protected readonly websiteError = signal<string | null>(null);
@@ -29,7 +31,33 @@ export class PartnerCreate {
   protected readonly submitting = signal(false);
 
   protected readonly websiteValid = computed(() => !this.website() || URL_RE.test(this.website()));
-  protected readonly isDirty = computed(() => this.name().length > 0 || this.website().length > 0);
+  protected readonly isDirty = computed(
+    () => this.name().length > 0 || this.website().length > 0 || this.logoUrl() !== null,
+  );
+
+  protected onLogoSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const file = target.files?.[0];
+    if (!file) return;
+    this.logoUploading.set(true);
+    const form = new FormData();
+    form.append('file', file);
+    this.http.post<{ url: string }>('/api/v1/uploads', form).subscribe({
+      next: (r) => {
+        this.logoUrl.set(r.url);
+        this.logoUploading.set(false);
+      },
+      error: () => {
+        this.logoUploading.set(false);
+        this.snackbar.show("Couldn't upload logo. Try again.", 'error');
+      },
+    });
+    target.value = '';
+  }
+
+  protected clearLogo(): void {
+    this.logoUrl.set(null);
+  }
 
   protected onSubmit(event: Event): void {
     event.preventDefault();
@@ -53,7 +81,11 @@ export class PartnerCreate {
 
     this.submitting.set(true);
     this.http
-      .post<{ id: string }>('/api/v1/partners', { name: nameVal, website: websiteVal || null })
+      .post<{ id: string }>('/api/v1/partners', {
+        name: nameVal,
+        website: websiteVal || null,
+        logo: this.logoUrl(),
+      })
       .subscribe({
         next: (partner) => {
           this.submitting.set(false);

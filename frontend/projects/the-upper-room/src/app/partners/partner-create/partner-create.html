@@ -49,6 +49,35 @@
           </a>
         }
       </div>
+
+      <div class="field" data-testid="partner-logo-field">
+        <label for="partner-logo-input" class="form-label">Logo</label>
+        @if (logoUrl()) {
+          <img
+            data-testid="partner-logo-preview"
+            class="partner-logo-preview"
+            [src]="logoUrl()"
+            alt="Partner logo preview"
+          />
+          <tar-button
+            variant="text"
+            type="button"
+            testId="partner-logo-clear"
+            (clicked)="clearLogo()"
+          >Remove logo</tar-button>
+        } @else {
+          <input
+            id="partner-logo-input"
+            data-testid="partner-logo-input"
+            type="file"
+            accept="image/*"
+            (change)="onLogoSelected($event)"
+          />
+        }
+        @if (logoUploading()) {
+          <span data-testid="partner-logo-uploading" class="form-hint">Uploading…</span>
+        }
+      </div>
     </section>
   </div>
 </form>
