@@ -1,7 +1,7 @@
 // Traces to: TASK-0230
 using Microsoft.EntityFrameworkCore;
 
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Infrastructure.Notifications;
 
 public sealed class PushDbContext(DbContextOptions<PushDbContext> options) : DbContext(options)
 {

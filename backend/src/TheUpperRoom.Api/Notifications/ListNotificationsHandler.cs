@@ -1,5 +1,6 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Infrastructure.Notifications;
 
 namespace TheUpperRoom.Api.Notifications;
 

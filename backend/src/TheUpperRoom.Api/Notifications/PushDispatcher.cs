@@ -1,4 +1,6 @@
 // Traces to: TASK-0230
+using TheUpperRoom.Infrastructure.Notifications;
+
 namespace TheUpperRoom.Api.Notifications;
 
 public sealed class PushDispatcher(PushDbContext db)

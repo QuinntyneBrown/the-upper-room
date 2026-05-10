@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using TheUpperRoom.Api.Notifications;
 using TheUpperRoom.Domain.Notifications;
+using TheUpperRoom.Infrastructure.Notifications;
 
 namespace TheUpperRoom.Application.Tests;
 

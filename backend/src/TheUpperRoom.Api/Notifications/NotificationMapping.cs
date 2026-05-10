@@ -1,3 +1,5 @@
+using TheUpperRoom.Infrastructure.Notifications;
+
 namespace TheUpperRoom.Api.Notifications;
 
 internal static class NotificationMapping

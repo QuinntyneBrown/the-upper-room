@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Infrastructure.Notifications;
 
 public sealed class NotificationsDbContext(DbContextOptions<NotificationsDbContext> options) : DbContext(options)
 {

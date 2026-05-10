@@ -19,6 +19,7 @@ using TheUpperRoom.Infrastructure.Ideas;
 using TheUpperRoom.Infrastructure.Kanban;
 using TheUpperRoom.Infrastructure.Locations;
 using TheUpperRoom.Infrastructure.Notes;
+using TheUpperRoom.Infrastructure.Notifications;
 
 namespace TheUpperRoom.Api.Tests.Notifications;
 

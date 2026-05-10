@@ -84,14 +84,12 @@ public sealed class TechnologyGuidanceArchitectureTests
         "DispatchNotificationHandler",
         "ListNotificationPreferencesHandler",
         "UpsertNotificationPreferenceHandler",
-        "NotificationsDbContext",
         "GetVapidPublicKeyQuery",
         "SubscribePushCommand",
         "UnsubscribePushCommand",
         "GetVapidPublicKeyHandler",
         "SubscribePushHandler",
         "UnsubscribePushHandler",
-        "PushDbContext",
     };
 
     [Fact]

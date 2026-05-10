@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Infrastructure.Notifications;
 
 public sealed class SentMailRow
 {
