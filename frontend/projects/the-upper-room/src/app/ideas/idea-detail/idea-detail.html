@@ -153,5 +153,32 @@
         </div>
       }
     </section>
+
+    <section data-testid="idea-comments" class="idea-comments">
+      <h2 class="idea-comments__title">Comments</h2>
+      <ul class="idea-comments__list">
+        @for (c of comments(); track c.id) {
+          <li [attr.data-testid]="'idea-comment-' + c.id" class="idea-comments__item">
+            <div class="idea-comments__author">{{ c.author }}</div>
+            <div class="idea-comments__body">{{ c.body }}</div>
+          </li>
+        }
+      </ul>
+      <div class="idea-comments__compose">
+        <textarea
+          data-testid="idea-comment-input"
+          placeholder="Add a comment…"
+          rows="2"
+          [value]="newComment()"
+          (input)="newComment.set($any($event.target).value)"
+        ></textarea>
+        <button
+          data-testid="idea-comment-submit"
+          type="button"
+          class="btn-filled"
+          (click)="submitComment()"
+        >Post comment</button>
+      </div>
+    </section>
   </div>
 }

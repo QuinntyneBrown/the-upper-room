@@ -241,6 +241,53 @@ public sealed class IdeasController(
         return StatusCode(201, new { partnerId = body.PartnerId });
     }
 
+    [HttpGet("{id}/comments")]
+    public IActionResult ListComments(string id)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+        var idea = db.Ideas.Find(id);
+        if (idea is null) return NotFound();
+
+        var items = db.Comments
+            .Where(c => c.IdeaId == id)
+            .AsEnumerable()
+            .OrderBy(c => c.CreatedAt)
+            .Select(c => new { id = c.Id, ideaId = c.IdeaId, body = c.Body, author = c.Author, createdAt = c.CreatedAt })
+            .ToArray();
+        return Ok(new { items });
+    }
+
+    [HttpPost("{id}/comments")]
+    public IActionResult CreateComment(string id, [FromBody] CreateCommentRequest? body)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+        var idea = db.Ideas.Find(id);
+        if (idea is null) return NotFound();
+        if (body is null || string.IsNullOrWhiteSpace(body.Body))
+            return UnprocessableEntity(new { error = "Body is required." });
+
+        var row = new IdeaCommentRow
+        {
+            Id = Guid.NewGuid().ToString("N")[..8],
+            IdeaId = id,
+            Author = user.Id,
+            Body = body.Body.Trim(),
+            CreatedAt = DateTimeOffset.UtcNow,
+        };
+        db.Comments.Add(row);
+        db.SaveChanges();
+        return Created($"/api/v1/ideas/{id}/comments/{row.Id}", new
+        {
+            id = row.Id,
+            ideaId = row.IdeaId,
+            body = row.Body,
+            author = row.Author,
+            createdAt = row.CreatedAt,
+        });
+    }
+
     [HttpDelete("{id}/partners/{partnerId}")]
     public IActionResult UnlinkPartner(string id, string partnerId)
     {
@@ -275,6 +322,7 @@ public sealed record CreateIdeaRequest(
     string? Description = null,
     string? BodyMarkdown = null,
     string[]? Tags = null);
+public sealed record CreateCommentRequest(string? Body);
 public sealed record UpdateIdeaRequest(string? BodyMarkdown, string? CoverImageUrl);
 public sealed record ChangeStatusRequest(string Status);
 public sealed record LinkIdeaPartnerRequest(string PartnerId, string? PartnerName = null);

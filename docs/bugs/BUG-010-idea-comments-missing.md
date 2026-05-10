@@ -1,10 +1,11 @@
-# BUG-010 — Idea detail page has no comments section
+# BUG-010 — Idea detail page has no comments section (RESOLVED 2026-05-10)
 
 **Severity**: High
 **Component**: frontend + backend
 **Found in test**: TC-8.8 (Idea discussion)
 **User-guide refs**: §8.4
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-10 — IdeaCommentRow + GET/POST `/api/v1/ideas/{id}/comments` endpoints (xUnit covered: create + list across restart, 422 on blank body, 404 on unknown idea); idea-detail page now renders the Comments section with list and Post comment composer. TC-8.8 PASS.
 
 ## Description
 

@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddDbContext<UsersDbContext>(o => o.UseSqlite(usersConn));
 
         services.AddScoped<IAuthUserStore, AuthUserStore>();
+        services.AddScoped<IAuthEmailSender, NoOpAuthEmailSender>();
         services.AddScoped<IUserDirectory, UserDirectory>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 

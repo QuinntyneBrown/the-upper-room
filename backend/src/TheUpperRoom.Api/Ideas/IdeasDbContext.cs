@@ -10,6 +10,7 @@ public sealed class IdeasDbContext(DbContextOptions<IdeasDbContext> options) : D
     public DbSet<IdeaRow> Ideas => Set<IdeaRow>();
     public DbSet<IdeaVoteRow> Votes => Set<IdeaVoteRow>();
     public DbSet<IdeaPartnerRow> Partners => Set<IdeaPartnerRow>();
+    public DbSet<IdeaCommentRow> Comments => Set<IdeaCommentRow>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -37,6 +38,15 @@ public sealed class IdeasDbContext(DbContextOptions<IdeasDbContext> options) : D
         p.Property(x => x.IdeaId).HasMaxLength(100);
         p.Property(x => x.PartnerId).HasMaxLength(100);
         p.Property(x => x.PartnerName).HasMaxLength(200).IsRequired();
+
+        var c = b.Entity<IdeaCommentRow>();
+        c.ToTable("IdeaComments");
+        c.HasKey(x => x.Id);
+        c.Property(x => x.Id).HasMaxLength(100);
+        c.Property(x => x.IdeaId).HasMaxLength(100).IsRequired();
+        c.Property(x => x.Author).HasMaxLength(100).IsRequired();
+        c.Property(x => x.Body).HasMaxLength(4000).IsRequired();
+        c.HasIndex(x => x.IdeaId);
     }
 }
 
@@ -66,4 +76,13 @@ public sealed class IdeaPartnerRow
     public string IdeaId { get; set; } = "";
     public string PartnerId { get; set; } = "";
     public string PartnerName { get; set; } = "";
+}
+
+public sealed class IdeaCommentRow
+{
+    public string Id { get; set; } = "";
+    public string IdeaId { get; set; } = "";
+    public string Author { get; set; } = "";
+    public string Body { get; set; } = "";
+    public DateTimeOffset CreatedAt { get; set; }
 }

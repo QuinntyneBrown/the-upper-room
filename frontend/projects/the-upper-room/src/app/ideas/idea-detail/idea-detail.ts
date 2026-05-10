@@ -10,6 +10,14 @@ export type IdeaDetailDto = IdeaDto;
 
 interface MeDto { id: string; roles: string[] }
 
+interface IdeaComment {
+  readonly id: string;
+  readonly ideaId: string;
+  readonly body: string;
+  readonly author: string;
+  readonly createdAt: string;
+}
+
 interface PartnerSearchResult {
   readonly id: string;
   readonly name: string;
@@ -31,6 +39,8 @@ export class IdeaDetail implements OnInit {
   protected readonly me = signal<MeDto | null>(null);
   protected readonly editMode = signal(false);
   protected readonly editBody = signal('');
+  protected readonly comments = signal<IdeaComment[]>([]);
+  protected readonly newComment = signal('');
   private ideaId = '';
 
   // Partner linking
@@ -60,6 +70,7 @@ export class IdeaDetail implements OnInit {
       this.editBody.set(i.bodyMarkdown);
       this.linkedPartners.set(i.linkedPartners ?? []);
     });
+    this.loadComments();
 
     this.partnerSearch$.pipe(debounceTime(250), distinctUntilChanged()).subscribe((q) => {
       if (!q) { this.partnerResults.set([]); return; }
@@ -160,6 +171,26 @@ export class IdeaDetail implements OnInit {
           const message: string = err.error?.error ?? 'Status update failed.';
           this.snackbar.show(message, 'error');
         },
+      });
+  }
+
+  protected loadComments(): void {
+    this.http
+      .get<{ items: IdeaComment[] }>(`/api/v1/ideas/${this.ideaId}/comments`)
+      .subscribe((r) => this.comments.set(r.items));
+  }
+
+  protected submitComment(): void {
+    const body = this.newComment().trim();
+    if (!body) return;
+    this.http
+      .post<IdeaComment>(`/api/v1/ideas/${this.ideaId}/comments`, { body })
+      .subscribe({
+        next: (created) => {
+          this.comments.update((items) => [...items, created]);
+          this.newComment.set('');
+        },
+        error: () => this.snackbar.show("Couldn't post comment. Try again.", 'error'),
       });
   }
 }

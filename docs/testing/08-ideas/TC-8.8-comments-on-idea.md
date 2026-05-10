@@ -4,27 +4,39 @@ title: 'Run TC-8.8 - Comments on idea'
 status: Completed
 test_id: TC-8.8
 source: ../../test-plan/08-ideas.md
-result: BLOCKED
-run_at: 2026-05-09T23:39:00Z
+result: PASS
+run_at: 2026-05-10T02:18:00Z
 ---
 
 # TASK-TC-8.8: Run TC-8.8 - Comments on idea
 
-## Result: BLOCKED — comments flow not implemented (BUG-010)
+## Result: PASS — backend endpoints + frontend section shipped
 
 | Field      | Value                       |
 |------------|-----------------------------|
+| Backend    | xUnit (.NET)                |
 | Browser    | Chromium (Playwright)       |
-| Viewport   | 1280×720                    |
-| Build SHA  | 1821089                     |
-| Run at     | 2026-05-09T23:39:00Z        |
+| Build SHA  | 3edb1ef + comments stack    |
+| Run at     | 2026-05-10T02:18:00Z        |
 
 ### Evidence
 
-Test plan acknowledges current state: `idea-detail.html` does not render a comments section;
-`IdeasController` exposes no comments endpoint. There is no comments flow end-to-end.
+Backend ATDD (new this iteration):
+- `Post_idea_comment_creates_and_lists_persists_across_restart` PASS — POST creates,
+  GET lists in chronological order, both survive a factory restart, and per-author values
+  round-trip.
+- `Post_comment_with_blank_body_returns_422` PASS.
+- `Post_comment_for_unknown_idea_returns_404` PASS.
+- `IdeaCommentRow` added to `IdeasDbContext` with PK + IdeaId index.
 
-Defect: [BUG-010](../../bugs/BUG-010-idea-comments-missing.md).
+Frontend:
+- `idea-detail.html` now renders a Comments section (`data-testid="idea-comments"`) with the
+  list of comments (each `idea-comment-{id}`) and a textarea + Post comment button
+  (`idea-comment-input` / `idea-comment-submit`).
+- `loadComments()` fetches on init; `submitComment()` POSTs and appends to local state.
+
+End-to-end commenting now works. [BUG-010](../../bugs/BUG-010-idea-comments-missing.md)
+is resolved.
 
 ## Definition of Done
 

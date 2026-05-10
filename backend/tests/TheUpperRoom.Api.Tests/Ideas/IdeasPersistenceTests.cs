@@ -200,4 +200,62 @@ public sealed class IdeasPersistenceTests : IDisposable
         var resp = await client.PostAsJsonAsync("/api/v1/ideas", new { title = "  ", description = "" });
         Assert.Equal(HttpStatusCode.UnprocessableEntity, resp.StatusCode);
     }
+
+    private sealed record CommentResponse(string Id, string IdeaId, string Body, string Author, DateTimeOffset CreatedAt);
+    private sealed record CommentsListResponse(CommentResponse[] Items);
+
+    [Fact]
+    public async Task Post_idea_comment_creates_and_lists_persists_across_restart()
+    {
+        string ideaId;
+
+        await using (var factory = Factory())
+        {
+            var client = AuthedClient(factory, "member");
+            var ideaResp = await client.PostAsJsonAsync("/api/v1/ideas", new { title = "Idea with comments" });
+            ideaId = (await ideaResp.Content.ReadFromJsonAsync<CreatedIdea>())!.Id;
+
+            var commentResp = await client.PostAsJsonAsync(
+                $"/api/v1/ideas/{ideaId}/comments",
+                new { body = "First comment from member" });
+            Assert.Equal(HttpStatusCode.Created, commentResp.StatusCode);
+
+            var leadClient = AuthedClient(factory, "lead");
+            var commentResp2 = await leadClient.PostAsJsonAsync(
+                $"/api/v1/ideas/{ideaId}/comments",
+                new { body = "Lead chiming in" });
+            Assert.Equal(HttpStatusCode.Created, commentResp2.StatusCode);
+        }
+
+        await using var factory2 = Factory();
+        var client2 = AuthedClient(factory2, "member");
+        var listResp = await client2.GetAsync($"/api/v1/ideas/{ideaId}/comments");
+        Assert.Equal(HttpStatusCode.OK, listResp.StatusCode);
+        var list = await listResp.Content.ReadFromJsonAsync<CommentsListResponse>();
+        Assert.NotNull(list);
+        Assert.Equal(2, list!.Items.Length);
+        Assert.Contains(list.Items, c => c.Body == "First comment from member" && c.Author == "member");
+        Assert.Contains(list.Items, c => c.Body == "Lead chiming in" && c.Author == "lead");
+    }
+
+    [Fact]
+    public async Task Post_comment_with_blank_body_returns_422()
+    {
+        await using var factory = Factory();
+        var client = AuthedClient(factory, "member");
+        var ideaResp = await client.PostAsJsonAsync("/api/v1/ideas", new { title = "Blank body parent" });
+        var ideaId = (await ideaResp.Content.ReadFromJsonAsync<CreatedIdea>())!.Id;
+
+        var resp = await client.PostAsJsonAsync($"/api/v1/ideas/{ideaId}/comments", new { body = "   " });
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, resp.StatusCode);
+    }
+
+    [Fact]
+    public async Task Post_comment_for_unknown_idea_returns_404()
+    {
+        await using var factory = Factory();
+        var client = AuthedClient(factory, "member");
+        var resp = await client.PostAsJsonAsync("/api/v1/ideas/no-such-idea/comments", new { body = "hello" });
+        Assert.Equal(HttpStatusCode.NotFound, resp.StatusCode);
+    }
 }
