@@ -55,6 +55,48 @@ public sealed class EventsHandlerAuthGateTests
     }
 
     [Fact]
+    public async Task ApproveRsvp_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new ApproveRsvpCommand("missing", "event-1", "rsvp-1"));
+
+        Assert.Equal(RsvpOutcome.Unauthorized, result);
+    }
+
+    [Fact]
+    public async Task DenyRsvp_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new DenyRsvpCommand("missing", "event-1", "rsvp-1"));
+
+        Assert.Equal(RsvpOutcome.Unauthorized, result);
+    }
+
+    [Fact]
+    public async Task GetMyRsvp_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new GetMyRsvpQuery("missing", "event-1"));
+
+        Assert.Equal(RsvpOutcome.Unauthorized, result.Outcome);
+        Assert.Null(result.Status);
+    }
+
+    [Fact]
+    public async Task GetRsvpRequests_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new GetRsvpRequestsQuery("missing", "event-1"));
+
+        Assert.Equal(RsvpOutcome.Unauthorized, result.Outcome);
+        Assert.Empty(result.Items);
+    }
+
+    [Fact]
     public void CancelEventOutcome_enum_pins_wire_shape()
     {
         Assert.Equal(
