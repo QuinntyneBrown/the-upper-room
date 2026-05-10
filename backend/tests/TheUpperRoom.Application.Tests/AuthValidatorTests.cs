@@ -63,4 +63,52 @@ public sealed class AuthValidatorTests
             .TestValidate(new SignInCommand("not-an-email", "ValidPass!42x"))
             .ShouldHaveValidationErrorFor(c => c.Email);
     }
+
+    [Fact]
+    public void RequestPasswordReset_invalid_email_fails()
+    {
+        new RequestPasswordResetCommandValidator()
+            .TestValidate(new RequestPasswordResetCommand("not-an-email"))
+            .ShouldHaveValidationErrorFor(c => c.Email);
+    }
+
+    [Fact]
+    public void ResetPassword_empty_token_fails()
+    {
+        new ResetPasswordCommandValidator()
+            .TestValidate(new ResetPasswordCommand(string.Empty, "ValidPass!42x"))
+            .ShouldHaveValidationErrorFor(c => c.Token);
+    }
+
+    [Fact]
+    public void ResetPassword_short_new_password_fails()
+    {
+        new ResetPasswordCommandValidator()
+            .TestValidate(new ResetPasswordCommand("a-token", "short!"))
+            .ShouldHaveValidationErrorFor(c => c.NewPassword);
+    }
+
+    [Fact]
+    public void VerifyEmail_empty_token_fails()
+    {
+        new VerifyEmailCommandValidator()
+            .TestValidate(new VerifyEmailCommand(string.Empty))
+            .ShouldHaveValidationErrorFor(c => c.Token);
+    }
+
+    [Fact]
+    public void DeleteAccount_empty_user_id_fails()
+    {
+        new DeleteAccountCommandValidator()
+            .TestValidate(new DeleteAccountCommand(string.Empty, "OldPass!42x"))
+            .ShouldHaveValidationErrorFor(c => c.UserId);
+    }
+
+    [Fact]
+    public void DeleteAccount_empty_current_password_fails()
+    {
+        new DeleteAccountCommandValidator()
+            .TestValidate(new DeleteAccountCommand("u", string.Empty))
+            .ShouldHaveValidationErrorFor(c => c.CurrentPassword);
+    }
 }
