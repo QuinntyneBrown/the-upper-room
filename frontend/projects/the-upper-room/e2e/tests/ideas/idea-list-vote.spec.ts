@@ -140,8 +140,10 @@ test('sort "Most votes" orders ideas by vote count desc', async ({ page }) => {
   const list = new IdeasListPage(page);
   await list.goto();
 
-  await list.sortSelect().selectOption('votes');
+  await Promise.all([
+    page.waitForResponse((r) => r.url().includes('/api/v1/ideas') && r.url().includes('sort=votes')),
+    list.sortSelect().selectOption('votes'),
+  ]);
 
-  const firstTitle = await list.ideaCard(0).textContent();
-  expect(firstTitle).toContain('Many votes');
+  await expect(list.ideaCard(0)).toContainText('Many votes');
 });

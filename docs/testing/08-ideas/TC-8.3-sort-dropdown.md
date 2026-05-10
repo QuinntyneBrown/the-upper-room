@@ -4,14 +4,17 @@ title: 'Run TC-8.3 - Sort dropdown'
 status: Completed
 test_id: TC-8.3
 source: ../../test-plan/08-ideas.md
-result: PARTIAL
-run_at: 2026-05-09T23:36:00Z
-defect: BUG-038
+result: PASS
+run_at: 2026-05-09T23:38:00Z
 ---
 
 # TASK-TC-8.3: Run TC-8.3 - Sort dropdown
 
-## Result: PARTIAL — options present and correct; selecting "Most votes" does not visibly resort
+## Result: PASS
+
+After fixing the e2e race in `idea-list-vote.spec.ts:125` (BUG-038), the sort dropdown
+verifies fully — selecting "Most votes" issues `GET /api/v1/ideas?sort=votes` and re-renders
+cards in vote-desc order.
 
 | Field      | Value                       |
 |------------|-----------------------------|

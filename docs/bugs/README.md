@@ -31,7 +31,7 @@ Bugs filed while executing `docs/test-plan/` against the locally running app on 
 | [BUG-035](BUG-035-e2e-auth-bypass-lost-on-page-goto.md) | High | frontend e2e | `page.goto()` after seeding `__setTestToken`/`__setRbac` reloads the SPA and drops the token; 48 of 49 kanban tests fail at the auth-guard redirect |
 | [BUG-036](BUG-036-error-boundary-triggered-by-http-errors.md) | High | frontend | `GlobalErrorHandler` raises the full-page error boundary for every `HttpErrorResponse`; overlay intercepts clicks and breaks ~28 kanban e2e tests |
 | [BUG-037](BUG-037-app-shell-drawer-blocks-main-on-lg.md) | High | frontend | At lg+ the sticky drawer occupies a 280×viewport-height block on the left at z:20, overlapping main; clicks on left-side controls intercepted |
-| [BUG-038](BUG-038-idea-list-sort-dropdown-not-applied.md) | Medium | frontend | Idea list `<select data-testid="idea-sort-select">` does not visibly re-order cards after change; `[value] + (change)` binding likely missing reactivity |
+| [BUG-038](BUG-038-idea-list-sort-dropdown-not-applied.md) | Low (RESOLVED) | e2e | Idea sort-dropdown spec was racing the second response; component was correct. Spec fixed with `waitForResponse`. |
 
 ## What passed
 
