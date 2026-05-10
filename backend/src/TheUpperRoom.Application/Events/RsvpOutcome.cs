@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Events;
+namespace TheUpperRoom.Application.Events;
 
 public enum RsvpOutcome
 {

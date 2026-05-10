@@ -2,10 +2,12 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using TheUpperRoom.Application.Events;
 
 namespace TheUpperRoom.Infrastructure.Events;
 
-public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) : DbContext(options)
+public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options)
+    : DbContext(options), IEventsDbContext
 {
     public DbSet<EventRow> Events => Set<EventRow>();
     public DbSet<RsvpRow> Rsvps => Set<RsvpRow>();

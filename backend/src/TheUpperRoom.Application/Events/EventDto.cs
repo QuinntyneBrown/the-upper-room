@@ -1,5 +1,5 @@
 // traces_to: L2-052, L2-053, L2-055, L2-056
-namespace TheUpperRoom.Api.Events;
+namespace TheUpperRoom.Application.Events;
 
 public sealed record EventDto(
     string Id,

@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Infrastructure.Events;
+namespace TheUpperRoom.Application.Events;
 
 public sealed class RsvpRow
 {

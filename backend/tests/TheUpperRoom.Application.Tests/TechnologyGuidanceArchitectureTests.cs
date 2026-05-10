@@ -43,18 +43,6 @@ public sealed class TechnologyGuidanceArchitectureTests
         "SetContactArchivedHandler",
         "GetDashboardHandler",
         "GetDashboardQuery",
-        "CancelEventCommand",
-        "CancelEventHandler",
-        "GetMyRsvpQuery",
-        "SubmitRsvpCommand",
-        "GetRsvpRequestsQuery",
-        "ApproveRsvpCommand",
-        "DenyRsvpCommand",
-        "GetMyRsvpHandler",
-        "SubmitRsvpHandler",
-        "GetRsvpRequestsHandler",
-        "ApproveRsvpHandler",
-        "DenyRsvpHandler",
         "ValidationExceptionHandler",
     };
 

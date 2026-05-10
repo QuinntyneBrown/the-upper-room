@@ -1,5 +1,6 @@
 // traces_to: L2-055
 using Microsoft.AspNetCore.Mvc;
+using TheUpperRoom.Application.Events;
 using TheUpperRoom.Infrastructure.Events;
 
 namespace TheUpperRoom.Api.Events;

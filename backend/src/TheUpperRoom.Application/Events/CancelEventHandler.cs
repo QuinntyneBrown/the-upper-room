@@ -1,15 +1,14 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
-using TheUpperRoom.Infrastructure.Events;
 
-namespace TheUpperRoom.Api.Events;
+namespace TheUpperRoom.Application.Events;
 
 internal sealed class CancelEventHandler : IRequestHandler<CancelEventCommand, CancelEventResult>
 {
-    private readonly EventsDbContext _db;
+    private readonly IEventsDbContext _db;
     private readonly IUserDirectory _users;
 
-    public CancelEventHandler(EventsDbContext db, IUserDirectory users)
+    public CancelEventHandler(IEventsDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;

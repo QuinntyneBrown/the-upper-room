@@ -1,15 +1,14 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
-using TheUpperRoom.Infrastructure.Events;
 
-namespace TheUpperRoom.Api.Events;
+namespace TheUpperRoom.Application.Events;
 
 internal sealed class SubmitRsvpHandler : IRequestHandler<SubmitRsvpCommand, SubmitRsvpResult>
 {
-    private readonly EventsDbContext _db;
+    private readonly IEventsDbContext _db;
     private readonly IUserDirectory _users;
 
-    public SubmitRsvpHandler(EventsDbContext db, IUserDirectory users)
+    public SubmitRsvpHandler(IEventsDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;

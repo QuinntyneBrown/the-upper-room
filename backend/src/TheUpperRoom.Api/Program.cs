@@ -11,6 +11,7 @@ using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Application.Kanban;
+using TheUpperRoom.Application.Events;
 using TheUpperRoom.Application.Notes;
 using TheUpperRoom.Application.Notifications;
 using TheUpperRoom.Api.Notes;
@@ -105,6 +106,7 @@ var eventsConn = builder.Configuration["EventsDb:ConnectionString"]
                  ?? "Data Source=Data/events.db";
 EnsureSqliteDirectoryExists(eventsConn);
 builder.Services.AddDbContext<EventsDbContext>(o => o.UseSqlite(eventsConn));
+builder.Services.AddScoped<IEventsDbContext>(sp => sp.GetRequiredService<EventsDbContext>());
 
 var ideasConn = builder.Configuration["IdeasDb:ConnectionString"]
                 ?? "Data Source=Data/ideas.db";
