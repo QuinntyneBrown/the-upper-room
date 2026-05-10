@@ -1,7 +1,8 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Domain.Rbac;
 
-namespace TheUpperRoom.Api.Rbac;
+namespace TheUpperRoom.Application.Rbac;
 
 internal sealed class GetCurrentUserHandler : IRequestHandler<GetCurrentUserQuery, MeResponse?>
 {
@@ -19,6 +20,6 @@ internal sealed class GetCurrentUserHandler : IRequestHandler<GetCurrentUserQuer
             user.Email,
             user.City,
             new[] { user.Role },
-            Permissions.For(user.Role).ToArray()));
+            RoleCatalog.PermissionsFor(user.Role).Select(p => p.ToString()).ToArray()));
     }
 }

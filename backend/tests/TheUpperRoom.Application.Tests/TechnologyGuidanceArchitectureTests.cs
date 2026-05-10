@@ -99,8 +99,6 @@ public sealed class TechnologyGuidanceArchitectureTests
         "SubscribePushHandler",
         "UnsubscribePushHandler",
         "PushDbContext",
-        "GetCurrentUserQuery",
-        "GetCurrentUserHandler",
         "UploadFileCommand",
         "UploadFileHandler",
     };
