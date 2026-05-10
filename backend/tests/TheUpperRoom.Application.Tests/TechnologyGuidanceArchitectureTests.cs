@@ -117,6 +117,21 @@ public sealed class TechnologyGuidanceArchitectureTests
     }
 
     [Fact]
+    public void Infrastructure_does_not_reference_api_assembly()
+    {
+        // Infrastructure may reference Application (to implement its
+        // interfaces) and Domain (for entity types). Referencing Api
+        // would invert Clean Architecture's dependency direction.
+        var infraAssembly = typeof(TheUpperRoom.Infrastructure.DependencyInjection).Assembly;
+        var references = infraAssembly.GetReferencedAssemblies()
+            .Select(reference => reference.Name)
+            .Where(name => name is not null)
+            .ToArray();
+
+        Assert.DoesNotContain(references, name => name == "TheUpperRoom.Api");
+    }
+
+    [Fact]
     public void Application_does_not_reference_infrastructure_or_api_assemblies()
     {
         // Clean Architecture inversion: Application owns interfaces;
