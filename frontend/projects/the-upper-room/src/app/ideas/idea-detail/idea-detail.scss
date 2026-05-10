@@ -103,6 +103,40 @@
   margin-top: var(--md-sys-space-1);
 }
 
+.idea-status-chip--draft {
+  background: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.idea-status-chip--proposed,
+.idea-status-chip--submitted {
+  background: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
+
+.idea-status-chip--underreview,
+.idea-status-chip--selected {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.idea-status-chip--inprogress {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.idea-status-chip--completed,
+.idea-status-chip--shipped {
+  background: var(--md-sys-color-tertiary);
+  color: var(--md-sys-color-on-tertiary);
+}
+
+.idea-status-chip--archived,
+.idea-status-chip--rejected {
+  background: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+}
+
 .status-select {
   padding: var(--md-sys-space-1) var(--md-sys-space-2);
   border: 1px solid var(--md-sys-color-outline);

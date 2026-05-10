@@ -13,7 +13,10 @@
       <div>
         <h1 data-testid="idea-detail-title" class="idea-content__title">{{ i.title }}</h1>
         <p data-testid="idea-detail-proposer" class="idea-content__meta">{{ i.proposedBy }}</p>
-        <span data-testid="idea-status-chip" class="idea-status-chip">{{ i.status }}</span>
+        <span
+          data-testid="idea-status-chip"
+          [class]="'idea-status-chip idea-status-chip--' + (i.status || '').toLowerCase()"
+        >{{ i.status }}</span>
       </div>
       <div class="idea-content__actions">
         <label data-testid="idea-cover-upload-button" class="btn-outlined idea-cover-label" aria-label="Upload cover image">
