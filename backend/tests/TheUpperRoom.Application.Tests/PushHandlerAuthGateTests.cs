@@ -31,6 +31,28 @@ public sealed class PushHandlerAuthGateTests
     }
 
     [Fact]
+    public async Task Subscribe_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new SubscribePushCommand(
+            "missing",
+            new PushSubscribeRequest("https://example.com/push", new PushKeys("p", "a"))));
+
+        Assert.Equal(PushOutcome.Unauthorized, result);
+    }
+
+    [Fact]
+    public async Task Subscribe_returns_BadRequest_when_body_is_null_even_for_known_user()
+    {
+        var sender = NewSender(userKnown: true);
+
+        var result = await sender.Send(new SubscribePushCommand("user-1", Body: null));
+
+        Assert.Equal(PushOutcome.BadRequest, result);
+    }
+
+    [Fact]
     public async Task PushOutcome_enum_has_no_content_unauthorized_bad_request()
     {
         // Pin the wire-shape of PushOutcome -- it routes 204/401/400
