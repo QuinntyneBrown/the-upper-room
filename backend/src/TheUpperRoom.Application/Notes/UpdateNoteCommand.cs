@@ -1,5 +1,5 @@
 using MediatR;
 
-namespace TheUpperRoom.Api.Notes;
+namespace TheUpperRoom.Application.Notes;
 
 public sealed record UpdateNoteCommand(string UserId, string Id, UpdateNoteRequest? Body) : IRequest<NoteResult>;

@@ -1,5 +1,5 @@
 using MediatR;
 
-namespace TheUpperRoom.Api.Notes;
+namespace TheUpperRoom.Application.Notes;
 
 public sealed record DeleteNoteCommand(string UserId, string Id) : IRequest<NoteResult>;

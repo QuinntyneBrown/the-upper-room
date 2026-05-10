@@ -1,16 +1,15 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Notes;
-using TheUpperRoom.Infrastructure.Notes;
 
-namespace TheUpperRoom.Api.Notes;
+namespace TheUpperRoom.Application.Notes;
 
 internal sealed class CreateNoteHandler : IRequestHandler<CreateNoteCommand, NoteResult>
 {
-    private readonly NotesDbContext _db;
+    private readonly INotesDbContext _db;
     private readonly IUserDirectory _users;
 
-    public CreateNoteHandler(NotesDbContext db, IUserDirectory users)
+    public CreateNoteHandler(INotesDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;

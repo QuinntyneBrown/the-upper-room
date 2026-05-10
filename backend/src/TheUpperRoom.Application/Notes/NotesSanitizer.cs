@@ -1,7 +1,6 @@
 using Ganss.Xss;
-using TheUpperRoom.Infrastructure.Notes;
 
-namespace TheUpperRoom.Api.Notes;
+namespace TheUpperRoom.Application.Notes;
 
 internal static class NotesSanitizer
 {

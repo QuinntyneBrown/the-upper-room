@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Notes;
+namespace TheUpperRoom.Application.Notes;
 
 public enum NotesOutcome
 {

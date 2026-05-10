@@ -1,7 +1,7 @@
 // traces_to: L2-041, L2-042
 using TheUpperRoom.Domain.Notes;
 
-namespace TheUpperRoom.Api.Notes;
+namespace TheUpperRoom.Application.Notes;
 
 public sealed record NoteDto(
     string Id,

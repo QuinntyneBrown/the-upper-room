@@ -1,16 +1,15 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
-using TheUpperRoom.Infrastructure.Notes;
 
-namespace TheUpperRoom.Api.Notes;
+namespace TheUpperRoom.Application.Notes;
 
 internal sealed class UpdateNoteHandler : IRequestHandler<UpdateNoteCommand, NoteResult>
 {
     private const int MaxHistoryVersions = 20;
-    private readonly NotesDbContext _db;
+    private readonly INotesDbContext _db;
     private readonly IUserDirectory _users;
 
-    public UpdateNoteHandler(NotesDbContext db, IUserDirectory users)
+    public UpdateNoteHandler(INotesDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;

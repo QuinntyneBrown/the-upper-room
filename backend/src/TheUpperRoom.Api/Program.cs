@@ -11,6 +11,7 @@ using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Application.Kanban;
+using TheUpperRoom.Application.Notes;
 using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
 using TheUpperRoom.Application;
@@ -118,6 +119,7 @@ var notesConn = builder.Configuration["NotesDb:ConnectionString"]
                 ?? "Data Source=Data/notes.db";
 EnsureSqliteDirectoryExists(notesConn);
 builder.Services.AddDbContext<NotesDbContext>(o => o.UseSqlite(notesConn));
+builder.Services.AddScoped<INotesDbContext>(sp => sp.GetRequiredService<NotesDbContext>());
 
 var kanbanConn = builder.Configuration["KanbanDb:ConnectionString"]
                  ?? "Data Source=Data/kanban.db";

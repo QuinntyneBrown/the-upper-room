@@ -2,10 +2,12 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using TheUpperRoom.Application.Notes;
 
 namespace TheUpperRoom.Infrastructure.Notes;
 
-public sealed class NotesDbContext(DbContextOptions<NotesDbContext> options) : DbContext(options)
+public sealed class NotesDbContext(DbContextOptions<NotesDbContext> options)
+    : DbContext(options), INotesDbContext
 {
     public DbSet<NoteRow> Notes => Set<NoteRow>();
 
