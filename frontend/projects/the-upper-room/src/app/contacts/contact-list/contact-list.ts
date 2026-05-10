@@ -124,7 +124,7 @@ export class ContactList implements OnInit, OnDestroy, AfterViewInit {
     params.set('size', String(PAGE_SIZE));
     const q = this.searchQuery();
     if (q) params.set('search', q);
-    if (this.showArchived()) params.set('archived', 'true');
+    if (this.showArchived()) params.set('includeArchived', 'true');
     if (this.perms.hasPermission('City:Switch')) {
       const scope = this.cityScope.current();
       if (scope) params.set('scope', scope);

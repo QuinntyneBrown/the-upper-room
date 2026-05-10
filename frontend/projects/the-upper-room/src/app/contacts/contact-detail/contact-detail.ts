@@ -56,18 +56,27 @@ export class ContactDetail implements OnInit {
   }
 
   protected archive(): void {
+    const archived = this.contact()?.archived ?? false;
+    if (archived) {
+      this.restore();
+      return;
+    }
     this.http
-      .patch<Contact>(`/api/v1/contacts/${this.contactId}`, { archived: true })
-      .subscribe((c) => {
-        this.contact.set(c);
+      .post(`/api/v1/contacts/${this.contactId}/archive`, {})
+      .subscribe(() => {
+        this.contact.update((c) => (c ? { ...c, archived: true } : c));
         this.snackbar.show('Contact archived', 'info', {
           label: 'Undo',
-          onClick: () => {
-            this.http.patch<Contact>(`/api/v1/contacts/${this.contactId}`, { archived: false }).subscribe((restored) => {
-              this.contact.set(restored);
-            });
-          },
+          onClick: () => this.restore(),
         });
+      });
+  }
+
+  protected restore(): void {
+    this.http
+      .post(`/api/v1/contacts/${this.contactId}/unarchive`, {})
+      .subscribe(() => {
+        this.contact.update((c) => (c ? { ...c, archived: false } : c));
       });
   }
 
