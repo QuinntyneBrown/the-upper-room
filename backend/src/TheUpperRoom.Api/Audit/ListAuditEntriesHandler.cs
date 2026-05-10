@@ -1,14 +1,20 @@
 using MediatR;
-using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Domain.Rbac;
 
 namespace TheUpperRoom.Api.Audit;
 
 internal sealed class ListAuditEntriesHandler : IRequestHandler<ListAuditEntriesQuery, ListAuditEntriesResult>
 {
     private readonly IUserDirectory _users;
+    private readonly IPermissionChecker _permissions;
 
-    public ListAuditEntriesHandler(IUserDirectory users) => _users = users;
+    public ListAuditEntriesHandler(IUserDirectory users, IPermissionChecker permissions)
+    {
+        _users = users;
+        _permissions = permissions;
+    }
 
     public Task<ListAuditEntriesResult> Handle(ListAuditEntriesQuery request, CancellationToken cancellationToken)
     {
@@ -17,7 +23,7 @@ internal sealed class ListAuditEntriesHandler : IRequestHandler<ListAuditEntries
             return Task.FromResult(new ListAuditEntriesResult(
                 Array.Empty<AuditEntryDto>(), 0, request.Page, request.PageSize, ListAuditEntriesOutcome.Unauthorized));
 
-        if (user.Role != Roles.SystemAdmin)
+        if (!_permissions.HasPermission(user.Role, PermissionResources.Audit, PermissionActions.Read))
         {
             AuditStore.Record(user.Id, "AdminAudit", "audit", "PermissionDenied");
             return Task.FromResult(new ListAuditEntriesResult(
