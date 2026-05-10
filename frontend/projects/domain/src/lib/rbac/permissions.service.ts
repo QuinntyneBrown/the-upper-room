@@ -10,8 +10,18 @@ export class PermissionsService implements IPermissionsService {
 
   constructor() {
     if (typeof window !== 'undefined') {
-      (window as unknown as { __setRbac: (s: RbacSnapshot) => void }).__setRbac = (s) =>
+      const seed = window.sessionStorage?.getItem('__e2e_rbac');
+      if (seed) {
+        try {
+          this.snapshot.set(JSON.parse(seed) as RbacSnapshot);
+        } catch {
+          // ignore corrupt seed
+        }
+      }
+      (window as unknown as { __setRbac: (s: RbacSnapshot) => void }).__setRbac = (s) => {
         this.snapshot.set(s);
+        window.sessionStorage?.setItem('__e2e_rbac', JSON.stringify(s));
+      };
     }
   }
 

@@ -15,9 +15,15 @@ export class AccessTokenStore implements AccessTokenSource {
 
   constructor() {
     if (typeof window !== 'undefined') {
+      const seed = window.sessionStorage?.getItem('__e2e_access_token');
+      if (seed) this.token = seed;
       (window as unknown as { __setTestToken: (t: string | null) => void }).__setTestToken = (
         t,
-      ) => this.set(t);
+      ) => {
+        this.set(t);
+        if (t === null) window.sessionStorage?.removeItem('__e2e_access_token');
+        else window.sessionStorage?.setItem('__e2e_access_token', t);
+      };
     }
   }
 
