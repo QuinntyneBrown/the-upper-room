@@ -35,6 +35,12 @@ function makeLocation(overrides: Partial<LocationDto> = {}): LocationDto {
 }
 
 async function seedUser(page: Page): Promise<void> {
+  await page.route('**/api/v1/notifications**', (r) =>
+    r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ items: [], total: 0 }) }));
+  await page.route('**/api/v1/users/me', (r) =>
+    r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: 'lead', email: 'lead@example.com', roles: ['CityLead'], permissions: ['Location:Create', 'Location:Delete', 'Location:Archive'] }) }));
+  await page.route('**/api/v1/cities**', (r) =>
+    r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ items: [{ id: 'Toronto', name: 'Toronto' }], total: 1 }) }));
   await page.goto('/sign-in');
   await page.evaluate(() => {
     const win = window as unknown as {

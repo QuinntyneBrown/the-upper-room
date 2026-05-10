@@ -1,7 +1,8 @@
 // traces_to: L2-057, L2-058
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { SKIP_ERROR_SNACKBAR } from 'api';
 import { SnackbarService, TarEmptyState } from 'components';
 
 export interface LocationDto {
@@ -44,19 +45,25 @@ export class LocationList implements OnInit {
   }
 
   protected deleteLocation(loc: LocationDto): void {
-    this.http.delete(`/api/v1/locations/${loc.id}`).subscribe({
-      next: () => {
-        this.locations.update((items) => items.filter((l) => l.id !== loc.id));
-      },
-      error: (err: HttpErrorResponse) => {
-        if (err.status === 409) {
-          this.snackbar.show('Location is used by upcoming events.', 'warning', {
-            label: 'Archive instead',
-            onClick: () => this.archiveLocation(loc.id),
-          });
-        }
-      },
-    });
+    this.http
+      .delete(`/api/v1/locations/${loc.id}`, {
+        context: new HttpContext().set(SKIP_ERROR_SNACKBAR, true),
+      })
+      .subscribe({
+        next: () => {
+          this.locations.update((items) => items.filter((l) => l.id !== loc.id));
+        },
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 409) {
+            this.snackbar.show('Location is used by upcoming events.', 'warning', {
+              label: 'Archive instead',
+              onClick: () => this.archiveLocation(loc.id),
+            });
+          } else {
+            this.snackbar.show('Could not delete location.', 'error');
+          }
+        },
+      });
   }
 
   private archiveLocation(id: string): void {
