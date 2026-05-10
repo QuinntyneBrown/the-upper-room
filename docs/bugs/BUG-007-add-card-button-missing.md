@@ -1,10 +1,11 @@
-# BUG-007 — Kanban board view has no "+ Add card" button
+# BUG-007 — Kanban board view has no "+ Add card" button (RESOLVED 2026-05-10)
 
 **Severity**: Critical
 **Component**: frontend
 **Found in test**: TC-7.6 (Add card)
 **User-guide refs**: §7.4
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-10 — board-view now renders the column-footer add-card affordance and POSTs `/api/v1/boards/{id}/cards`. TC-7.6 PASS.
 
 ## Description
 

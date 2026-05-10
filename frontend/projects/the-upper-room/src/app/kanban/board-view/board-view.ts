@@ -66,6 +66,8 @@ export class BoardView implements AfterViewInit, OnDestroy {
   protected readonly activeTagName = signal<string | null>(null);
   protected readonly activeColumnIndex = signal(0);
   protected readonly showArchived = signal(false);
+  protected readonly addingCardColumnId = signal<string | null>(null);
+  protected readonly newCardTitle = signal('');
 
   private readonly scrollListener = () => this.onColumnsScroll();
   private touchStartX = 0;
@@ -130,6 +132,50 @@ export class BoardView implements AfterViewInit, OnDestroy {
 
   protected toggleTag(name: string): void {
     this.activeTagName.update((current) => (current === name ? null : name));
+  }
+
+  protected startAddCard(columnId: string): void {
+    this.addingCardColumnId.set(columnId);
+    this.newCardTitle.set('');
+  }
+
+  protected cancelAddCard(): void {
+    this.addingCardColumnId.set(null);
+    this.newCardTitle.set('');
+  }
+
+  protected onNewCardTitleInput(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.newCardTitle.set(target.value);
+  }
+
+  protected submitAddCard(columnId: string): void {
+    const title = this.newCardTitle().trim();
+    const boardId = this.board()?.id;
+    if (!title || !boardId) return;
+    this.http
+      .post<{ id: string; columnId: string; title: string }>(
+        `/api/v1/boards/${boardId}/cards`,
+        { title, columnId },
+      )
+      .subscribe({
+        next: (created) => {
+          const current = this.board();
+          if (!current) return;
+          const newCard: BoardCard = {
+            id: created.id,
+            columnId: created.columnId,
+            title: created.title,
+            tags: [],
+            assigneeName: null,
+            dueDate: null,
+            swimlaneKey: null,
+          };
+          this.board.set({ ...current, cards: [...current.cards, newCard] });
+          this.cancelAddCard();
+        },
+        error: () => this.snackbar.show("Couldn't add card. Try again.", 'error'),
+      });
   }
 
   protected isTagActive(name: string): boolean {

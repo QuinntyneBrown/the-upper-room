@@ -85,6 +85,39 @@
               </li>
             }
           </ul>
+          <footer class="column__footer">
+            @if (addingCardColumnId() === column.id) {
+              <input
+                [attr.data-testid]="'board-column-add-card-input-' + column.name"
+                class="column__add-card-input"
+                type="text"
+                placeholder="Card title"
+                [value]="newCardTitle()"
+                (input)="onNewCardTitleInput($event)"
+                (keydown.enter)="submitAddCard(column.id)"
+                (keydown.escape)="cancelAddCard()"
+              />
+              <button
+                type="button"
+                [attr.data-testid]="'board-column-add-card-submit-' + column.name"
+                class="btn-text"
+                (click)="submitAddCard(column.id)"
+              >Add</button>
+              <button
+                type="button"
+                [attr.data-testid]="'board-column-add-card-cancel-' + column.name"
+                class="btn-text"
+                (click)="cancelAddCard()"
+              >Cancel</button>
+            } @else {
+              <button
+                type="button"
+                [attr.data-testid]="'board-column-add-card-' + column.name"
+                class="btn-text column__add-card"
+                (click)="startAddCard(column.id)"
+              >+ Add card</button>
+            }
+          </footer>
         </section>
       }
     </div>
