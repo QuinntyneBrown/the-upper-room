@@ -360,6 +360,36 @@ public sealed class WireShapeRecordTests
     }
 
     [Fact]
+    public void List_results_carry_Items_then_metadata_then_Outcome()
+    {
+        // Listing handlers across the codebase all use Items-first
+        // ordering. Pinning that convention.
+        var notes = new ListNotesResult(Array.Empty<NoteDto>(), NotesOutcome.Ok, null);
+        Assert.Empty(notes.Items);
+
+        var contacts = new ListContactsResult(Array.Empty<Contact>(), 0, ContactsOutcome.Ok);
+        Assert.Equal(0, contacts.Total);
+
+        var notifications = new ListNotificationsResult(
+            Array.Empty<NotificationDto>(), NotificationsOutcome.Ok);
+        Assert.Empty(notifications.Items);
+
+        var preferences = new ListNotificationPreferencesResult(
+            Array.Empty<NotificationPreferenceDto>(), NotificationsOutcome.Ok);
+        Assert.Empty(preferences.Items);
+    }
+
+    [Fact]
+    public void GetContactResult_contact_is_null_on_NotFound_or_Forbidden()
+    {
+        var notFound = new GetContactResult(null, ContactsOutcome.NotFound);
+        Assert.Null(notFound.Contact);
+
+        var forbidden = new GetContactResult(null, ContactsOutcome.Forbidden);
+        Assert.Null(forbidden.Contact);
+    }
+
+    [Fact]
     public void EventDto_optional_arguments_default_to_null_or_false()
     {
         var dto = new EventDto(
