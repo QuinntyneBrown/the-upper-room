@@ -172,6 +172,25 @@ dotnet test tests/TheUpperRoom.Infrastructure.Tests
 dotnet test tests/TheUpperRoom.Api.Tests
 ```
 
+The backend suite has four kinds of tests:
+
+- **Domain unit tests** — entity invariants and value-object equality.
+- **Application validator tests** — every `*CommandValidator` /
+  `*QueryValidator` has at least one failing-input case using
+  `FluentValidation.TestHelper`.
+- **Architecture tests** — pure reflection / file-pattern checks that
+  catch regressions in the Clean Architecture layout (no CQRS types
+  under `Api/`, dependency direction, single-type files,
+  handler/validator visibility conventions, every Infrastructure
+  `<Feature>DbContext` implements an `I<Feature>DbContext` from
+  Application). Located in
+  `tests/TheUpperRoom.Application.Tests/TechnologyGuidanceArchitectureTests.cs`.
+- **HTTP integration tests** — `WebApplicationFactory<Program>`-driven
+  end-to-end tests that exercise the FluentValidation →
+  `ValidationExceptionHandler` → RFC-7807
+  `application/problem+json` 400 pipeline plus the auth, audit, and
+  per-feature persistence flows.
+
 ## Frontend
 
 The frontend is an Angular workspace under [`frontend/`](frontend). The npm lockfile is committed for reproducible installs; use `npm ci`.
