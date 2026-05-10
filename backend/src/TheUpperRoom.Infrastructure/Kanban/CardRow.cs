@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Kanban;
+namespace TheUpperRoom.Infrastructure.Kanban;
 
 public sealed class CardRow
 {

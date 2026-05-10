@@ -1,7 +1,7 @@
 // Traces to: TASK-0228
 using Microsoft.EntityFrameworkCore;
 
-namespace TheUpperRoom.Api.Kanban;
+namespace TheUpperRoom.Infrastructure.Kanban;
 
 public sealed class KanbanDbContext(DbContextOptions<KanbanDbContext> options) : DbContext(options)
 {

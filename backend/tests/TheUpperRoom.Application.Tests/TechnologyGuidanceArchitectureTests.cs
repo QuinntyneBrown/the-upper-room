@@ -58,7 +58,6 @@ public sealed class TechnologyGuidanceArchitectureTests
         "EventsDbContext",
         "ValidationExceptionHandler",
         "IdeasDbContext",
-        "KanbanDbContext",
         "PatchCardCommand",
         "MoveCardCommand",
         "DeleteCardCommand",

@@ -8,6 +8,7 @@ using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Rbac;
 using TheUpperRoom.Infrastructure.Contacts;
+using TheUpperRoom.Infrastructure.Kanban;
 
 namespace TheUpperRoom.Api.Dashboard;
 

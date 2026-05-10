@@ -1,5 +1,6 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Infrastructure.Kanban;
 
 namespace TheUpperRoom.Api.Kanban;
 
