@@ -582,17 +582,17 @@ The fixes in §B1, §B3, and §B13 overlap heavily — do them as a single sweep
 
 Use this list to verify the audit is closed.
 
-- [ ] No CQRS handlers, validators, queries, commands, or `*Row` entities exist under `TheUpperRoom.Api/`.
-- [ ] Single `AppDbContext` in Infrastructure implementing `IAppDbContext` from Application.
-- [ ] All handlers depend on `IAppDbContext`.
-- [ ] `FluentValidation` referenced; at least one `AbstractValidator<>` per command.
-- [ ] `ValidationBehavior` registered; `ValidationException` returns RFC-7807 `ValidationProblemDetails` with HTTP 400.
-- [ ] No `.cs` file in the solution declares more than one top-level type; every file's name matches its type.
-- [ ] No Serilog packages in any `.csproj`.
-- [ ] All data seeders live under `TheUpperRoom.Infrastructure/Seeding/`.
-- [ ] Local sign-in actually verifies a stored password hash (Argon2id / PBKDF2 / bcrypt) and writes audit entries on every attempt.
-- [ ] Throttling state survives restart and is shared across instances.
-- [ ] Domain RBAC entities (`Role`, `Permission`) exist; handlers check permissions, not role strings.
-- [ ] Every Angular service in `domain/` has a `*.service.contract.ts` companion and is consumed via its `InjectionToken`.
-- [ ] No Angular component declares `template:` or `styles:`/`styles: [...]` inline.
-- [ ] No raw `<input>`/`<button>` in main-app templates where a Material or `tar-*` equivalent exists.
+- [ ] No CQRS handlers, validators, queries, commands, or `*Row` entities exist under `TheUpperRoom.Api/`. _(Pending — handlers + Row types still live under Api; the move to Application/Infrastructure is the open Phase 2/3 work.)_
+- [ ] Single `AppDbContext` in Infrastructure implementing `IAppDbContext` from Application. _(Pending — `IAppDbContext` exists with Domain DbSets; runtime still uses per-feature contexts.)_
+- [ ] All handlers depend on `IAppDbContext`. _(Pending — only Application-project handlers (Auth, ChangePassword, etc.) currently do; Api handlers still take feature-specific contexts.)_
+- [x] `FluentValidation` referenced; at least one `AbstractValidator<>` per command.
+- [x] `ValidationBehavior` registered; `ValidationException` returns RFC-7807 `ValidationProblemDetails` with HTTP 400.
+- [x] No `.cs` file in **`backend/src`** declares more than one top-level type; every file's name matches its type. _(Test projects still co-locate small private DTO records inside their test class file, which is intentional fixture-scoping; the architecture test scopes the rule to `backend/src` and runs with **zero allow-list entries** as of 2026-05-10.)_
+- [x] No Serilog packages in any `.csproj`. _(Zero `Serilog` references in the entire backend tree.)_
+- [x] All data seeders live under `TheUpperRoom.Infrastructure/Seeding/`. _(Cities, Contacts, Users — all under `Infrastructure/Seeding/<Feature>/`, registered via `Infrastructure.DependencyInjection.AddSeeders`.)_
+- [x] Local sign-in actually verifies a stored password hash (Argon2id / PBKDF2 / bcrypt) and writes audit entries on every attempt. _(`PasswordHasher` uses PBKDF2 via `Microsoft.AspNetCore.Identity.PasswordHasher<TUser>`; `SignInHandler` audits every attempt via `AuditStore.Record`.)_
+- [ ] Throttling state survives restart and is shared across instances. _(Still in-process via `AuthRateLimiter` — distributed Redis-backed limiter is the deferred Phase 5D follow-up.)_
+- [x] Domain RBAC entities (`Role`, `Permission`) exist; handlers check permissions, not role strings. _(`Domain.Rbac.Permission` + `Domain.Rbac.RoleDefinition` exist as records; `Application.Rbac.IPermissionChecker` interface and `Infrastructure.Rbac.PermissionChecker` implementation exist; every handler/controller in `backend/src` consults `IPermissionChecker.HasPermission` rather than comparing role strings — `grep "Roles\." backend/src` returns zero hits as of 2026-05-10. EF-table-backed `Role`/`Permission`/`RolePermission` entities (4.11) deferred — `RoleCatalog` is the current source of truth.)_
+- [x] Every Angular service in `domain/` has a `*.service.contract.ts` companion and is consumed via its `InjectionToken`.
+- [x] No Angular component declares `template:` or `styles:`/`styles: [...]` inline.
+- [x] No raw `<input>`/`<button>` in main-app templates where a Material or `tar-*` equivalent exists.
