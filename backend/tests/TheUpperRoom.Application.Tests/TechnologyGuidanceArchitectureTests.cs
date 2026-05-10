@@ -233,6 +233,43 @@ public sealed class TechnologyGuidanceArchitectureTests
     }
 
     [Fact]
+    public void Every_application_validator_is_public_sealed_and_extends_abstract_validator()
+    {
+        // FluentValidation's AddValidatorsFromAssembly only registers public
+        // AbstractValidator<T> implementations; `sealed` is the project
+        // convention for handlers/validators. Catch a regression where a
+        // validator is internal (so DI silently doesn't register it) or
+        // non-sealed.
+        var appAssembly = typeof(DependencyInjection).Assembly;
+        var abstractValidator = typeof(FluentValidation.AbstractValidator<>);
+
+        var validators = appAssembly.GetTypes()
+            .Where(t => t.Name.EndsWith("Validator", StringComparison.Ordinal))
+            .Where(t => t is { IsClass: true, IsAbstract: false })
+            .Where(t => InheritsFromOpenGeneric(t, abstractValidator))
+            .ToArray();
+
+        // Sanity: there should be a meaningful number of validators wired up.
+        Assert.NotEmpty(validators);
+
+        var violations = validators
+            .Where(t => !t.IsPublic || !t.IsSealed)
+            .Select(t => t.FullName)
+            .ToArray();
+
+        Assert.Empty(violations);
+
+        static bool InheritsFromOpenGeneric(Type type, Type openGeneric)
+        {
+            for (var t = type.BaseType; t is not null; t = t.BaseType)
+            {
+                if (t.IsGenericType && t.GetGenericTypeDefinition() == openGeneric) return true;
+            }
+            return false;
+        }
+    }
+
+    [Fact]
     public void Application_handlers_that_need_a_db_context_use_iappdbcontext()
     {
         var root = FindRepoRoot();
