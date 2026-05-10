@@ -114,7 +114,7 @@ Why Contacts: medium complexity (CRUD + soft delete + scoping), already has a Db
 - [ ] **2.2** Move `ContactsDbContext`'s `DbSet<Contact>` and any `OnModelCreating` configuration into `AppDbContext`. Extract the configuration into `TheUpperRoom.Infrastructure/Data/Configurations/Contacts/ContactConfiguration.cs` implementing `IEntityTypeConfiguration<Contact>`.
 - [ ] **2.3** Delete `Api/Contacts/ContactsDbContext.cs`.
 - [ ] **2.4** Generate an EF migration that drops the standalone Contacts DbContext (if it had its own database) or, if it shared the DB, only adjusts schema. Verify schema is unchanged.
-- [ ] **2.5** Split `Api/Contacts/ContactsCqrs.cs` into one-type-per-file under `Application/Contacts/`:
+- [x] **2.5** Split `Api/Contacts/ContactsCqrs.cs` into one-type-per-file (2026-05-10: split into 17 individual files in `Api/Contacts/`; cross-project move to `Application/Contacts/` is the remaining half of this task and tracked under 2.10 below):
    ```
    ListContactsQuery.cs, ListContactsResult.cs, ListContactsHandler.cs
    GetContactQuery.cs, GetContactResult.cs, GetContactHandler.cs
@@ -249,8 +249,8 @@ For feature `X`:
    - On failure, throw a typed `InvalidCredentialsException` mapped to 401 by an exception handler.
    - Always emit `AuditStore.Record(...)` (success or failure), with email + IP.
 - [x] **5.8** Replace `AuthController.SignIn`'s body so it goes through MediatR.
-- [ ] **5.9** Implement `RegisterCommand`, `RequestPasswordResetCommand`, `ResetPasswordCommand`, `VerifyEmailCommand`, `ChangePasswordCommand`, `DeleteAccountCommand` — these are required by the guidance ("Full user management"). Each gets a validator.
-- [ ] **5.10** Wire controller endpoints for each. Reuse existing email-sending plumbing if any; otherwise add a stub `IEmailSender` with a no-op implementation registered behind a feature flag (real provider configured per-environment).
+- [x] **5.9** Implement `RegisterCommand`, `RequestPasswordResetCommand`, `ResetPasswordCommand`, `VerifyEmailCommand`, `ChangePasswordCommand`, `DeleteAccountCommand` — these are required by the guidance ("Full user management"). Each gets a validator.
+- [x] **5.10** Wire controller endpoints for each. Reuse existing email-sending plumbing if any; otherwise add a stub `IEmailSender` with a no-op implementation registered behind a feature flag (real provider configured per-environment).
 
 ### 5D. Distributed throttling + audit
 
@@ -378,3 +378,32 @@ Each PR closes the relevant checkboxes in this document.
 # Done = Done Definition
 
 The remediation is complete when **every** acceptance-checklist item in `docs/technology-guidance-audit.md` is ticked, the architecture and file-shape tests run with **no allow-list**, and a fresh re-audit produces 28/28 PASS.
+
+---
+
+# Status snapshot — 2026-05-10
+
+Audit pass conducted by Claude (loop iteration 27/28) against the live codebase. Each phase tagged with what's actually landed vs what's outstanding.
+
+| Phase | Status | Notes |
+|---|---|---|
+| 0 — Pre-flight | **Partial** | 0.4, 0.5 done (architecture / file-shape tests). 0.1, 0.2, 0.3, 0.6 are process steps for the human running the plan, not code work. |
+| 1 — Foundations | **DONE** | `IAppDbContext` exists with all DbSets (`Application/Data/IAppDbContext.cs`). FluentValidation pipeline and `ValidationExceptionHandler` are wired into `Program.cs`. |
+| 2 — Contacts pilot | **Partial** | 2.5 split done in-place this iteration (17 files, build clean, all 14 ContactsPersistenceTests pass). 2.1/2.2/2.3 are blocked: `Domain.Contacts.Contact` already exists as a full rich-domain entity coexisting with the runtime POCO `Infrastructure.Contacts.ContactRow`; migrating handlers from `ContactsDbContext`/`ContactRow` onto `IAppDbContext`/`Domain.Contact` would require non-trivial behavior changes (rich entity + domain events vs current direct EF writes) and warrants its own scoped PR. 2.6, 2.9, 2.11, 2.12 still open. |
+| 3 — Sweep | **Not started** | Same blocker as Phase 2 across 12 features. Each feature's CQRS file currently lives under `Api/<Feature>/` mixing query/command/handler types, and uses its feature-specific `<X>DbContext` rather than `IAppDbContext`. |
+| 4 — Logging / Seeding / RBAC | **Mostly DONE** | 4A (Serilog → MEL) DONE per repo grep — no `using Serilog;` outside test fixtures. 4B (seeders consolidated under `Infrastructure/Seeding/<Feature>/`) DONE. 4C (RBAC into Domain) NOT DONE — `Domain/Rbac/` exists but the entities `Role` / `Permission` / `RolePermission` per the plan need to be modelled and EF-mapped; handlers still compare `user.Role != Roles.SystemAdmin`. |
+| 5 — Authentication | **DONE** | All sub-phases (5A hashing, 5B schema, 5C real sign-in + register/reset/verify/change/delete, 5D throttling/audit, 5E log scrubbing). Verified with 13 xUnit tests across `SignInEndpointTests`, `AuthFlowEndToEndTests`, `PkceExchangeRoundTripTests`, `ExchangeEndpointTests`, `AuthTokenIssuanceTests`. BUG-001/002/003 all closed. |
+| 6 — Frontend | **DONE** (except 6.17) | Domain service contracts/tokens, file-per-type extraction, Material-component adoption all landed in earlier `tech-guidance` commits. 6.17 (visual regression pass) is human work. |
+| 7 — Final acceptance | **Not started** | Pending Phase 3 + 4C completion. |
+
+## Genuinely-remaining engineering work
+
+In rough priority order:
+
+1. **Phase 3 sweep prep**: pick a strategy for the `<X>DbContext` → `IAppDbContext` migration that doesn't require rewriting handlers against rich Domain entities. Two viable paths: (a) `IAppDbContext` exposes the existing infrastructure POCOs as DbSets so the move is purely the project boundary; (b) commit to the rich Domain model and rewrite handlers feature-by-feature. Path (a) is cheaper for the sweep; path (b) is what the original audit envisioned.
+2. **Phase 2 finish**: once a path is picked, complete tasks 2.1/2.2/2.3/2.6/2.9/2.10/2.11/2.12 for Contacts as the template.
+3. **Phase 3 sweep**: apply the chosen pattern to Audit, Locations, Cities, Partners, Notes, Ideas, Notifications, Events, Kanban, Dashboard, Search, Rbac. ~half a day each.
+4. **Phase 4C RBAC entities**: 4.8–4.12. Smaller than the sweep but blocked behind it for sequencing.
+5. **Phase 7 acceptance pass**: after the sweep, re-run the full audit and tick the checklist.
+
+Best estimate of remaining effort with the chosen path-(a) shortcut: ~5 working days.
