@@ -405,8 +405,9 @@ In addition to Contacts (2.5), this iteration applied the one-type-per-file spli
 - [x] **3.A (Audit)** — `ListAuditEntriesQuery.cs` (4 types) → `ListAuditEntriesQuery.cs`, `ListAuditEntriesResult.cs`, `ListAuditEntriesOutcome.cs`, `ListAuditEntriesHandler.cs`.
 - [x] **3.K2 (Kanban DbContext + DTO split)** — `KanbanDbContext.cs` (4 types) → `KanbanDbContext.cs`, `BoardRow.cs`, `BoardColumnRow.cs`, `CardRow.cs`. `BoardDetailDto.cs` (4 types) → `BoardDetailDto.cs`, `BoardColumnDto.cs`, `BoardCardTagDto.cs`, `BoardCardDto.cs`.
 - [x] **3.N (Notes)** — `NotesCqrs.cs` (13 types) → 13 files (`NotesOutcome`, `ListNotesQuery`/`Result`, `GetNoteQuery`, `CreateNoteCommand`, `UpdateNoteCommand`, `DeleteNoteCommand`, `NoteResult`, `NotesSanitizer` helper, plus 5 handler files).
+- [x] **3.E2 (Event RSVP)** — `EventRsvpCqrs.cs` (14 types) → 14 files (`RsvpOutcome`, `GetMyRsvpQuery`/`Result`, `SubmitRsvpCommand`/`Result`, `GetRsvpRequestsQuery`/`Result`, `ApproveRsvpCommand`, `DenyRsvpCommand`, plus 5 handler files).
 
-Full Api.Tests suite stays **105/105 PASS** after every split. Remaining multi-type files to sweep: `Notifications/NotificationsCqrs.cs` (19 types), `Events/EventRsvpCqrs.cs` (14), `Notifications/PushCommands.cs` (7), plus a few 3-5 type files in DbContext / Controller sites where secondary types are tightly cohesive.
+Full Api.Tests suite stays **105/105 PASS** after every split. Remaining multi-type files to sweep: `Notifications/NotificationsCqrs.cs` (19 types), `Notifications/PushCommands.cs` (7), plus a few 3-5 type files in DbContext / Controller sites where secondary types are tightly cohesive.
 
 ## Genuinely-remaining engineering work
 
