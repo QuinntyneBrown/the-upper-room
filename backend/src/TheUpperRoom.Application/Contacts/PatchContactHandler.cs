@@ -3,16 +3,15 @@ using MediatR;
 using TheUpperRoom.Application.Audit;
 using TheUpperRoom.Application.Cities;
 using TheUpperRoom.Application.Users;
-using TheUpperRoom.Infrastructure.Contacts;
 
-namespace TheUpperRoom.Api.Contacts;
+namespace TheUpperRoom.Application.Contacts;
 
 internal sealed class PatchContactHandler : IRequestHandler<PatchContactCommand, MutateContactResult>
 {
-    private readonly ContactsDbContext _db;
+    private readonly IContactsDbContext _db;
     private readonly IUserDirectory _users;
 
-    public PatchContactHandler(ContactsDbContext db, IUserDirectory users)
+    public PatchContactHandler(IContactsDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;

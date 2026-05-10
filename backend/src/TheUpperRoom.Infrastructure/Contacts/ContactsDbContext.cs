@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using TheUpperRoom.Application.Contacts;
 
 namespace TheUpperRoom.Infrastructure.Contacts;
 
-public sealed class ContactsDbContext(DbContextOptions<ContactsDbContext> options) : DbContext(options)
+public sealed class ContactsDbContext(DbContextOptions<ContactsDbContext> options)
+    : DbContext(options), IContactsDbContext
 {
     public DbSet<ContactRow> Contacts => Set<ContactRow>();
 

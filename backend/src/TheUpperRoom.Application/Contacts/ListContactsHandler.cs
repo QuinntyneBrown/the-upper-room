@@ -3,17 +3,16 @@ using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Cities;
 using TheUpperRoom.Domain.Rbac;
-using TheUpperRoom.Infrastructure.Contacts;
 
-namespace TheUpperRoom.Api.Contacts;
+namespace TheUpperRoom.Application.Contacts;
 
 internal sealed class ListContactsHandler : IRequestHandler<ListContactsQuery, ListContactsResult>
 {
-    private readonly ContactsDbContext _db;
+    private readonly IContactsDbContext _db;
     private readonly IUserDirectory _users;
     private readonly IPermissionChecker _permissions;
 
-    public ListContactsHandler(ContactsDbContext db, IUserDirectory users, IPermissionChecker permissions)
+    public ListContactsHandler(IContactsDbContext db, IUserDirectory users, IPermissionChecker permissions)
     {
         _db = db;
         _users = users;

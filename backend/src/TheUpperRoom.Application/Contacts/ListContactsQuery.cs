@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace TheUpperRoom.Api.Contacts;
+namespace TheUpperRoom.Application.Contacts;
 
 public sealed record ListContactsQuery(
     string UserId,

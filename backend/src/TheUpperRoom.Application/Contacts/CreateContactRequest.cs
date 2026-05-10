@@ -1,5 +1,5 @@
 // traces_to: L2-032
-namespace TheUpperRoom.Api.Contacts;
+namespace TheUpperRoom.Application.Contacts;
 
 public sealed record CreateContactRequest(
     string FirstName,

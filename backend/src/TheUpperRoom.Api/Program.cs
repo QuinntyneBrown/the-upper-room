@@ -11,6 +11,7 @@ using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Application.Kanban;
+using TheUpperRoom.Application.Contacts;
 using TheUpperRoom.Application.Events;
 using TheUpperRoom.Application.Notes;
 using TheUpperRoom.Application.Notifications;
@@ -101,6 +102,7 @@ var contactsConn = builder.Configuration["ContactsDb:ConnectionString"]
                    ?? "Data Source=Data/contacts.db";
 EnsureSqliteDirectoryExists(contactsConn);
 builder.Services.AddDbContext<ContactsDbContext>(o => o.UseSqlite(contactsConn));
+builder.Services.AddScoped<IContactsDbContext>(sp => sp.GetRequiredService<ContactsDbContext>());
 
 var eventsConn = builder.Configuration["EventsDb:ConnectionString"]
                  ?? "Data Source=Data/events.db";

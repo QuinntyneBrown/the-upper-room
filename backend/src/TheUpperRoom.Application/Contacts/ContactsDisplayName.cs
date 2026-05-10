@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Contacts;
+namespace TheUpperRoom.Application.Contacts;
 
 internal static class ContactsDisplayName
 {

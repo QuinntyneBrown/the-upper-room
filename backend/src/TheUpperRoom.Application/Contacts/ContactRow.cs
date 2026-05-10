@@ -1,6 +1,6 @@
 using TheUpperRoom.Domain.Cities;
 
-namespace TheUpperRoom.Infrastructure.Contacts;
+namespace TheUpperRoom.Application.Contacts;
 
 public sealed class ContactRow : IHasCity
 {

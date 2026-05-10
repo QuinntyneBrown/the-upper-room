@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using TheUpperRoom.Application.Contacts;
 using TheUpperRoom.Infrastructure.Contacts;
 
 namespace TheUpperRoom.Infrastructure.Seeding.Contacts;

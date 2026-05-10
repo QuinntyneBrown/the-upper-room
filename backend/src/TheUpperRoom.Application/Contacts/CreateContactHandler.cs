@@ -2,16 +2,15 @@ using System.Text.Json;
 using MediatR;
 using TheUpperRoom.Application.Audit;
 using TheUpperRoom.Application.Users;
-using TheUpperRoom.Infrastructure.Contacts;
 
-namespace TheUpperRoom.Api.Contacts;
+namespace TheUpperRoom.Application.Contacts;
 
 internal sealed class CreateContactHandler : IRequestHandler<CreateContactCommand, MutateContactResult>
 {
-    private readonly ContactsDbContext _db;
+    private readonly IContactsDbContext _db;
     private readonly IUserDirectory _users;
 
-    public CreateContactHandler(ContactsDbContext db, IUserDirectory users)
+    public CreateContactHandler(IContactsDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;
