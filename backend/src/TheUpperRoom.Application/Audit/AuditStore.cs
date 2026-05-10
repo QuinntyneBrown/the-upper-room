@@ -1,11 +1,11 @@
 // traces_to: L2-098
-namespace TheUpperRoom.Api.Audit;
+namespace TheUpperRoom.Application.Audit;
 
-internal static class AuditStore
+public static class AuditStore
 {
-    internal static readonly List<AuditEntryRecord> Entries = [];
+    public static readonly List<AuditEntryRecord> Entries = [];
 
-    internal static void Record(
+    public static void Record(
         string actorUserId,
         string entityType,
         string entityId,

@@ -27,8 +27,6 @@ public sealed class TechnologyGuidanceArchitectureTests
 
     private static readonly HashSet<string> RestrictedApiTypeAllowList = new(StringComparer.Ordinal)
     {
-        "ListAuditEntriesQuery",
-        "ListAuditEntriesHandler",
         "ListContactsQuery",
         "GetContactQuery",
         "CreateContactCommand",

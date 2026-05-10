@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Audit;
+namespace TheUpperRoom.Application.Audit;
 
 public sealed record ListAuditEntriesResult(
     IReadOnlyList<AuditEntryDto> Items,

@@ -3,7 +3,7 @@ using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Rbac;
 
-namespace TheUpperRoom.Api.Audit;
+namespace TheUpperRoom.Application.Audit;
 
 internal sealed class ListAuditEntriesHandler : IRequestHandler<ListAuditEntriesQuery, ListAuditEntriesResult>
 {

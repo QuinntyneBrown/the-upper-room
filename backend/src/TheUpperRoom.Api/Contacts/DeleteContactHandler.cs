@@ -1,6 +1,6 @@
 using System.Text.Json;
 using MediatR;
-using TheUpperRoom.Api.Audit;
+using TheUpperRoom.Application.Audit;
 using TheUpperRoom.Application.Cities;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Infrastructure.Contacts;

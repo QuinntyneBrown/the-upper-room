@@ -1,7 +1,6 @@
-// traces_to: L2-098
-namespace TheUpperRoom.Api.Audit;
+namespace TheUpperRoom.Application.Audit;
 
-public sealed record AuditEntryDto(
+public sealed record AuditEntryRecord(
     string Id,
     DateTimeOffset Timestamp,
     string ActorUserId,

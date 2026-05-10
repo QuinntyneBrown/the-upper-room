@@ -3,7 +3,7 @@ using System.Text.Json;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TheUpperRoom.Api.Audit;
+using TheUpperRoom.Application.Audit;
 using TheUpperRoom.Application.Auth;
 
 namespace TheUpperRoom.Api.Auth;

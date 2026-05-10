@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Auth;
+using TheUpperRoom.Application.Audit;
 
 namespace TheUpperRoom.Api.Audit;
 

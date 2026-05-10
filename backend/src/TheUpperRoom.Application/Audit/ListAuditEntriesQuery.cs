@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace TheUpperRoom.Api.Audit;
+namespace TheUpperRoom.Application.Audit;
 
 public sealed record ListAuditEntriesQuery(
     string UserId,
