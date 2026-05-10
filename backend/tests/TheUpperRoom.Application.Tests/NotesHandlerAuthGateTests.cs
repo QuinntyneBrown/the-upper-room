@@ -90,6 +90,39 @@ public sealed class NotesHandlerAuthGateTests
     }
 
     [Fact]
+    public async Task UpdateNote_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new UpdateNoteCommand(
+            "missing", "note-1", new UpdateNoteRequest("body")));
+
+        Assert.Equal(NotesOutcome.Unauthorized, result.Outcome);
+    }
+
+    [Fact]
+    public async Task ListNotes_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new ListNotesQuery("missing", "Contact", "c-1"));
+
+        Assert.Equal(NotesOutcome.Unauthorized, result.Outcome);
+        Assert.Empty(result.Items);
+    }
+
+    [Fact]
+    public async Task ListNotes_returns_BadRequest_for_invalid_subject_type()
+    {
+        var sender = NewSender(userKnown: true);
+
+        var result = await sender.Send(new ListNotesQuery("user-1", "Galaxy", "x"));
+
+        Assert.Equal(NotesOutcome.BadRequest, result.Outcome);
+        Assert.Contains("subjectType", result.Error);
+    }
+
+    [Fact]
     public void NotesOutcome_enum_pins_wire_shape()
     {
         Assert.Equal(
