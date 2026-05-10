@@ -111,6 +111,28 @@ public sealed class ContactsHandlerAuthGateTests
     }
 
     [Fact]
+    public async Task PatchContact_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new PatchContactCommand(
+            "missing", "c-1", new PatchContactRequest("Renamed")));
+
+        Assert.Equal(ContactsOutcome.Unauthorized, result.Outcome);
+    }
+
+    [Fact]
+    public async Task SetContactArchived_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new SetContactArchivedCommand(
+            "missing", "c-1", Archived: true));
+
+        Assert.Equal(ContactsOutcome.Unauthorized, result.Outcome);
+    }
+
+    [Fact]
     public void ContactsOutcome_enum_pins_wire_shape()
     {
         Assert.Equal(
