@@ -42,28 +42,32 @@
 
 <app-offline-banner />
 
-<nav
-  data-testid="drawer"
-  class="app-shell__drawer"
-  [attr.aria-hidden]="!isOpen"
-  [class.app-shell__drawer--open]="isOpen"
-></nav>
+<div class="app-shell__layout">
+  <nav
+    data-testid="drawer"
+    class="app-shell__drawer"
+    [attr.aria-hidden]="!isOpen"
+    [class.app-shell__drawer--open]="isOpen"
+  ></nav>
 
-@if (isOpen) {
-  <div data-testid="drawer-scrim" class="app-shell__scrim" (click)="closeDrawer()"></div>
-}
-
-<nav data-testid="breadcrumbs" class="app-shell__breadcrumbs" aria-label="Breadcrumb">
-  @for (c of crumbs(); track c.url; let last = $last) {
-    <a [attr.aria-current]="last ? 'page' : null" [href]="c.url">{{ c.label }}</a>
-    @if (!last) {
-      <span aria-hidden="true">/</span>
-    }
+  @if (isOpen) {
+    <div data-testid="drawer-scrim" class="app-shell__scrim" (click)="closeDrawer()"></div>
   }
-</nav>
 
-<main id="main" tabindex="-1" class="app-shell__main">
-  <router-outlet />
-</main>
+  <div class="app-shell__content">
+    <nav data-testid="breadcrumbs" class="app-shell__breadcrumbs" aria-label="Breadcrumb">
+      @for (c of crumbs(); track c.url; let last = $last) {
+        <a [attr.aria-current]="last ? 'page' : null" [href]="c.url">{{ c.label }}</a>
+        @if (!last) {
+          <span aria-hidden="true">/</span>
+        }
+      }
+    </nav>
 
-<footer data-testid="footer" class="app-shell__footer">© The Upper Room</footer>
+    <main id="main" tabindex="-1" class="app-shell__main">
+      <router-outlet />
+    </main>
+
+    <footer data-testid="footer" class="app-shell__footer">© The Upper Room</footer>
+  </div>
+</div>
