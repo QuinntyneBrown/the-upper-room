@@ -1,9 +1,7 @@
 // Traces to: TASK-0230
-using TheUpperRoom.Infrastructure.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
-namespace TheUpperRoom.Api.Notifications;
-
-public sealed class PushDispatcher(PushDbContext db)
+public sealed class PushDispatcher(IPushDbContext db)
 {
     public void Enqueue(string userId, string title, string body)
     {

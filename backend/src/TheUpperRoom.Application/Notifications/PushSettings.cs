@@ -1,5 +1,5 @@
 // Traces to: TASK-0230
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
 public sealed class PushSettings
 {

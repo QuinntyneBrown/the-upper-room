@@ -68,12 +68,6 @@ public sealed class TechnologyGuidanceArchitectureTests
         "DispatchNotificationHandler",
         "ListNotificationPreferencesHandler",
         "UpsertNotificationPreferenceHandler",
-        "GetVapidPublicKeyQuery",
-        "SubscribePushCommand",
-        "UnsubscribePushCommand",
-        "GetVapidPublicKeyHandler",
-        "SubscribePushHandler",
-        "UnsubscribePushHandler",
     };
 
     [Fact]

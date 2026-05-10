@@ -1,15 +1,14 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
-using TheUpperRoom.Infrastructure.Notifications;
 
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
 internal sealed class UnsubscribePushHandler : IRequestHandler<UnsubscribePushCommand, PushOutcome>
 {
-    private readonly PushDbContext _db;
+    private readonly IPushDbContext _db;
     private readonly IUserDirectory _users;
 
-    public UnsubscribePushHandler(PushDbContext db, IUserDirectory users)
+    public UnsubscribePushHandler(IPushDbContext db, IUserDirectory users)
     {
         _db = db;
         _users = users;

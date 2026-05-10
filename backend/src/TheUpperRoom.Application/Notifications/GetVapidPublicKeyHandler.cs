@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace TheUpperRoom.Api.Notifications;
+namespace TheUpperRoom.Application.Notifications;
 
 internal sealed class GetVapidPublicKeyHandler : IRequestHandler<GetVapidPublicKeyQuery, string>
 {

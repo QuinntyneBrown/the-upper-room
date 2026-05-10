@@ -1,9 +1,11 @@
 // Traces to: TASK-0230
 using Microsoft.EntityFrameworkCore;
+using TheUpperRoom.Application.Notifications;
 
 namespace TheUpperRoom.Infrastructure.Notifications;
 
-public sealed class PushDbContext(DbContextOptions<PushDbContext> options) : DbContext(options)
+public sealed class PushDbContext(DbContextOptions<PushDbContext> options)
+    : DbContext(options), IPushDbContext
 {
     public DbSet<PushSubscriptionRow> Subscriptions => Set<PushSubscriptionRow>();
     public DbSet<PendingPushRow> PendingPushes => Set<PendingPushRow>();

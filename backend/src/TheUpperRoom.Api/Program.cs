@@ -12,6 +12,7 @@ using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Application.Kanban;
 using TheUpperRoom.Application.Notes;
+using TheUpperRoom.Application.Notifications;
 using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
 using TheUpperRoom.Application;
@@ -137,6 +138,7 @@ var pushConn = builder.Configuration["PushDb:ConnectionString"]
                ?? "Data Source=Data/push.db";
 EnsureSqliteDirectoryExists(pushConn);
 builder.Services.AddDbContext<PushDbContext>(o => o.UseSqlite(pushConn));
+builder.Services.AddScoped<IPushDbContext>(sp => sp.GetRequiredService<PushDbContext>());
 builder.Services.AddScoped<PushDispatcher>();
 builder.Services.AddSeeders(typeof(Program).Assembly);
 

@@ -13,6 +13,7 @@ using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
+using TheUpperRoom.Application.Notifications;
 using TheUpperRoom.Infrastructure.Contacts;
 using TheUpperRoom.Infrastructure.Events;
 using TheUpperRoom.Infrastructure.Ideas;
