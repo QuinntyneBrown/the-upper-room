@@ -1,3 +1,4 @@
+using TheUpperRoom.Application.Audit;
 using TheUpperRoom.Application.Auth;
 using TheUpperRoom.Application.Contacts;
 using TheUpperRoom.Application.Dashboard;
@@ -263,6 +264,51 @@ public sealed class WireShapeRecordTests
         Assert.Single(typeof(DeleteAccountResult).GetProperties());
         Assert.Single(typeof(ResetPasswordResult).GetProperties());
         Assert.Single(typeof(VerifyEmailResult).GetProperties());
+    }
+
+    [Fact]
+    public void ListAuditEntriesResult_carries_pagination_surface()
+    {
+        var result = new ListAuditEntriesResult(
+            Items: Array.Empty<AuditEntryDto>(),
+            Total: 0,
+            Page: 1,
+            PageSize: 50,
+            Outcome: ListAuditEntriesOutcome.Ok);
+
+        Assert.Empty(result.Items);
+        Assert.Equal(0, result.Total);
+        Assert.Equal(1, result.Page);
+        Assert.Equal(50, result.PageSize);
+        Assert.Equal(ListAuditEntriesOutcome.Ok, result.Outcome);
+    }
+
+    [Fact]
+    public void MarkNotificationReadResult_carries_optional_notification_dto()
+    {
+        var t = new DateTimeOffset(2026, 5, 10, 12, 0, 0, TimeSpan.Zero);
+        var dto = new NotificationDto(
+            "n-1", "welcome", "Welcome", "Body", new(), false, t, null, "Info");
+
+        var success = new MarkNotificationReadResult(dto, NotificationsOutcome.Ok);
+        Assert.NotNull(success.Notification);
+        Assert.Equal(NotificationsOutcome.Ok, success.Outcome);
+
+        var failure = new MarkNotificationReadResult(null, NotificationsOutcome.NotFound);
+        Assert.Null(failure.Notification);
+    }
+
+    [Fact]
+    public void SubmitRsvpResult_response_is_null_on_validation_or_auth_failure()
+    {
+        // Auth handlers consistently use a (Payload?, Outcome) shape so
+        // controllers can render a 4xx with no body or a 200 with one
+        // by branching on Outcome.
+        var unauthorized = new SubmitRsvpResult(null, RsvpOutcome.Unauthorized);
+        Assert.Null(unauthorized.Response);
+
+        var ok = new SubmitRsvpResult(new RsvpResponse("Going"), RsvpOutcome.Ok);
+        Assert.NotNull(ok.Response);
     }
 
     [Fact]
