@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace TheUpperRoom.Api.Ideas;
+namespace TheUpperRoom.Infrastructure.Ideas;
 
 public sealed class IdeasDbContext(DbContextOptions<IdeasDbContext> options) : DbContext(options)
 {

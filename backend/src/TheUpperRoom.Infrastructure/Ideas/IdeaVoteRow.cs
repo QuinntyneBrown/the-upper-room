@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Ideas;
+namespace TheUpperRoom.Infrastructure.Ideas;
 
 public sealed class IdeaVoteRow
 {

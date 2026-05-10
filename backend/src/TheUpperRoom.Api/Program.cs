@@ -16,6 +16,7 @@ using TheUpperRoom.Application;
 using TheUpperRoom.Infrastructure;
 using TheUpperRoom.Infrastructure.Cities;
 using TheUpperRoom.Infrastructure.Contacts;
+using TheUpperRoom.Infrastructure.Ideas;
 using TheUpperRoom.Infrastructure.Kanban;
 
 var builder = WebApplication.CreateBuilder(args);

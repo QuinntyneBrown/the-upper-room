@@ -57,7 +57,6 @@ public sealed class TechnologyGuidanceArchitectureTests
         "DenyRsvpHandler",
         "EventsDbContext",
         "ValidationExceptionHandler",
-        "IdeasDbContext",
         "PatchCardCommand",
         "MoveCardCommand",
         "DeleteCardCommand",
