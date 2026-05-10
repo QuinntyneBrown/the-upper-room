@@ -1,6 +1,6 @@
 namespace TheUpperRoom.Application.Contacts;
 
-internal static class ContactsDisplayName
+public static class ContactsDisplayName
 {
     public static string Build(CreateContactRequest body)
     {
