@@ -42,6 +42,50 @@ public sealed class NotificationsHandlerAuthGateTests
     }
 
     [Fact]
+    public async Task UpsertPreference_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new UpsertNotificationPreferenceCommand(
+            "missing", new UpsertPreferenceRequest("welcome", true, true, false)));
+
+        Assert.Equal(NotificationsOutcome.Unauthorized, result.Outcome);
+        Assert.Null(result.Payload);
+    }
+
+    [Fact]
+    public async Task UpsertPreference_returns_BadRequest_when_body_is_null()
+    {
+        var sender = NewSender(userKnown: true);
+
+        var result = await sender.Send(new UpsertNotificationPreferenceCommand("user-1", Body: null));
+
+        Assert.Equal(NotificationsOutcome.BadRequest, result.Outcome);
+    }
+
+    [Fact]
+    public async Task ListNotifications_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new ListNotificationsQuery("missing"));
+
+        Assert.Equal(NotificationsOutcome.Unauthorized, result.Outcome);
+        Assert.Empty(result.Items);
+    }
+
+    [Fact]
+    public async Task ListNotificationPreferences_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new ListNotificationPreferencesQuery("missing"));
+
+        Assert.Equal(NotificationsOutcome.Unauthorized, result.Outcome);
+        Assert.Empty(result.Items);
+    }
+
+    [Fact]
     public void NotificationsOutcome_enum_pins_wire_shape()
     {
         Assert.Equal(
