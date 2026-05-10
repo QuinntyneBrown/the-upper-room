@@ -1,5 +1,5 @@
 using MediatR;
 
-namespace TheUpperRoom.Api.Dashboard;
+namespace TheUpperRoom.Application.Dashboard;
 
 public sealed record GetDashboardQuery(string UserId) : IRequest<GetDashboardResult?>;

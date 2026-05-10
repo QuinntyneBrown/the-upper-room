@@ -11,10 +11,13 @@ using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Application.Kanban;
+using TheUpperRoom.Api.Partners;
 using TheUpperRoom.Application.Contacts;
 using TheUpperRoom.Application.Events;
+using TheUpperRoom.Application.Ideas;
 using TheUpperRoom.Application.Notes;
 using TheUpperRoom.Application.Notifications;
+using TheUpperRoom.Application.Partners;
 using TheUpperRoom.Api.Notes;
 using TheUpperRoom.Api.Notifications;
 using TheUpperRoom.Application;
@@ -114,6 +117,8 @@ var ideasConn = builder.Configuration["IdeasDb:ConnectionString"]
                 ?? "Data Source=Data/ideas.db";
 EnsureSqliteDirectoryExists(ideasConn);
 builder.Services.AddDbContext<IdeasDbContext>(o => o.UseSqlite(ideasConn));
+builder.Services.AddScoped<IIdeasDbContext>(sp => sp.GetRequiredService<IdeasDbContext>());
+builder.Services.AddSingleton<IPartnersStore, InMemoryPartnersStore>();
 
 var locationsConn = builder.Configuration["LocationsDb:ConnectionString"]
                     ?? "Data Source=Data/locations.db";

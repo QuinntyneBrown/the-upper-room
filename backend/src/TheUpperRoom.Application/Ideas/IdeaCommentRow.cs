@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Infrastructure.Ideas;
+namespace TheUpperRoom.Application.Ideas;
 
 public sealed class IdeaCommentRow
 {

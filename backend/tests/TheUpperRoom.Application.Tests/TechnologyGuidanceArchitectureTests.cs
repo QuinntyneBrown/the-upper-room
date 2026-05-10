@@ -25,16 +25,7 @@ public sealed class TechnologyGuidanceArchitectureTests
 
     private static readonly HashSet<string> MultiTypeFileAllowList = new(StringComparer.OrdinalIgnoreCase);
 
-    // Cross-feature aggregator that fans out to four feature DbContexts plus
-    // a handful of in-process Api stores (Partners). Moving it to Application
-    // would require porting every static helper it depends on; left in Api as
-    // the documented exception until the partners store has its own service
-    // boundary.
-    private static readonly HashSet<string> RestrictedApiTypeAllowList = new(StringComparer.Ordinal)
-    {
-        "GetDashboardHandler",
-        "GetDashboardQuery",
-    };
+    private static readonly HashSet<string> RestrictedApiTypeAllowList = new(StringComparer.Ordinal);
 
     [Fact]
     public void Backend_source_files_do_not_add_new_multi_type_files()

@@ -2,10 +2,12 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using TheUpperRoom.Application.Ideas;
 
 namespace TheUpperRoom.Infrastructure.Ideas;
 
-public sealed class IdeasDbContext(DbContextOptions<IdeasDbContext> options) : DbContext(options)
+public sealed class IdeasDbContext(DbContextOptions<IdeasDbContext> options)
+    : DbContext(options), IIdeasDbContext
 {
     public DbSet<IdeaRow> Ideas => Set<IdeaRow>();
     public DbSet<IdeaVoteRow> Votes => Set<IdeaVoteRow>();

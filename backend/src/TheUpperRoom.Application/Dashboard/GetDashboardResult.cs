@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Dashboard;
+namespace TheUpperRoom.Application.Dashboard;
 
 public sealed record GetDashboardResult(
     string FirstName,

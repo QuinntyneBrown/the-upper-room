@@ -3,6 +3,7 @@ using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Auth;
+using TheUpperRoom.Application.Ideas;
 using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Rbac;
