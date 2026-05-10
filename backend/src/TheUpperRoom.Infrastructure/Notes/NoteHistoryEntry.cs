@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Notes;
+namespace TheUpperRoom.Infrastructure.Notes;
 
 public sealed record NoteHistoryEntry(
     string Id,

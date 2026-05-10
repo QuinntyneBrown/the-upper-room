@@ -72,7 +72,6 @@ public sealed class TechnologyGuidanceArchitectureTests
         "CreateNoteHandler",
         "UpdateNoteHandler",
         "DeleteNoteHandler",
-        "NotesDbContext",
         "ListNotificationsQuery",
         "MarkNotificationReadCommand",
         "MarkAllNotificationsReadCommand",

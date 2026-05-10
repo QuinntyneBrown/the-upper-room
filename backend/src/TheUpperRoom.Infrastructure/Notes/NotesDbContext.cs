@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace TheUpperRoom.Api.Notes;
+namespace TheUpperRoom.Infrastructure.Notes;
 
 public sealed class NotesDbContext(DbContextOptions<NotesDbContext> options) : DbContext(options)
 {

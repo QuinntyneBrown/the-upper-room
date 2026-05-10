@@ -1,5 +1,6 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Infrastructure.Notes;
 
 namespace TheUpperRoom.Api.Notes;
 

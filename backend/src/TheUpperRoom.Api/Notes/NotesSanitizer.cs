@@ -1,4 +1,5 @@
 using Ganss.Xss;
+using TheUpperRoom.Infrastructure.Notes;
 
 namespace TheUpperRoom.Api.Notes;
 
