@@ -15,8 +15,6 @@ using TheUpperRoom.Infrastructure.Contacts;
 
 namespace TheUpperRoom.Api.Search;
 
-public sealed record SearchResult(string Id, string Type, string Title, string? Subtitle, string Url);
-
 [ApiController]
 [Authorize]
 [Route("api/v1/search")]

@@ -26,19 +26,10 @@ public sealed class TechnologyGuidanceArchitectureTests
     private static readonly HashSet<string> MultiTypeFileAllowList = new(StringComparer.OrdinalIgnoreCase)
     {
         "backend/src/TheUpperRoom.Api/Auth/AuthController.cs",
-        "backend/src/TheUpperRoom.Api/Contacts/ContactsController.cs",
-        "backend/src/TheUpperRoom.Api/Events/EventCancelController.cs",
         "backend/src/TheUpperRoom.Api/Events/EventRsvpController.cs",
-        "backend/src/TheUpperRoom.Api/Events/EventsController.cs",
         "backend/src/TheUpperRoom.Api/Ideas/IdeasController.cs",
         "backend/src/TheUpperRoom.Api/Kanban/BoardsController.cs",
-        "backend/src/TheUpperRoom.Api/Kanban/CardsController.cs",
-        "backend/src/TheUpperRoom.Api/Locations/LocationsController.cs",
         "backend/src/TheUpperRoom.Api/Notifications/NotificationsController.cs",
-        "backend/src/TheUpperRoom.Api/Notifications/PushController.cs",
-        "backend/src/TheUpperRoom.Api/Partners/PartnerContactsController.cs",
-        "backend/src/TheUpperRoom.Api/Sanitization/SanitizeController.cs",
-        "backend/src/TheUpperRoom.Api/Search/SearchController.cs",
     };
 
     private static readonly HashSet<string> RestrictedApiTypeAllowList = new(StringComparer.Ordinal)

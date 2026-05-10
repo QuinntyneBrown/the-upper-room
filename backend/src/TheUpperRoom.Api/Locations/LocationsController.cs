@@ -136,9 +136,3 @@ public sealed class LocationsController(
     private AppUser? GetCurrentUser() =>
         userDirectory.GetById(currentUser.UserId ?? "");
 }
-
-public sealed record UpsertLocationRequest(
-    string Name, string? Street, string? City, string? State,
-    string? Country, string? PostalCode, int? Capacity, double? Lat, double? Lng);
-
-public sealed record PatchLocationRequest(bool? Archived, string? Name);

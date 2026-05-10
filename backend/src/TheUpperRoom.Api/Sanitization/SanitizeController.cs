@@ -17,5 +17,3 @@ public sealed class SanitizeController : ControllerBase
         return Ok(new { Html = _sanitizer.Sanitize(body.Html ?? "") });
     }
 }
-
-public sealed record SanitizeRequest(string? Html);

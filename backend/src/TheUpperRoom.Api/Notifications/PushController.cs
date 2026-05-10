@@ -37,6 +37,3 @@ public sealed class PushController(IMediator mediator, ICurrentUser currentUser)
         _ => StatusCode(500),
     };
 }
-
-public sealed record PushSubscribeRequest(string Endpoint, PushKeys? Keys);
-public sealed record PushKeys(string P256dh, string Auth);

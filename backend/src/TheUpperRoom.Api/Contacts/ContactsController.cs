@@ -139,5 +139,3 @@ public sealed class ContactsController(IMediator mediator, ICurrentUser currentU
         _ => StatusCode(500),
     };
 }
-
-public sealed record PatchContactRequest(string? Name);

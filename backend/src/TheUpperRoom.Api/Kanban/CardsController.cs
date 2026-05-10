@@ -49,5 +49,3 @@ public sealed class CardsController(IMediator mediator, ICurrentUser currentUser
         _ => StatusCode(500),
     };
 }
-
-public sealed record MoveCardRequest(string? TargetColumnId, string? SourceColumnId);

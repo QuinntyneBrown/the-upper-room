@@ -6,8 +6,6 @@ using TheUpperRoom.Api.Auth;
 
 namespace TheUpperRoom.Api.Events;
 
-public sealed record CancelEventRequest(string? Message = null);
-
 [ApiController]
 [Authorize]
 [Route("api/v1/events/{id}/cancel")]
