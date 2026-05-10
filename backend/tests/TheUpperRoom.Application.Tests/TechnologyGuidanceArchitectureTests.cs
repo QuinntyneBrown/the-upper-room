@@ -233,6 +233,35 @@ public sealed class TechnologyGuidanceArchitectureTests
     }
 
     [Fact]
+    public void Every_application_handler_is_internal_sealed()
+    {
+        // Project convention: MediatR handlers are internal sealed. Internal
+        // because nothing outside the Application assembly should construct
+        // them (the controllers send requests through IMediator, never
+        // newing up a handler). Sealed because there's no inheritance use
+        // case — locks the convention.
+        var appAssembly = typeof(DependencyInjection).Assembly;
+        var requestHandler = typeof(MediatR.IRequestHandler<,>);
+
+        var handlers = appAssembly.GetTypes()
+            .Where(t => t.Name.EndsWith("Handler", StringComparison.Ordinal))
+            .Where(t => t is { IsClass: true, IsAbstract: false })
+            .Where(t => t.GetInterfaces()
+                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == requestHandler))
+            .ToArray();
+
+        // Sanity: there should be a meaningful number of handlers.
+        Assert.NotEmpty(handlers);
+
+        var violations = handlers
+            .Where(t => t.IsPublic || !t.IsSealed)
+            .Select(t => $"{t.FullName} (IsPublic={t.IsPublic}, IsSealed={t.IsSealed})")
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void Every_application_validator_is_public_sealed_and_extends_abstract_validator()
     {
         // FluentValidation's AddValidatorsFromAssembly only registers public
