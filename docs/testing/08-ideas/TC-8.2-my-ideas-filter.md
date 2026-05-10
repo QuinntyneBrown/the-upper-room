@@ -1,25 +1,34 @@
 ---
 id: TASK-TC-8.2
 title: 'Run TC-8.2 - My-ideas filter'
-status: Idle
+status: Completed
 test_id: TC-8.2
 source: ../../test-plan/08-ideas.md
+result: PASS
+run_at: 2026-05-09T23:35:00Z
 ---
 
 # TASK-TC-8.2: Run TC-8.2 - My-ideas filter
 
-## Goal
+## Result: PASS
 
-Run `TC-8.2` from `docs/test-plan/08-ideas.md` and record the result.
+| Field      | Value                       |
+|------------|-----------------------------|
+| Browser    | Chromium (Playwright)       |
+| Viewport   | 1280×720                    |
+| Build SHA  | 2db73af                     |
+| Run at     | 2026-05-09T23:35:00Z        |
 
-## Execution
+### Evidence
 
-- Follow the source test case steps, verification notes, pass criteria, and severity.
-- Capture browser, viewport, build SHA, result, tester, run timestamp, and defect link if the result fails.
+`idea-list-vote.spec.ts:100` — "filter 'My ideas' shows only current user ideas" PASS.
+
+- Click `[data-testid="idea-filter-my-ideas"]` → chip becomes `filter-chip--active`.
+- `GET /api/v1/ideas?myIdeas=true` is fired (verified via test route capturing query string).
+- Card list filters down to ideas authored by the current user.
 
 ## Definition of Done
 
-- [ ] Test run completed.
-- [ ] Result recorded.
-- [ ] Defect linked for any failure.
-
+- [x] Test run completed.
+- [x] Result recorded.
+- [x] Defect linked for any failure.
