@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Auth;
-using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Domain.Rbac;
 
 namespace TheUpperRoom.Api.Partners;
 
@@ -12,8 +13,12 @@ namespace TheUpperRoom.Api.Partners;
 [Route("api/v1/partners")]
 public sealed class PartnersController(
     ICurrentUser currentUser,
-    IUserDirectory userDirectory) : ControllerBase
+    IUserDirectory userDirectory,
+    IPermissionChecker permissions) : ControllerBase
 {
+    private bool CanSwitchCity(AppUser user) =>
+        permissions.HasPermission(user.Role, PermissionResources.City, PermissionActions.Switch);
+
     private static readonly List<PartnerDto> _store =
     [
         new("p-seed", "Grace Church", "https://grace.org", "Toronto", 3,
@@ -33,7 +38,7 @@ public sealed class PartnersController(
         var user = GetCurrentUser();
         if (user is null) return Unauthorized();
 
-        IEnumerable<PartnerDto> items = user.Role == Roles.SystemAdmin
+        IEnumerable<PartnerDto> items = CanSwitchCity(user)
             ? _store
             : _store.Where(p => p.CityId == user.City);
 
@@ -58,7 +63,7 @@ public sealed class PartnersController(
         var partner = _store.FirstOrDefault(p => p.Id == id);
         if (partner is null) return NotFound();
 
-        if (user.Role != Roles.SystemAdmin && partner.CityId != user.City) return NotFound();
+        if (!CanSwitchCity(user) && partner.CityId != user.City) return NotFound();
 
         return Ok(partner);
     }
@@ -92,7 +97,7 @@ public sealed class PartnersController(
 
         var partner = _store.FirstOrDefault(p => p.Id == id);
         if (partner is null) return NotFound();
-        if (user.Role != Roles.SystemAdmin && partner.CityId != user.City) return NotFound();
+        if (!CanSwitchCity(user) && partner.CityId != user.City) return NotFound();
 
         var sameCityName = _store.Any(p =>
             p.Id != id &&
@@ -117,7 +122,7 @@ public sealed class PartnersController(
 
         var partner = _store.FirstOrDefault(p => p.Id == id);
         if (partner is null) return NotFound();
-        if (user.Role != Roles.SystemAdmin && partner.CityId != user.City) return NotFound();
+        if (!CanSwitchCity(user) && partner.CityId != user.City) return NotFound();
 
         var updated = partner with { Archived = body.Archived };
         var idx = _store.IndexOf(partner);
@@ -133,7 +138,7 @@ public sealed class PartnersController(
 
         var partner = _store.FirstOrDefault(p => p.Id == id);
         if (partner is null) return NotFound();
-        if (user.Role != Roles.SystemAdmin && partner.CityId != user.City) return NotFound();
+        if (!CanSwitchCity(user) && partner.CityId != user.City) return NotFound();
 
         _store.Remove(partner);
         return NoContent();

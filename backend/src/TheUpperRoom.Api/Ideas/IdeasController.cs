@@ -3,8 +3,9 @@ using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Auth;
-using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Domain.Rbac;
 
 namespace TheUpperRoom.Api.Ideas;
 
@@ -14,7 +15,8 @@ namespace TheUpperRoom.Api.Ideas;
 public sealed class IdeasController(
     IdeasDbContext db,
     ICurrentUser currentUser,
-    IUserDirectory userDirectory) : ControllerBase
+    IUserDirectory userDirectory,
+    IPermissionChecker permissions) : ControllerBase
 {
     private static readonly HtmlSanitizer _sanitizer = BuildSanitizer();
 
@@ -158,7 +160,7 @@ public sealed class IdeasController(
         if (idea is null) return NotFound();
         if (body is null) return BadRequest();
 
-        var isLead = user.Role is Roles.CityLead or Roles.SystemAdmin;
+        var isLead = permissions.HasPermission(user.Role, PermissionResources.Idea, PermissionActions.Update);
         var isProposer = idea.ProposedBy == user.Id;
 
         var transitions = isLead ? _leadTransitions : (isProposer ? _proposerTransitions : new());

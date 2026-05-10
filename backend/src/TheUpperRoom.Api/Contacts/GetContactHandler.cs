@@ -1,8 +1,9 @@
 using MediatR;
-using TheUpperRoom.Api.Rbac;
 using TheUpperRoom.Application.Cities;
+using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Cities;
+using TheUpperRoom.Domain.Rbac;
 using TheUpperRoom.Infrastructure.Contacts;
 
 namespace TheUpperRoom.Api.Contacts;
@@ -11,11 +12,13 @@ internal sealed class GetContactHandler : IRequestHandler<GetContactQuery, GetCo
 {
     private readonly ContactsDbContext _db;
     private readonly IUserDirectory _users;
+    private readonly IPermissionChecker _permissions;
 
-    public GetContactHandler(ContactsDbContext db, IUserDirectory users)
+    public GetContactHandler(ContactsDbContext db, IUserDirectory users, IPermissionChecker permissions)
     {
         _db = db;
         _users = users;
+        _permissions = permissions;
     }
 
     public Task<GetContactResult> Handle(GetContactQuery request, CancellationToken cancellationToken)
@@ -25,7 +28,7 @@ internal sealed class GetContactHandler : IRequestHandler<GetContactQuery, GetCo
             return Task.FromResult(new GetContactResult(null, ContactsOutcome.Unauthorized));
 
         var allCities = request.Scope == "all";
-        if (allCities && user.Role != Roles.SystemAdmin)
+        if (allCities && !_permissions.HasPermission(user.Role, PermissionResources.City, PermissionActions.Switch))
             return Task.FromResult(new GetContactResult(null, ContactsOutcome.Forbidden));
 
         var c = _db.Contacts.Find(request.Id);

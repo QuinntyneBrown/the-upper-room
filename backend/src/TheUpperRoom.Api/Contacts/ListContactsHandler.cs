@@ -1,7 +1,8 @@
 using MediatR;
-using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Cities;
+using TheUpperRoom.Domain.Rbac;
 using TheUpperRoom.Infrastructure.Contacts;
 
 namespace TheUpperRoom.Api.Contacts;
@@ -10,11 +11,13 @@ internal sealed class ListContactsHandler : IRequestHandler<ListContactsQuery, L
 {
     private readonly ContactsDbContext _db;
     private readonly IUserDirectory _users;
+    private readonly IPermissionChecker _permissions;
 
-    public ListContactsHandler(ContactsDbContext db, IUserDirectory users)
+    public ListContactsHandler(ContactsDbContext db, IUserDirectory users, IPermissionChecker permissions)
     {
         _db = db;
         _users = users;
+        _permissions = permissions;
     }
 
     public Task<ListContactsResult> Handle(ListContactsQuery request, CancellationToken cancellationToken)
@@ -25,16 +28,17 @@ internal sealed class ListContactsHandler : IRequestHandler<ListContactsQuery, L
 
         var allCities = request.Scope == "all" || request.Scope == "__all__";
         var cityFilter = !allCities && !string.IsNullOrEmpty(request.Scope) ? request.Scope : null;
+        var canSwitchCity = _permissions.HasPermission(user.Role, PermissionResources.City, PermissionActions.Switch);
 
-        if ((allCities || cityFilter != null) && user.Role != Roles.SystemAdmin)
+        if ((allCities || cityFilter != null) && !canSwitchCity)
             return Task.FromResult(new ListContactsResult(Array.Empty<Contact>(), 0, ContactsOutcome.Forbidden));
 
         IEnumerable<ContactRow> items;
         if (allCities)
             items = _db.Contacts.AsEnumerable();
-        else if (cityFilter != null && user.Role == Roles.SystemAdmin)
+        else if (cityFilter != null && canSwitchCity)
             items = _db.Contacts.AsEnumerable().Where(c => c.CityId.Equals(cityFilter, StringComparison.OrdinalIgnoreCase));
-        else if (user.Role == Roles.SystemAdmin)
+        else if (canSwitchCity)
             items = _db.Contacts.AsEnumerable();
         else
             items = _db.Contacts.AsEnumerable().Where(c => c.CityId.Equals(user.City, StringComparison.OrdinalIgnoreCase));
