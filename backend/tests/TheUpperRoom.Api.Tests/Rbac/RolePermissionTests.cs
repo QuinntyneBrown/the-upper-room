@@ -1,5 +1,6 @@
 // traces_to: L2-023
 using TheUpperRoom.Api.Rbac;
+using TheUpperRoom.Domain.Rbac;
 
 namespace TheUpperRoom.Api.Tests.Rbac;
 
@@ -8,7 +9,7 @@ public sealed class RolePermissionTests
     [Fact]
     public void SystemAdmin_has_user_role_audit_management()
     {
-        var perms = Permissions.For(Roles.SystemAdmin);
+        var perms = Permissions.For(RoleNames.SystemAdmin);
         Assert.Contains("User:Manage", perms);
         Assert.Contains("Role:Manage", perms);
         Assert.Contains("Audit:Read", perms);
@@ -18,7 +19,7 @@ public sealed class RolePermissionTests
     [Fact]
     public void CityLead_can_CRUD_business_resources_but_not_manage_users()
     {
-        var perms = Permissions.For(Roles.CityLead);
+        var perms = Permissions.For(RoleNames.CityLead);
         Assert.Contains("Contact:Create", perms);
         Assert.Contains("Partner:Update", perms);
         Assert.DoesNotContain("User:Manage", perms);
@@ -27,7 +28,7 @@ public sealed class RolePermissionTests
     [Fact]
     public void Member_can_read_but_not_create_contacts()
     {
-        var perms = Permissions.For(Roles.Member);
+        var perms = Permissions.For(RoleNames.Member);
         Assert.Contains("Contact:Read", perms);
         Assert.DoesNotContain("Contact:Create", perms);
         Assert.Contains("Note:Create", perms);
@@ -38,7 +39,7 @@ public sealed class RolePermissionTests
     [Fact]
     public void Guest_only_has_event_read_and_rsvp()
     {
-        var perms = Permissions.For(Roles.Guest);
+        var perms = Permissions.For(RoleNames.Guest);
         Assert.Equal(new[] { "Event:Read", "Event:RSVP" }, perms);
     }
 }

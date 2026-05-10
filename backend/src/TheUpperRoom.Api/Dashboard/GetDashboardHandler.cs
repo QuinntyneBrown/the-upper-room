@@ -4,7 +4,9 @@ using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Kanban;
 using TheUpperRoom.Api.Partners;
+using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Domain.Rbac;
 using TheUpperRoom.Infrastructure.Contacts;
 
 namespace TheUpperRoom.Api.Dashboard;
@@ -16,25 +18,31 @@ internal sealed class GetDashboardHandler : IRequestHandler<GetDashboardQuery, G
     private readonly IdeasDbContext _ideasDb;
     private readonly KanbanDbContext _kanbanDb;
     private readonly IUserDirectory _users;
+    private readonly IPermissionChecker _permissions;
 
     public GetDashboardHandler(
         ContactsDbContext contactsDb,
         EventsDbContext eventsDb,
         IdeasDbContext ideasDb,
         KanbanDbContext kanbanDb,
-        IUserDirectory users)
+        IUserDirectory users,
+        IPermissionChecker permissions)
     {
         _contactsDb = contactsDb;
         _eventsDb = eventsDb;
         _ideasDb = ideasDb;
         _kanbanDb = kanbanDb;
         _users = users;
+        _permissions = permissions;
     }
 
     public Task<GetDashboardResult?> Handle(GetDashboardQuery request, CancellationToken cancellationToken)
     {
         var user = _users.GetById(request.UserId);
         if (user is null) return Task.FromResult<GetDashboardResult?>(null);
+
+        var canSeeAllCities = _permissions.HasPermission(
+            user.Role, PermissionResources.City, PermissionActions.Switch);
 
         var now = DateTimeOffset.UtcNow;
 
@@ -45,7 +53,7 @@ internal sealed class GetDashboardHandler : IRequestHandler<GetDashboardQuery, G
             .ToList();
 
         var stats = new DashboardStats(
-            Contacts: ContactsController.StoreCount(user, _contactsDb),
+            Contacts: ContactsController.StoreCount(user, _contactsDb, canSeeAllCities),
             Partners: PartnersController.StoreCount(),
             UpcomingEvents: allUpcoming.Count,
             OpenIdeas: IdeasController.StoreCount(_ideasDb));

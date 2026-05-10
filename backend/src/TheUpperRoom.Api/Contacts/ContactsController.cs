@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Auth;
-using TheUpperRoom.Api.Rbac;
 using TheUpperRoom.Application.Users;
 using TheUpperRoom.Domain.Cities;
 using TheUpperRoom.Infrastructure.Contacts;
@@ -16,16 +15,16 @@ namespace TheUpperRoom.Api.Contacts;
 public sealed class ContactsController(IMediator mediator, ICurrentUser currentUser) : ControllerBase
 {
     // Helpers retained for cross-controller usage (Dashboard, Search). They
-    // are pure functions over an injected DbContext and an AppUser; they do
-    // not reach into the http context.
-    internal static int StoreCount(AppUser user, ContactsDbContext db) =>
-        user.Role == Roles.SystemAdmin
+    // are pure functions over an injected DbContext and the caller's
+    // city-scope visibility; they do not reach into the http context.
+    internal static int StoreCount(AppUser user, ContactsDbContext db, bool canSeeAllCities) =>
+        canSeeAllCities
             ? db.Contacts.Count()
             : db.Contacts.Count(c => c.CityId == user.City);
 
-    internal static IEnumerable<Contact> Search(string term, AppUser user, ContactsDbContext db)
+    internal static IEnumerable<Contact> Search(string term, AppUser user, ContactsDbContext db, bool canSeeAllCities)
     {
-        var query = user.Role == Roles.SystemAdmin
+        var query = canSeeAllCities
             ? db.Contacts.AsEnumerable()
             : db.Contacts.Where(c => c.CityId == user.City).AsEnumerable();
         return query.Where(c => c.Name.Contains(term, StringComparison.OrdinalIgnoreCase))

@@ -7,7 +7,9 @@ using TheUpperRoom.Api.Events;
 using TheUpperRoom.Api.Ideas;
 using TheUpperRoom.Api.Locations;
 using TheUpperRoom.Api.Partners;
+using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Domain.Rbac;
 using TheUpperRoom.Infrastructure.Contacts;
 
 
@@ -24,7 +26,8 @@ public sealed class SearchController(
     IdeasDbContext ideasDb,
     LocationsDbContext locationsDb,
     ICurrentUser currentUser,
-    IUserDirectory userDirectory) : ControllerBase
+    IUserDirectory userDirectory,
+    IPermissionChecker permissions) : ControllerBase
 {
     private const int MaxPerGroup = 5;
 
@@ -36,8 +39,10 @@ public sealed class SearchController(
         if (string.IsNullOrWhiteSpace(q)) return Ok(EmptyResult());
 
         var term = q.Trim();
+        var canSeeAllCities = permissions.HasPermission(
+            user.Role, PermissionResources.City, PermissionActions.Switch);
 
-        var contacts = ContactsController.Search(term, user, contactsDb)
+        var contacts = ContactsController.Search(term, user, contactsDb, canSeeAllCities)
             .Take(MaxPerGroup)
             .Select(c => new SearchResult(c.Id, "contact", c.Name, c.CityId, $"/contacts/{c.Id}"))
             .ToList();
