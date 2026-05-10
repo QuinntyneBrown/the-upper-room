@@ -406,8 +406,9 @@ In addition to Contacts (2.5), this iteration applied the one-type-per-file spli
 - [x] **3.K2 (Kanban DbContext + DTO split)** — `KanbanDbContext.cs` (4 types) → `KanbanDbContext.cs`, `BoardRow.cs`, `BoardColumnRow.cs`, `CardRow.cs`. `BoardDetailDto.cs` (4 types) → `BoardDetailDto.cs`, `BoardColumnDto.cs`, `BoardCardTagDto.cs`, `BoardCardDto.cs`.
 - [x] **3.N (Notes)** — `NotesCqrs.cs` (13 types) → 13 files (`NotesOutcome`, `ListNotesQuery`/`Result`, `GetNoteQuery`, `CreateNoteCommand`, `UpdateNoteCommand`, `DeleteNoteCommand`, `NoteResult`, `NotesSanitizer` helper, plus 5 handler files).
 - [x] **3.E2 (Event RSVP)** — `EventRsvpCqrs.cs` (14 types) → 14 files (`RsvpOutcome`, `GetMyRsvpQuery`/`Result`, `SubmitRsvpCommand`/`Result`, `GetRsvpRequestsQuery`/`Result`, `ApproveRsvpCommand`, `DenyRsvpCommand`, plus 5 handler files).
+- [x] **3.Nf (Notifications)** — `NotificationsCqrs.cs` (20 types) → 20 individual files: `NotificationsOutcome`, six query/command records (`ListNotificationsQuery`, `MarkNotificationReadCommand`, `MarkAllNotificationsReadCommand`, `DispatchNotificationCommand`, `ListNotificationPreferencesQuery`, `UpsertNotificationPreferenceCommand`), six result records, `NotificationPreferenceDto`, `NotificationMapping` helper, plus 6 handler files.
 
-Full Api.Tests suite stays **105/105 PASS** after every split. Remaining multi-type files to sweep: `Notifications/NotificationsCqrs.cs` (19 types), `Notifications/PushCommands.cs` (7), plus a few 3-5 type files in DbContext / Controller sites where secondary types are tightly cohesive.
+Full Api.Tests suite stays **105/105 PASS** after every split. Remaining multi-type files to sweep: `Notifications/PushCommands.cs` (7), plus a few 3-5 type files in DbContext / Controller sites where secondary types are tightly cohesive.
 
 ## Genuinely-remaining engineering work
 
