@@ -53,6 +53,38 @@ internal sealed class PatchCardHandler : IRequestHandler<PatchCardCommand, Patch
     }
 }
 
+public sealed record DeleteCardCommand(string UserId, string CardId)
+    : IRequest<DeleteCardResult>;
+
+public sealed record DeleteCardResult(KanbanOutcome Outcome);
+
+internal sealed class DeleteCardHandler : IRequestHandler<DeleteCardCommand, DeleteCardResult>
+{
+    private readonly KanbanDbContext _db;
+    private readonly IUserDirectory _users;
+
+    public DeleteCardHandler(KanbanDbContext db, IUserDirectory users)
+    {
+        _db = db;
+        _users = users;
+    }
+
+    public Task<DeleteCardResult> Handle(DeleteCardCommand request, CancellationToken cancellationToken)
+    {
+        if (_users.GetById(request.UserId) is null)
+            return Task.FromResult(new DeleteCardResult(KanbanOutcome.Unauthorized));
+
+        var card = _db.Cards.Find(request.CardId);
+        if (card is null)
+            return Task.FromResult(new DeleteCardResult(KanbanOutcome.NotFound));
+
+        _db.Cards.Remove(card);
+        _db.SaveChanges();
+
+        return Task.FromResult(new DeleteCardResult(KanbanOutcome.Ok));
+    }
+}
+
 internal sealed class MoveCardHandler : IRequestHandler<MoveCardCommand, MoveCardResult>
 {
     private readonly KanbanDbContext _db;

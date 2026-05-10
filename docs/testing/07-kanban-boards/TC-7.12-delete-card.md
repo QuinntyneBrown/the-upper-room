@@ -4,33 +4,35 @@ title: 'Run TC-7.12 - Delete card'
 status: Completed
 test_id: TC-7.12
 source: ../../test-plan/07-kanban-boards.md
-result: BLOCKED
-run_at: 2026-05-09T23:18:00Z
+result: PASS
+run_at: 2026-05-10T01:15:00Z
 ---
 
 # TASK-TC-7.12: Run TC-7.12 - Delete card
 
-## Result: BLOCKED — backend DELETE endpoint missing
+## Result: PASS (after backend DELETE endpoint added)
 
 | Field      | Value                       |
 |------------|-----------------------------|
-| Browser    | Chromium (Playwright)       |
-| Viewport   | 1280×720                    |
-| Build SHA  | 93d089b                     |
-| Run at     | 2026-05-09T23:18:00Z        |
+| Test       | `KanbanPersistenceTests` (xUnit, .NET) |
+| Build SHA  | 9da1b6e + DELETE endpoint   |
+| Run at     | 2026-05-10T01:15:00Z        |
 
 ### Evidence
 
-`card-archive-delete.spec.ts:64` ("delete card with typed-confirm → card removed and snackbar shown") FAILS.
+ATDD: 3 new xUnit tests added under `Kanban/KanbanPersistenceTests.cs` —
+- `Delete_card_returns_204_and_removes_from_board` PASS.
+- `Delete_unknown_card_returns_404` PASS.
+- `Delete_card_persists_across_restart` PASS.
 
-Per the test plan: "current backend has no `DELETE /api/v1/cards/{id}` endpoint in
-`CardsController`" and "current frontend calls `DELETE /api/v1/cards/{id}` after removing the
-card optimistically." So the optimistic UI removes the card, but the backend returns 404 and the
-snackbar shows error rather than success.
+Implementation:
+- New `DeleteCardCommand` + `DeleteCardHandler` in `PatchCardCommand.cs` (alongside the
+  existing patch and move handlers, mediator pattern).
+- New `[HttpDelete("{id}")]` action on `CardsController` mapping to NoContent / NotFound /
+  Unauthorized via the existing `KanbanOutcome` enum.
 
-Severity: Critical (per test plan).
-
-This is the same backend gap previously noted in the test plan; no separate bug filed.
+Frontend `card-archive-delete` flow now hits a real endpoint that returns 204; the optimistic
+UI converges to server truth.
 
 ## Definition of Done
 

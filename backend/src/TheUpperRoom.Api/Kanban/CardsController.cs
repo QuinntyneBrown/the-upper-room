@@ -26,6 +26,19 @@ public sealed class CardsController(IMediator mediator, ICurrentUser currentUser
         return Map(result.Outcome, result.Payload);
     }
 
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new DeleteCardCommand(currentUser.UserId ?? "", id), cancellationToken);
+        return result.Outcome switch
+        {
+            KanbanOutcome.Unauthorized => Unauthorized(),
+            KanbanOutcome.NotFound => NotFound(),
+            KanbanOutcome.Ok => NoContent(),
+            _ => StatusCode(500),
+        };
+    }
+
     private IActionResult Map(KanbanOutcome outcome, object? payload) => outcome switch
     {
         KanbanOutcome.Unauthorized => Unauthorized(),

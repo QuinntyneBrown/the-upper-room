@@ -137,6 +137,70 @@ public sealed class KanbanPersistenceTests : IDisposable
     }
 
     [Fact]
+    public async Task Delete_card_returns_204_and_removes_from_board()
+    {
+        await using var factory = Factory();
+        var client = AuthedClient(factory, "lead");
+
+        var boardResp = await client.PostAsJsonAsync("/api/v1/boards", new { name = "Delete Board", defaultColumns = true });
+        Assert.Equal(HttpStatusCode.Created, boardResp.StatusCode);
+        var boardId = (await boardResp.Content.ReadFromJsonAsync<BoardLite>())!.Id;
+
+        var detail = await client.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+        var columnId = detail!.Columns[0].Id;
+
+        var cardResp = await client.PostAsJsonAsync($"/api/v1/boards/{boardId}/cards", new { title = "Doomed Card", columnId });
+        Assert.Equal(HttpStatusCode.Created, cardResp.StatusCode);
+        var cardId = (await cardResp.Content.ReadFromJsonAsync<CardLite>())!.Id;
+
+        var del = await client.DeleteAsync($"/api/v1/cards/{cardId}");
+        Assert.Equal(HttpStatusCode.NoContent, del.StatusCode);
+
+        var afterDetail = await client.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+        Assert.DoesNotContain(afterDetail!.Cards, c => c.Id == cardId);
+    }
+
+    [Fact]
+    public async Task Delete_unknown_card_returns_404()
+    {
+        await using var factory = Factory();
+        var client = AuthedClient(factory, "lead");
+
+        var del = await client.DeleteAsync("/api/v1/cards/does-not-exist");
+        Assert.Equal(HttpStatusCode.NotFound, del.StatusCode);
+    }
+
+    [Fact]
+    public async Task Delete_card_persists_across_restart()
+    {
+        string boardId;
+        string cardId;
+
+        await using (var factory = Factory())
+        {
+            var client = AuthedClient(factory, "lead");
+
+            var boardResp = await client.PostAsJsonAsync("/api/v1/boards", new { name = "Restart Delete Board", defaultColumns = true });
+            boardId = (await boardResp.Content.ReadFromJsonAsync<BoardLite>())!.Id;
+
+            var detail = await client.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+            var columnId = detail!.Columns[0].Id;
+
+            var cardResp = await client.PostAsJsonAsync($"/api/v1/boards/{boardId}/cards", new { title = "Will Be Deleted", columnId });
+            cardId = (await cardResp.Content.ReadFromJsonAsync<CardLite>())!.Id;
+
+            var del = await client.DeleteAsync($"/api/v1/cards/{cardId}");
+            Assert.Equal(HttpStatusCode.NoContent, del.StatusCode);
+        }
+
+        await using var factory2 = Factory();
+        var client2 = AuthedClient(factory2, "lead");
+
+        var detail2 = await client2.GetFromJsonAsync<BoardDetailResponse>($"/api/v1/boards/{boardId}");
+        Assert.DoesNotContain(detail2!.Cards, c => c.Id == cardId);
+    }
+
+    [Fact]
     public async Task Wip_limit_survives_restart()
     {
         string boardId;
