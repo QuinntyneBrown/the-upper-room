@@ -1,6 +1,6 @@
 namespace TheUpperRoom.Application.Notifications;
 
-internal static class NotificationMapping
+public static class NotificationMapping
 {
     public static NotificationDto ToDto(NotificationRow n) =>
         new(n.Id, n.Code, n.Title, n.Body, n.Data, n.Read, n.CreatedAt, n.DeepLink, n.Severity);
