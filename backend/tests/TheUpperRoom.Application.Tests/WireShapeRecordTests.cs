@@ -193,6 +193,40 @@ public sealed class WireShapeRecordTests
     }
 
     [Fact]
+    public void CreateContactRequest_optional_fields_can_all_be_null()
+    {
+        var minimal = new CreateContactRequest("Ada", null, null, null, null, null);
+        Assert.Equal("Ada", minimal.FirstName);
+        Assert.Null(minimal.LastName);
+        Assert.Null(minimal.Pronouns);
+        Assert.Null(minimal.Title);
+        Assert.Null(minimal.Org);
+        Assert.Null(minimal.DisplayName);
+    }
+
+    [Fact]
+    public void NoteResult_records_with_same_fields_are_equal()
+    {
+        var a = new NoteResult(null, NotesOutcome.NotFound, null);
+        var b = new NoteResult(null, NotesOutcome.NotFound, null);
+        Assert.Equal(a, b);
+    }
+
+    [Fact]
+    public void MutateContactResult_records_carry_optional_payload_outcome_error()
+    {
+        var success = new MutateContactResult(
+            new Contact("c-1", "Ada", "city-1"), ContactsOutcome.Created, null);
+        Assert.NotNull(success.Contact);
+        Assert.Equal(ContactsOutcome.Created, success.Outcome);
+        Assert.Null(success.Error);
+
+        var failed = new MutateContactResult(null, ContactsOutcome.Unprocessable, "reason");
+        Assert.Null(failed.Contact);
+        Assert.Equal("reason", failed.Error);
+    }
+
+    [Fact]
     public void EventDto_optional_arguments_default_to_null_or_false()
     {
         var dto = new EventDto(
