@@ -1,3 +1,3 @@
-namespace TheUpperRoom.Api.Uploads;
+namespace TheUpperRoom.Application.Uploads;
 
 public sealed record UploadFileResult(string? Url, UploadFileOutcome Outcome, string? Error);

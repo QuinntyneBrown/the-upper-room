@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheUpperRoom.Api.Auth;
+using TheUpperRoom.Application.Uploads;
 
 namespace TheUpperRoom.Api.Uploads;
 
@@ -15,7 +16,7 @@ public sealed class UploadsController(IMediator mediator, ICurrentUser currentUs
     public async Task<IActionResult> Upload([FromForm] IFormFile? file, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(
-            new UploadFileCommand(currentUser.UserId ?? "", file),
+            new UploadFileCommand(currentUser.UserId ?? "", file?.Length, file?.FileName),
             cancellationToken);
 
         return result.Outcome switch

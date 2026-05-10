@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Api.Uploads;
+namespace TheUpperRoom.Application.Uploads;
 
 public enum UploadFileOutcome
 {

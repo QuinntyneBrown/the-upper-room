@@ -1,7 +1,7 @@
 using MediatR;
 using TheUpperRoom.Application.Users;
 
-namespace TheUpperRoom.Api.Uploads;
+namespace TheUpperRoom.Application.Uploads;
 
 internal sealed class UploadFileHandler : IRequestHandler<UploadFileCommand, UploadFileResult>
 {
@@ -15,16 +15,16 @@ internal sealed class UploadFileHandler : IRequestHandler<UploadFileCommand, Upl
         if (_users.GetById(request.UserId) is null)
             return Task.FromResult(new UploadFileResult(null, UploadFileOutcome.Unauthorized, null));
 
-        if (request.File is null)
+        if (request.Length is null || request.FileName is null)
             return Task.FromResult(new UploadFileResult(null, UploadFileOutcome.NoFile, "No file provided."));
 
-        if (request.File.Length > MaxBoardBytes)
+        if (request.Length > MaxBoardBytes)
             return Task.FromResult(new UploadFileResult(
                 null,
                 UploadFileOutcome.TooLarge,
                 "Image is too large (max 10MB). Try a smaller image."));
 
-        var url = $"https://uploads.example.com/{Guid.NewGuid()}{Path.GetExtension(request.File.FileName)}";
+        var url = $"https://uploads.example.com/{Guid.NewGuid()}{Path.GetExtension(request.FileName)}";
         return Task.FromResult(new UploadFileResult(url, UploadFileOutcome.Uploaded, null));
     }
 }

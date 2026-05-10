@@ -97,8 +97,6 @@ public sealed class TechnologyGuidanceArchitectureTests
         "SubscribePushHandler",
         "UnsubscribePushHandler",
         "PushDbContext",
-        "UploadFileCommand",
-        "UploadFileHandler",
     };
 
     [Fact]
