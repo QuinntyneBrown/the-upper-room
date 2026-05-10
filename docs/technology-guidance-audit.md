@@ -25,19 +25,20 @@ The single **PARTIAL** is §B3 (per-feature `I<Feature>DbContext` abstractions i
 
 ### Test surface (2026-05-10)
 
-The backend test suite grew from 167 to **286 tests** during the remediation:
+The backend test suite grew from 167 to **296 tests** during the remediation:
 
-- **Domain.Tests**:       16 (was 9)
-- **Infrastructure.Tests**: 3
+- **Domain.Tests**:       20 (was 9)
+- **Infrastructure.Tests**: 9 (was 3)
 - **Application.Tests**:  160 (was 50)
 - **Api.Tests**:          107 (was 105)
 
-The 119 new tests split as:
+The 129 new tests split as:
 
 - **Architecture tests** (13): file-shape rule, Api-shape rule, seeder centralisation, Application/Domain reference graph, Domain framework purity, Application→Infrastructure dependency inversion, Domain→outer-layer inversion, Infrastructure→Api inversion, every Infrastructure DbContext implements an Application interface, every Application handler depends on `I<Feature>DbContext`, every Application handler is `internal sealed`, every Application validator is `public sealed AbstractValidator<T>`, every Application command/query is a `public sealed record` implementing `IRequest<T>`.
 - **Validator unit tests** (58): every Application validator (24 of them) has at least one failing-input case pinned, including all 7 Auth validators, SubmitRsvp status enum, ListAuditEntries paging bounds, CreateContact field shapes, MoveCard, DispatchNotification, plus smoke cases for the 13 ID-bearing validators.
 - **Pure-helper unit tests** (39): `ContactsDisplayName.Build` (Contacts), `ContactsMapping.ToContact` (Contacts), `EventsMapping.ToDto` (Events), `CityScope.ForCity` / `VisibleOrNull` (Cities), `NotificationMapping.Render` / `ToDto` (Notifications), `NotesSanitizer.Instance` allow-list + `ToDto` (Notes), and `RoleCatalog.HasPermission` / `PermissionsFor` (Domain.Rbac).
 - **MediatR pipeline behaviour tests** (5): `ValidationBehavior` short-circuits with no validators, calls next on success, throws ValidationException + does not call next on failure, aggregates failures across multiple validators.
+- **Infrastructure unit tests** (10): `PasswordHasher` (per-call salt, null/blank-input contract, verify rejects blank), `PermissionChecker` (delegates to RoleCatalog), `Permission` record value-equality + ToString format.
 - **HTTP-level validation integration** (4): RegisterCommand (short password / bad email) + Create / Update Contact (empty FirstName) all return RFC-7807 `application/problem+json` 400s end-to-end through the FluentValidation → ValidationException → ValidationExceptionHandler pipeline.
 
 The original section-by-section breakdown follows for historical reference. **Treat the per-section "PASS / PARTIAL / FAIL" verdicts in the headings below as the 2026-05-09 snapshot, not the current state.**
