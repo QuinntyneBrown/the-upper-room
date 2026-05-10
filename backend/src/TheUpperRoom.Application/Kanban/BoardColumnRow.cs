@@ -1,4 +1,4 @@
-namespace TheUpperRoom.Infrastructure.Kanban;
+namespace TheUpperRoom.Application.Kanban;
 
 public sealed class BoardColumnRow
 {

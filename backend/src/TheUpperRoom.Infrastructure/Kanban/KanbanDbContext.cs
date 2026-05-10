@@ -1,9 +1,11 @@
 // Traces to: TASK-0228
 using Microsoft.EntityFrameworkCore;
+using TheUpperRoom.Application.Kanban;
 
 namespace TheUpperRoom.Infrastructure.Kanban;
 
-public sealed class KanbanDbContext(DbContextOptions<KanbanDbContext> options) : DbContext(options)
+public sealed class KanbanDbContext(DbContextOptions<KanbanDbContext> options)
+    : DbContext(options), IKanbanDbContext
 {
     public DbSet<BoardRow> Boards => Set<BoardRow>();
     public DbSet<BoardColumnRow> Columns => Set<BoardColumnRow>();
