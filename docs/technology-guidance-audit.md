@@ -25,17 +25,17 @@ The single **PARTIAL** is §B3 (per-feature `I<Feature>DbContext` abstractions i
 
 ### Test surface (2026-05-10)
 
-The backend test suite grew from 167 to **211 tests** during the remediation:
+The backend test suite grew from 167 to **228 tests** during the remediation:
 
 - **Domain.Tests**:        9
 - **Infrastructure.Tests**: 3
-- **Application.Tests**:   92 (was 50)
+- **Application.Tests**:  109 (was 50)
 - **Api.Tests**:          107 (was 105)
 
-The 44 new tests split as:
+The 61 new tests split as:
 
 - **Architecture tests** (12): file-shape rule, Api-shape rule, seeder centralisation, Application/Domain reference graph, Domain framework purity, Application→Infrastructure dependency inversion, Domain→outer-layer inversion, Infrastructure→Api inversion, every Infrastructure DbContext implements an Application interface, every Application handler depends on `I<Feature>DbContext`, every Application handler is `internal sealed`, every Application validator is `public sealed AbstractValidator<T>`.
-- **Validator unit tests** (33): SubmitRsvp status enum, ListAuditEntries paging bounds, CreateContact field shapes, MoveCard, DispatchNotification.
+- **Validator unit tests** (50): every Application validator has at least one failing-input case pinned. SubmitRsvp status enum (10), ListAuditEntries paging bounds (4 sets of inlines), CreateContact field shapes (4), MoveCard (5), DispatchNotification (3), plus 17 smoke cases across the 13 ID-bearing validators (Contacts/Notes/Kanban/Events/Notifications).
 - **HTTP-level validation integration** (4): RegisterCommand (short password / bad email) + Create / Update Contact (empty FirstName) all return RFC-7807 `application/problem+json` 400s end-to-end through the FluentValidation → ValidationException → ValidationExceptionHandler pipeline.
 
 The original section-by-section breakdown follows for historical reference. **Treat the per-section "PASS / PARTIAL / FAIL" verdicts in the headings below as the 2026-05-09 snapshot, not the current state.**
