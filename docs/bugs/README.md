@@ -30,6 +30,7 @@ Bugs filed while executing `docs/test-plan/` against the locally running app on 
 | [BUG-014](BUG-014-test-plan-stale-persistence.md) | Medium | docs | Test plan describes in-memory persistence, but backend now uses SQLite (`ContactsDbContext`, `EventsDbContext`, etc.) |
 | [BUG-035](BUG-035-e2e-auth-bypass-lost-on-page-goto.md) | High | frontend e2e | `page.goto()` after seeding `__setTestToken`/`__setRbac` reloads the SPA and drops the token; 48 of 49 kanban tests fail at the auth-guard redirect |
 | [BUG-036](BUG-036-error-boundary-triggered-by-http-errors.md) | High | frontend | `GlobalErrorHandler` raises the full-page error boundary for every `HttpErrorResponse`; overlay intercepts clicks and breaks ~28 kanban e2e tests |
+| [BUG-037](BUG-037-app-shell-drawer-blocks-main-on-lg.md) | High | frontend | At lg+ the sticky drawer occupies a 280×viewport-height block on the left at z:20, overlapping main; clicks on left-side controls intercepted |
 
 ## What passed
 
