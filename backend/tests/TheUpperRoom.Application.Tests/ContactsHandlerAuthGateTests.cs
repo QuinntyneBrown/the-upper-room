@@ -2,7 +2,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TheUpperRoom.Application.Contacts;
+using TheUpperRoom.Application.Rbac;
 using TheUpperRoom.Application.Users;
+using TheUpperRoom.Domain.Rbac;
 
 namespace TheUpperRoom.Application.Tests;
 
@@ -11,11 +13,12 @@ namespace TheUpperRoom.Application.Tests;
 // the throwing stub surfaces gate-bypass regressions.
 public sealed class ContactsHandlerAuthGateTests
 {
-    private static ISender NewSender(bool userKnown)
+    private static ISender NewSender(bool userKnown, bool canSwitchCity = false)
     {
         var services = new ServiceCollection();
         services.AddSingleton<IUserDirectory>(new StubDirectory(userKnown));
         services.AddSingleton<IContactsDbContext>(new StubContactsDb());
+        services.AddSingleton<IPermissionChecker>(new StubPermissions(canSwitchCity));
         services.AddApplication();
         return services.BuildServiceProvider().GetRequiredService<ISender>();
     }
@@ -43,6 +46,50 @@ public sealed class ContactsHandlerAuthGateTests
     }
 
     [Fact]
+    public async Task GetContact_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new GetContactQuery("missing", "c-1", null));
+
+        Assert.Equal(ContactsOutcome.Unauthorized, result.Outcome);
+        Assert.Null(result.Contact);
+    }
+
+    [Fact]
+    public async Task GetContact_returns_Forbidden_when_all_scope_without_city_switch()
+    {
+        var sender = NewSender(userKnown: true, canSwitchCity: false);
+
+        var result = await sender.Send(new GetContactQuery("user-1", "c-1", "all"));
+
+        Assert.Equal(ContactsOutcome.Forbidden, result.Outcome);
+    }
+
+    [Fact]
+    public async Task ListContacts_returns_Unauthorized_when_user_unknown()
+    {
+        var sender = NewSender(userKnown: false);
+
+        var result = await sender.Send(new ListContactsQuery("missing", null, null, null, null));
+
+        Assert.Equal(ContactsOutcome.Unauthorized, result.Outcome);
+        Assert.Empty(result.Items);
+        Assert.Equal(0, result.Total);
+    }
+
+    [Fact]
+    public async Task ListContacts_returns_Forbidden_when_cross_city_scope_without_switch()
+    {
+        var sender = NewSender(userKnown: true, canSwitchCity: false);
+
+        var result = await sender.Send(new ListContactsQuery(
+            "user-1", null, null, null, Scope: "other-city"));
+
+        Assert.Equal(ContactsOutcome.Forbidden, result.Outcome);
+    }
+
+    [Fact]
     public void ContactsOutcome_enum_pins_wire_shape()
     {
         Assert.Equal(
@@ -56,6 +103,15 @@ public sealed class ContactsHandlerAuthGateTests
         public AppUser? GetById(string id) =>
             known ? new AppUser(id, $"{id}@example.com", "city-1", "Member") : null;
         public IReadOnlyCollection<AppUser> All() => [];
+    }
+
+    private sealed class StubPermissions(bool canSwitchCity) : IPermissionChecker
+    {
+        public IReadOnlyCollection<Permission> PermissionsFor(string roleName) => [];
+        public bool HasPermission(string roleName, string resource, string action) =>
+            canSwitchCity
+            && resource == PermissionResources.City
+            && action == PermissionActions.Switch;
     }
 
     private sealed class StubContactsDb : IContactsDbContext
