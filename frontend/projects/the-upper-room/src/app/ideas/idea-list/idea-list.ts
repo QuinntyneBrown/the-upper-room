@@ -38,6 +38,9 @@ export class IdeaList implements OnInit {
   protected readonly ideas = signal<IdeaDto[]>([]);
   protected readonly myIdeasFilter = signal(false);
   protected readonly sort = signal('newest');
+  protected readonly creating = signal(false);
+  protected readonly newIdeaTitle = signal('');
+  protected readonly newIdeaDescription = signal('');
 
   ngOnInit(): void {
     this.load();
@@ -65,6 +68,29 @@ export class IdeaList implements OnInit {
   protected onSortChange(value: string): void {
     this.sort.set(value);
     this.load();
+  }
+
+  protected startNewIdea(): void {
+    this.creating.set(true);
+    this.newIdeaTitle.set('');
+    this.newIdeaDescription.set('');
+  }
+
+  protected cancelNewIdea(): void {
+    this.creating.set(false);
+  }
+
+  protected submitNewIdea(): void {
+    const title = this.newIdeaTitle().trim();
+    if (!title) return;
+    const body = { title, description: this.newIdeaDescription().trim() };
+    this.http.post<IdeaDto>('/api/v1/ideas', body).subscribe({
+      next: (created) => {
+        this.ideas.update((items) => [created, ...items]);
+        this.creating.set(false);
+      },
+      error: () => this.snackbar.show("Couldn't create idea. Try again.", 'error'),
+    });
   }
 
   protected toggleVote(idea: IdeaDto): void {

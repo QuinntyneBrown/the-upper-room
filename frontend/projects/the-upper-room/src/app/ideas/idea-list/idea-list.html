@@ -20,8 +20,37 @@
       <option value="votes">Most votes</option>
       <option value="updated">Updated</option>
     </select>
+    <button
+      data-testid="idea-new-button"
+      type="button"
+      class="btn-filled"
+      (click)="startNewIdea()"
+    >+ New idea</button>
   </div>
 </header>
+
+@if (creating()) {
+  <section data-testid="idea-new-form" class="idea-new-form">
+    <input
+      data-testid="idea-new-title"
+      type="text"
+      placeholder="Idea title"
+      [value]="newIdeaTitle()"
+      (input)="newIdeaTitle.set($any($event.target).value)"
+    />
+    <textarea
+      data-testid="idea-new-description"
+      placeholder="Short description"
+      rows="2"
+      [value]="newIdeaDescription()"
+      (input)="newIdeaDescription.set($any($event.target).value)"
+    ></textarea>
+    <div class="idea-new-form__actions">
+      <button data-testid="idea-new-submit" type="button" class="btn-filled" (click)="submitNewIdea()">Create</button>
+      <button data-testid="idea-new-cancel" type="button" class="btn-text" (click)="cancelNewIdea()">Cancel</button>
+    </div>
+  </section>
+}
 
 @if (ideas().length === 0) {
   <tar-empty-state

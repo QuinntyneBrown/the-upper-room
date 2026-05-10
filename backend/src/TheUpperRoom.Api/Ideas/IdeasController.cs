@@ -82,6 +82,41 @@ public sealed class IdeasController(
         return Ok(new { items, total = items.Count });
     }
 
+    [HttpPost]
+    public IActionResult Create([FromBody] CreateIdeaRequest? body)
+    {
+        var user = GetCurrentUser();
+        if (user is null) return Unauthorized();
+        if (body is null || string.IsNullOrWhiteSpace(body.Title))
+            return UnprocessableEntity(new { error = "Title is required." });
+
+        var now = DateTimeOffset.UtcNow;
+        var idea = new IdeaRow
+        {
+            Id = Guid.NewGuid().ToString("N")[..8],
+            Title = body.Title.Trim(),
+            Description = body.Description?.Trim() ?? "",
+            BodyMarkdown = body.BodyMarkdown ?? "",
+            BodyHtmlSanitized = string.IsNullOrEmpty(body.BodyMarkdown)
+                ? ""
+                : _sanitizer.Sanitize(body.BodyMarkdown),
+            Status = "Draft",
+            ProposedBy = user.Id,
+            CreatedAt = now,
+            UpdatedAt = now,
+            Tags = body.Tags ?? Array.Empty<string>(),
+        };
+        db.Ideas.Add(idea);
+        db.SaveChanges();
+        return Created($"/api/v1/ideas/{idea.Id}", new
+        {
+            id = idea.Id,
+            title = idea.Title,
+            status = idea.Status,
+            proposedBy = idea.ProposedBy,
+        });
+    }
+
     [HttpGet("{id}")]
     public IActionResult GetById(string id)
     {
@@ -235,6 +270,11 @@ public sealed class IdeasController(
         userDirectory.GetById(currentUser.UserId ?? "");
 }
 
+public sealed record CreateIdeaRequest(
+    string? Title,
+    string? Description = null,
+    string? BodyMarkdown = null,
+    string[]? Tags = null);
 public sealed record UpdateIdeaRequest(string? BodyMarkdown, string? CoverImageUrl);
 public sealed record ChangeStatusRequest(string Status);
 public sealed record LinkIdeaPartnerRequest(string PartnerId, string? PartnerName = null);

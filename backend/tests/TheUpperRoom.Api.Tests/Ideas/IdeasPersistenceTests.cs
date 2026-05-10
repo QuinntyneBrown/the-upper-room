@@ -161,4 +161,43 @@ public sealed class IdeasPersistenceTests : IDisposable
         var json = await resp2.Content.ReadAsStringAsync();
         Assert.Contains("\"status\":\"Selected\"", json);
     }
+
+    private sealed record CreatedIdea(string Id, string Title, string Status, string ProposedBy);
+
+    [Fact]
+    public async Task Post_ideas_creates_draft_and_persists_across_restart()
+    {
+        string id;
+
+        await using (var factory = Factory())
+        {
+            var client = AuthedClient(factory, "member");
+            var resp = await client.PostAsJsonAsync("/api/v1/ideas",
+                new { title = "Build a community garden", description = "Outdoor space for prayer." });
+            Assert.Equal(HttpStatusCode.Created, resp.StatusCode);
+            var created = await resp.Content.ReadFromJsonAsync<CreatedIdea>();
+            Assert.NotNull(created);
+            Assert.Equal("Build a community garden", created!.Title);
+            Assert.Equal("Draft", created.Status);
+            Assert.Equal("member", created.ProposedBy);
+            id = created.Id;
+        }
+
+        await using var factory2 = Factory();
+        var resp2 = await AuthedClient(factory2, "member").GetAsync($"/api/v1/ideas/{id}");
+        Assert.Equal(HttpStatusCode.OK, resp2.StatusCode);
+        var json = await resp2.Content.ReadAsStringAsync();
+        Assert.Contains("\"title\":\"Build a community garden\"", json);
+        Assert.Contains("\"status\":\"Draft\"", json);
+    }
+
+    [Fact]
+    public async Task Post_ideas_with_blank_title_returns_422()
+    {
+        await using var factory = Factory();
+        var client = AuthedClient(factory, "member");
+
+        var resp = await client.PostAsJsonAsync("/api/v1/ideas", new { title = "  ", description = "" });
+        Assert.Equal(HttpStatusCode.UnprocessableEntity, resp.StatusCode);
+    }
 }

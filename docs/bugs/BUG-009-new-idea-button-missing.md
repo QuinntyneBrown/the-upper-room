@@ -1,10 +1,11 @@
-# BUG-009 — Idea list page has no "New idea" button
+# BUG-009 — Idea list page has no "New idea" button (RESOLVED 2026-05-10)
 
 **Severity**: Critical
-**Component**: frontend
+**Component**: frontend + backend
 **Found in test**: TC-8.5 (Submit a new idea)
 **User-guide refs**: §8.2
 **Found**: 2026-05-09
+**Status**: FIXED 2026-05-10 — IdeasController now exposes `POST /api/v1/ideas` (xUnit covered: create-draft + 422-on-blank-title); idea-list toolbar renders `idea-new-button` + inline title/description form that POSTs and prepends to the list. TC-8.5 PASS.
 
 ## Description
 
