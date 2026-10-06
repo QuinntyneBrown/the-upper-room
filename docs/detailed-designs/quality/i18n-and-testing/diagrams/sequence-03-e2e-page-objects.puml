@@ -1,0 +1,42 @@
+@startuml
+title UML sequence behaviour — E2E journey through a Page Object
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Developer" as actor
+box "Build — CI pipeline" #F2F4F7
+  participant "Playwright (Chromium)" as pw
+  participant "Spec file" as spec
+  participant "playwright-no-raw-locators" as rule
+  participant "SignInPage" as po
+end box
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "the-upper-room" as spa
+end box
+actor -> rule : Run lint
+rule -> spec : Scan for page.locator and page.getBy
+alt raw locator found
+  rule --> actor : Fail (L2-102)
+else only Page Objects used
+  rule --> actor : Pass
+end
+actor -> pw : Run tests
+pw -> spec : Execute scenario
+spec -> po : goto() then signIn(email, password)
+po -> spa : Locators and interactions
+spa --> po : Page state
+po --> spec : Result
+spec -> spec : Assert intent
+spec --> actor : Pass or fail
+@enduml

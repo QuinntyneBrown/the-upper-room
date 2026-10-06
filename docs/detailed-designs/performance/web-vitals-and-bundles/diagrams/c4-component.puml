@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Web vitals and bundle budgets
+
+System_Ext(ci, "CI service", "Runs build and Lighthouse-CI jobs")
+Container_Boundary(ng, "Angular CLI build") {
+  Component(bud, "angular.json budgets", "JSON configuration", "Size limits per bundle type")
+  Component(app, "Application builder", "Angular CLI", "Emits bundles and checks budgets")
+}
+Container_Boundary(lhci, "Lighthouse-CI") {
+  Component(cfg, ".lighthouserc.json", "JSON configuration", "URLs, assertions, upload target")
+  Component(run, "lhci autorun", "CLI", "Collects and asserts")
+  Component(cmp, "BaselineComparer (target)", "Script", "Fails on more than 10% regression")
+}
+Rel(app, bud, "Reads")
+Rel(run, cfg, "Reads")
+Rel(run, cmp, "Passes results to")
+@enduml

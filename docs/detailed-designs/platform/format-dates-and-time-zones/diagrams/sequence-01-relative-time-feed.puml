@@ -1,0 +1,40 @@
+@startuml
+title UML sequence behaviour — Relative time in the activity feed
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Viewer" as actor
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "Activity feed" as feed
+  participant "TarRelativeTime" as rt
+  participant "formatDate" as fd
+end box
+actor -> feed : Open feed
+feed -> rt : timestamp
+rt -> rt : Compute minutes since timestamp (L2-110)
+alt below 1 minute
+  rt --> feed : just now
+else below 60 minutes
+  rt --> feed : 5m ago
+else below 24 hours
+  rt --> feed : Nh ago
+else below 7 days
+  rt --> feed : Nd ago
+else 7 days or more
+  rt -> fd : Medium date with en-CA
+  fd --> rt : MMM d, y
+  rt --> feed : Absolute date
+end
+rt -> rt : Tick every 60 s
+@enduml

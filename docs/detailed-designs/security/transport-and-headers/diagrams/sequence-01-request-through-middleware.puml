@@ -1,0 +1,43 @@
+@startuml
+title UML sequence behaviour — Request through middleware
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "Browser" as br
+  participant "csrfInterceptor" as int
+end box
+box "Backend — TheUpperRoom.Api application" #D1FADF
+  participant "HttpsRedirect (target)" as https
+  participant "CsrfMiddleware" as csrf
+  participant "Security-header middleware" as hdr
+  participant "Controller" as ctrl
+end box
+actor -> br : Navigate or submit
+br -> https : Request
+alt scheme is HTTP
+  https --> br : 308 to HTTPS URL (L2-092)
+else HTTPS
+  https -> csrf : Next
+end
+alt method is GET and cookie absent
+  csrf -> br : Set-Cookie XSRF-TOKEN (SameSite=Strict)
+end
+csrf -> hdr : Next
+hdr -> ctrl : Next
+ctrl --> hdr : Response
+hdr -> hdr : Add HSTS, CSP, nosniff, Referrer-Policy, Permissions-Policy, COOP (L2-092)
+hdr --> br : Response with headers
+@enduml

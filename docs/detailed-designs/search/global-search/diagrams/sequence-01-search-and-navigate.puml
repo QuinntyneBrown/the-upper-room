@@ -1,0 +1,37 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Search and navigate
+actor "Signed-in user" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "GlobalSearch" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "SearchController" as ctrl
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "Application stores" as db
+end box
+actor -> page : Press Ctrl+K
+page --> actor : Dialog with focused input
+actor -> page : Type alice
+page -> page : Debounce 300 ms
+page -> ctrl : GET /api/v1/search?q=alice
+ctrl -> ctrl : Authenticate and apply city scope
+ctrl -> db : Query five entity types, take 5 each
+db --> ctrl : Matches
+ctrl --> page : SearchResult list
+alt no results
+page --> actor : search_off, No matches, Try different keywords or check your filters.
+else results
+page --> actor : Grouped rows per L2-060
+actor -> page : ArrowDown x3 and Enter
+page -> page : Navigate to SearchResult.Url
+end
+actor -> page : Press Esc
+page --> actor : Dialog closes
+@enduml

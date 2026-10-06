@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Show snackbars
+
+Person(member, "City member", "Performs actions and reads transient feedback")
+System(upperRoom, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, and boards")
+
+Rel(member, upperRoom, "Receives snackbar feedback from")
+@enduml

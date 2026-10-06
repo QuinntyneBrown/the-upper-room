@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Browse ideas
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(page, "IdeaList", "Angular component", "Grid, filter chips, sort, vote heart")
+  Component(token, "Ideas API contract and token", "Target role", "Typed access to /api/v1/ideas")
+}
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(ctrl, "IdeasController", "ASP.NET Core controller", "List and vote endpoints")
+}
+Container_Boundary(core, "Application and Domain") {
+  Component(ctx, "IIdeasDbContext", "Abstraction", "Ideas, Votes, Partners sets")
+  Component(idea, "Idea", "Domain entity", "Owns vote set and VoteCount")
+}
+ComponentDb(db, "IdeasDbContext", "EF Core", "Persists ideas and votes")
+Rel(page, token, "Calls")
+Rel(token, ctrl, "GET list, POST vote", "JSON/HTTPS")
+Rel(ctrl, ctx, "Queries")
+Rel(ctrl, idea, "Applies vote toggle")
+Rel(ctx, db, "Implemented by")
+@enduml

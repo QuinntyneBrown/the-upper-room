@@ -1,0 +1,29 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - View location detail
+actor "Member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "LocationDetail" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "LocationsController" as ctrl
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "LocationsDbContext" as db
+end box
+actor -> page : Open /locations/{id}
+page -> ctrl : GET /api/v1/locations/{id}
+ctrl -> db : Load location
+db --> ctrl : Location
+ctrl --> page : LocationDetailDto
+alt lat and lng present
+page --> actor : 320px map with centered marker, photos, capacity, notes
+else absent
+page --> actor : Placeholder No coordinates set. Edit location to add a map.
+end
+@enduml

@@ -1,0 +1,31 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Browse locations
+actor "Member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "LocationList" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "LocationsController" as ctrl
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "LocationsDbContext" as db
+end box
+actor -> page : Open /locations
+page -> ctrl : GET /api/v1/locations
+ctrl -> ctrl : Authenticate and resolve city scope
+ctrl -> db : Query locations
+db --> ctrl : Rows
+alt request fails
+ctrl --> page : Error response
+page --> actor : Feedback shown
+else success
+ctrl --> page : LocationDto list
+page --> actor : Grid per L2-058
+end
+@enduml

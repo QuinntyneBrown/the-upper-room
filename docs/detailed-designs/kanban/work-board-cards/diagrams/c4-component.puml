@@ -1,0 +1,33 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Work board cards
+Container_Boundary(browser, "Frontend - Upper Room") {
+Component(f0, "BoardView", "Angular page", "Columns, cards, CDK drag-and-drop")
+Component(f1, "BoardMoveSheetDialog", "Material dialog", "Compact-viewport move")
+Component(f2, "CardDetailDialog", "Material dialog", "Card editing")
+Component(f3, "IBoardsApi / ICardsApi", "Contracts (proposed)", "Typed clients; names `<TO SUPPLY>`")
+}
+Container_Boundary(backend, "Backend - Upper Room API, Application, Domain") {
+Component(b0, "CardsController", "ASP.NET Core controller", "Route api/v1/cards")
+Component(b1, "BoardsController", "ASP.NET Core controller", "Board detail")
+Component(b2, "MoveCardHandler", "MediatR handler", "WIP check and reposition")
+Component(b3, "PatchCardHandler", "MediatR handler", "Edit and archive")
+Component(b4, "DeleteCardHandler", "MediatR handler", "Delete")
+Component(b5, "KanbanCard", "Domain entity", "Card state")
+}
+ContainerDb(data, "Upper Room database", "KanbanDbContext", "Boards, columns, cards")
+Rel(f0, f2, "Opens")
+Rel(f0, f1, "Opens on compact viewports")
+Rel(f0, f3, "Loads and mutates")
+Rel(f2, f3, "Saves")
+Rel(f3, b0, "Calls", "JSON/HTTPS")
+Rel(f3, b1, "Loads board", "JSON/HTTPS")
+Rel(b0, b2, "Sends MoveCardCommand")
+Rel(b0, b3, "Sends PatchCardCommand")
+Rel(b0, b4, "Sends DeleteCardCommand")
+Rel(b2, b5, "Mutates")
+Rel(b2, data, "Persists", "EF Core")
+Rel(b3, data, "Persists", "EF Core")
+Rel(b4, data, "Removes", "EF Core")
+@enduml

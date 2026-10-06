@@ -1,0 +1,56 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Browse contacts
+interface "ContactPhone" as t0 <<existing interface>> {
+  readonly value: string
+  readonly label?: string
+  readonly primary: boolean
+  readonly value: string
+}
+class "ContactDetail" as t1 <<existing class>> {
+  private readonly http = inject(HttpClient)
+  private readonly route = inject(ActivatedRoute)
+  private readonly router = inject(Router)
+  private readonly titleService = inject(Title)
+}
+class "ContactsApiService" as t2 <<existing class>> {
+  private readonly http = inject(HttpClient)
+  private readonly baseUrl = inject(API_BASE_URL)
+  get(id: string): Observable<Contact>
+}
+class "ContactsController" as t3 <<existing class>> {
+  public async Task<IActionResult> List(
+  public async Task<ActionResult<Contact>> GetById(string id, [FromQuery] string? scope, CancellationToken cancellationToken)
+  public async Task<ActionResult<Contact>> Create([FromBody] CreateContactRequest? body, CancellationToken cancellationToken)
+  public async Task<IActionResult> Archive(string id, CancellationToken cancellationToken)
+}
+class "ListContactsHandler" as t4 <<existing class>> {
+  private readonly IContactsDbContext _db
+  private readonly IUserDirectory _users
+  private readonly IPermissionChecker _permissions
+  public ListContactsHandler(IContactsDbContext db, IUserDirectory users, IPermissionChecker permissions)
+}
+class "GetContactHandler" as t5 <<existing class>> {
+  private readonly IContactsDbContext _db
+  private readonly IUserDirectory _users
+  private readonly IPermissionChecker _permissions
+  public GetContactHandler(IContactsDbContext db, IUserDirectory users, IPermissionChecker permissions)
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+t0 ..> t3 : target collaboration
+t0 ..> t4 : target collaboration
+t0 ..> t5 : target collaboration
+
+@enduml

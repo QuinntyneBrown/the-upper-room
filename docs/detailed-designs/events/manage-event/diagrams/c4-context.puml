@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Manage event
+Person(member, "Member", "Views an event, responds with an RSVP, and exports it to a calendar")
+Person(organizer, "Organizer", "Creates and edits events and approves RSVPs")
+System(room, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+System_Ext(calendar, "Calendar application", "Imports the downloaded ICS file")
+Rel(member, room, "Responds to events using")
+Rel(organizer, room, "Manages events using")
+Rel(member, calendar, "Imports ICS file into")
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Configure notifications
+
+Container_Boundary(fe, "Frontend (domain library)") {
+  Component(page, "TarNotificationPreferences", "Angular component", "Table of codes by channel with debounced save")
+}
+Container_Boundary(api, "TheUpperRoom.Api and Application") {
+  Component(ctrl, "NotificationsController", "ASP.NET Core controller", "ListPreferences, UpsertPreference")
+  Component(list, "ListNotificationPreferencesHandler", "MediatR handler", "Returns preferences for the caller")
+  Component(upsert, "UpsertNotificationPreferenceHandler", "MediatR handler", "Creates or updates a PreferenceRow")
+  Component(entity, "NotificationPreference", "Domain entity", "InApp, Email, Push flags per code")
+  ComponentDb(db, "INotificationsDbContext", "EF Core", "Preferences set")
+}
+Rel(page, ctrl, "GET and PUT /preferences", "JSON/HTTPS")
+Rel(ctrl, list, "Sends ListNotificationPreferencesQuery")
+Rel(ctrl, upsert, "Sends UpsertNotificationPreferenceCommand")
+Rel(list, db, "Reads")
+Rel(upsert, db, "Inserts or updates")
+Rel(upsert, entity, "Persists as PreferenceRow")
+@enduml

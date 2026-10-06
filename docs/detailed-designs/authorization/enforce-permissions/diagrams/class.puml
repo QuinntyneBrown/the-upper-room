@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Enforce permissions
+class "PermissionsService" as t0 <<existing class>> {
+  readonly snapshot = signal<RbacSnapshot>(EMPTY_RBAC_SNAPSHOT)
+  set(snapshot: RbacSnapshot): void
+  setFromMe(me: Me): void
+  clear(): void
+}
+class "HasPermissionDirective" as t1 <<existing class>> {
+  private readonly tpl = inject(TemplateRef<unknown>)
+  private readonly vcr = inject(ViewContainerRef)
+  private readonly perms = inject(PERMISSIONS_SERVICE)
+  private current = ''
+}
+class "HasRoleDirective" as t2 <<existing class>> {
+  private readonly tpl = inject(TemplateRef<unknown>)
+  private readonly vcr = inject(ViewContainerRef)
+  private readonly perms = inject(PERMISSIONS_SERVICE)
+  private roles: readonly string[] = []
+}
+class "PermissionChecker" as t3 <<existing class>> {
+  public IReadOnlyCollection<Permission> PermissionsFor(string roleName)
+  public bool HasPermission(string roleName, string resource, string action)
+}
+class "RoleCatalog" as t4 <<existing class>> {
+  private static readonly string[] CityLeadResources =
+  private static readonly string[] CityLeadActions =
+  public static IReadOnlyCollection<RoleDefinition> All
+  public static IReadOnlyCollection<Permission> PermissionsFor(string roleName)
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+t0 ..> t3 : target collaboration
+t0 ..> t4 : target collaboration
+class "Proposed Enforce permissions application service" as proposed <<proposed responsibility>> {
+  +execute(request: FeatureRequest): FeatureOutcome
+}
+t0 ..> proposed : target application boundary
+
+@enduml

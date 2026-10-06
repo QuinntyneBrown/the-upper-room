@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Target behavior - Save partner
+actor "Member or authorized administrator" as actor
+box "Frontend - Upper Room application and libraries" #E0F2FE
+participant "PartnerEdit" as page
+participant "IPartnersApi" as client
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "PartnersController" as boundary
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Partner save command (target role)" as logic
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "InMemoryPartnersStore" as state
+end box
+actor -> page : Save partner
+page -> client : POST /api/v1/partners or PUT /api/v1/partners/{id} with the form payload
+client -> boundary : Authorized feature request
+boundary -> boundary : Authenticate and validate request shape
+alt invalid or forbidden request
+boundary --> client : Safe error and correlation identifier
+client --> page : Preserve input or previous state
+else accepted request
+boundary -> logic : Dispatch operation
+logic -> logic : Apply L2-034 and L2-037 rules and per-city name uniqueness
+logic -> state : Read or persist authorized state
+state --> logic : State or dependency result
+alt rule or dependency failure
+logic --> boundary : Rejected outcome
+boundary --> client : Mapped failure response
+client --> page : 409 with errors.name for a duplicate name, or field errors; input retained
+else success
+logic --> boundary : Outcome
+boundary --> client : Typed response
+client --> page : Persisted partner returned
+end
+end
+page --> actor : Result or recoverable feedback
+@enduml

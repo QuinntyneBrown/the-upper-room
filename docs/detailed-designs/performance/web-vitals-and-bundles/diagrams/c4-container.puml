@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Web vitals and bundle budgets
+
+Person(dev, "Developer", "Changes code and reviews CI results")
+System_Ext(ci, "CI service", "Runs build and Lighthouse-CI jobs")
+System_Boundary(trur, "The Upper Room") {
+  Container(ng, "Angular CLI build", "ng build", "Compiles and applies budgets")
+  Container(spa, "the-upper-room application", "Angular", "Served build output")
+  Container(lhci, "Lighthouse-CI", "Node.js", "Audits pages and compares to baseline")
+  ContainerDb(base, "Baseline store", "CI artifact storage", "Rolling 7-day vitals baseline")
+}
+Rel(dev, ng, "Runs", "CLI")
+Rel(ng, spa, "Produces", "Bundles")
+Rel(lhci, spa, "Loads under mobile profile", "Chrome")
+Rel(lhci, base, "Reads and writes", "<TO SUPPLY>")
+@enduml

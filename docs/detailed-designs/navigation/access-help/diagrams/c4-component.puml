@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Target components - Access help
+Container_Boundary(browser, "Frontend - Upper Room") {
+Component(f0, "Browser runtime", "Angular type", "Feature presentation or client behavior")
+}
+Container_Boundary(backend, "Backend - Upper Room API and Application") {
+Component(boundary, "UploadsController", "HTTP boundary", "Authentication and request translation")
+Component(logic, "Proposed Access help application service", "Application responsibility", "Validates scoped rules and coordinates state")
+}
+ContainerDb(data, "Feature persistence (target)", "Infrastructure adapter", "Authorized feature state")
+Rel(f0, boundary, "Submits or queries", "HTTPS")
+Rel(boundary, logic, "Dispatches validated request")
+Rel(logic, data, "Uses persistence interface")
+
+@enduml

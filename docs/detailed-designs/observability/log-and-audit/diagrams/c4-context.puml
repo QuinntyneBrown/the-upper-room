@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Log and audit
+Person(admin, "System administrator", "Reviews the audit trail")
+Person(ops, "Operator", "Reads structured logs")
+Person(member, "Member", "Performs actions that are logged and audited")
+System(room, "The Upper Room", "Emits structured JSON logs and records audit entries for data changes")
+System_Ext(sink, "Log collector", "Receives JSON console output <TO SUPPLY>")
+Rel(member, room, "Uses")
+Rel(admin, room, "Queries audit entries from")
+Rel(room, sink, "Writes JSON logs to", "stdout")
+Rel(ops, sink, "Searches")
+@enduml

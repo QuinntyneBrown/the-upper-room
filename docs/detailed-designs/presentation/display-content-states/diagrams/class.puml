@@ -1,0 +1,32 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Display content states
+class "TarEmptyState" as t0 <<existing class>> {
+}
+class "TarSkeleton" as t1 <<existing class>> {
+  rows(): number[]
+}
+class "TarListError" as t2 <<existing class>> {
+}
+interface "ContactPhone" as t3 <<existing interface>> {
+  readonly value: string
+  readonly label?: string
+  readonly primary: boolean
+  readonly value: string
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+t0 ..> t3 : target collaboration
+
+@enduml

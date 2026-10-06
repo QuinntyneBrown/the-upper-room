@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Show offline banner
+
+Person(member, "City member", "Sees the banner")
+System_Boundary(upperRoom, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "App shell hosting the offline banner below the top app bar")
+  Container(lib, "components library", "Angular library", "NetworkService, OfflineBanner, TarBanner")
+}
+System_Ext(browser, "Browser network events", "navigator.onLine, online and offline window events")
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, lib, "Imports", "TypeScript")
+Rel(lib, browser, "Listens to", "window events")
+@enduml

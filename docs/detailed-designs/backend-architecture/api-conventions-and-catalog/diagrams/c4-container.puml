@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - API conventions and catalog
+Person(member, "Member or administrator", "Uses the SPA")
+System_Boundary(room, "The Upper Room") {
+  Container(spa, "Upper Room web application", "Angular", "Calls the API through typed API services")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Controllers under api/v1; exception handler and problem details")
+  Container(app, "TheUpperRoom.Application", "Class library", "Handlers and validators behind each endpoint")
+  ContainerDb(db, "Feature databases", "SQLite", "Persist feature state")
+}
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, app, "Sends requests through MediatR")
+Rel(app, db, "Reads and writes", "EF Core")
+@enduml

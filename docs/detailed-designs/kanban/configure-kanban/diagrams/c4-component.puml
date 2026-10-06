@@ -1,0 +1,24 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Configure kanban
+Container_Boundary(browser, "Frontend - Upper Room") {
+Component(f0, "BoardConfigure", "Angular page", "Board, column, swimlane, and schema editing")
+Component(f1, "MoveCardsDialog", "Material dialog", "Choose destination column")
+Component(f2, "IBoardsApi", "Contract (proposed)", "Typed client; name `<TO SUPPLY>`")
+}
+Container_Boundary(backend, "Backend - Upper Room API, Application, Domain") {
+Component(b0, "BoardsController", "ASP.NET Core controller", "Route api/v1/boards")
+Component(b1, "Board configuration handlers", "Application (proposed)", "Validate and apply configuration")
+Component(b2, "KanbanBoard", "Domain entity", "Owns columns, swimlanes, schema")
+Component(b3, "KanbanColumn", "Domain entity", "Name, order, color, WIP limit")
+}
+ContainerDb(data, "Upper Room database", "KanbanDbContext", "Boards, columns, cards")
+Rel(f0, f1, "Opens")
+Rel(f0, f2, "Submits configuration")
+Rel(f2, b0, "Calls", "JSON/HTTPS")
+Rel(b0, b1, "Dispatches")
+Rel(b1, b2, "Mutates")
+Rel(b1, b3, "Mutates")
+Rel(b1, data, "Persists", "EF Core")
+@enduml

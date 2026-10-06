@@ -1,0 +1,35 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Record an audit entry when a contact changes
+actor "Member or administrator" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "ContactEdit" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "ContactsController" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "UpdateContactHandler" as handler
+participant "AuditStore" as store
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "ContactsDbContext" as db
+end box
+actor -> page : Save an edited phone number
+page -> ctrl : PUT /api/v1/contacts/{id}
+ctrl -> handler : Send UpdateContactRequest
+handler -> db : Load contact and capture before JSON
+handler -> db : Save changes
+db --> handler : Saved
+handler -> store : Record(actor, "Contact", id, "Update", before, after) (L2-098)
+store --> handler : Entry appended
+handler --> ctrl : Updated contact
+ctrl --> page : 200 response
+page --> actor : Confirmation
+@enduml

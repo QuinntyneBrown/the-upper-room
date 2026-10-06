@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Global search
+Person(member, "Signed-in user", "Searches records")
+System_Boundary(room, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "Global search dialog")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Search endpoint")
+  ContainerDb(db, "Application stores", "EF Core", "Contacts, partners, events, ideas, locations")
+}
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads", "EF Core")
+@enduml

@@ -1,0 +1,44 @@
+@startuml
+title UML sequence behaviour — Nightly load test
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "CI scheduler" as actor
+box "Build — CI pipeline" #F2F4F7
+  participant "k6-nightly workflow" as wf
+  participant "k6 contacts-list.js" as k6
+end box
+box "Backend — TheUpperRoom.Api application" #D1FADF
+  participant "ContactsController" as ctrl
+end box
+box "Backend — TheUpperRoom Infrastructure" #FFF4E5
+  database "Contacts database" as db
+end box
+actor -> wf : Cron 02:00 UTC
+wf -> ctrl : Start API (dotnet run)
+wf -> k6 : k6 run
+loop 5 minutes at 50 RPS
+  k6 -> ctrl : GET /api/v1/contacts?page=1&pageSize=25
+  ctrl -> db : Query page
+  db --> ctrl : Rows
+  ctrl --> k6 : 200
+end
+k6 -> k6 : Evaluate p(95)<300 and error rate<0.01 (L2-091)
+alt thresholds crossed
+  k6 --> wf : Non-zero exit
+  wf --> actor : Run failed
+else within thresholds
+  k6 --> wf : Exit 0
+end
+@enduml

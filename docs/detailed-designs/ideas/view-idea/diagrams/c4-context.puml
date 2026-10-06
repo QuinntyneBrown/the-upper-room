@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - View idea
+Person(member, "Member", "Reads, votes on, and comments on an idea")
+Person(lead, "CityLead or higher", "Reviews an idea and changes its status")
+System(room, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+Rel(member, room, "Views ideas using")
+Rel(lead, room, "Changes idea status using")
+@enduml

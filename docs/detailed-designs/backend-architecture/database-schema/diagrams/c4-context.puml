@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Database schema
+Person(dev, "Backend developer", "Defines entity mappings and applies schema changes")
+Person(member, "Member or administrator", "Reads and writes data through the application")
+System(room, "The Upper Room", "Persists city-scoped entities with audit columns and concurrency tokens")
+SystemDb_Ext(sql, "SQL Server", "Target relational store for the full schema")
+Rel(dev, room, "Maintains schema of")
+Rel(member, room, "Uses")
+Rel(room, sql, "Targets with AppDbContext", "EF Core")
+@enduml

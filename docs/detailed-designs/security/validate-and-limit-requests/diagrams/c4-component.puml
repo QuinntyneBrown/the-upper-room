@@ -1,0 +1,24 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Validate, sanitize, and rate-limit requests
+
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(ac, "AuthController", "ASP.NET Core controller", "Sign-in and 429 responses")
+  Component(rl, "AuthRateLimiter", "IAuthRateLimiter", "Tracks failed attempts and lockout")
+  Component(veh, "ValidationExceptionHandler", "IExceptionHandler", "Maps validation failures to ProblemDetails")
+  ComponentDb(cache, "Distributed cache", "Redis or memory", "Bucket storage")
+}
+Container_Boundary(app, "TheUpperRoom.Application") {
+  Component(val, "CreateNoteCommandValidator", "FluentValidation", "Validates note commands")
+  Component(h, "CreateNoteHandler", "MediatR handler", "Sanitizes then stores")
+  Component(san, "NotesSanitizer", "Ganss.Xss HtmlSanitizer", "Allow-list sanitizer")
+  ComponentDb(ndb, "Notes database", "SQLite", "Stores sanitized HTML")
+}
+Rel(ac, rl, "Checks and records via")
+Rel(rl, cache, "Reads and writes", "IDistributedCache")
+Rel(veh, val, "Reports failures of")
+Rel(h, val, "Validated by")
+Rel(h, san, "Sanitizes with")
+Rel(h, ndb, "Stores", "EF Core")
+@enduml

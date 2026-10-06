@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Install as a PWA
+
+Person(user, "Member", "Installs and launches the application")
+System_Boundary(trur, "The Upper Room") {
+  Container(br, "Browser", "Chrome, Edge, Safari", "Install prompt and Cache Storage")
+  Container(spa, "the-upper-room application", "Angular", "Pages, manifest, offline banner")
+  Container(sw, "Service worker", "JavaScript sw.js", "Shell cache and push")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "JSON API")
+}
+Rel(user, br, "Installs from", "HTTPS")
+Rel(br, sw, "Runs", "Service Worker API")
+Rel(br, spa, "Hosts", "HTML")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+@enduml

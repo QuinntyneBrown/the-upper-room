@@ -1,0 +1,25 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Navigate the calendar
+actor "Member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "EventList" as page
+participant "CalendarMonth" as cal
+end box
+actor -> cal : Click Today
+cal -> cal : Apply L2-054 navigate to current month and select today
+cal --> actor : Today highlighted, selected day outlined
+actor -> cal : Click +2 more
+cal -> cal : Collect events of the day
+cal --> actor : Popover lists all events of the day
+actor -> page : Choose Week, Day, or Agenda
+page -> cal : Change view mode
+cal --> actor : Rendered view
+actor -> cal : Click event
+cal -> page : Navigate to /events/{id}
+@enduml

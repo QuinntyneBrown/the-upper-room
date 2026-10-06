@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Upload files
+
+Person(user, "Member", "Uploads an image")
+System(trur, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+System_Ext(av, "Malware scanner", "ClamAV or hosted equivalent")
+System_Ext(obj, "Object storage", "Stores uploaded objects and issues signed URLs")
+
+Rel(user, trur, "Uploads files to", "HTTPS")
+Rel(trur, av, "Scans files with", "<TO SUPPLY>")
+Rel(trur, obj, "Stores files in", "<TO SUPPLY>")
+@enduml

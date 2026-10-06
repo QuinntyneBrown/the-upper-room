@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Target behavior - Select or create tag
+actor "Member" as actor
+box "Frontend - Upper Room application and libraries" #E0F2FE
+participant "TarTagSelector" as page
+participant "ITagsApi" as client
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "TagsController" as boundary
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Search and create tag handlers (target role)" as logic
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "Upper Room database" as state
+end box
+actor -> page : Select or create tag
+page -> client : GET /api/v1/tags with the typed prefix, then POST /api/v1/tags on Enter when no match exists
+client -> boundary : Authorized feature request
+boundary -> boundary : Authenticate and validate request shape
+alt invalid or forbidden request
+boundary --> client : Safe error and correlation identifier
+client --> page : Preserve input or previous state
+else accepted request
+boundary -> logic : Dispatch operation
+logic -> logic : Apply L2-040 Tag:Create permission to creation
+logic -> state : Read or persist authorized state
+state --> logic : State or dependency result
+alt rule or dependency failure
+logic --> boundary : Rejected outcome
+boundary --> client : Mapped failure response
+client --> page : Creation hint hidden without Tag:Create; only matches are clickable
+else success
+logic --> boundary : Outcome
+boundary --> client : Typed response
+client --> page : Matching tags with color dots, or the newly created tag as a chip
+end
+end
+page --> actor : Result or recoverable feedback
+@enduml

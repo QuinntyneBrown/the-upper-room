@@ -1,0 +1,8 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Display content states
+Person(member, "Member or authorized administrator", "Uses this capability within the permitted city scope")
+System(room, "The Upper Room", "A content state distinguishes pending data, a successful empty result, a populated result, and a failed request")
+Rel(member, room, "Display content states")
+@enduml

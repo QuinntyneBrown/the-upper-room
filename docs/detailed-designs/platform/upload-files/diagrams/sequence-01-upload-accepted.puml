@@ -1,0 +1,45 @@
+@startuml
+title UML sequence behaviour — Upload an accepted file
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "TarAvatarUploader" as ui
+end box
+box "Backend — TheUpperRoom.Api application" #D1FADF
+  participant "UploadsController" as ctrl
+end box
+box "Backend — TheUpperRoom Application and Domain" #ECFDF3
+  participant "UploadFileHandler" as h
+  participant "ContentSniffer (target)" as sn
+  participant "MalwareScanner (target)" as sc
+end box
+box "Backend — TheUpperRoom Infrastructure" #FFF4E5
+  participant "ObjectStore (target)" as st
+end box
+actor -> ui : Choose image
+ui -> ctrl : POST /api/v1/uploads multipart/form-data
+ctrl -> h : Send UploadFileCommand
+h -> h : Check user, file present, size (L2-113)
+h -> sn : Sniff MIME from content
+sn --> h : image/png
+h -> sc : Scan stream
+sc --> h : Clean
+h -> st : Store under random key
+st --> h : Signed URL valid 7 days
+h --> ctrl : Uploaded with url
+ctrl --> ui : 200 { url }
+ui --> actor : Show uploaded image
+@enduml

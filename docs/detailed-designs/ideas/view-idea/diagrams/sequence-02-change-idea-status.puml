@@ -1,0 +1,39 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Change idea status
+actor "Proposer or CityLead" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "IdeaDetail" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "IdeasController" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Idea" as entity
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "IdeasDbContext" as db
+end box
+actor -> page : Click Submit for review or Change status
+page -> ctrl : POST /api/v1/ideas/{id}/status
+ctrl -> ctrl : Authenticate and authorize role
+ctrl -> db : Load idea
+db --> ctrl : Idea
+ctrl -> entity : Apply status transition
+alt transition rejected
+entity --> ctrl : Rejected
+ctrl --> page : Error response
+page --> actor : Status unchanged and feedback shown
+else accepted
+entity --> ctrl : New status
+ctrl -> db : Save changes
+db --> ctrl : Commit result
+ctrl --> page : Updated IdeaDto
+page --> actor : Updated status chip and actions
+end
+@enduml

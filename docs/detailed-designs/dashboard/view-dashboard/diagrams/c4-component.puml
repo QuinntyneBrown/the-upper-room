@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - View dashboard
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(page, "Dashboard", "Angular component", "Header, stat cards, list cards")
+}
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(ctrl, "DashboardController", "ASP.NET Core controller", "GET api/v1/dashboard")
+}
+Container_Boundary(core, "Application") {
+  Component(handler, "GetDashboardHandler", "MediatR handler", "Aggregates counts and lists")
+  Component(users, "IUserDirectory", "Abstraction", "Resolves the user")
+  Component(perm, "IPermissionChecker", "Abstraction", "City switch permission")
+  Component(sources, "Contacts, Events, Ideas, Kanban, Partners abstractions", "Abstractions", "IContactsDbContext, IEventsDbContext, IIdeasDbContext, IKanbanDbContext, IPartnersStore")
+}
+Rel(page, ctrl, "GET dashboard", "JSON/HTTPS")
+Rel(ctrl, handler, "Sends GetDashboardQuery")
+Rel(handler, users, "Resolves user with")
+Rel(handler, perm, "Checks scope with")
+Rel(handler, sources, "Reads")
+@enduml

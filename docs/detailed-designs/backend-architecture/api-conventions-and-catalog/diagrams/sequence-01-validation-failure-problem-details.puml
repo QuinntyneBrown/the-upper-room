@@ -1,0 +1,42 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Validation failure returns problem details
+actor "Member or administrator" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "Page" as page
+participant "API service" as client
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "Correlation middleware" as corr
+participant "AuditController" as ctrl
+participant "ValidationExceptionHandler" as exh
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "ValidationBehavior" as vb
+participant "ListAuditEntriesHandler" as handler
+end box
+actor -> page : Open the audit list
+page -> client : Build request with page and pageSize
+client -> corr : GET /api/v1/admin/audit?page=0
+corr -> ctrl : Forward with X-Correlation-Id scope
+ctrl -> vb : Send ListAuditEntriesQuery
+vb -> vb : Validate page and pageSize (L2-076)
+alt invalid paging parameters
+vb --> exh : throw ValidationException
+exh --> client : 400 application/problem+json with errors dictionary
+client --> page : Typed validation error
+else valid parameters
+vb -> handler : next()
+handler --> vb : Result with Items, Total, Page, PageSize
+vb --> ctrl : Result
+ctrl --> client : 200 with paged body
+client --> page : Page of audit entries
+end
+page --> actor : List or error feedback
+@enduml

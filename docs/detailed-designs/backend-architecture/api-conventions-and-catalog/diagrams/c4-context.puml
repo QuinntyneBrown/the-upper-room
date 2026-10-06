@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - API conventions and catalog
+Person(member, "Member or administrator", "Uses the web application that calls the API")
+Person(integrator, "API consumer", "Reads the endpoint catalog and the OpenAPI document")
+System(room, "The Upper Room", "Exposes a REST API under /api/v1 with problem-details errors and a paged envelope")
+Rel(member, room, "Uses")
+Rel(integrator, room, "Calls endpoints of", "JSON/HTTPS")
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Browse boards
+class BoardList <<existing>>
+class Board <<existing>>
+class CreateBoardWizard <<existing>>
+class CreateBoardForm <<existing>>
+class BoardsController <<existing>> {
+  +List()
+  +Create(body: CreateBoardRequest)
+}
+class BoardListItem <<existing>>
+class CreateBoardRequest <<existing>>
+class KanbanBoard <<existing>> {
+  +string Name
+  +string? Description
+}
+interface IBoardsApi <<proposed>>
+BoardList --> "*" Board
+BoardList ..> CreateBoardWizard : opens
+CreateBoardWizard --> CreateBoardForm
+BoardList ..> IBoardsApi
+IBoardsApi ..> BoardsController : calls
+BoardsController ..> BoardListItem : returns
+BoardsController ..> CreateBoardRequest : accepts
+BoardsController ..> KanbanBoard : creates
+@enduml

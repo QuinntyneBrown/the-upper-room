@@ -1,0 +1,28 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Notification inbox
+
+Container_Boundary(fe, "Frontend (domain library)") {
+  Component(bell, "TarNotificationBell", "Angular component", "Badge, tabs, rows, mark read, deep-link navigation")
+}
+Container_Boundary(api, "TheUpperRoom.Api and Application") {
+  Component(ctrl, "NotificationsController", "ASP.NET Core controller", "List, MarkRead, MarkAllRead, Dispatch")
+  Component(list, "ListNotificationsHandler", "MediatR handler", "Returns the caller's notifications")
+  Component(read, "MarkNotificationReadHandler", "MediatR handler", "Marks one notification read")
+  Component(readAll, "MarkAllNotificationsReadHandler", "MediatR handler", "Marks all caller notifications read")
+  Component(dispatch, "DispatchNotificationHandler", "MediatR handler", "Renders catalog copy and fans out by channel")
+  Component(catalog, "NotificationCatalog", "Domain static catalog", "Fourteen notification types with copy and severity")
+  ComponentDb(db, "INotificationsDbContext", "EF Core", "NotificationRow and PreferenceRow sets")
+}
+Rel(bell, ctrl, "GET, POST read, POST read-all", "JSON/HTTPS")
+Rel(ctrl, list, "Sends ListNotificationsQuery")
+Rel(ctrl, read, "Sends MarkNotificationReadCommand")
+Rel(ctrl, readAll, "Sends MarkAllNotificationsReadCommand")
+Rel(ctrl, dispatch, "Sends DispatchNotificationCommand")
+Rel(dispatch, catalog, "Looks up NotificationType")
+Rel(list, db, "Reads")
+Rel(read, db, "Updates")
+Rel(readAll, db, "Updates")
+Rel(dispatch, db, "Inserts NotificationRow")
+@enduml

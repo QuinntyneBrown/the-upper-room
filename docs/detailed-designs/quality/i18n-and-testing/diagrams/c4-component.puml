@@ -1,0 +1,25 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Localization keys, coverage gates, and e2e conventions
+
+System_Ext(ci, "CI service", "Runs lint, test, coverage, and e2e jobs")
+Container_Boundary(lint, "ESLint plugin") {
+  Component(r1, "i18n-no-literal", "ESLint rule", "Flags literal strings")
+  Component(r2, "playwright-no-raw-locators", "ESLint rule", "Flags raw locators in specs")
+}
+Container_Boundary(e2e, "Playwright e2e suite") {
+  Component(spec, "tests/{feature}/{scenario}.spec.ts", "Playwright spec", "States intent; starts with Traces to comment")
+  Component(po, "pages/{Name}Page.ts", "Page Object", "goto, locators, actions")
+}
+Container_Boundary(spa, "the-upper-room application") {
+  Component(pipe, "TranslocoPipe", "Angular pipe", "Looks up key")
+  Component(ts, "TranslateService", "Angular service", "Resolves key for locale")
+  Component(dict, "DICTIONARIES", "TypeScript constant", "en-CA strings")
+}
+Rel(spec, po, "Calls")
+Rel(r2, spec, "Checks", "AST")
+Rel(r1, pipe, "Requires use of")
+Rel(pipe, ts, "Calls")
+Rel(ts, dict, "Reads")
+@enduml

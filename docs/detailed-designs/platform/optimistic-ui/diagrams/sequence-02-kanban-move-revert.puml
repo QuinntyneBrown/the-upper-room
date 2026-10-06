@@ -1,0 +1,42 @@
+@startuml
+title UML sequence behaviour — Kanban move reverts on failure
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "BoardView page" as page
+  participant "optimisticMutation" as om
+  participant "SnackbarService" as sn
+end box
+box "Backend — TheUpperRoom.Api application" #D1FADF
+  participant "Kanban controller" as ctrl
+end box
+box "Backend — TheUpperRoom Application and Domain" #ECFDF3
+  participant "MoveCardCommandValidator" as val
+end box
+actor -> page : Drop card in target column
+page -> om : board state with card moved
+om -> om : Apply move optimistically (L2-114)
+om -> ctrl : PATCH move card
+ctrl -> val : Validate
+alt server failure
+  ctrl --> om : 500
+  om -> om : Restore card to source column
+  om -> page : onError
+  page -> sn : show("Couldn't save. Try again.", error)
+else success
+  ctrl --> om : 200
+end
+@enduml

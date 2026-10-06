@@ -1,0 +1,36 @@
+@startuml
+title UML sequence behaviour — Scan accessibility
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Developer" as actor
+box "Build — CI pipeline" #F2F4F7
+  participant "a11y.spec.ts" as spec
+  participant "AxeBuilder" as axe
+end box
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "Rendered page" as page
+end box
+actor -> spec : Run Playwright suite (Chromium)
+spec -> page : Navigate and seed test session
+spec -> axe : analyze() with wcag2a, wcag2aa, wcag21a, wcag21aa
+axe -> page : Inspect names, roles, contrast (L2-086, L2-088)
+page --> axe : Violations
+axe --> spec : Serious and critical violations
+alt violations empty
+  spec --> actor : Pass
+else violations present
+  spec --> actor : Fail with rule ids and nodes
+end
+@enduml

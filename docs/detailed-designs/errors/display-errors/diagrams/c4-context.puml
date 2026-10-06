@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Display errors
+
+Person(member, "City member", "Sees errors and recovery hints while working")
+System(upperRoom, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, and boards")
+System_Ext(telemetry, "Telemetry service", "Receives error reports <TO SUPPLY>")
+
+Rel(member, upperRoom, "Receives error feedback from")
+Rel(upperRoom, telemetry, "Reports errors with correlation ID to")
+@enduml

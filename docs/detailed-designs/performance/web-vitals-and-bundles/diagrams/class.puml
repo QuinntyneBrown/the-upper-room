@@ -1,0 +1,40 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Web vitals and bundle budgets
+class BudgetRule {
+  +type: "initial" | "anyComponentStyle" | "anyComponentStyle" | "bundle"
+  +maximumWarning: string
+  +maximumError: string
+}
+class LighthouseConfig {
+  +urls: string[]
+  +numberOfRuns: int
+  +assertions: Map<string, Assertion>
+}
+class Assertion {
+  +level: "warn" | "error"
+  +maxNumericValue: number
+}
+class BaselineComparer <<target>> {
+  +compare(current: Vitals, baseline: Vitals): Result
+  +thresholdPercent: 10
+}
+class Vitals {
+  +lcpMs: number
+  +tbtMs: number
+  +cls: number
+  +inpMs: number
+}
+LighthouseConfig "1" *-- "*" Assertion
+BaselineComparer ..> Vitals : compares
+BaselineComparer ..> LighthouseConfig : follows
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Validate event schedule
+actor "Organizer" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "EventForm" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "EventsController" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Event" as entity
+end box
+actor -> page : Save event
+page -> ctrl : POST or PUT /api/v1/events
+ctrl -> ctrl : Authenticate and validate request shape
+ctrl -> entity : Apply L2-052 schedule rule
+alt endsAt before startsAt
+entity --> ctrl : Domain error
+ctrl --> page : 400 End time must be after start time.
+page --> actor : Retain input and show error
+else valid
+entity --> ctrl : Valid event
+ctrl --> page : Typed response
+page --> actor : Saved event
+end
+@enduml

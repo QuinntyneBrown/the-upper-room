@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Validate, sanitize, and rate-limit requests
+
+Person(user, "Member", "Submits notes and signs in")
+Person(att, "Abusive client", "Sends unsafe markup or excess requests")
+System(trur, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+
+Rel(user, trur, "Submits data to", "HTTPS")
+Rel(att, trur, "Attempts injection and brute force against", "HTTPS")
+@enduml

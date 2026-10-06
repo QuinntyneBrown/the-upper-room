@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Transport, headers, secrets, and CSRF
+
+Person(user, "Member", "Uses the web application")
+System_Ext(kv, "Key vault", "Holds production secrets (Azure Key Vault or equivalent)")
+System_Boundary(trur, "The Upper Room") {
+  Container(spa, "the-upper-room application", "Angular", "Reads XSRF cookie; sends X-XSRF-TOKEN")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Header, CSRF, and logging middleware")
+  ContainerDb(cfg, "Configuration", "Environment variables, key vault", "Secrets and settings")
+}
+Rel(user, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, cfg, "Reads secrets", "IConfiguration")
+Rel(cfg, kv, "Backed by", "<TO SUPPLY>")
+@enduml

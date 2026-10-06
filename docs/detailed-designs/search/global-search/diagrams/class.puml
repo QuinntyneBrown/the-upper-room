@@ -1,0 +1,30 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Global search
+class SearchController {
+  -int MaxPerGroup
+  +Search(q: string?): IActionResult
+}
+class SearchResult {
+  +string Id
+  +string Type
+  +string Title
+  +string? Subtitle
+  +string Url
+}
+class GlobalSearch {
+  +ngAfterViewInit(): void
+  +ngOnDestroy(): void
+}
+GlobalSearch ..> SearchController : HTTP
+SearchController "1" --> "*" SearchResult : returns up to 5 per group
+@enduml

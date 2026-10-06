@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Keyboard and focus
+
+Person(user, "Keyboard member", "Navigates with Tab, Enter, Space, and Escape")
+System(trur, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+
+Rel(user, trur, "Operates by keyboard", "HTTPS")
+@enduml

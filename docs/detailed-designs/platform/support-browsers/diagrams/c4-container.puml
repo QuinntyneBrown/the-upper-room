@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Support browsers
+
+Person(user, "Member", "Opens the application in any browser")
+System_Boundary(trur, "The Upper Room") {
+  Container(br, "Browser", "Any", "Reports user agent")
+  Container(spa, "the-upper-room application", "Angular", "Detector and banner")
+  Container(lib, "components library", "Angular library", "Banner component")
+}
+Rel(user, br, "Uses")
+Rel(br, spa, "Loads", "HTTPS")
+Rel(spa, lib, "Renders banner from", "TypeScript")
+@enduml

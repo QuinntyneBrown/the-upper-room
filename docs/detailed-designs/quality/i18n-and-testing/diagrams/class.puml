@@ -1,0 +1,43 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Localization keys, coverage gates, and e2e conventions
+class TranslateService {
+  +locale: Signal<string>
+  +translate(key: string): string
+}
+class TranslocoPipe {
+  +transform(key: string): string
+}
+class DICTIONARIES <<constant>> {
+  +en-CA: Record<string,string>
+  +xx-XX: Record<string,string>
+}
+class PageObject <<pattern>> {
+  +goto(): Promise<void>
+  +locator functions
+  +action methods
+}
+class SignInPage
+class ContactFormPage
+class Spec <<pattern>> {
+  +Traces to comment
+}
+class CoverageThreshold {
+  +project: string
+  +lineThreshold: int
+}
+TranslocoPipe ..> TranslateService : calls
+TranslateService ..> DICTIONARIES : reads
+PageObject <|-- SignInPage
+PageObject <|-- ContactFormPage
+Spec ..> PageObject : depends only on
+@enduml

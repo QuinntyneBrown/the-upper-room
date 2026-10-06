@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — API performance targets
+
+Person(dev, "Developer", "Changes code and reviews CI results")
+System_Ext(ci, "CI scheduler", "Triggers the nightly workflow")
+System_Boundary(trur, "The Upper Room") {
+  Container(k6, "k6 scripts", "k6 JavaScript", "Load scenarios and thresholds")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "List and detail endpoints; notification dispatch")
+  ContainerDb(db, "Service databases", "SQLite via EF Core", "Persisted resources")
+}
+Rel(ci, k6, "Runs nightly", "GitHub Actions")
+Rel(k6, api, "Sends 50 RPS to", "HTTP")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(dev, k6, "Maintains", "Git")
+@enduml

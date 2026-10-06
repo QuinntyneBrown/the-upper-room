@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Show snackbars
+
+Person(member, "City member", "Reads transient feedback")
+System_Boundary(upperRoom, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "Hosts the snackbar and the pages that raise it")
+  Container(lib, "components library", "Angular library", "Provides SnackbarService and TarSnackbar")
+}
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, lib, "Imports", "TypeScript")
+@enduml

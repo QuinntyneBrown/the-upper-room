@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Browse boards
+Container_Boundary(browser, "Frontend - Upper Room") {
+Component(f0, "BoardList", "Angular page", "Responsive grid and empty state")
+Component(f1, "CreateBoardWizard", "Material dialog", "Collects the new board data")
+Component(f2, "IBoardsApi", "Contract (proposed)", "Typed client; name `<TO SUPPLY>`")
+}
+Container_Boundary(backend, "Backend - Upper Room API, Application, Domain") {
+Component(b0, "BoardsController", "ASP.NET Core controller", "List and create boards")
+Component(b1, "KanbanBoard", "Domain entity", "Created by the request")
+}
+ContainerDb(data, "Upper Room database", "KanbanDbContext", "Boards")
+Rel(f0, f1, "Opens")
+Rel(f0, f2, "Loads and creates")
+Rel(f2, b0, "Calls", "JSON/HTTPS")
+Rel(b0, b1, "Creates")
+Rel(b0, data, "Reads and writes", "EF Core")
+@enduml

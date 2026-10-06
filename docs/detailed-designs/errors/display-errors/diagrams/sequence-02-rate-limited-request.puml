@@ -1,0 +1,26 @@
+@startuml
+title UML sequence behaviour — Rate-limited request (target)
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "City member" as actor
+box "Frontend — The Upper Room web app" #E0F2FE
+  participant "Feature page" as page
+  participant "errorInterceptor" as err
+end box
+box "Frontend — components library" #E0F2FE
+  participant "SnackbarService" as snack
+end box
+box "Backend — TheUpperRoom.Api" #D1FADF
+  participant "API endpoint" as api
+end box
+actor -> page : Click action button
+page -> api : HTTP request
+api --> err : 429 with Retry-After
+err -> snack : show("Too many requests.", 'error') (L2-066)
+snack --> actor : Error snackbar
+err --> page : Rethrow error with retryAfter <TO SUPPLY>
+page --> actor : Disable button and show countdown for Retry-After seconds (L2-066)
+@enduml

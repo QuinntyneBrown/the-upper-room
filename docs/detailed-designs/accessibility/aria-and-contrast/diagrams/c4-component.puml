@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — ARIA roles and color contrast
+
+Container_Boundary(lib, "components library") {
+  Component(ib, "tar-icon-button", "Angular component", "Applies aria-label")
+  Component(sn, "tar-snackbar", "Angular component", "Chooses live-region role by severity")
+  Component(svc, "SnackbarService", "Angular service", "Queues messages with severity")
+  Component(chip, "chip", "Angular component", "Renders color, icon, and label")
+  Component(tabs, "tabs", "Angular component", "Exposes tab roles")
+}
+Container_Boundary(e2e, "Playwright e2e suite") {
+  Component(axe, "a11y.spec.ts", "axe-core", "Fails on serious or critical violations")
+}
+Rel(svc, sn, "Publishes current item to", "Signal")
+Rel(axe, sn, "Scans", "DOM")
+Rel(axe, chip, "Scans", "DOM")
+Rel(axe, ib, "Scans", "DOM")
+@enduml

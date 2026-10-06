@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Database schema
+Person(dev, "Backend developer", "Maintains mappings")
+System_Boundary(room, "The Upper Room backend") {
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Creates SQLite databases at startup with EnsureCreated")
+  Container(infra, "TheUpperRoom.Infrastructure", "EF Core", "Per-feature DbContexts, AppDbContext, and entity configurations")
+  Container(domain, "TheUpperRoom.Domain", "Class library", "Entities with audit fields, row version, and city scope")
+  ContainerDb(sqlite, "Feature databases", "SQLite", "cities.db, contacts.db, events.db, ideas.db, locations.db, notes.db, kanban.db, notifications.db, push.db, users.db")
+  ContainerDb(sqlserver, "TheUpperRoom database", "SQL Server", "Target schema through AppDbContext; migrations are not yet present")
+}
+Rel(dev, infra, "Edits configurations in")
+Rel(api, infra, "Registers and initializes")
+Rel(infra, domain, "Maps")
+Rel(infra, sqlite, "Reads and writes", "EF Core SQLite")
+Rel(infra, sqlserver, "Optionally targets", "EF Core SqlServer")
+@enduml

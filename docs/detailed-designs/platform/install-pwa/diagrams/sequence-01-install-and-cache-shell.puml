@@ -1,0 +1,30 @@
+@startuml
+title UML sequence behaviour — Install and cache the shell
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Browser platform" #F4EBFF
+  participant "Browser" as br
+  participant "Service worker" as sw
+  database "Cache Storage" as cch
+end box
+actor -> br : Visit application
+br -> br : Read manifest and check install criteria (L2-117)
+br -> sw : Register and install
+sw -> cch : Add shell
+sw -> sw : skipWaiting and claim clients
+br --> actor : Install prompt eligible
+actor -> br : Install
+@enduml

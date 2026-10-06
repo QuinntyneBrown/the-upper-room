@@ -1,0 +1,65 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Database schema
+
+abstract class Entity {
+  +string Id
+}
+abstract class AuditableEntity {
+  +DateTimeOffset CreatedAt
+  +string CreatedBy
+  +DateTimeOffset UpdatedAt
+  +string UpdatedBy
+  +byte[] Version
+  +ClearDomainEvents(): void
+  +SetVersion(version: byte[]): void
+}
+abstract class CityScopedAuditableEntity {
+  +string CityId
+}
+class Contact {
+  +DateTimeOffset? DeletedAt
+  +bool IsDeleted
+  +SoftDelete(updatedBy, deletedAt): void
+}
+class AuditEntry {
+  +DateTimeOffset Timestamp
+  +string ActorUserId
+  +string? CityId
+  +string EntityType
+  +string EntityId
+  +string Action
+  +string? BeforeJson
+  +string? AfterJson
+  +string CorrelationId
+  +string Ip
+  +string UserAgent
+}
+class AppDbContext {
+  +DbSet<Contact> Contacts
+  +DbSet<AuditEntry> AuditEntries
+  #OnModelCreating(modelBuilder): void
+}
+class EntityConfigurationExtensions {
+  +ConfigureEntityBase(builder)
+  +ConfigureAuditable(builder)
+  +ConfigureCityScoped(builder)
+}
+
+AuditableEntity --|> Entity
+CityScopedAuditableEntity --|> AuditableEntity
+Contact --|> CityScopedAuditableEntity
+AuditEntry --|> Entity
+AppDbContext --> Contact : maps
+AppDbContext --> AuditEntry : maps
+AppDbContext ..> EntityConfigurationExtensions : configurations call
+@enduml

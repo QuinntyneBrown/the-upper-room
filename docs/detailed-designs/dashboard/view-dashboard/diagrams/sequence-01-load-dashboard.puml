@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Load dashboard
+actor "Signed-in user" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "Dashboard" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "DashboardController" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "GetDashboardHandler" as handler
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "Application stores" as db
+end box
+actor -> page : Land on /dashboard
+page -> ctrl : GET /api/v1/dashboard
+ctrl -> ctrl : Authenticate caller
+ctrl -> handler : Send GetDashboardQuery
+handler -> handler : Resolve user and city scope
+handler -> db : Read counts, upcoming events, assigned cards
+db --> handler : Data
+alt user not found
+handler --> ctrl : null
+ctrl --> page : Not found or unauthorized
+page --> actor : Error state
+else found
+handler --> ctrl : GetDashboardResult
+ctrl --> page : JSON
+page --> actor : L2-059 header, stats, and cards in responsive grid
+end
+@enduml

@@ -1,0 +1,25 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Support browsers
+class BrowserSupportDetector <<target>> {
+  +isSupported(userAgent: string): boolean
+}
+class SupportPolicy <<target>> {
+  +minimumVersions: Map<string, int>
+}
+class Banner {
+  +message: string
+  +dismissed: Signal<boolean>
+}
+BrowserSupportDetector --> SupportPolicy : reads
+BrowserSupportDetector ..> Banner : shows
+@enduml

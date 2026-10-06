@@ -1,0 +1,36 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - View idea detail
+actor "Member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "IdeaDetail" as page
+participant "tar-notes" as notes
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "IdeasController" as ctrl
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "IdeasDbContext" as db
+end box
+actor -> page : Open /ideas/{id}
+page -> ctrl : GET /api/v1/ideas/{id}
+ctrl -> ctrl : Authenticate and check city scope
+ctrl -> db : Load idea, votes, partners
+db --> ctrl : Idea
+alt idea not found
+ctrl --> page : 404
+page --> actor : Show not-found state
+else found
+ctrl --> page : IdeaDto
+page -> page : Apply L2-050 action rules by status and role
+page -> notes : Render comments
+notes -> ctrl : GET /api/v1/ideas/{id}/comments
+ctrl --> notes : Comments
+page --> actor : Cover, body, partners, tags, actions
+end
+@enduml

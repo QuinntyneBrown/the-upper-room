@@ -1,0 +1,37 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Save idea
+actor "Member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "Idea editor page" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "IdeasController" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Idea" as entity
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "IdeasDbContext" as db
+end box
+actor -> page : Save idea
+page -> ctrl : POST or PATCH /api/v1/ideas
+ctrl -> ctrl : Authenticate and validate request shape
+ctrl -> entity : Apply L2-048 field limits
+alt limit violated
+entity --> ctrl : Domain error
+ctrl --> page : 400 with message
+page --> actor : Retain input and show errors
+else valid
+entity --> ctrl : Valid idea
+ctrl -> db : Save changes
+db --> ctrl : Commit result
+ctrl --> page : IdeaDto
+page --> actor : Saved idea
+end
+@enduml

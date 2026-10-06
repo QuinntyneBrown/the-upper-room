@@ -1,0 +1,39 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Validate and confirm input
+class "TarTextField" as t0 <<existing class>> {
+  readonly label = input<string | null>(null)
+  readonly value = input<string | number | null>('')
+  readonly type = input<TarTextFieldType>('text')
+  readonly placeholder = input('')
+}
+class "TarFormActions" as t1 <<existing class>> {
+}
+interface "ConfirmOptions" as t2 <<existing interface>> {
+  readonly title: string
+  readonly body?: string
+  readonly severity?: ConfirmSeverity
+  readonly confirmLabel?: string
+}
+class "TarConfirmDialog" as t3 <<existing class>> {
+  protected readonly data = inject<ConfirmOptions>(MAT_DIALOG_DATA)
+  private readonly ref = inject<MatDialogRef<TarConfirmDialog, boolean>>(MatDialogRef)
+  protected readonly typed = signal('')
+  protected readonly confirmEnabled = computed(()
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+t0 ..> t3 : target collaboration
+
+@enduml

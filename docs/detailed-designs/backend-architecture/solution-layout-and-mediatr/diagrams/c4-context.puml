@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Solution layout and MediatR
+Person(dev, "Backend developer", "Adds features and cross-cutting behaviors to the backend solution")
+Person(member, "Member or administrator", "Sends requests that the backend processes through MediatR")
+System(room, "The Upper Room", "Multi-city platform whose backend is split into Domain, Application, Infrastructure, and Api projects")
+System_Ext(nuget, "NuGet feed", "Supplies MediatR 12.x, FluentValidation, EF Core, and Microsoft.Extensions.* packages")
+Rel(dev, room, "Builds and extends")
+Rel(member, room, "Uses")
+Rel(room, nuget, "Restores packages from")
+@enduml

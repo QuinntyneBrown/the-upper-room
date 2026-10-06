@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Manage partners
+Person(member, "Member or authorized administrator")
+System_Boundary(room, "The Upper Room") {
+Container(spa, "Upper Room browser app", "Angular", "PartnerList, PartnerDetail, PartnerContactsTab")
+Container(api, "Upper Room API", "ASP.NET Core", "PartnersController, PartnerContactsController")
+ContainerDb(data, "Partner state", "InMemoryPartnersStore", "Partners and links")
+}
+Rel(member, spa, "Uses")
+Rel(spa, api, "Calls feature boundary", "JSON over HTTPS")
+Rel(api, data, "Reads or persists authorized state", "Application interfaces")
+@enduml

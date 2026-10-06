@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Format dates and time zones
+
+Container_Boundary(lib, "components library") {
+  Component(rt, "TarRelativeTime", "Angular component", "Formats relative times")
+}
+Container_Boundary(spa, "the-upper-room application") {
+  Component(ef, "EventTimeDisplay (target)", "Angular component", "Shows viewer and organizer times")
+  Component(tzf, "TimeZoneFormatter (target)", "Angular service", "Formats an instant in a zone")
+  Component(prof, "User profile time zone", "Signal", "Viewer zone, default browser zone")
+}
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(ev, "Event", "Domain entity", "Holds StartAt in UTC and Timezone")
+  Component(us, "User", "Domain entity", "Holds TimeZone")
+}
+Rel(ef, tzf, "Formats with")
+Rel(tzf, prof, "Reads zone from")
+Rel(ef, ev, "Receives start and Timezone of", "JSON")
+Rel(prof, us, "Loaded from", "JSON")
+@enduml

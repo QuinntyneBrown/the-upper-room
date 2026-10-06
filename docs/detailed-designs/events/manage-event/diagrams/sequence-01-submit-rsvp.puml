@@ -1,0 +1,45 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Submit RSVP
+actor "Member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "EventDetail" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "EventRsvpController" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "SubmitRsvpHandler" as handler
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "EventsDbContext" as db
+end box
+actor -> page : Click RSVP Yes
+page -> ctrl : POST /api/v1/events/{eventId}/rsvp
+ctrl -> ctrl : Authenticate caller
+ctrl -> handler : Send SubmitRsvpCommand
+handler -> db : Load event and RSVPs
+db --> handler : Event state
+alt event requires approval
+handler -> db : Save RSVP as pending
+handler --> ctrl : Pending outcome
+ctrl --> page : Pending
+page --> actor : Pending approval and snackbar RSVP submitted
+else capacity reached
+handler -> db : Save RSVP as Waitlist
+handler --> ctrl : Waitlist outcome
+ctrl --> page : Waitlist position
+page --> actor : Snackbar You're on the waitlist
+else confirmed
+handler -> db : Save RSVP
+db --> handler : Commit result
+handler --> ctrl : Confirmed outcome
+ctrl --> page : Confirmed
+page --> actor : Updated RSVP card and attendees
+end
+@enduml

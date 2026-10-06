@@ -1,0 +1,40 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Save event
+actor "Organizer" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "EventForm" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "EventsController" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Event" as entity
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "EventsDbContext" as db
+end box
+actor -> page : Edit fields
+page -> page : Update live preview card
+actor -> page : Pick timezone
+page -> page : Apply L2-056 display conversion, keep UTC unchanged
+actor -> page : Save
+page -> ctrl : POST or PUT /api/v1/events
+ctrl -> ctrl : Authenticate and authorize
+ctrl -> entity : Apply field and schedule rules
+alt invalid
+entity --> ctrl : Domain error
+ctrl --> page : 400 with message
+page --> actor : Retain input and show errors
+else valid
+ctrl -> db : Save changes
+db --> ctrl : Commit result
+ctrl --> page : Event
+page --> actor : Navigate to event detail
+end
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Vote on an idea
+actor "Member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "IdeaList" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "IdeasController" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Idea" as entity
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "IdeasDbContext" as db
+end box
+actor -> page : Click heart
+page -> ctrl : POST /api/v1/ideas/{id}/vote
+ctrl -> ctrl : Authenticate caller
+ctrl -> db : Load idea and votes
+db --> ctrl : Idea
+ctrl -> entity : Toggle vote of caller
+entity --> ctrl : IdeaVoteChange
+ctrl -> db : Save changes
+db --> ctrl : Commit result
+alt request fails
+ctrl --> page : Error response
+page --> actor : Keep heart and count unchanged
+else success
+ctrl --> page : New count and voted flag
+page --> actor : Fill or clear heart, update count, animate 0.95 to 1.0
+end
+@enduml

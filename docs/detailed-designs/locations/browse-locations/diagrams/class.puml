@@ -1,0 +1,37 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Browse locations
+class Location {
+  +string Name
+  +Address Address
+  +int? Capacity
+  +string? AccessibilityNotes
+  +string? ParkingNotes
+  +bool Archived
+  +IReadOnlyCollection<string> PhotoUrls
+  +IReadOnlyCollection<string> TagIds
+}
+class Address
+class LocationsController {
+  +List(): IActionResult
+  +GetById(id: string): IActionResult
+  +Delete(id: string): IActionResult
+}
+class LocationDto
+class LocationList
+class LocationDetail
+Location --> Address : has
+LocationsController ..> Location : loads
+LocationsController ..> LocationDto : returns
+LocationList ..> LocationsController : HTTP
+LocationDetail ..> LocationsController : HTTP
+@enduml

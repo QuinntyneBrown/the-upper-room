@@ -1,0 +1,23 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — API performance targets
+
+System_Ext(ci, "CI scheduler", "Triggers the nightly workflow")
+Container_Boundary(k6, "k6 scripts") {
+  Component(s1, "contacts-list.js", "k6 scenario", "GET contacts, p95 < 300")
+  Component(s2, "dashboard.js", "k6 scenario", "Dashboard load")
+  Component(s3, "partners-list.js", "k6 scenario", "Partners list load")
+}
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(cc, "ContactsController", "ASP.NET Core controller", "Contacts list and detail")
+  Component(nd, "DispatchNotification handler", "MediatR handler", "Starts notification delivery")
+  Component(pd, "PushDispatcher", "Infrastructure service", "Delivers push notifications")
+  ComponentDb(db, "Contacts database", "SQLite", "Contact rows")
+}
+Rel(s1, cc, "Calls", "HTTP")
+Rel(s2, cc, "Calls", "HTTP")
+Rel(s3, cc, "Calls", "HTTP")
+Rel(cc, db, "Queries", "EF Core")
+Rel(nd, pd, "Dispatches via")
+@enduml

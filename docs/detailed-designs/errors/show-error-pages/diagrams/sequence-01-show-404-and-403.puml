@@ -1,0 +1,28 @@
+@startuml
+title UML sequence behaviour — Show the 404 and 403 pages
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "City member" as actor
+box "Frontend — The Upper Room web app" #E0F2FE
+  participant "Router" as router
+  participant "RBAC guard" as guard
+  participant "NotFound" as nf
+  participant "Forbidden" as fb
+end box
+actor -> router : Navigate to /no-such-route
+router -> router : Match wildcard route ** (L2-067)
+router -> nf : Render, URL preserved
+nf --> actor : "Page not found" with Go back and Go to dashboard
+actor -> router : Navigate to /admin/users
+router -> guard : canActivate
+alt Role or permission missing
+  guard --> router : UrlTree /forbidden (L2-068)
+  router -> fb : Render
+  fb --> actor : "Access denied" with Go back and Go to dashboard
+else Allowed
+  guard --> router : true
+end
+@enduml

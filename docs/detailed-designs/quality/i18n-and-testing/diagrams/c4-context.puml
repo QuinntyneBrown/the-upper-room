@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Localization keys, coverage gates, and e2e conventions
+
+Person(dev, "Developer", "Changes code and reviews CI results")
+System(trur, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+System_Ext(ci, "CI service", "Runs lint, test, coverage, and e2e jobs")
+
+Rel(dev, trur, "Changes code and tests of", "Git")
+Rel(ci, trur, "Verifies")
+Rel(dev, ci, "Reads results from", "HTTPS")
+@enduml

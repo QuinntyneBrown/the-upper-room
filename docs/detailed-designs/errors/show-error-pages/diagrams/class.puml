@@ -1,0 +1,57 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Show error pages
+
+class NotFound {
+  <<Component app-not-found>>
+}
+
+class Forbidden {
+  <<Component app-forbidden>>
+}
+
+class BoundaryError {
+  +string correlationId
+}
+
+class ErrorBoundaryService {
+  +signal current: BoundaryError
+  +raise(): void
+  +clear(): void
+}
+
+class GlobalErrorHandler {
+  -ErrorBoundaryService boundary
+  +handleError(error): void
+  -isHttpError(error): boolean
+}
+
+class ErrorBoundary {
+  #ErrorBoundaryService svc
+  #copy(value): void
+  #reload(): void
+  -fallbackCopy(value): void
+}
+
+class TarEmptyState {
+  <<Component tar-empty-state>>
+}
+
+interface ErrorHandler
+
+ErrorBoundaryService "1" --> "0..1" BoundaryError
+GlobalErrorHandler ..|> ErrorHandler
+GlobalErrorHandler --> ErrorBoundaryService
+ErrorBoundary --> ErrorBoundaryService
+NotFound ..> TarEmptyState : renders
+Forbidden ..> TarEmptyState : renders
+@enduml

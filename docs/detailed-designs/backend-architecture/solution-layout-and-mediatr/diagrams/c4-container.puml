@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Solution layout and MediatR
+Person(member, "Member or administrator", "Calls the API")
+System_Boundary(room, "The Upper Room backend (TheUpperRoom.sln)") {
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Hosts controllers, middleware, and the composition root in Program.cs")
+  Container(app, "TheUpperRoom.Application", "Class library", "MediatR requests, handlers, FluentValidation validators, pipeline behaviors, and persistence abstractions")
+  Container(domain, "TheUpperRoom.Domain", "Class library", "Entities, value objects, and domain events with no package dependencies")
+  Container(infra, "TheUpperRoom.Infrastructure", "Class library", "EF Core contexts, entity configurations, user directory, and seeders")
+  ContainerDb(db, "Feature databases", "SQLite", "One database file per feature context")
+}
+Rel(member, api, "Calls", "JSON/HTTPS")
+Rel(api, app, "Sends requests through MediatR; registers via AddApplication")
+Rel(api, infra, "Registers via AddInfrastructure")
+Rel(app, domain, "Uses")
+Rel(infra, app, "Implements abstractions of")
+Rel(infra, db, "Reads and writes", "EF Core")
+@enduml

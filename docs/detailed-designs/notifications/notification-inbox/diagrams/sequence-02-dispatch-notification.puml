@@ -1,0 +1,47 @@
+@startuml
+title UML sequence behaviour — Dispatch a catalog notification
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+participant "Feature handler" as caller
+box "Backend — TheUpperRoom.Api" #D1FADF
+  participant "NotificationsController" as ctrl
+end box
+box "Backend — Application and Domain" #ECFDF3
+  participant "DispatchNotificationHandler" as handler
+  participant "NotificationCatalog" as catalog
+  participant "MailStore" as mail
+  participant "PushDispatcher" as push
+end box
+box "Backend — Infrastructure" #FFF4E5
+  database "Application database" as db
+end box
+caller -> ctrl : POST /api/v1/notifications/dispatch
+ctrl -> handler : Send DispatchNotificationCommand
+handler -> catalog : Find type by code
+alt Code not registered
+  catalog --> handler : none
+  handler --> ctrl : Unprocessable
+  ctrl --> caller : 422
+else Code registered
+  catalog --> handler : NotificationType
+  loop Each recipient
+    handler -> db : Find preference (recipient, code)
+    db --> handler : Preference or none
+    opt InApp enabled or no preference (L2-063)
+      handler -> db : Add NotificationRow with rendered copy
+    end
+    opt Email enabled or no preference (L2-063)
+      handler -> mail : Send(recipient, title, body)
+    end
+    opt Push enabled
+      handler -> push : Enqueue(recipient, title, body)
+    end
+  end
+  handler -> db : SaveChanges
+  handler --> ctrl : NoContent
+  ctrl --> caller : 204
+end
+@enduml

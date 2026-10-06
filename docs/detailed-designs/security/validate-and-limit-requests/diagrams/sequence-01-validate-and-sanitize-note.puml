@@ -1,0 +1,49 @@
+@startuml
+title UML sequence behaviour — Validate and sanitize a note
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "Notes UI" as ui
+end box
+box "Backend — TheUpperRoom.Api application" #D1FADF
+  participant "NotesController" as ctrl
+  participant "ValidationExceptionHandler" as veh
+end box
+box "Backend — TheUpperRoom Application and Domain" #ECFDF3
+  participant "CreateNoteCommandValidator" as val
+  participant "CreateNoteHandler" as h
+  participant "NotesSanitizer" as san
+end box
+box "Backend — TheUpperRoom Infrastructure" #FFF4E5
+  database "Notes database" as db
+end box
+actor -> ui : Submit note body
+ui -> ctrl : POST note
+ctrl -> val : Validate command (L2-093)
+alt invalid
+  val --> veh : ValidationException
+  veh --> ui : 400 ProblemDetails
+else valid
+  ctrl -> h : Send CreateNoteCommand
+  h -> san : Sanitize HTML (L2-093)
+  san --> h : HTML without onerror
+  h -> db : Insert with parameterized EF Core command
+  db --> h : Saved
+  h --> ctrl : NoteDto
+  ctrl --> ui : 201
+  ui -> ui : Render through Angular sanitizer
+end
+@enduml

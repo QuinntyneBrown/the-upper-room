@@ -1,0 +1,35 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Switch theme
+class "Appearance" as t0 <<existing class>> {
+  protected readonly theme = inject(THEME_SERVICE)
+  protected readonly modes: ThemeMode[] = ['system', 'light', 'dark']
+}
+class "ThemeService" as t1 <<existing class>> {
+  private readonly http = inject(HttpClient)
+  private readonly tokenSource = inject(ACCESS_TOKEN_SOURCE)
+  readonly mode = signal<ThemeMode>(this.read())
+  setMode(mode: ThemeMode): void
+}
+interface "IThemeService" as t2 <<existing interface>> {
+  readonly mode: WritableSignal<ThemeMode>
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+class "Proposed Switch theme application service" as proposed <<proposed responsibility>> {
+  +execute(request: FeatureRequest): FeatureOutcome
+}
+t0 ..> proposed : target application boundary
+
+@enduml

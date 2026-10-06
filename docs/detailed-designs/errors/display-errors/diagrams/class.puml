@@ -1,0 +1,40 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Display errors
+
+class errorInterceptor <<HttpInterceptorFn>> {
+  +(req, next): Observable<HttpEvent>
+}
+
+class correlationIdInterceptor <<HttpInterceptorFn>> {
+  +(req, next): Observable<HttpEvent>
+}
+
+class ErrorCatalog <<module error-catalog.ts>> {
+  -CATALOG: Record<string, string>
+  -FALLBACK_BY_STATUS: Record<number, string>
+  +mapErrorToMessage(status, code): string
+}
+
+class SKIP_ERROR_SNACKBAR <<HttpContextToken<boolean>>> {
+  +default: false
+}
+
+class SnackbarService {
+  +show(message, severity, action): void
+}
+
+errorInterceptor ..> ErrorCatalog : calls
+errorInterceptor ..> SKIP_ERROR_SNACKBAR : reads
+errorInterceptor ..> SnackbarService : shows error
+correlationIdInterceptor ..> errorInterceptor : precedes in chain
+@enduml

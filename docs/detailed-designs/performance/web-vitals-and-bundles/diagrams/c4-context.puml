@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Web vitals and bundle budgets
+
+Person(dev, "Developer", "Changes code and reviews CI results")
+System(trur, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+System_Ext(ci, "CI service", "Runs build and Lighthouse-CI jobs")
+
+Rel(dev, trur, "Changes frontend code of")
+Rel(ci, trur, "Builds and audits")
+Rel(dev, ci, "Reads results from", "HTTPS")
+@enduml

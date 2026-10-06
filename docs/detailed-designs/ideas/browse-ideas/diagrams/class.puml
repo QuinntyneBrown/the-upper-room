@@ -1,0 +1,50 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Browse ideas
+enum IdeaStatus {
+  Draft
+  Submitted
+  UnderReview
+  Selected
+  InProgress
+  Completed
+  Archived
+}
+class Idea {
+  +string Title
+  +string Summary
+  +IdeaStatus Status
+  +string ProposerUserId
+  +string? CoverImageUrl
+  +int VoteCount
+  +IReadOnlyCollection<string> PartnerIds
+  +IReadOnlyCollection<string> TagIds
+}
+interface IIdeasDbContext {
+  +DbSet<IdeaRow> Ideas
+  +DbSet<IdeaVoteRow> Votes
+  +DbSet<IdeaPartnerRow> Partners
+}
+class IdeasController {
+  +List(): IActionResult
+  +ToggleVote(id: string): IActionResult
+}
+class IdeaDto
+class IdeaList {
+  +ngOnInit(): void
+}
+IdeaList ..> IdeaDto : renders
+IdeaList ..> IdeasController : HTTP
+IdeasController --> IIdeasDbContext : queries
+IdeasController ..> IdeaDto : returns
+Idea --> IdeaStatus : has
+@enduml

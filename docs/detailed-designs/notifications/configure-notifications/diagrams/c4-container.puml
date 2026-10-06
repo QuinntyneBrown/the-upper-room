@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Configure notifications
+
+Person(member, "City member", "Edits preferences")
+System_Boundary(upperRoom, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "Routes /settings/notifications")
+  Container(domainLib, "domain library", "Angular library", "Provides TarNotificationPreferences")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Hosts /api/v1/notifications/preferences")
+  ContainerDb(db, "Application database", "EF Core", "NotificationPreference rows")
+}
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, domainLib, "Imports", "TypeScript")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+@enduml

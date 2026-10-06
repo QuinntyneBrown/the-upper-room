@@ -1,0 +1,24 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Edit idea
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(page, "Idea editor page", "Angular component, <TO SUPPLY>", "Form for title, summary, description, cover, partners, tags")
+  Component(md, "tar-markdown-editor", "Angular component", "Toolbar, preview tab, character count")
+}
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(ideas, "IdeasController", "ASP.NET Core controller", "Create, PATCH, cover, partners")
+  Component(uploads, "UploadsController", "ASP.NET Core controller", "POST api/v1/uploads")
+}
+Container_Boundary(core, "Application and Domain") {
+  Component(handler, "UploadFileHandler", "MediatR handler", "Validates size and type, stores file")
+  Component(idea, "Idea", "Domain entity", "Enforces field limits")
+}
+ComponentDb(db, "IdeasDbContext", "EF Core", "Persists ideas")
+Rel(page, md, "Hosts")
+Rel(md, uploads, "Uploads image", "multipart/HTTPS")
+Rel(page, ideas, "Saves idea", "JSON/HTTPS")
+Rel(uploads, handler, "Sends UploadFileCommand")
+Rel(ideas, idea, "Creates and updates")
+Rel(ideas, db, "Persists", "EF Core")
+@enduml

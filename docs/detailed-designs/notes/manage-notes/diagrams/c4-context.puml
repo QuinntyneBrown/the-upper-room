@@ -1,0 +1,8 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Manage notes
+Person(member, "Member or authorized administrator", "Uses this capability within the permitted city scope")
+System(room, "The Upper Room", "Notes record time-stamped, authored, free-form commentary against contacts, partners, ideas, and events.")
+Rel(member, room, "Manage notes")
+@enduml

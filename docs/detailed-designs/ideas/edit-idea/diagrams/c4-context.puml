@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Edit idea
+Person(member, "Member", "Writes and edits ideas in the permitted city scope")
+System(room, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+System_Ext(storage, "Object storage", "Holds uploaded images")
+Rel(member, room, "Edits ideas using")
+Rel(room, storage, "Stores images in")
+@enduml

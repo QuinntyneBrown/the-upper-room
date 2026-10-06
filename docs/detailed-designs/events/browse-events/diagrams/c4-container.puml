@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Browse events
+Person(member, "Member", "Browses events")
+System_Boundary(room, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "Events list page and calendar")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Events endpoints")
+  ContainerDb(db, "Events store", "EF Core", "Events and attendees")
+}
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+@enduml

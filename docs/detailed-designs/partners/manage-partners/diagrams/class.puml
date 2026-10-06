@@ -1,0 +1,70 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Manage partners
+class Partner <<existing>> {
+  +string Name
+  +string? LegalName
+  +string? Website
+  +string? DescriptionMarkdown
+  +string? LogoUrl
+  +bool Archived
+  +Addresses / Phones / Emails
+  +SocialLinks
+  +LinkedContacts
+  +TagIds
+}
+class PartnerContactLink <<existing>> {
+  +string ContactId
+  +string Role
+}
+class SocialLink <<existing>> {
+  +SocialPlatform Platform
+  +string Url
+}
+enum SocialPlatform <<existing>> {
+  Facebook
+  X
+  LinkedIn
+  Instagram
+  YouTube
+  TikTok
+  Other
+}
+class PartnersController <<existing>> {
+  +List()
+  +GetById(id: string)
+  +Create(body: CreatePartnerRequest)
+  +Update(id: string, body: CreatePartnerRequest)
+  +Patch(id: string, body: PatchPartnerRequest)
+  +Delete(id: string)
+}
+class PartnerContactsController <<existing>> {
+  +List(partnerId: string)
+  +Link(partnerId: string, body: LinkContactRequest)
+  +Unlink(partnerId: string, contactId: string)
+}
+class InMemoryPartnersStore <<existing>>
+interface IPartnersStore <<existing>> {
+  +CountActive(): int
+}
+interface IPartnersApi <<proposed>>
+Partner "1" *-- "*" PartnerContactLink
+Partner "1" *-- "*" SocialLink
+SocialLink --> SocialPlatform
+PartnersController ..> InMemoryPartnersStore : uses
+PartnerContactsController ..> InMemoryPartnersStore : uses
+InMemoryPartnersStore ..|> IPartnersStore
+InMemoryPartnersStore --> Partner : holds
+IPartnersApi ..> PartnersController : calls
+@enduml

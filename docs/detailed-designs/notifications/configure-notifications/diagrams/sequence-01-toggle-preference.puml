@@ -1,0 +1,39 @@
+@startuml
+title UML sequence behaviour — Toggle a notification preference
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "City member" as actor
+box "Frontend — The Upper Room web app" #E0F2FE
+  participant "TarNotificationPreferences" as page
+end box
+box "Backend — TheUpperRoom.Api" #D1FADF
+  participant "NotificationsController" as ctrl
+end box
+box "Backend — Application and Domain" #ECFDF3
+  participant "ListNotificationPreferencesHandler" as list
+  participant "UpsertNotificationPreferenceHandler" as upsert
+end box
+box "Backend — Infrastructure" #FFF4E5
+  database "Application database" as db
+end box
+actor -> page : Open /settings/notifications
+page -> ctrl : GET /api/v1/notifications/preferences
+ctrl -> list : Send ListNotificationPreferencesQuery
+list -> db : Load preferences
+db --> list : Rows
+list --> ctrl : Items
+ctrl --> page : PrefDto list
+page --> actor : Table of codes by In-app, Email, Push
+actor -> page : Toggle event_cancelled / Email off
+page -> page : Update local state and restart 1000 ms debounce (L2-064)
+page -> ctrl : PUT /api/v1/notifications/preferences
+ctrl -> upsert : Send UpsertNotificationPreferenceCommand
+upsert -> db : Insert or update preference and save
+db --> upsert : Commit
+upsert --> ctrl : Ok payload
+ctrl --> page : 200
+page --> actor : Show "Saved" indicator on the row (L2-064)
+@enduml

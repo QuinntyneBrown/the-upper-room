@@ -1,0 +1,39 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Validate, sanitize, and rate-limit requests
+interface IAuthRateLimiter {
+  +IsSignInLockedAsync(email, now): Task<bool>
+  +RecordFailedSignInAsync(email, now): Task<bool>
+}
+class AuthRateLimiter {
+  -cache: IDistributedCache
+}
+class SignInBucket {
+  +Count: int
+  +WindowStart: DateTimeOffset
+  +LockUntil: DateTimeOffset?
+}
+class NotesSanitizer {
+  +Instance: HtmlSanitizer
+  +ToDto(row: NoteRow): NoteDto
+}
+class CreateNoteCommandValidator
+class ValidationExceptionHandler
+class AuthController {
+  +SignIn(...): IActionResult
+}
+IAuthRateLimiter <|.. AuthRateLimiter
+AuthRateLimiter ..> SignInBucket : stores
+AuthController ..> IAuthRateLimiter : checks
+CreateNoteCommandValidator ..> ValidationExceptionHandler : failures handled by
+NotesSanitizer ..> CreateNoteCommandValidator : runs after
+@enduml

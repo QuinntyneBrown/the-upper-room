@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Delete or archive location
+actor "Authorized member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "LocationDetail" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "LocationsController" as ctrl
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "LocationsDbContext" as db
+database "EventsDbContext" as events
+end box
+actor -> page : Click Delete
+page -> ctrl : DELETE /api/v1/locations/{id}
+ctrl -> events : Count Scheduled events using location
+events --> ctrl : N
+alt N greater than 0
+ctrl --> page : 409 This location is used by N upcoming events. Archive it instead.
+page --> actor : Offer Archive action
+actor -> page : Click Archive
+page -> ctrl : PATCH /api/v1/locations/{id} archived
+ctrl -> db : Save changes
+db --> ctrl : Commit result
+ctrl --> page : Updated location
+else N equals 0
+ctrl -> db : Remove location
+db --> ctrl : Commit result
+ctrl --> page : 204
+page --> actor : Return to list
+end
+@enduml

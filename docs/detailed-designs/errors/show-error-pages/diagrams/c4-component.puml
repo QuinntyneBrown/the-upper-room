@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Show error pages
+
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(routes, "app.routes", "Angular Routes", "Declares /forbidden and the ** wildcard")
+  Component(nf, "NotFound", "Angular component", "404 page")
+  Component(fb, "Forbidden", "Angular component", "403 page")
+  Component(geh, "GlobalErrorHandler", "ErrorHandler", "Logs and raises the boundary for non-HTTP errors")
+  Component(ebs, "ErrorBoundaryService", "Injectable service", "Holds current BoundaryError with correlationId")
+  Component(eb, "ErrorBoundary", "Angular component", "Full-page 500 boundary; copy and reload")
+}
+Container_Boundary(dom, "domain library") {
+  Component(guards, "RBAC guards", "CanActivateFn", "Redirect to /forbidden")
+}
+Rel(routes, nf, "Wildcard route renders")
+Rel(routes, fb, "/forbidden renders")
+Rel(guards, routes, "createUrlTree(['/forbidden'])")
+Rel(geh, ebs, "raise()")
+Rel(eb, ebs, "Reads current; clear()")
+@enduml

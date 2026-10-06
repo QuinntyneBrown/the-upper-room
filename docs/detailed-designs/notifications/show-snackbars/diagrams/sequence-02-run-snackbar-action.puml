@@ -1,0 +1,24 @@
+@startuml
+title UML sequence behaviour — Run a snackbar action
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "City member" as actor
+box "Frontend — The Upper Room web app" #E0F2FE
+  participant "Feature page" as page
+  participant "TarSnackbar" as host
+end box
+box "Frontend — components library" #E0F2FE
+  participant "SnackbarService" as svc
+end box
+page -> svc : show("Deleted", success, {label: "Undo", onClick})
+svc --> host : current = SnackbarItem with action
+host --> actor : Render message and "Undo" button
+actor -> host : Click "Undo"
+host -> svc : dismiss() (L2-061 dismisses immediately)
+svc -> svc : Clear timer and advance()
+host -> page : action.onClick() runs the undo handler
+page --> actor : Present restored state
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Browse events
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(page, "EventList", "Angular component", "Toggle, cards, filters")
+  Component(cal, "CalendarMonth", "Angular component", "Month grid; Week, Day, Agenda are target work")
+}
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(ctrl, "EventsController", "ASP.NET Core controller", "GET api/v1/events")
+  Component(rsvp, "EventRsvpController", "ASP.NET Core controller", "RSVP counts and submission")
+}
+Container_Boundary(core, "Application and Domain") {
+  Component(ctx, "IEventsDbContext", "Abstraction", "Events and RSVP rows")
+  Component(event, "Event", "Domain entity", "Schedule validation and GetEffectiveStatus")
+  Component(att, "EventAttendee", "Domain entity", "RSVP status")
+}
+ComponentDb(db, "EventsDbContext", "EF Core", "Persists events")
+Rel(page, cal, "Hosts in Calendar view")
+Rel(page, ctrl, "Lists events", "JSON/HTTPS")
+Rel(ctrl, ctx, "Queries")
+Rel(ctrl, event, "Maps effective status")
+Rel(event, att, "Owns")
+Rel(rsvp, ctx, "Reads and writes RSVPs")
+Rel(ctx, db, "Implemented by")
+@enduml

@@ -1,0 +1,44 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - View dashboard
+class GetDashboardQuery {
+  +string UserId
+}
+class GetDashboardHandler {
+  +Handle(request: GetDashboardQuery, ct: CancellationToken): Task<GetDashboardResult?>
+}
+class GetDashboardResult {
+  +string FirstName
+  +DashboardStats Stats
+  +IReadOnlyList<DashboardEventDto> UpcomingEvents
+  +IReadOnlyList<DashboardBoardGroupDto> TasksOnMyBoards
+}
+class DashboardStats {
+  +int Contacts
+  +int Partners
+  +int UpcomingEvents
+  +int OpenIdeas
+}
+class DashboardEventDto
+class DashboardBoardGroupDto
+class DashboardController {
+  +Get(ct: CancellationToken): Task<IActionResult>
+}
+class Dashboard
+DashboardController ..> GetDashboardQuery : sends
+GetDashboardHandler ..> GetDashboardQuery : handles
+GetDashboardHandler ..> GetDashboardResult : returns
+GetDashboardResult *-- DashboardStats
+GetDashboardResult o-- DashboardEventDto
+GetDashboardResult o-- DashboardBoardGroupDto
+Dashboard ..> DashboardController : HTTP
+@enduml

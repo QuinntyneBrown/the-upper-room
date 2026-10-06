@@ -1,0 +1,44 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - View idea
+enum IdeaStatus {
+  Draft
+  Submitted
+  UnderReview
+  Selected
+  InProgress
+  Completed
+  Archived
+}
+class Idea {
+  +string Title
+  +IdeaStatus Status
+  +string ProposerUserId
+  +int VoteCount
+}
+class IdeasController {
+  +GetById(id: string): IActionResult
+  +ChangeStatus(id: string, body: ChangeStatusRequest): IActionResult
+  +ListComments(id: string): IActionResult
+  +CreateComment(id: string, body: CreateCommentRequest): IActionResult
+}
+class ChangeStatusRequest
+class CreateCommentRequest
+class IdeaDetail {
+  +ngOnInit(): void
+}
+IdeaDetail ..> IdeasController : HTTP
+IdeasController ..> ChangeStatusRequest : accepts
+IdeasController ..> CreateCommentRequest : accepts
+IdeasController --> Idea : loads / mutates
+Idea --> IdeaStatus : has
+@enduml

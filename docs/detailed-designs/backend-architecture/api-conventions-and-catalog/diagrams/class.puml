@@ -1,0 +1,56 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - API conventions and catalog
+
+class AuditController {
+  +List(actor, entityType, action, from, to, page, pageSize, cancellationToken): Task<IActionResult>
+}
+class ListAuditEntriesQuery {
+  +string UserId
+  +string? Actor
+  +string? EntityType
+  +string? Action
+  +DateTimeOffset? From
+  +DateTimeOffset? To
+  +int Page
+  +int PageSize
+}
+class ListAuditEntriesQueryValidator {
+  PageSize between 1 and 200
+}
+class ListAuditEntriesResult {
+  +IReadOnlyList<AuditEntryDto> Items
+  +int Total
+  +int Page
+  +int PageSize
+  +ListAuditEntriesOutcome Outcome
+}
+enum ListAuditEntriesOutcome {
+  Ok
+  Unauthorized
+  Forbidden
+}
+class ValidationExceptionHandler {
+  +TryHandleAsync(httpContext, exception, cancellationToken): ValueTask<bool>
+}
+class ValidationProblemDetails {
+  +int Status
+  +string Title
+  +IDictionary<string,string[]> Errors
+}
+
+AuditController ..> ListAuditEntriesQuery : sends
+ListAuditEntriesQueryValidator ..> ListAuditEntriesQuery : validates
+ListAuditEntriesResult --> ListAuditEntriesOutcome : has
+AuditController ..> ListAuditEntriesResult : maps to response
+ValidationExceptionHandler ..> ValidationProblemDetails : creates
+@enduml

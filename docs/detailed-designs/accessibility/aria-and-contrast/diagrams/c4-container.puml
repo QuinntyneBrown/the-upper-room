@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — ARIA roles and color contrast
+
+Person(user, "Screen-reader member", "Uses assistive technology")
+Person(dev, "Developer", "Changes code and reviews CI results")
+System_Boundary(trur, "The Upper Room") {
+  Container(spa, "the-upper-room application", "Angular", "Pages that raise snackbars and render chips")
+  Container(lib, "components library", "Angular library", "Icon button, snackbar, tabs, dialog, chip")
+  Container(e2e, "Playwright e2e suite", "Playwright, axe-core", "Accessibility scan")
+}
+Rel(user, spa, "Uses", "Assistive technology")
+Rel(spa, lib, "Renders", "TypeScript")
+Rel(dev, e2e, "Runs", "CLI")
+Rel(e2e, spa, "Scans", "HTTP")
+@enduml

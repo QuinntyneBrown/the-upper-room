@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Optimistic UI
+
+Container_Boundary(lib, "components library") {
+  Component(om, "optimisticMutation", "TypeScript function", "Applies next state and reverts on failure")
+  Component(sn, "SnackbarService", "Angular service", "Shows the failure message")
+}
+Container_Boundary(spa, "the-upper-room application") {
+  Component(pg, "Page component", "Angular component", "Holds WritableSignal state")
+  Component(cl, "API client", "Angular service", "Returns Observable of the mutation")
+}
+Rel(pg, om, "Calls with next state")
+Rel(om, cl, "Subscribes to mutation of", "HTTP")
+Rel(om, pg, "Restores state of", "Signal.set")
+Rel(pg, sn, "Shows error through")
+@enduml

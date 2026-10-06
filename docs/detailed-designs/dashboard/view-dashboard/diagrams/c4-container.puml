@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - View dashboard
+Person(member, "Signed-in user", "Views the dashboard")
+System_Boundary(room, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "Dashboard page")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Dashboard endpoint")
+  ContainerDb(db, "Application stores", "EF Core", "Contacts, partners, events, ideas, boards")
+}
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads", "EF Core")
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Non-idempotent POST failure is not retried
+actor "Member or administrator" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "Page" as page
+participant "IContactsApi" as client
+participant "retryInterceptor" as retry
+participant "errorInterceptor" as err
+participant "SnackbarService" as snack
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "ContactsController" as ctrl
+end box
+actor -> page : Save a new contact
+page -> client : Submit typed request
+client -> retry : POST /api/v1/contacts
+retry -> retry : Method is not GET or HEAD, skip retry (L2-084)
+retry -> err : Pass request on
+err -> ctrl : Send request
+ctrl --> err : 503
+err -> snack : Show mapped message for status and code
+err --> retry : Error
+retry --> client : Error
+client --> page : Failure, input retained
+page --> actor : Message shown
+@enduml

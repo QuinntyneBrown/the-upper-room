@@ -1,0 +1,20 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Install as a PWA
+
+Container_Boundary(sw, "Service worker") {
+  Component(inst, "install handler", "Event listener", "Caches shell")
+  Component(fet, "fetch handler", "Event listener", "Skips /api/, serves navigations from cache")
+  ComponentDb(cch, "Cache the-upper-room-shell-v1", "Cache Storage", "Shell and immutable assets")
+}
+Container_Boundary(spa, "the-upper-room application") {
+  Component(man, "manifest.webmanifest", "JSON", "Name, start_url, display, icons")
+  Component(net, "NetworkService", "Angular service", "Online state")
+  Component(ob, "Offline banner", "Angular component", "Shows offline state")
+}
+Rel(inst, cch, "Writes")
+Rel(fet, cch, "Reads")
+Rel(net, ob, "Drives")
+Rel(man, inst, "Installability pairs with")
+@enduml

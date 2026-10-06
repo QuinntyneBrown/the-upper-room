@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Display errors
+
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(corr, "correlationIdInterceptor", "HttpInterceptorFn", "Adds X-Correlation-Id to each request")
+  Component(errInt, "errorInterceptor", "HttpInterceptorFn", "Maps failures to catalog messages and shows an error snackbar")
+  Component(catalog, "mapErrorToMessage", "Function in error-catalog.ts", "Resolves code or status to a message; falls back to server.internal")
+  Component(skip, "SKIP_ERROR_SNACKBAR", "HttpContextToken", "Lets a request suppress the global snackbar")
+}
+Container_Boundary(lib, "components library") {
+  Component(snack, "SnackbarService", "Injectable service", "Shows the error snackbar")
+}
+Rel(corr, errInt, "Request passes to")
+Rel(errInt, skip, "Reads request context")
+Rel(errInt, catalog, "Calls mapErrorToMessage(status, code)")
+Rel(errInt, snack, "show(message, 'error')")
+@enduml

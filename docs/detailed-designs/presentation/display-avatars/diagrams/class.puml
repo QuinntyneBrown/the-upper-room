@@ -1,0 +1,30 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Display avatars
+class "TarAvatar" as t0 <<existing class>> {
+  protected readonly avatarUrl = computed(()
+  protected readonly label = computed(()
+  protected readonly background = computed(()
+}
+interface "AvatarUser" as t1 <<existing interface>> {
+  readonly displayName?: string
+  readonly email?: string
+}
+class "TarAvatarUploader" as t2 <<existing class>> {
+  protected onChange(input: HTMLInputElement): void
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+
+@enduml

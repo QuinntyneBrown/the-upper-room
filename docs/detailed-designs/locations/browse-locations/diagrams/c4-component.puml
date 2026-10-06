@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Browse locations
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(list, "LocationList", "Angular component", "Grid of locations")
+  Component(detail, "LocationDetail", "Angular component", "Map, photos, capacity, notes")
+}
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(ctrl, "LocationsController", "ASP.NET Core controller", "List, get, delete")
+  Component(map, "LocationsMapping", "Mapper", "Location to LocationDto")
+}
+Container_Boundary(core, "Domain") {
+  Component(loc, "Location", "Domain entity", "Fields and archived flag")
+}
+ComponentDb(db, "LocationsDbContext", "EF Core", "Persists locations")
+Rel(list, ctrl, "GET list", "JSON/HTTPS")
+Rel(detail, ctrl, "GET id, DELETE", "JSON/HTTPS")
+Rel(ctrl, map, "Maps with")
+Rel(ctrl, loc, "Loads")
+Rel(ctrl, db, "Queries", "EF Core")
+@enduml
