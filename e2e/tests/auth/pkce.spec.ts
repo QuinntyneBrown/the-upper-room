@@ -3,20 +3,23 @@ import { test, expect } from '../../fixtures/test';
 import { SignInPage } from '../../pages/SignInPage';
 import { AuthCallbackPage } from '../../pages/AuthCallbackPage';
 
-test('sign-in submit redirects to IdP authorize URL with PKCE params', async ({ page }) => {
-  let location: URL | null = null;
+test('sign-in submit POSTs credentials and an S256 challenge to the IdP', async ({ page }) => {
+  let body: { email?: string; password?: string; codeChallenge?: string } | null = null;
   await page.route(/\/__idp\/authorize/, async (route) => {
-    location = new URL(route.request().url());
-    await route.fulfill({ status: 200, body: '' });
+    body = route.request().postDataJSON();
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ code: 'idp-code' }),
+    });
   });
   const sp = new SignInPage(page);
   await sp.goto();
   await sp.submit('test@example.com', 'Password!23456');
-  await expect.poll(() => location?.searchParams.get('response_type')).toBe('code');
-  expect(location!.searchParams.get('code_challenge_method')).toBe('S256');
-  expect(location!.searchParams.get('state')).toBeTruthy();
-  expect(location!.searchParams.get('nonce')).toBeTruthy();
-  expect(location!.searchParams.get('code_challenge')).toBeTruthy();
+  await expect.poll(() => body?.codeChallenge).toBeTruthy();
+  expect(body!.email).toBe('test@example.com');
+  expect(body!.password).toBe('Password!23456');
+  await expect(page).toHaveURL(/\/auth\/callback\?code=idp-code&state=/);
 });
 
 test('callback with matching state POSTs /api/v1/auth/exchange and stores access in memory', async ({

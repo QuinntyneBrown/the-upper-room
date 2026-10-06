@@ -263,13 +263,13 @@ export class MockBackend {
     r.get('/api/v1/health', () => json({ status: 'ok' }));
 
     // ---- auth / identity provider -------------------------------------
-    r.get('/__idp/authorize', (req) => {
-      const redirect = req.query.get('redirect_uri') ?? '/auth/callback';
-      const state = req.query.get('state') ?? '';
-      const target = new URL(redirect, req.url.origin);
-      target.searchParams.set('code', 'mock-auth-code');
-      target.searchParams.set('state', state);
-      return { status: 302, headers: { location: target.toString() } };
+    r.post('/__idp/authorize', (req) => {
+      const body = (req.body ?? {}) as { email?: string; password?: string; codeChallenge?: string };
+      if (!body.codeChallenge) return badRequest('idp.code_challenge_required');
+      if (!body.email || body.password !== CANONICAL_PASSWORD) {
+        return json({ code: 'auth.invalid_credentials' }, 401);
+      }
+      return json({ code: 'mock-auth-code' });
     });
     r.post('/api/v1/auth/exchange', (req) => {
       const body = (req.body ?? {}) as { code?: string; codeVerifier?: string };
