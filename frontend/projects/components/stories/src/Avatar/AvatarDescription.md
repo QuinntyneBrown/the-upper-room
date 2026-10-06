@@ -1,0 +1,3 @@
+A round picture of a person. `tar-avatar` is a plain Angular component (no Material primitive) that takes a `user` (`displayName`, `email`, optional `avatarUrl`) and a `size` in px (24, 32, 40, 48, 64 or 96; default 48).
+
+With an `avatarUrl` it renders an `<img>` with the classes `.avatar .avatar--image` and `data-testid="avatar-image"`. Otherwise it renders a `<span>` with `.avatar .avatar--initials` and `data-testid="avatar-initials"` showing two initials on a pastel background whose hue is derived deterministically from the email (falling back to the name). The `initials()` and `deterministicColor()` helpers are exported for reuse.

@@ -1,0 +1,5 @@
+A five-bar strength meter for new passwords. `tar-password-strength` is a plain Angular component (no Material primitive) that runs `password` (and optionally `userEmail`) through an `evaluator` — `evaluatePassword` from `password-policy.ts` by default — and renders the resulting score.
+
+The policy checks five rules (12–128 characters, an uppercase letter, a lowercase letter, a digit and a symbol); the score is the number met. Passwords on a short common-password list score 0, and a password that contains the email's local part loses two points and is never valid. Swap `evaluator` for any `PasswordEvaluator` to apply a different policy.
+
+The host renders `.tar-password-strength__bars` with five `.tar-password-strength__bar` spans (`data-testid="password-strength-bar"`; filled ones add `.tar-password-strength__bar--filled`), a `.tar-password-strength__label` (`data-testid="password-strength-label"`, empty / Weak / Okay / Strong) and, when the policy returns guidance, a `.tar-password-strength__helper` (`data-testid="password-strength-helper"`). Filled bars and the label are coloured by score: error for 1–2, secondary for 3–4, tertiary for 5.
