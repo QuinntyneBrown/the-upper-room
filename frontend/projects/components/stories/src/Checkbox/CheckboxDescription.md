@@ -1,0 +1,3 @@
+A single on/off choice with a label. `tar-checkbox` wraps Angular Material's `mat-checkbox` and emits `checkedChange` with the new boolean. It is controlled, not a `ControlValueAccessor`: bind `checked` and update it from `checkedChange`. The label is projected content.
+
+The `mat-checkbox` carries `.tar-checkbox` with `data-testid` from `testId` and `aria-label` from `ariaLabel`; the projected label is wrapped in `.tar-checkbox__label`. `indeterminate` shows the mixed state used by "select all" parents. A `color` input exists, but the Material 3 theme renders every checkbox in the primary colour.
