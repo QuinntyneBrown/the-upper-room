@@ -1,0 +1,3 @@
+A single Material Symbols glyph. `tar-icon` wraps Angular Material's `mat-icon` with the `material-symbols-rounded` font set and resolves `name` through `ICON_ALIASES` (exported from `components`), so feature code asks for `contacts` or `kanban` and gets the agreed glyph (`person`, `view_kanban`). A name that is not an alias is passed through as a raw ligature.
+
+The `mat-icon` carries `.tar-icon` and a size modifier `.tar-icon--{size}` (`xs`, `sm`, `md`, `lg`, `xl`, backed by the `--icon-size-*` tokens), and renders `data-testid="icon-{name}"` and `aria-label="{name}"` using the name as given, not the resolved glyph.

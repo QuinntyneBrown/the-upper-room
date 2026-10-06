@@ -1,0 +1,3 @@
+A single choice from a short, visible list. `tar-radio-group` wraps Angular Material's `mat-radio-group`, rendering one `mat-radio-button` per entry in `options` (`TarRadioOption`: `value`, `label`, optional `disabled`). It is controlled, not a `ControlValueAccessor`: pass `value` and listen to `valueChange`.
+
+The group carries `.tar-radio-group` (plus `.tar-radio-group--inline` to lay options out in a row), `data-testid` from `testId` and `aria-label` from `ariaLabel`, falling back to `label`. The optional `label` renders as `.tar-radio-group__label` and each option is `.tar-radio-group__option`.

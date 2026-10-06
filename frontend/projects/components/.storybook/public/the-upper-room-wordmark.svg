@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 32" role="img" aria-label="The Upper Room">
+  <rect width="32" height="32" rx="8" fill="#6750a4"/>
+  <path d="M7 15.5 16 8l9 7.5V24a1 1 0 0 1-1 1h-5v-6h-6v6H8a1 1 0 0 1-1-1z" fill="#ffffff"/>
+  <text x="42" y="22" font-family="Roboto, system-ui, sans-serif" font-size="17" font-weight="500" fill="#1c1b1f">The Upper Room</text>
+</svg>

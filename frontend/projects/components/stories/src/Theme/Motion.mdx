@@ -1,0 +1,23 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { TokenRows, previews } from './components/TokenBlocks';
+
+<Meta title="Theme/Motion" />
+
+# Motion
+
+Short durations (`short1`–`short4`) for hover, press and selection feedback; `medium` for state changes such as a drawer
+or dialog opening; `long` only for large, full-screen transitions. Under `prefers-reduced-motion: reduce` the global
+stylesheet collapses every animation and transition.
+
+## Duration
+
+Hover a row to see the duration.
+
+<TokenRows prefixes={['md-sys-motion-duration-']} preview={previews.duration} />
+
+## Easing
+
+Hover a row to see the curve at `long2`.
+
+<TokenRows prefixes={['md-sys-motion-easing-']} preview={previews.easing} />

@@ -1,0 +1,3 @@
+A multi-line text input. `tar-textarea` wraps an Angular Material `mat-form-field` (always `outline`) around a `<textarea matInput>`, sized by `rows` and vertically resizable. It is controlled, not a `ControlValueAccessor`: pass `value`, listen to `valueChange` and `blurred`.
+
+The form field carries `.tar-textarea` (plus `.tar-textarea--full-width`, on by default); the `<textarea>` is `.tar-textarea__input` with `data-testid` from `testId`, and `aria-label` falls back to `label`. `hint` renders `.tar-textarea__hint`. `error` renders a `mat-error` (`.tar-textarea__error`, `data-testid` from `errorTestId`), which Material only displays when the input is in an error state — without a bound form control that never happens, so the message is not shown.

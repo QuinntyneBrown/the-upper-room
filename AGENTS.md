@@ -21,6 +21,7 @@ The Upper Room is a full-stack, multi-city platform for managing contacts, partn
 - API services have a contract and injection token; app pages depend on the token, not the concrete implementation.
 - **No inline forms in pages.** Button-triggered editing always opens a CDK Dialog or navigates to a screen.
 - Use Angular CDK Dialog/Overlay for modal behavior; don't hand-roll modals.
+- The design system is the Storybook docsite in `frontend/projects/components/.storybook` + `stories/`. Every public component has a story folder `stories/src/<Name>/`: `index.stories.ts` (meta + re-exports; the only file Storybook globs), one `<Name><Story>.stories.ts` per example (`Default` first), and `<Name>Description.md` + `<Name>BestPractices.md`. Run `npm run build-storybook` from `frontend/` after changing a component's API.
 
 ## E2E conventions (Playwright)
 

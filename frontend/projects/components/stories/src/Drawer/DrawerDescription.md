@@ -1,0 +1,5 @@
+A panel that slides in from the edge of the screen over a scrim — contact previews, filters, activity feeds. `tar-drawer` is a custom component (not `mat-sidenav` or a CDK overlay); it uses Material's `mat-icon-button` for the close control. It renders nothing while `open` is false.
+
+When open it renders `.tar-drawer__scrim` (`data-testid="{testId}-scrim"`) and `aside.tar-drawer.tar-drawer--{position}`, both `position: fixed`. The `aside` gets `role` (`dialog` by default, or `complementary`), `aria-modal="true"` when the role is `dialog`, `aria-label` from `ariaLabel`, and `data-testid` from `testId`. It contains `.tar-drawer__header` with an optional `h2.tar-drawer__title` and the `.tar-drawer__close` button (`aria-label="Close"`, `{testId}-close`), `.tar-drawer__body` for the default slot, and `.tar-drawer__footer` for content marked `tar-drawer-footer`.
+
+The drawer is controlled: the close button, a scrim click (when `closeOnScrim`) and the Escape key emit `closed`, and the host sets `open` to false. It is full width on phones and 480 px from the `md` breakpoint.

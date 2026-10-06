@@ -1,0 +1,3 @@
+The floating action button for a screen's single most important create action. `tar-fab` wraps Angular Material's `mat-fab` (with `extended` when `extended` is true) around a `mat-icon` ligature and emits `clicked` with the native `MouseEvent`.
+
+The inner `<button>` carries `.tar-fab` (plus `.tar-fab--extended` for the extended form), the glyph is `.tar-fab__icon`, `ariaLabel` becomes `aria-label`, and `testId` is mirrored to `data-testid`. Content projected into an extended FAB renders after the icon as its visible label. A `color` input exists, but the Material 3 theme renders every FAB in the primary container colour.

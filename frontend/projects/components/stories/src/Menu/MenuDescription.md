@@ -1,0 +1,3 @@
+An overflow menu of actions behind an icon button. `tar-menu` renders a Material `mat-icon-button` trigger (`[matMenuTriggerFor]`) and a `mat-menu` built from `items` (`TarMenuItem { id, label, icon?, disabled?, danger?, divider? }`). Choosing an item emits `itemSelected` with the item's `id`.
+
+BEM classes: the trigger is `.tar-menu__trigger`; the panel is `.tar-menu`; each entry is a `mat-menu-item` button `.tar-menu__item` (plus `.tar-menu__item--danger`) containing `.tar-menu__icon` and `.tar-menu__label`; dividers are `.tar-menu__divider`. `testId` is mirrored to `data-testid` on the trigger, and each item gets `data-testid="{testId}-{item.id}"` when `testId` is set. `ariaLabel` (default `"Open menu"`) names the trigger; `xPosition`/`yPosition` place the panel.

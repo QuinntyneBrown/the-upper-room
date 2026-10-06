@@ -1,0 +1,45 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Concepts/Developer/Styling Components" />
+
+# Styling components
+
+## BEM classes are part of the API
+
+Every component renders BEM classes — the block (`.tar-button`), its elements (`.tar-button__icon`) and modifiers
+(`.tar-button--outlined`, `.tar-button--full-width`) — plus a `data-testid` where it takes a `testId`. The Playwright page
+objects locate by these, so **renaming a class breaks the e2e suite**. Stylelint enforces the naming
+(`the-upper-room/bem-class-name`).
+
+## Encapsulated SCSS
+
+Each component owns its stylesheet (`<name>.scss`, emulated encapsulation). Global SCSS holds only shared foundations:
+the Material theme, the tokens and utilities such as `.u-grid`.
+
+```scss
+// card.scss
+.tar-card {
+  border-radius: var(--md-sys-shape-corner-medium);
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+}
+
+.tar-card--interactive {
+  cursor: pointer;
+  transition: box-shadow var(--md-sys-motion-duration-short3) var(--md-sys-motion-easing-standard);
+}
+```
+
+Rules of thumb:
+
+- Use tokens, never hex values, and pick them by **role** (`on-surface-variant` for secondary text), not by value.
+- Padding, margin and gap use `--md-sys-space-*` (`the-upper-room/spacing-token-only`).
+- Responsive rules use the mixins: `@use '../styles' as bp;` then `@include bp.md { … }`.
+- Style the wrapped Material primitive through its documented tokens and classes; don't reach into its internals.
+
+## Content projection
+
+Declare each `ng-content` slot **once**. A component that renders different elements by condition puts its content in
+one `<ng-template>` and renders it with `ngTemplateOutlet` in every branch — `tar-button` does this for its five
+variants. On the consumer side, an `@if` wrapping several `[slot=…]` nodes loses the slot (NG8011) — use one `@if` per
+node.

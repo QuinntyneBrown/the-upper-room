@@ -1,0 +1,3 @@
+A one-tap "share this page" control. `tar-share-button` renders a plain icon `<button>` (no Material primitive) with the class `.tar-share-button`, `aria-label="Share"` and `data-testid="share-button"`, containing a `material-icons` "share" glyph. It has no inputs or outputs.
+
+On click it shares the current `location.href`: through the Web Share API (`navigator.share`) where available — the native share sheet on phones — and otherwise by copying the URL to the clipboard and confirming with the `SnackbarService` toast "Link copied to clipboard.". A cancelled share sheet or a denied clipboard permission fails silently.

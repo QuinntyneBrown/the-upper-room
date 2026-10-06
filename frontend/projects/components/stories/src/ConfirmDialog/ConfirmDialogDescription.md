@@ -1,0 +1,5 @@
+A modal that asks the user to confirm an action. Pages don't render `tar-confirm-dialog` directly; they call `ConfirmService.confirm(options)`, which opens it with Angular Material's `MatDialog` (panel class `tar-confirm-dialog-panel`, initial focus on Cancel, focus restored on close) and returns a `Promise<boolean>` that is `true` only when the user confirms.
+
+`ConfirmOptions`: `title` (required), `body`, `severity` (`'info' | 'warning' | 'danger'`, default `info`), `confirmLabel` (default "Confirm"), `cancelLabel` (default "Cancel") and `requireTypedConfirmation` (a phrase the user must type before confirming).
+
+The host carries `data-testid="confirm-dialog"` and `data-severity`; `warning` and `danger` repaint it with the tertiary- and error-container roles. Inside, BEM classes `.tar-confirm-dialog__title` (`mat-dialog-title`, `id="confirm-dialog-title"`), `__content`, `__body`, `__field` and `__actions`; test ids `confirm-title`, `confirm-body`, `confirm-typed-input`, `confirm-cancel` and `confirm-button`. The stories below render the dialog inline with stub dialog data, except **Via service**, which opens it for real.

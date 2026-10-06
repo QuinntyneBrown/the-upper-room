@@ -1,0 +1,49 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { ColorGrid } from './components/TokenBlocks';
+
+<Meta title="Theme/Colors" />
+
+# Colors
+
+Material 3 colour roles generated from the seed `#6750A4`. Pair every container with its `on-` role — `primary-container`
+with `on-primary-container`, `error-container` with `on-error-container` — so text always passes AA. Switch the toolbar
+to **Dark** to see the dark scheme's values.
+
+## Primary, secondary & tertiary
+
+<ColorGrid prefixes={['md-sys-color-primary', 'md-sys-color-on-primary']} />
+
+<ColorGrid prefixes={['md-sys-color-secondary', 'md-sys-color-on-secondary']} />
+
+<ColorGrid prefixes={['md-sys-color-tertiary', 'md-sys-color-on-tertiary']} />
+
+## Error
+
+Destructive actions, invalid fields and error banners.
+
+<ColorGrid prefixes={['md-sys-color-error', 'md-sys-color-on-error']} />
+
+## Surfaces
+
+`surface` is the page; the five `surface-container-*` levels step up for cards, sheets, menus and dialogs.
+
+<ColorGrid
+  prefixes={[
+    'md-sys-color-background',
+    'md-sys-color-on-background',
+    'md-sys-color-surface',
+    'md-sys-color-on-surface',
+  ]}
+/>
+
+## Outline, inverse & scrim
+
+<ColorGrid
+  prefixes={[
+    'md-sys-color-outline',
+    'md-sys-color-inverse',
+    'md-sys-color-shadow',
+    'md-sys-color-scrim',
+  ]}
+/>

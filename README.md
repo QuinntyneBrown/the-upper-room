@@ -40,6 +40,8 @@ The Upper Room is a full-stack application composed of an ASP.NET Core backend a
 |   +-- projects/
 |   |   +-- api/             # API integration library
 |   |   +-- components/      # Shared Angular component library
+|   |   |   +-- .storybook/  # Storybook configuration, manager theme, branding
+|   |   |   +-- stories/     # Design-system docsite: concepts, theme, components, patterns
 |   |   +-- domain/          # Domain models and business logic library
 |   |   +-- the-upper-room/  # Main Angular application
 |   +-- angular.json
@@ -219,6 +221,8 @@ The development server runs at `http://localhost:4200/` by default and reloads w
 | `npm run build` | Build the default Angular project for production. |
 | `npm run watch` | Build continuously with the development configuration. |
 | `npm test` | Run unit tests through Angular's test builder. |
+| `npm run storybook` | Start the Storybook design-system docsite for the `components` library on :6006. |
+| `npm run build-storybook` | Build the static Storybook to `frontend/dist/storybook`. |
 | `npm run ng -- <args>` | Run Angular CLI commands through the local CLI version. |
 
 You can also target individual workspace projects directly:
@@ -235,6 +239,7 @@ npm run ng -- test the-upper-room
 
 - `projects/api` — API clients and transport concerns.
 - `projects/components` — reusable UI components.
+- `projects/components/stories` — the Storybook docsite for those components (see [Design System](#design-system)).
 - `projects/domain` — domain models and business rules.
 - `projects/the-upper-room` — app composition and user-facing routes.
 
@@ -267,6 +272,30 @@ Build output is written to `frontend/dist/`. To build a specific project, pass t
 npm run ng -- build the-upper-room
 npm run ng -- build components
 ```
+
+### Design System
+
+The design system is a [Storybook](https://storybook.js.org) docsite for the `components` library, laid out like the
+Fluent UI v9 docsite:
+
+```bash
+cd frontend
+npm run storybook        # http://localhost:6006
+npm run build-storybook  # static build -> frontend/dist/storybook
+```
+
+- `projects/components/.storybook/` — `main.ts` (stories glob, docs + a11y addons), `preview.ts` (compodoc API tables,
+  router, viewports, light/dark toolbar), the branded manager theme and static branding in `public/`.
+- `projects/components/stories/src/Concepts/` — introduction and developer guides (MDX).
+- `projects/components/stories/src/Theme/` — the `--md-sys-*` design tokens, read from the live stylesheet (MDX).
+- `projects/components/stories/src/<Component>/` — `index.stories.ts` (meta + re-exports; the only file Storybook
+  globs), one `<Component><Story>.stories.ts` per example (`Default` first), and `<Component>Description.md` +
+  `<Component>BestPractices.md` for the autodocs page.
+- `projects/components/stories/src/Patterns/` — whole-screen compositions of real components.
+
+Stories render with the app's global stylesheet (`projects/the-upper-room/src/styles.scss`), so a component looks the
+same in Storybook as on a screen. The `Storybook` workflow builds it on every PR that touches the library and deploys
+`main` to an Azure Static Web App when the `SWA_STORYBOOK_DEPLOYMENT_TOKEN` secret is set.
 
 ## Documentation
 

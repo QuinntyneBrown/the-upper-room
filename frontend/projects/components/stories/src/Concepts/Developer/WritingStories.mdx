@@ -1,0 +1,65 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Concepts/Developer/Writing Stories" />
+
+# Writing stories
+
+Stories follow the Fluent UI docsite layout: one folder per component under
+`frontend/projects/components/stories/src/`, with small, copy-pasteable story files.
+
+```text
+stories/src/Button/
+├── index.stories.ts             # meta (title, component, imports) + re-exports
+├── ButtonDescription.md         # what it is, what it wraps, which BEM classes it renders
+├── ButtonBestPractices.md       # ## Best practices — Layout / Content / Accessibility
+├── ButtonDefault.stories.ts     # `Default` — args wired to inputs for Controls
+├── ButtonVariant.stories.ts
+└── ButtonStates.stories.ts
+```
+
+Only `index.stories.ts` is globbed by `.storybook/main.ts`; it owns the meta and re-exports each story:
+
+```ts
+import type { Meta } from '@storybook/angular';
+import { moduleMetadata } from '@storybook/angular';
+import { TarButton } from 'components';
+
+import descriptionMd from './ButtonDescription.md';
+import bestPracticesMd from './ButtonBestPractices.md';
+
+export { Default } from './ButtonDefault.stories';
+export { Variant } from './ButtonVariant.stories';
+
+export default {
+  title: 'Components/Button',
+  component: TarButton,
+  decorators: [moduleMetadata({ imports: [TarButton] })],
+  parameters: {
+    docs: { description: { component: [descriptionMd, bestPracticesMd].join('\n') } },
+  },
+} as Meta<TarButton>;
+```
+
+Each story file exports one `StoryObj` with a template and a short description:
+
+```ts
+export const Variant: StoryObj<TarButton> = {
+  render: () => ({
+    template: `<tar-button variant="outlined">Archive partner</tar-button>`,
+  }),
+  parameters: {
+    docs: { description: { story: '`outlined` is a secondary action.' } },
+  },
+};
+```
+
+## Checklist
+
+- `Default` comes first and binds `args` to inputs so Controls work.
+- Bind boolean inputs (`[disabled]="true"`) — most inputs have no `booleanAttribute` transform, so a bare `disabled`
+  attribute passes an empty string.
+- Use realistic Upper Room copy — real contacts, partners, cities and boards, not "Lorem ipsum".
+- Shell and pattern stories set `layout: 'fullscreen'` and a viewport global where the tier matters.
+- Inputs, outputs and their JSDoc come from compodoc — document them on the component, not in the story.
+- New component? Add it to `src/public-api.ts`, then add its story folder. Run `npm run build-storybook` from
+  `frontend/` after changing a component's API.
