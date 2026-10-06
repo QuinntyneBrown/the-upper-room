@@ -44,7 +44,7 @@ The Upper Room is a full-stack application composed of an ASP.NET Core backend a
 |   |   +-- the-upper-room/  # Main Angular application
 |   +-- angular.json
 |   +-- package.json
-+-- docs/                    # Specs, plans, design assets, ICDs
++-- docs/                    # Requirements and backend feature guidance
 ```
 
 ## Tech Stack
@@ -272,10 +272,9 @@ npm run ng -- build components
 
 Project documentation lives under [`docs/`](docs):
 
-- `docs/specs/` — requirements (L1 high-level, L2 detailed with acceptance criteria).
-- `docs/plan/` — task breakdowns.
-- `docs/design/` — architecture and design documents.
-- `docs/ui-design.pen` — UI design source (Pencil).
+- [High-level requirements](docs/specs/L1.md) — intended product capabilities.
+- [Detailed requirements](docs/specs/L2.md) — acceptance criteria for those capabilities.
+- [Backend feature template](docs/architecture/feature-template.md) — layer responsibilities and feature-development guidance.
 
 ## Contributing
 
