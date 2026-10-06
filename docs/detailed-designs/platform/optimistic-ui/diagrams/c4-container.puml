@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Optimistic UI
+
+Person(user, "Member", "Votes, RSVPs, archives, and moves cards")
+System_Boundary(trur, "The Upper Room") {
+  Container(spa, "the-upper-room application", "Angular", "Pages that toggle state")
+  Container(lib, "components library", "Angular library", "optimisticMutation and snackbar")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Vote, RSVP, read, archive, and move endpoints")
+}
+Rel(user, spa, "Uses", "HTTPS")
+Rel(spa, lib, "Calls optimisticMutation of", "TypeScript")
+Rel(spa, api, "Sends mutation to", "JSON/HTTPS")
+@enduml

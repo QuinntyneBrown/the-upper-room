@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Validate, sanitize, and rate-limit requests
+
+Person(user, "Member", "Submits notes and signs in")
+Person(att, "Abusive client", "Sends unsafe markup or excess requests")
+System_Boundary(trur, "The Upper Room") {
+  Container(spa, "the-upper-room application", "Angular", "Renders sanitized HTML")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Controllers, exception handling, rate limiter")
+  Container(app, "TheUpperRoom.Application", ".NET library", "Validators, handlers, sanitizer")
+  ContainerDb(cache, "Rate-limit cache", "Redis or distributed memory cache", "Sign-in buckets")
+  ContainerDb(db, "Service databases", "SQLite via EF Core", "Notes and other data")
+}
+Rel(user, spa, "Uses", "HTTPS")
+Rel(att, api, "Sends requests to", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, app, "Sends commands to", "MediatR")
+Rel(api, cache, "Counts attempts in", "IDistributedCache")
+Rel(app, db, "Persists to", "EF Core")
+@enduml

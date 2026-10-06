@@ -1,0 +1,42 @@
+@startuml
+title UML sequence behaviour — Lighthouse-CI regression check
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Developer" as actor
+box "Build — CI pipeline" #F2F4F7
+  participant "CI job" as ci
+  participant "lhci autorun" as lhci
+  participant "Baseline store" as base
+end box
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "the-upper-room (served)" as spa
+end box
+actor -> ci : Open pull request
+ci -> spa : Build and serve
+ci -> lhci : Run with .lighthouserc.json
+loop each representative page
+  lhci -> spa : Load under Moto G4 / Slow 4G (L2-089)
+  spa --> lhci : LCP, TBT, CLS
+end
+lhci -> base : Read rolling 7-day baseline
+base --> lhci : Baseline vitals
+alt any vital regressed by more than 10%
+  lhci --> ci : Fail, "LCP regressed by 32%"
+  ci --> actor : Build failed
+else within tolerance
+  lhci -> base : Append run
+  ci --> actor : Build passed
+end
+@enduml

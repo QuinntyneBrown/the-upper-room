@@ -1,0 +1,25 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Upload files
+
+System_Ext(av, "Malware scanner", "ClamAV or hosted equivalent")
+System_Ext(obj, "Object storage", "Stores uploaded objects and issues signed URLs")
+Container_Boundary(spa, "the-upper-room application") {
+  Component(up, "TarAvatarUploader", "Angular component", "Selects and posts a file")
+}
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(ctrl, "UploadsController", "ASP.NET Core controller", "POST /api/v1/uploads")
+  Component(h, "UploadFileHandler", "MediatR handler", "Validates, scans, stores")
+  Component(sn, "ContentSniffer (target)", "Service", "Detects MIME type from bytes")
+  Component(sc, "MalwareScanner (target)", "Service", "Scans the stream")
+  Component(st, "ObjectStore (target)", "Service", "Stores with random key; signs URL")
+}
+Rel(up, ctrl, "POSTs file to", "multipart/form-data")
+Rel(ctrl, h, "Sends UploadFileCommand", "MediatR")
+Rel(h, sn, "Sniffs with")
+Rel(h, sc, "Scans with")
+Rel(h, st, "Stores with")
+Rel(sc, av, "Calls", "<TO SUPPLY>")
+Rel(st, obj, "Writes to", "<TO SUPPLY>")
+@enduml

@@ -1,0 +1,37 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Service contracts and interceptors
+Container_Boundary(app, "the-upper-room application") {
+  Component(page, "ContactEdit", "Angular component", "Page that depends on a contract token")
+  Component(cfg, "app.config.ts", "ApplicationConfig", "Registers interceptors and providers in order")
+  Component(corr, "correlationIdInterceptor", "HttpInterceptorFn", "Adds X-Correlation-Id")
+  Component(auth, "authInterceptor", "HttpInterceptorFn", "Attaches the access token")
+  Component(csrf, "csrfInterceptor", "HttpInterceptorFn", "Adds the CSRF header")
+  Component(err, "errorInterceptor", "HttpInterceptorFn", "Maps errors to snackbar messages")
+  Component(cat, "error-catalog", "Module", "mapErrorToMessage")
+}
+Container_Boundary(apilib, "api library") {
+  Component(token, "CONTACTS_API", "InjectionToken", "Contract token")
+  Component(contract, "IContactsApi", "Interface", "Contract")
+  Component(svc, "ContactsApiService", "Injectable", "Concrete service")
+  Component(provide, "provideApi", "Provider helper", "Binds tokens to services")
+}
+Container_Boundary(comp, "components library") {
+  Component(retry, "retryInterceptor", "HttpInterceptorFn", "Retries GET and HEAD")
+  Component(snack, "SnackbarService", "Service", "Shows messages")
+}
+Component(tokensrc, "ACCESS_TOKEN_SOURCE", "InjectionToken in domain library", "Supplies the current token")
+Rel(page, token, "inject()")
+Rel(token, contract, "Typed as")
+Rel(provide, svc, "useExisting")
+Rel(provide, token, "Provides")
+Rel(cfg, corr, "Registers 1st")
+Rel(cfg, auth, "Registers 2nd")
+Rel(cfg, csrf, "Registers 3rd")
+Rel(cfg, retry, "Registers 4th")
+Rel(cfg, err, "Registers 5th")
+Rel(auth, tokensrc, "Reads")
+Rel(err, cat, "Uses")
+Rel(err, snack, "Shows")
+@enduml

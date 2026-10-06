@@ -1,0 +1,36 @@
+@startuml
+title UML sequence behaviour — Show the application error boundary
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "City member" as actor
+box "Frontend — The Upper Room web app" #E0F2FE
+  participant "Component" as comp
+  participant "GlobalErrorHandler" as geh
+  participant "ErrorBoundaryService" as svc
+  participant "ErrorBoundary" as eb
+end box
+actor -> comp : Trigger rendering
+comp -> geh : Unhandled exception
+geh -> geh : console.error(error)
+geh -> geh : Send exception to telemetry (L2-069) <TO SUPPLY>
+alt Error is HttpErrorResponse
+  geh --> comp : Return, no boundary
+else Runtime error
+  geh -> svc : raise()
+  svc -> svc : current = { correlationId: UUID }
+  svc --> eb : current signal
+  eb --> actor : "Something went wrong" with ID (L2-069)
+  opt Copy
+    actor -> eb : Copy reference
+    eb -> eb : navigator.clipboard.writeText(correlationId)
+  end
+  opt Reload
+    actor -> eb : Reload page
+    eb -> svc : clear()
+    eb -> eb : window.location.reload()
+  end
+end
+@enduml

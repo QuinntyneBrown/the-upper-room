@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Upload files
+
+Person(user, "Member", "Uploads an image")
+System_Ext(av, "Malware scanner", "ClamAV or hosted equivalent")
+System_Ext(obj, "Object storage", "Stores uploaded objects and issues signed URLs")
+System_Boundary(trur, "The Upper Room") {
+  Container(spa, "the-upper-room application", "Angular", "Upload controls")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "UploadsController and handler")
+}
+Rel(user, spa, "Selects file in", "HTTPS")
+Rel(spa, api, "POST multipart/form-data", "HTTPS")
+Rel(api, av, "Scans with", "<TO SUPPLY>")
+Rel(api, obj, "Stores in", "<TO SUPPLY>")
+@enduml

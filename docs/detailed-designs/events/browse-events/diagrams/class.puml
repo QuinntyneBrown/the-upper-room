@@ -1,0 +1,64 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Browse events
+enum EventStatus {
+  Potential
+  Scheduled
+  InProgress
+  Past
+  Cancelled
+}
+enum RsvpStatus {
+  Yes
+  No
+  Maybe
+  Waitlist
+}
+class Event {
+  +string Title
+  +string? DescriptionMarkdown
+  +EventStatus Status
+  +DateTimeOffset StartsAt
+  +DateTimeOffset EndsAt
+  +string Timezone
+  +string? LocationId
+  +string? VirtualMeetingUrl
+  +int? Capacity
+  +bool RequiresApproval
+  +string? CoverImageUrl
+  +GetEffectiveStatus(now: DateTimeOffset): EventStatus
+}
+class EventAttendee {
+  +string EventId
+  +string? UserId
+  +string? GuestContactId
+  +RsvpStatus Status
+  +DateTimeOffset RespondedAt
+  +string? Note
+}
+class EventsController {
+  +List(): IActionResult
+  +GetById(id: string): IActionResult
+}
+class EventList {
+  +ngOnInit(): void
+}
+class CalendarMonth {
+  +ngOnChanges(): void
+}
+Event "1" *-- "*" EventAttendee : Attendees
+Event --> EventStatus : has
+EventAttendee --> RsvpStatus : has
+EventList ..> EventsController : HTTP
+EventList --> CalendarMonth : hosts
+EventsController ..> Event : maps
+@enduml

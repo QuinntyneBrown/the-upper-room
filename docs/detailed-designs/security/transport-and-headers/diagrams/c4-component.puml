@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Transport, headers, secrets, and CSRF
+
+System_Ext(kv, "Key vault", "Holds production secrets (Azure Key Vault or equivalent)")
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(https, "HttpsRedirect (target)", "Middleware", "Redirects with 308")
+  Component(hdr, "Security-header middleware", "Inline middleware in Program.cs", "Sets response headers")
+  Component(csrf, "CsrfMiddleware", "ASP.NET Core middleware", "Issues and validates the double-submit token")
+  Component(log, "Correlation and logging middleware", "Inline middleware", "Logs requests without secrets")
+  Component(conf, "IConfiguration", "ASP.NET Core", "Reads Jwt and Push settings")
+}
+Container_Boundary(spa, "the-upper-room application") {
+  Component(int, "csrfInterceptor", "HttpInterceptorFn", "Copies cookie to header")
+}
+Rel(https, hdr, "Passes to")
+Rel(hdr, csrf, "Passes to")
+Rel(csrf, log, "Passes to")
+Rel(int, csrf, "Sends X-XSRF-TOKEN to", "HTTPS")
+Rel(conf, hdr, "Supplies environment name to")
+@enduml

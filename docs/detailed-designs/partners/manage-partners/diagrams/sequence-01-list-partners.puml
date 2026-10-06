@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Target behavior - List partners
+actor "Member" as actor
+box "Frontend - Upper Room application and libraries" #E0F2FE
+participant "PartnerList" as page
+participant "IPartnersApi" as client
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "PartnersController" as boundary
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Partner list query (target role)" as logic
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "InMemoryPartnersStore" as state
+end box
+actor -> page : List partners
+page -> client : GET /api/v1/partners with Tag, City, and Archived filters
+client -> boundary : Authorized feature request
+boundary -> boundary : Authenticate and validate request shape
+alt invalid or forbidden request
+boundary --> client : Safe error and correlation identifier
+client --> page : Preserve input or previous state
+else accepted request
+boundary -> logic : Dispatch operation
+logic -> logic : Apply L2-035 filters and the city scope
+logic -> state : Read or persist authorized state
+state --> logic : State or dependency result
+alt rule or dependency failure
+logic --> boundary : Rejected outcome
+boundary --> client : Mapped failure response
+client --> page : Safe error and a retry affordance
+else success
+logic --> boundary : Outcome
+boundary --> client : Typed response
+client --> page : Partner cards with logo, name, website, primary contact count, and tag chips; empty state when none
+end
+end
+page --> actor : Result or recoverable feedback
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Solution layout and MediatR
+
+class DependencyInjection <<Application>> {
+  +AddApplication(services: IServiceCollection, additionalAssemblies: Assembly[]): IServiceCollection
+}
+class InfrastructureDependencyInjection <<Infrastructure>> {
+  +AddInfrastructure(services: IServiceCollection, configuration: IConfiguration): IServiceCollection
+  +AddSeeders(services: IServiceCollection, assemblies: Assembly[]): IServiceCollection
+  +AddAppDbContextSqlServer(services: IServiceCollection, configuration: IConfiguration): IServiceCollection
+}
+interface "IPipelineBehavior<TRequest,TResponse>" as IPB {
+  +Handle(request, next, cancellationToken): Task<TResponse>
+}
+class "ValidationBehavior<TRequest,TResponse>" as VB {
+  -IEnumerable<IValidator<TRequest>> _validators
+  +Handle(request, next, cancellationToken): Task<TResponse>
+}
+interface "IRequestHandler<TRequest,TResponse>" as IRH {
+  +Handle(request, cancellationToken): Task<TResponse>
+}
+class CreateContactHandler {
+  -IContactsDbContext _db
+  -IUserDirectory _users
+  +Handle(request, cancellationToken): Task<TResponse>
+}
+interface IContactsDbContext
+class ContactsDbContext <<Infrastructure>>
+class ValidationExceptionHandler <<Api>> {
+  +TryHandleAsync(httpContext, exception, cancellationToken): ValueTask<bool>
+}
+
+VB ..|> IPB
+CreateContactHandler ..|> IRH
+DependencyInjection ..> VB : registers
+CreateContactHandler --> IContactsDbContext : depends on
+ContactsDbContext ..|> IContactsDbContext
+VB ..> ValidationExceptionHandler : throws ValidationException handled by
+@enduml

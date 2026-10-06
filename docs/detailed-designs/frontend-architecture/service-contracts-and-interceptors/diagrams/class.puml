@@ -1,0 +1,49 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Service contracts and interceptors
+
+interface IContactsApi {
+  +get(id: string): Observable<Contact>
+}
+class ContactsApiService {
+  +get(id: string): Observable<Contact>
+}
+class "CONTACTS_API" as TOKEN <<InjectionToken<IContactsApi>>>
+class "provideApi(options)" as PROVIDE {
+  +EnvironmentProviders
+}
+class ContactEdit
+class SKIP_ERROR_SNACKBAR <<HttpContextToken<boolean>>>
+interface HttpInterceptorFn {
+  +(req, next): Observable<HttpEvent>
+}
+class correlationIdInterceptor
+class authInterceptor
+class csrfInterceptor
+class retryInterceptor {
+  RETRYABLE = 0, 502, 503, 504
+  DELAYS_MS = 300, 900
+}
+class errorInterceptor
+
+ContactsApiService ..|> IContactsApi
+TOKEN ..> IContactsApi : typed as
+PROVIDE ..> TOKEN : provides
+PROVIDE ..> ContactsApiService : useExisting
+ContactEdit ..> TOKEN : inject
+correlationIdInterceptor ..|> HttpInterceptorFn
+authInterceptor ..|> HttpInterceptorFn
+csrfInterceptor ..|> HttpInterceptorFn
+retryInterceptor ..|> HttpInterceptorFn
+errorInterceptor ..|> HttpInterceptorFn
+errorInterceptor ..> SKIP_ERROR_SNACKBAR : reads
+@enduml

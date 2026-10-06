@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Workspace and conventions
+Person(dev, "Frontend developer", "Builds components, pages, and services in the Angular workspace")
+System(room, "The Upper Room frontend", "Angular workspace with api, components, domain libraries and the application")
+System_Ext(ci, "Lint and build tooling", "ESLint, Stylelint, ng-packagr, and the Angular builder")
+Rel(dev, room, "Develops")
+Rel(dev, ci, "Runs npm run lint and build")
+Rel(ci, room, "Checks and builds")
+@enduml

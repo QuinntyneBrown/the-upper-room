@@ -1,0 +1,38 @@
+@startuml
+title UML sequence behaviour — Detect an unsupported browser
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Browser platform" #F4EBFF
+  participant "Browser" as br
+end box
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "BrowserSupportDetector (target)" as det
+  participant "AppShell" as shell
+  participant "banner" as bn
+end box
+actor -> br : Open application
+br -> det : userAgent at bootstrap
+det -> det : Classify against supported browsers (L2-120)
+alt unsupported and not dismissed
+  det -> shell : Show banner
+  shell -> bn : Render message
+  bn --> actor : "Your browser may not be fully supported..."
+  actor -> bn : Dismiss
+  bn -> det : Remember dismissal for session
+else supported or dismissed
+  det --> shell : No banner
+end
+@enduml

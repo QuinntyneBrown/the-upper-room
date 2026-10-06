@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Manage notes
+Container_Boundary(browser, "Frontend - Upper Room") {
+Component(f0, "TarNotes", "Angular component", "`<tar-notes>` composer and list")
+Component(f1, "NoteHistoryDialog", "CDK dialog", "Prior versions")
+Component(f2, "INotesApi", "Contract", "`NOTES_API` token")
+Component(f3, "NotesApiService", "Angular service", "Implements `INotesApi`")
+}
+Container_Boundary(backend, "Backend - Upper Room API, Application, Domain") {
+Component(b0, "NotesController", "ASP.NET Core controller", "Route api/v1/notes")
+Component(b1, "CreateNoteHandler", "MediatR handler", "Creates notes")
+Component(b2, "UpdateNoteHandler", "MediatR handler", "Edits and records history")
+Component(b3, "DeleteNoteHandler", "MediatR handler", "Deletes notes")
+Component(b4, "NotesSanitizer", "Static helper", "Strips unsafe HTML")
+Component(b5, "Note", "Domain entity", "Owns body and history")
+}
+ContainerDb(data, "Upper Room database", "NotesDbContext", "Notes and versions")
+Rel(f0, f1, "Opens")
+Rel(f0, f2, "Uses")
+Rel(f3, b0, "Calls", "JSON/HTTPS")
+Rel(b0, b1, "Sends CreateNoteCommand")
+Rel(b0, b2, "Sends UpdateNoteCommand")
+Rel(b0, b3, "Sends DeleteNoteCommand")
+Rel(b1, b4, "Sanitizes")
+Rel(b2, b4, "Sanitizes")
+Rel(b2, b5, "Calls UpdateBody")
+Rel(b1, data, "Persists", "EF Core")
+Rel(b2, data, "Persists", "EF Core")
+Rel(b3, data, "Removes", "EF Core")
+@enduml

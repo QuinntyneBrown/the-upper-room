@@ -1,0 +1,32 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Workspace and conventions
+Container_Boundary(tools, "tools/") {
+  Component(fpt, "component-file-per-type", "ESLint rule", "Rejects inline template and styles in @Component")
+  Component(cti, "contract-token-import", "ESLint rule", "Rejects concrete *.service imports in *.component.ts")
+  Component(bem, "bem-class-name", "Stylelint rule", "Validates class selector names")
+  Component(sp, "spacing-token-only", "Stylelint rule", "Requires spacing tokens")
+  Component(parser, "raw-source-parser", "ESLint parser", "Passes raw source text to rules")
+}
+Container_Boundary(cfg, "frontend/ configuration") {
+  Component(eslintcfg, "eslint.config.js", "ESLint flat config", "Enables rules for **/*.ts and **/*.html")
+  Component(stylecfg, ".stylelintrc.json", "Stylelint config", "Enables BEM and spacing rules")
+  Component(tsconfig, "tsconfig.json", "TypeScript config", "Maps api, components, and domain to dist output")
+  Component(pkg, "package.json", "npm scripts", "build:libs, start, build, lint, e2e")
+}
+Container_Boundary(src, "Workspace sources") {
+  Component(libs, "projects/api, components, domain", "Angular libraries", "Built before the application")
+  Component(appsrc, "projects/the-upper-room", "Angular application", "Pages, shell, interceptors, e2e")
+}
+Rel(eslintcfg, fpt, "Enables")
+Rel(eslintcfg, cti, "Enables")
+Rel(eslintcfg, parser, "Uses")
+Rel(stylecfg, bem, "Enables")
+Rel(stylecfg, sp, "Enables")
+Rel(pkg, eslintcfg, "lint runs")
+Rel(pkg, stylecfg, "lint runs")
+Rel(pkg, libs, "build:libs builds")
+Rel(tsconfig, libs, "Resolves imports to dist of")
+Rel(appsrc, libs, "Imports")
+@enduml

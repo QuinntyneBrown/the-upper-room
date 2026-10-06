@@ -1,0 +1,27 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Solution layout and MediatR
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(program, "Program.cs", "Composition root", "Calls AddApplication and AddInfrastructure and builds the middleware pipeline")
+  Component(ctrl, "ContactsController", "ASP.NET Core controller", "Sends commands and queries through IMediator")
+  Component(exh, "ValidationExceptionHandler", "IExceptionHandler", "Maps ValidationException to a 400 problem response")
+}
+Container_Boundary(app, "TheUpperRoom.Application") {
+  Component(di, "DependencyInjection.AddApplication", "Extension method", "Registers MediatR, validators, and ValidationBehavior")
+  Component(vb, "ValidationBehavior", "IPipelineBehavior", "Runs every registered validator before the handler")
+  Component(handler, "CreateContactHandler", "IRequestHandler", "Applies the feature rule")
+  Component(abs, "IContactsDbContext", "Abstraction", "Persistence port used by handlers")
+}
+Container_Boundary(infra, "TheUpperRoom.Infrastructure") {
+  Component(idi, "DependencyInjection.AddInfrastructure", "Extension method", "Registers user directory, hasher, permission checker, and seeders")
+  Component(ctx, "ContactsDbContext", "EF Core DbContext", "Implements IContactsDbContext")
+}
+Rel(program, di, "Calls")
+Rel(program, idi, "Calls")
+Rel(ctrl, vb, "Sends request through")
+Rel(vb, handler, "Calls next")
+Rel(vb, exh, "Throws ValidationException handled by")
+Rel(handler, abs, "Depends on")
+Rel(ctx, abs, "Implements")
+@enduml

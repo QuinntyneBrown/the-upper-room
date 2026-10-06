@@ -1,0 +1,50 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Manage tags
+class Tag <<existing>> {
+  +string Name
+  +string Slug
+  +TagColor Color
+  +string? Description
+  +Update(name: string, color: TagColor, description: string?, updatedBy: string, updatedAt: DateTimeOffset)
+}
+enum TagColor <<existing>> {
+  Red
+  Pink
+  Purple
+  DeepPurple
+  Indigo
+  Blue
+  LightBlue
+  Cyan
+  Teal
+  Green
+  Lime
+  Amber
+  Orange
+}
+class TagConfiguration <<existing>>
+class TagList <<existing>> {
+  +COLORS
+}
+class TarTagSelector <<existing>>
+interface ITagsApi <<proposed>>
+class TagsController <<proposed>>
+Tag --> TagColor
+TagConfiguration ..> Tag : maps
+TagList ..> ITagsApi
+TarTagSelector ..> ITagsApi
+ITagsApi ..> TagsController : calls
+TagsController ..> Tag : via handlers
+@enduml

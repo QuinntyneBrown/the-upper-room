@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Manage tags
+Person(member, "Member or authorized administrator")
+System_Boundary(room, "The Upper Room") {
+Container(spa, "Upper Room browser app", "Angular", "TagList, TarTagSelector, ITagsApi")
+Container(api, "Upper Room API", "ASP.NET Core", "TagsController, Tag command and query handlers")
+ContainerDb(data, "Upper Room database", "EF Core", "Tags and associations")
+}
+Rel(member, spa, "Uses")
+Rel(spa, api, "Calls feature boundary", "JSON over HTTPS")
+Rel(api, data, "Reads or persists authorized state", "Application interfaces")
+@enduml

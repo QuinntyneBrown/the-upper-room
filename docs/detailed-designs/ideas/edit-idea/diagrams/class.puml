@@ -1,0 +1,48 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Edit idea
+class Idea {
+  +string Title
+  +string Summary
+  +string? DescriptionMarkdown
+  +IdeaStatus Status
+  +string ProposerUserId
+  +string? CoverImageUrl
+  +IReadOnlyCollection<string> PartnerIds
+  +IReadOnlyCollection<string> TagIds
+  +int VoteCount
+  +Update(title, summary, descriptionMarkdown, coverImageUrl, partnerIds, tagIds, updatedBy, updatedAt): void
+}
+enum IdeaStatus
+class IdeasController {
+  +Create(body: CreateIdeaRequest): IActionResult
+  +Update(id: string, body: UpdateIdeaRequest): IActionResult
+  +UploadCover(id: string, file: IFormFile): IActionResult
+}
+class CreateIdeaRequest
+class UpdateIdeaRequest
+class UploadsController {
+  +Upload(file: IFormFile): Task<IActionResult>
+}
+class UploadFileCommand
+class UploadFileHandler {
+  +Handle(command: UploadFileCommand): Task<UploadFileResult>
+}
+class UploadFileResult
+IdeasController ..> CreateIdeaRequest : accepts
+IdeasController ..> UpdateIdeaRequest : accepts
+IdeasController --> Idea : creates / updates
+UploadsController ..> UploadFileCommand : sends
+UploadFileHandler ..> UploadFileCommand : handles
+UploadFileHandler ..> UploadFileResult : returns
+Idea --> IdeaStatus : has
+@enduml

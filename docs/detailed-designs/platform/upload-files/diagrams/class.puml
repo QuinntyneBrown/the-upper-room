@@ -1,0 +1,47 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Upload files
+class UploadsController {
+  +Upload(file: IFormFile): Task<IActionResult>
+}
+class UploadFileCommand {
+  +UserId: string
+  +Length: long?
+  +FileName: string?
+}
+class UploadFileHandler {
+  -MaxBoardBytes: long
+  +Handle(request, ct): Task<UploadFileResult>
+}
+class UploadFileResult {
+  +Url: string?
+  +Outcome: UploadFileOutcome
+  +Error: string?
+}
+enum UploadFileOutcome {
+  Unauthorized
+  NoFile
+  TooLarge
+  Uploaded
+  UnsupportedType <<target>>
+}
+class ContentSniffer <<target>>
+class MalwareScanner <<target>>
+class ObjectStore <<target>>
+UploadsController ..> UploadFileCommand : sends
+UploadFileCommand ..> UploadFileHandler : handled by
+UploadFileHandler --> UploadFileResult : returns
+UploadFileResult --> UploadFileOutcome
+UploadFileHandler ..> ContentSniffer
+UploadFileHandler ..> MalwareScanner
+UploadFileHandler ..> ObjectStore
+@enduml

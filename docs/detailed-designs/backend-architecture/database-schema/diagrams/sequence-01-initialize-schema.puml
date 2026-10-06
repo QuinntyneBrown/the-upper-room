@@ -1,0 +1,32 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Initialize the schema at startup
+actor "Backend developer" as actor
+box "Backend - Upper Room API application" #D1FADF
+participant "Program.cs" as program
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Entity types" as entities
+end box
+box "Backend - Infrastructure" #FFF4E5
+participant "Feature DbContext" as ctx
+participant "Entity configurations" as cfg
+database "Feature database" as db
+end box
+actor -> program : Start the host
+program -> ctx : Resolve each feature DbContext in a scope
+ctx -> cfg : OnModelCreating applies configurations
+cfg -> entities : Read Id, audit fields, Version, CityId
+cfg --> ctx : Model with keys, row version, CityId index
+program -> ctx : Database.EnsureCreated()
+ctx -> db : Create tables if absent (L2-078)
+db --> ctx : Schema ready
+ctx --> program : Ready
+program --> actor : Host serves requests
+@enduml

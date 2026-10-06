@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Show snackbars
+
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(app, "App", "Angular root component", "Hosts the tar-snackbar element once")
+  Component(caller, "Feature pages and interceptors", "Angular", "Call SnackbarService.show")
+}
+Container_Boundary(lib, "components library") {
+  Component(host, "TarSnackbar", "Angular component", "Renders the current item with hover and focus pause")
+  Component(svc, "SnackbarService", "Injectable service", "Queues items and owns the auto-dismiss timer")
+}
+Rel(app, host, "Contains")
+Rel(caller, svc, "Calls show(message, severity, action)")
+Rel(host, svc, "Reads current; calls pause, resume, dismiss")
+@enduml

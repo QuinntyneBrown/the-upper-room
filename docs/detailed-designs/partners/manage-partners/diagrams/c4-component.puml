@@ -1,0 +1,29 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Manage partners
+Container_Boundary(browser, "Frontend - Upper Room") {
+Component(f0, "PartnerList", "Angular page", "Cards, filters, empty state")
+Component(f1, "PartnerDetail", "Angular page", "Overview, Contacts, Activity tabs")
+Component(f2, "PartnerContactsTab", "Angular component", "Linked contacts table and unlink")
+Component(f3, "LinkContactDialog", "CDK dialog", "Find a contact and assign a role")
+Component(f4, "PartnerEdit", "Angular page", "Create and edit form (`PartnerCreate` shares the layout)")
+Component(f5, "IPartnersApi", "Contract (proposed)", "Typed client; name `<TO SUPPLY>`")
+}
+Container_Boundary(backend, "Backend - Upper Room API, Application, Domain") {
+Component(b0, "PartnersController", "ASP.NET Core controller", "Route api/v1/partners")
+Component(b1, "PartnerContactsController", "ASP.NET Core controller", "Link and unlink contacts")
+Component(b2, "InMemoryPartnersStore", "Store", "Holds `Partner` state today")
+}
+ContainerDb(data, "Partner state", "InMemoryPartnersStore", "Partners and links")
+Rel(f0, f5, "Queries partners")
+Rel(f4, f5, "Submits partner")
+Rel(f2, f3, "Opens")
+Rel(f2, f5, "Links and unlinks")
+Rel(f1, f2, "Hosts")
+Rel(f5, b0, "Calls", "JSON/HTTPS")
+Rel(f5, b1, "Calls", "JSON/HTTPS")
+Rel(b0, b2, "Reads and writes")
+Rel(b1, b2, "Reads and writes")
+Rel(b2, data, "Is", "In-process")
+@enduml

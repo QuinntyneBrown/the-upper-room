@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Show offline banner
+
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(shell, "AppShell", "Angular component", "Places app-offline-banner under the top app bar")
+}
+Container_Boundary(lib, "components library") {
+  Component(banner, "OfflineBanner", "Angular component", "Chooses message, severity, and icon from bannerState")
+  Component(tar, "TarBanner", "Angular component", "Renders message, icon, and dismiss button")
+  Component(net, "NetworkService", "Injectable service", "Tracks offline, justRecovered, dismissed signals")
+}
+Rel(shell, banner, "Contains")
+Rel(banner, tar, "Renders")
+Rel(banner, net, "Reads bannerState; calls dismiss()")
+@enduml

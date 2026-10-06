@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Manage event
+Person(member, "Member or organizer", "Manages and responds to events")
+System_Boundary(room, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "Event detail page and form")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Events, RSVP, and ICS endpoints")
+  ContainerDb(db, "Events store", "EF Core", "Events and attendees")
+}
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Format dates and time zones
+class TarRelativeTime {
+  +timestamp: InputSignal<Date|string>
+  -tick: WritableSignal<number>
+  -format(ts: Date|string): string
+}
+class TimeZoneFormatter <<target>> {
+  +format(instant: Date, zone: string, pattern: string): string
+  +abbreviation(instant: Date, zone: string): string
+}
+class EventTimeDisplay <<target>> {
+  +startAt: Date
+  +eventTimezone: string
+  +viewerTimezone: string
+}
+class User {
+  +TimeZone: string
+}
+class Event {
+  +Timezone: string
+  +StartAt: DateTimeOffset
+}
+EventTimeDisplay ..> TimeZoneFormatter : uses
+EventTimeDisplay ..> Event : displays
+TimeZoneFormatter ..> User : viewer zone from
+TarRelativeTime ..> TimeZoneFormatter : may share
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Global search
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(dialog, "GlobalSearch", "Angular component", "Input, grouped results, keyboard navigation")
+  Component(field, "search-field", "Angular component", "Search input")
+}
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(ctrl, "SearchController", "ASP.NET Core controller", "GET api/v1/search")
+  Component(perm, "IPermissionChecker", "Abstraction", "City scope")
+}
+ComponentDb(db, "Contacts, Events, Ideas, Locations contexts", "EF Core", "Searched stores")
+Rel(dialog, field, "Hosts")
+Rel(dialog, ctrl, "GET search with q", "JSON/HTTPS")
+Rel(ctrl, perm, "Checks scope with")
+Rel(ctrl, db, "Queries", "EF Core")
+@enduml

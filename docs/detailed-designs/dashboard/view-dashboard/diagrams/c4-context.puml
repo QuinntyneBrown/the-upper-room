@@ -1,0 +1,8 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - View dashboard
+Person(member, "Signed-in user", "Lands on the dashboard after sign-in")
+System(room, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+Rel(member, room, "Views dashboard in")
+@enduml

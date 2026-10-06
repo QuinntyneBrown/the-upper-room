@@ -1,0 +1,44 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Send a request through the MediatR pipeline
+actor "Member or administrator" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "Page and API client" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "ContactsController" as ctrl
+participant "ValidationExceptionHandler" as exh
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "IMediator" as mediator
+participant "ValidationBehavior" as vb
+participant "CreateContactHandler" as handler
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "ContactsDbContext" as db
+end box
+actor -> page : Submit a form
+page -> ctrl : POST /api/v1/contacts
+ctrl -> mediator : Send(request)
+mediator -> vb : Handle(request, next)
+vb -> vb : Run all registered validators (L2-075)
+alt validation failures
+vb --> exh : throw ValidationException
+exh --> page : 400 application/problem+json with errors
+else no validator or no failures
+vb -> handler : next()
+handler -> db : Persist through IContactsDbContext
+db --> handler : Saved
+handler --> vb : Response
+vb --> mediator : Response
+mediator --> ctrl : Response
+ctrl --> page : 2xx response
+end
+page --> actor : Result or inline errors
+@enduml

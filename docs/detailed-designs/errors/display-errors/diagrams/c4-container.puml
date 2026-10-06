@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Display errors
+
+Person(member, "City member", "Sees errors")
+System_Boundary(upperRoom, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "HTTP interceptors, error catalog, snackbar host")
+  Container(lib, "components library", "Angular library", "SnackbarService")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Returns HTTP error statuses and codes")
+}
+System_Ext(telemetry, "Telemetry service", "Error reports <TO SUPPLY>")
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(spa, lib, "Shows snackbars through", "TypeScript")
+Rel(spa, telemetry, "Reports errors to", "<TO SUPPLY>")
+@enduml

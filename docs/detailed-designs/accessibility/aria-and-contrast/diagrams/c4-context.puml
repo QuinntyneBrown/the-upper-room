@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — ARIA roles and color contrast
+
+Person(user, "Screen-reader member", "Uses assistive technology")
+Person(dev, "Developer", "Changes code and reviews CI results")
+System(trur, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+
+Rel(user, trur, "Reads announcements from", "HTTPS")
+Rel(dev, trur, "Verifies with axe-core scan", "Playwright")
+@enduml

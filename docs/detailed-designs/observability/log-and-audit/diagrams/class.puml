@@ -1,0 +1,76 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Log and audit
+
+class AuditStore <<static>> {
+  +List<AuditEntryRecord> Entries
+  +Record(actorUserId, entityType, entityId, action, beforeJson, afterJson): void
+}
+class AuditEntryRecord <<record>> {
+  +string Id
+  +DateTimeOffset Timestamp
+  +string ActorUserId
+  +string EntityType
+  +string EntityId
+  +string Action
+  +string? BeforeJson
+  +string? AfterJson
+}
+class AuditEntry {
+  +DateTimeOffset Timestamp
+  +string ActorUserId
+  +string? CityId
+  +string EntityType
+  +string EntityId
+  +string Action
+  +string? BeforeJson
+  +string? AfterJson
+  +string CorrelationId
+  +string Ip
+  +string UserAgent
+}
+class AuditActions <<static>> {
+  Create
+  Update
+  Delete
+  Archive
+  Restore
+  Login
+  Logout
+  PermissionDenied
+  Move
+}
+class ListAuditEntriesQuery <<IRequest>> {
+  +string UserId
+  +string? Actor
+  +string? EntityType
+  +string? Action
+  +DateTimeOffset? From
+  +DateTimeOffset? To
+  +int Page
+  +int PageSize
+}
+class ListAuditEntriesHandler {
+  +Handle(request, cancellationToken): Task<ListAuditEntriesResult>
+}
+class AuditController {
+  +List(...): Task<IActionResult>
+}
+class UpdateContactHandler
+
+AuditStore "1" *-- "*" AuditEntryRecord
+UpdateContactHandler ..> AuditStore : Record
+ListAuditEntriesHandler ..> AuditStore : reads
+ListAuditEntriesHandler ..> ListAuditEntriesQuery : handles
+AuditController ..> ListAuditEntriesQuery : sends
+AuditEntry ..> AuditActions : Action values
+@enduml

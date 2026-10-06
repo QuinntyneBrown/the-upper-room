@@ -1,0 +1,59 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Configure notifications
+
+class TarNotificationPreferences {
+  -signal prefs: PrefDto[]
+  -signal savedCode: string
+  -Map debounces
+  +ngOnInit(): void
+  #onToggle(code, field): void
+}
+
+class PrefDto {
+  +string code
+  +boolean inApp
+  +boolean email
+  +boolean push
+}
+
+class NotificationsController {
+  +ListPreferences(): IActionResult
+  +UpsertPreference(body): IActionResult
+}
+
+class UpsertPreferenceRequest {
+  +string Code
+  +bool InApp
+  +bool Email
+  +bool Push
+}
+
+class UpsertNotificationPreferenceHandler {
+  +Handle(command): Task<UpsertNotificationPreferenceResult>
+}
+
+class NotificationPreference {
+  +string UserId
+  +string Code
+  +bool InApp
+  +bool Email
+  +bool Push
+  +Update(inApp, email, push): void
+}
+
+TarNotificationPreferences "1" o-- "*" PrefDto
+TarNotificationPreferences ..> NotificationsController : HTTP
+NotificationsController ..> UpsertPreferenceRequest : binds
+NotificationsController ..> UpsertNotificationPreferenceHandler : via MediatR
+UpsertNotificationPreferenceHandler ..> NotificationPreference : persists (as PreferenceRow)
+@enduml

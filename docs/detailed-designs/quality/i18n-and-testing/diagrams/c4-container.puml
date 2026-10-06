@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Localization keys, coverage gates, and e2e conventions
+
+Person(dev, "Developer", "Changes code and reviews CI results")
+System_Ext(ci, "CI service", "Runs lint, test, coverage, and e2e jobs")
+System_Boundary(trur, "The Upper Room") {
+  Container(spa, "the-upper-room application", "Angular", "Templates and transloco keys")
+  Container(lint, "ESLint plugin", "Node.js", "i18n-no-literal, playwright-no-raw-locators")
+  Container(e2e, "Playwright e2e suite", "Playwright", "Page Objects and specs")
+  Container(dn, "dotnet test with coverlet", ".NET", "Backend tests and coverage thresholds")
+  ContainerDb(loc, "Locale files", "JSON / TypeScript", "en-CA strings")
+}
+Rel(dev, lint, "Runs", "npm run lint")
+Rel(dev, e2e, "Runs", "Chromium")
+Rel(dev, dn, "Runs", "CLI")
+Rel(lint, spa, "Scans templates of", "AST")
+Rel(spa, loc, "Reads strings from", "TranslateService")
+Rel(e2e, spa, "Drives", "HTTP")
+@enduml

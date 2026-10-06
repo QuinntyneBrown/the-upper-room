@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Query the audit trail
+actor "System administrator" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "AuditLog page" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "AuditController" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "ListAuditEntriesHandler" as handler
+participant "IPermissionChecker" as perm
+participant "AuditStore" as store
+end box
+actor -> page : Filter by actor, entity type, action, and dates
+page -> ctrl : GET /api/v1/admin/audit?page=1&pageSize=20
+ctrl -> handler : Send ListAuditEntriesQuery
+handler -> perm : HasPermission(role, Audit, Read)
+alt not permitted
+handler -> store : Record PermissionDenied (L2-098)
+handler --> ctrl : Forbidden outcome
+ctrl --> page : 403
+page --> actor : Access denied message
+else permitted
+handler -> store : Read entries, filter, order by Timestamp descending, page
+store --> handler : Matching AuditEntryRecord items
+handler --> ctrl : Ok outcome with items and total
+ctrl --> page : 200 with items, total, page, pageSize
+page --> actor : Audit entries with before and after JSON
+end
+@enduml

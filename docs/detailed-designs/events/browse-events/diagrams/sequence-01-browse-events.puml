@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Browse events
+actor "Member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "EventList" as page
+participant "CalendarMonth" as cal
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "EventsController" as ctrl
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "EventsDbContext" as db
+end box
+actor -> page : Open /events
+page -> ctrl : GET /api/v1/events with filters
+ctrl -> ctrl : Authenticate and resolve city scope
+ctrl -> db : Query events and RSVP counts
+db --> ctrl : Rows
+ctrl -> ctrl : Apply effective status (Past after end)
+alt request fails
+ctrl --> page : Error response
+page --> actor : Keep previous list and show feedback
+else success
+ctrl --> page : Events
+alt MD+ and Calendar view
+page -> cal : Render current month
+cal --> actor : Month grid with event blocks
+else List view
+page --> actor : Cards with L2-053 status chip, date, RSVP count
+end
+end
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Optimistic UI
+
+Person(user, "Member", "Votes, RSVPs, archives, and moves cards")
+System(trur, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+
+Rel(user, trur, "Toggles state in", "HTTPS")
+@enduml

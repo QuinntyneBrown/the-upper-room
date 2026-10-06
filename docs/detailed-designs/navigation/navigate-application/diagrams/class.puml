@@ -1,0 +1,31 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Navigate application
+class "AppShell" as t0 <<existing class>> {
+  private readonly router = inject(Router)
+  private readonly signOutService = inject(SIGN_OUT_SERVICE)
+  private readonly dialog = inject(MatDialog)
+  private searchRef: MatDialogRef<GlobalSearch> | null = null
+}
+interface "Crumb" as t1 <<existing interface>> {
+  readonly label: string
+  readonly url: string
+}
+class "TarDrawer" as t2 <<existing class>> {
+  protected onEscape(): void
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+
+@enduml

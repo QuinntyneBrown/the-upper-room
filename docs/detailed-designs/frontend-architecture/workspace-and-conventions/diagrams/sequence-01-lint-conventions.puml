@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Lint enforces file-per-type and BEM
+actor "Frontend developer" as actor
+box "Frontend - Workspace tooling" #E0F2FE
+participant "npm run lint" as lint
+participant "ESLint" as eslint
+participant "Stylelint" as stylelint
+end box
+box "Frontend - the-upper-room plugins" #D1FADF
+participant "component-file-per-type" as fpt
+participant "bem-class-name" as bem
+end box
+actor -> lint : Run lint
+lint -> eslint : eslint . (**/*.ts, **/*.html)
+eslint -> fpt : Check each component source (L2-081)
+alt inline template or styles array
+fpt --> eslint : Violation
+else templateUrl and styleUrl
+fpt --> eslint : No violation
+end
+eslint --> lint : ESLint result
+lint -> stylelint : stylelint "**/*.scss"
+stylelint -> bem : Check each class selector (L2-082)
+alt class name not BEM or allow-listed
+bem --> stylelint : Violation
+else valid
+bem --> stylelint : No violation
+end
+stylelint --> lint : Stylelint result
+lint --> actor : Pass or fail
+@enduml

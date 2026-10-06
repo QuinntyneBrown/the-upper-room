@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Support browsers
+
+Container_Boundary(spa, "the-upper-room application") {
+  Component(det, "BrowserSupportDetector (target)", "Bootstrap service", "Classifies user agent")
+  ComponentDb(st, "Session dismissal flag", "sessionStorage", "Remembers dismissal")
+  Component(host, "AppShell", "Angular component", "Hosts banner")
+}
+Container_Boundary(lib, "components library") {
+  Component(bn, "banner", "Angular component", "Shows message and dismiss action")
+}
+Rel(det, host, "Sets banner visible in")
+Rel(host, bn, "Renders")
+Rel(bn, st, "Records dismissal in")
+Rel(det, st, "Reads")
+@enduml

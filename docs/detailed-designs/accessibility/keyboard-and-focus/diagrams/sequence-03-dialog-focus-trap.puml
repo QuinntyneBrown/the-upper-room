@@ -1,0 +1,31 @@
+@startuml
+title UML sequence behaviour — Dialog focus trap
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Keyboard member" as actor
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "Opener button" as opener
+  participant "CDK Dialog" as dlg
+  participant "ConfirmDialog" as content
+end box
+actor -> opener : Press Enter
+opener -> dlg : Open dialog
+dlg -> content : Focus first focusable element
+actor -> content : Press Tab past last element
+content --> actor : Focus wraps to first element (L2-085)
+actor -> dlg : Press Escape
+dlg -> opener : Close and restore focus
+opener --> actor : Focus ring on opener (L2-087)
+@enduml

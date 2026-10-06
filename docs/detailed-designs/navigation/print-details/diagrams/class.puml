@@ -1,0 +1,36 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Print details
+class "ContactDetail" as t0 <<existing class>> {
+  private readonly http = inject(HttpClient)
+  private readonly route = inject(ActivatedRoute)
+  private readonly router = inject(Router)
+  private readonly titleService = inject(Title)
+}
+interface "AttendeeDto" as t1 <<existing interface>> {
+  readonly id: string
+  readonly name: string
+  readonly avatarUrl: string | null
+  readonly rsvpStatus: string
+}
+interface "MeDto" as t2 <<existing interface>> {
+  readonly id: string
+  readonly ideaId: string
+  readonly body: string
+  readonly author: string
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+
+@enduml

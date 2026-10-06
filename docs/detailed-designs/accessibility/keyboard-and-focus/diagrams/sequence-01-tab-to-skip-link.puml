@@ -1,0 +1,31 @@
+@startuml
+title UML sequence behaviour — Tab to skip link
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Keyboard member" as actor
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "Browser focus" as focus
+  participant "AppShell" as shell
+  participant "main region" as main
+end box
+actor -> focus : Load page
+focus -> shell : Render shell with skip link first
+actor -> focus : Press Tab
+focus --> actor : Focus "Skip to main content" (L2-085)
+shell -> shell : Show link at top-left with primary background
+actor -> shell : Press Enter
+shell -> main : skipToMain moves focus
+main --> actor : Focus ring visible (L2-087)
+@enduml

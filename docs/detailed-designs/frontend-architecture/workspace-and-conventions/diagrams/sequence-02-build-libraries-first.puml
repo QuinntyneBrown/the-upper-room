@@ -1,0 +1,34 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Build libraries before the application
+actor "Frontend developer" as actor
+box "Frontend - Workspace tooling" #E0F2FE
+participant "npm scripts" as npm
+participant "ng build" as ng
+end box
+box "Frontend - Libraries" #D1FADF
+participant "api" as api
+participant "domain" as domain
+participant "components" as components
+end box
+box "Frontend - Upper Room application" #ECFDF3
+participant "the-upper-room" as app
+end box
+actor -> npm : npm start or npm run build
+npm -> npm : prestart or prebuild runs build:libs
+npm -> ng : ng build api
+ng -> api : Emit dist/api
+npm -> ng : ng build domain
+ng -> domain : Emit dist/domain (imports api and components)
+npm -> ng : ng build components
+ng -> components : Emit dist/components
+npm -> ng : ng serve or ng build (L2-080)
+ng -> app : Resolve api, components, domain through tsconfig paths to dist
+app --> actor : Application served or built
+@enduml

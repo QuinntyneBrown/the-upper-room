@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Service contracts and interceptors
+Person(member, "Member or administrator", "Uses the SPA")
+System_Boundary(spa, "Upper Room frontend workspace") {
+  Container(app, "the-upper-room application", "Angular", "Pages, app.config.ts, and the correlation, auth, csrf, and error interceptors")
+  Container(apilib, "api library", "Angular library", "API contracts, tokens, services, and provideApi")
+  Container(domainlib, "domain library", "Angular library", "Domain service contracts, tokens, and provideDomain")
+  Container(complib, "components library", "Angular library", "retryInterceptor and SnackbarService")
+}
+System_Ext(backend, "The Upper Room API", "ASP.NET Core REST API")
+Rel(member, app, "Uses", "HTTPS")
+Rel(app, apilib, "Injects tokens from")
+Rel(app, domainlib, "Injects tokens from")
+Rel(app, complib, "Registers retryInterceptor and SnackbarService from")
+Rel(apilib, backend, "Calls", "JSON/HTTPS")
+@enduml

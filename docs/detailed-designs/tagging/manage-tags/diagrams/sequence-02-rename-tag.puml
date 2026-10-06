@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Target behavior - Rename tag
+actor "Administrator" as actor
+box "Frontend - Upper Room application and libraries" #E0F2FE
+participant "TagList" as page
+participant "ITagsApi" as client
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "TagsController" as boundary
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Update tag handler (target role)" as logic
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "Upper Room database" as state
+end box
+actor -> page : Rename tag
+page -> client : PUT /api/v1/tags/{id} with name, color, and description
+client -> boundary : Authorized feature request
+boundary -> boundary : Authenticate and validate request shape
+alt invalid or forbidden request
+boundary --> client : Safe error and correlation identifier
+client --> page : Preserve input or previous state
+else accepted request
+boundary -> logic : Dispatch operation
+logic -> logic : Apply L2-039 update and L2-038 uniqueness
+logic -> state : Read or persist authorized state
+state --> logic : State or dependency result
+alt rule or dependency failure
+logic --> boundary : Rejected outcome
+boundary --> client : Mapped failure response
+client --> page : Safe error; previous name retained
+else success
+logic --> boundary : Outcome
+boundary --> client : Typed response
+client --> page : Tag updated; snackbar Tag updated; tagged entities show the new name
+end
+end
+page --> actor : Result or recoverable feedback
+@enduml

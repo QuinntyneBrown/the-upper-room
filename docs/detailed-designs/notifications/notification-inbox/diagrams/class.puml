@@ -1,0 +1,83 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Notification inbox
+
+enum NotificationSeverity {
+  Info
+  Success
+  Warning
+}
+
+class NotificationType {
+  +string Code
+  +string Title
+  +string BodyTemplate
+  +NotificationSeverity Severity
+}
+
+class NotificationCatalog {
+  +{static} All: NotificationType[]
+  +{static} Require(code): NotificationType
+}
+
+class Notification {
+  +string UserId
+  +string Code
+  +string Title
+  +string Body
+  +NotificationSeverity Severity
+  +DateTimeOffset CreatedAt
+  +string DeepLink
+  +DateTimeOffset ReadAt
+  +MarkRead(readAt): void
+}
+
+class NotificationsController {
+  +List(): IActionResult
+  +MarkRead(id): IActionResult
+  +MarkAllRead(): IActionResult
+  +Dispatch(body): IActionResult
+}
+
+class DispatchNotificationHandler {
+  +Handle(command): Task<DispatchNotificationResult>
+}
+
+class TarNotificationBell {
+  -signal notifications: NotificationDto[]
+  -signal activeTab: Tab
+  -computed unreadCount
+  -computed badgeLabel
+  #onRowClick(n): void
+  #markAllRead(): void
+}
+
+class NotificationDto {
+  +string id
+  +string code
+  +string title
+  +string body
+  +boolean read
+  +string createdAt
+  +string deepLink
+  +string severity
+}
+
+NotificationCatalog "1" o-- "14" NotificationType
+NotificationType --> NotificationSeverity
+Notification --> NotificationSeverity
+NotificationsController ..> DispatchNotificationHandler : via MediatR
+DispatchNotificationHandler ..> NotificationCatalog : looks up
+DispatchNotificationHandler ..> Notification : creates (as NotificationRow)
+TarNotificationBell "1" o-- "*" NotificationDto
+TarNotificationBell ..> NotificationsController : HTTP
+@enduml

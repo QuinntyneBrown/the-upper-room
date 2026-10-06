@@ -1,0 +1,52 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Target behavior - Unlink contact from partner
+actor "Member or authorized administrator" as actor
+box "Frontend - Upper Room application and libraries" #E0F2FE
+participant "PartnerContactsTab" as page
+participant "IPartnersApi" as client
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "PartnerContactsController" as boundary
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Unlink contact command (target role)" as logic
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "InMemoryPartnersStore" as state
+end box
+actor -> page : Unlink contact from partner
+page -> client : DELETE /api/v1/partners/{partnerId}/contacts/{contactId} after confirmation
+client -> boundary : Authorized feature request
+boundary -> boundary : Authenticate and validate request shape
+alt invalid or forbidden request
+boundary --> client : Safe error and correlation identifier
+client --> page : Preserve input or previous state
+else accepted request
+boundary -> logic : Dispatch operation
+logic -> logic : Apply L2-036 rule that only the link is removed
+logic -> state : Read or persist authorized state
+state --> logic : State or dependency result
+alt rule or dependency failure
+logic --> boundary : Rejected outcome
+boundary --> client : Mapped failure response
+client --> page : Link retained and recoverable failure shown
+else success
+logic --> boundary : Outcome
+boundary --> client : Typed response
+client --> page : Link removed, contact retained, snackbar with Undo
+end
+end
+page --> actor : Result or recoverable feedback
+@enduml

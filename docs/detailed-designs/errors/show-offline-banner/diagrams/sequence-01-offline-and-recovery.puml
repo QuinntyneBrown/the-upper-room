@@ -1,0 +1,30 @@
+@startuml
+title UML sequence behaviour — Show offline and back-online banner
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "City member" as actor
+participant "Browser" as browser
+box "Frontend — components library" #E0F2FE
+  participant "NetworkService" as net
+  participant "OfflineBanner" as banner
+end box
+browser -> net : window "offline" event
+net -> net : offline = true; dismissed = false
+net --> banner : bannerState = offline
+banner --> actor : Banner "You're offline. Some features may be unavailable." (L2-070)
+opt Close icon
+  actor -> banner : Click close
+  banner -> net : dismiss()
+  net --> banner : bannerState = null
+end
+browser -> net : window "online" event
+net -> net : offline = false; justRecovered = true
+net --> banner : bannerState = online
+banner --> actor : Banner "Back online" (L2-070)
+net -> net : After 3000 ms justRecovered = false
+net --> banner : bannerState = null
+banner --> actor : Banner removed
+@enduml

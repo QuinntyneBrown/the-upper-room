@@ -1,0 +1,73 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Configure kanban
+class KanbanBoard <<existing>> {
+  +string Name
+  +string? Description
+  +int? WipLimitPerColumn
+  +CardSchema
+  +Columns
+  +Swimlanes
+  +Cards
+  +UpdateBasics(name: string, description: string?, wipLimitPerColumn: int?, updatedBy: string, updatedAt: DateTimeOffset)
+}
+class KanbanColumn <<existing>> {
+  +string BoardId
+  +string Name
+  +int Order
+  +TagColor Color
+  +int? WipLimit
+  +Update(name: string, color: TagColor, wipLimit: int?)
+  +SetOrder(order: int)
+}
+class KanbanSwimlane <<existing>> {
+  +string Key
+  +string Name
+  +int Order
+}
+class CardSchemaField <<existing>> {
+  +string Key
+  +KanbanFieldType Type
+  +string Label
+  +bool Required
+  +Options
+}
+enum KanbanFieldType <<existing>>
+class KanbanCard <<existing>> {
+  +string ColumnId
+  +string? SwimlaneKey
+  +decimal Position
+  +Data
+  +string? AssigneeUserId
+  +TagIds
+  +bool Archived
+}
+class BoardsController <<existing>> {
+  +Patch(id: string, body: PatchBoardRequest)
+  +ReorderColumns(id: string, body: ColumnOrderRequest)
+  +PatchColumn(id: string, columnId: string, body: PatchColumnRequest)
+  +DeleteColumn(id: string, columnId: string, body: DeleteColumnRequest)
+}
+class BoardConfigure <<existing>>
+interface IBoardsApi <<proposed>>
+KanbanBoard "1" *-- "*" KanbanColumn
+KanbanBoard "1" *-- "*" KanbanSwimlane
+KanbanBoard "1" *-- "*" CardSchemaField
+KanbanBoard "1" *-- "*" KanbanCard
+CardSchemaField --> KanbanFieldType
+KanbanCard --> KanbanColumn : in
+BoardConfigure ..> IBoardsApi
+IBoardsApi ..> BoardsController : calls
+BoardsController ..> KanbanBoard : mutates
+@enduml

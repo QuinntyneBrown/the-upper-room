@@ -1,0 +1,23 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Access help
+class "UploadsController" as t0 <<existing class>> {
+  public async Task<IActionResult> Upload([FromForm] IFormFile? file, CancellationToken cancellationToken)
+}
+class "Proposed Access help application service" as proposed <<proposed responsibility>> {
+  +execute(request: FeatureRequest): FeatureOutcome
+}
+t0 ..> proposed : target application boundary
+
+@enduml

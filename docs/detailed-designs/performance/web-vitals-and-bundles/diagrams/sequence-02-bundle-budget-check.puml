@@ -1,0 +1,35 @@
+@startuml
+title UML sequence behaviour — Bundle budget check
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Developer" as actor
+box "Build — CI pipeline" #F2F4F7
+  participant "ng build" as ng
+  participant "angular.json budgets" as bud
+end box
+actor -> ng : npm run build
+ng -> ng : Compile and bundle
+ng -> bud : Read budgets
+loop each bundle and component style
+  ng -> ng : Measure size against budget (L2-090)
+end
+alt size above maximumError
+  ng --> actor : Fail with budget error
+else size above maximumWarning
+  ng --> actor : Succeed with warning
+else within budget
+  ng --> actor : Succeed
+end
+@enduml

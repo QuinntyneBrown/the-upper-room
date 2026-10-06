@@ -1,0 +1,23 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - View idea
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(page, "IdeaDetail", "Angular component", "Cover, body, actions, partners, tags")
+  Component(notes, "tar-notes", "Angular component", "Comment thread")
+}
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(ctrl, "IdeasController", "ASP.NET Core controller", "GET id, vote, status, comments")
+}
+Container_Boundary(core, "Application and Domain") {
+  Component(ctx, "IIdeasDbContext", "Abstraction", "Ideas, Votes, Partners, Comments")
+  Component(idea, "Idea", "Domain entity", "Status and vote rules")
+}
+ComponentDb(db, "IdeasDbContext", "EF Core", "Persists ideas")
+Rel(page, notes, "Hosts")
+Rel(page, ctrl, "Loads idea, votes, changes status", "JSON/HTTPS")
+Rel(notes, ctrl, "Reads and posts comments", "JSON/HTTPS")
+Rel(ctrl, ctx, "Queries")
+Rel(ctrl, idea, "Applies status change")
+Rel(ctx, db, "Implemented by")
+@enduml

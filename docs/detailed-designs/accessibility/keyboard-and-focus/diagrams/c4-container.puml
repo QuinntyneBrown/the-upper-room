@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Keyboard and focus
+
+Person(user, "Keyboard member", "Navigates with Tab, Enter, Space, and Escape")
+System_Boundary(trur, "The Upper Room") {
+  Container(spa, "the-upper-room application", "Angular", "Shell, pages, global focus styles, route-focus handling")
+  Container(lib, "components library", "Angular library", "Page header, dialogs, menus built on CDK")
+}
+Rel(user, spa, "Tabs, activates, dismisses", "Keyboard")
+Rel(spa, lib, "Renders shared components from", "TypeScript")
+@enduml

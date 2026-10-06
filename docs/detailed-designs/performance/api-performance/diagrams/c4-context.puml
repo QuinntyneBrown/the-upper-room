@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — API performance targets
+
+Person(dev, "Developer", "Changes code and reviews CI results")
+System(trur, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+System_Ext(ci, "CI scheduler", "Triggers the nightly workflow")
+
+Rel(ci, trur, "Drives load against", "HTTP")
+Rel(dev, ci, "Reads thresholds from", "HTTPS")
+@enduml

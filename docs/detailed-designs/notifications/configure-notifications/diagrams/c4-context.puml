@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Configure notifications
+
+Person(member, "City member", "Chooses which notifications arrive on which channel")
+System(upperRoom, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, and boards")
+
+Rel(member, upperRoom, "Edits notification preferences in")
+@enduml

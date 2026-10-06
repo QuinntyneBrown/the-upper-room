@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Browse ideas
+Person(member, "Member", "Browses and votes on ideas")
+System_Boundary(room, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "Ideas list page")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Ideas endpoints")
+  ContainerDb(db, "Ideas store", "EF Core", "Ideas, votes, partner links")
+}
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+@enduml

@@ -1,0 +1,23 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - API conventions and catalog
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(ctrls, "Feature controllers", "ASP.NET Core controllers", "ContactsController, PartnersController, NotesController, BoardsController, and the others under api/v1")
+  Component(audit, "AuditController", "ASP.NET Core controller", "GET api/v1/admin/audit with page and pageSize")
+  Component(exh, "ValidationExceptionHandler", "IExceptionHandler", "Writes 400 validation problem details")
+  Component(pd, "ProblemDetails service", "AddProblemDetails", "Writes application/problem+json")
+  Component(corr, "Correlation middleware", "Inline middleware", "Echoes X-Correlation-Id")
+}
+Container_Boundary(app, "TheUpperRoom.Application") {
+  Component(vb, "ValidationBehavior", "IPipelineBehavior", "Throws ValidationException")
+  Component(validator, "ListAuditEntriesQueryValidator", "FluentValidation", "Bounds page and pageSize")
+  Component(handler, "Feature handlers", "IRequestHandler", "Return typed outcomes")
+}
+Rel(ctrls, vb, "Send requests through")
+Rel(audit, vb, "Sends ListAuditEntriesQuery through")
+Rel(vb, validator, "Runs")
+Rel(vb, handler, "Calls next")
+Rel(exh, pd, "Writes through")
+Rel(corr, ctrls, "Wraps requests to")
+@enduml

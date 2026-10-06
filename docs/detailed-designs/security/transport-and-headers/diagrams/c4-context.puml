@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Transport, headers, secrets, and CSRF
+
+Person(user, "Member", "Uses the web application")
+System(trur, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+System_Ext(kv, "Key vault", "Holds production secrets (Azure Key Vault or equivalent)")
+
+Rel(user, trur, "Sends HTTPS requests to", "HTTPS")
+Rel(trur, kv, "Reads secrets from", "<TO SUPPLY>")
+@enduml

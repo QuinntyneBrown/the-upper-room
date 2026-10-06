@@ -1,0 +1,42 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Concurrent update detected by row version
+actor "Member or administrator" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "Page" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "Controller" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Handler" as handler
+end box
+box "Backend - Infrastructure" #FFF4E5
+participant "DbContext" as ctx
+database "Database" as db
+end box
+actor -> page : Save an edit
+page -> ctrl : PUT or PATCH request
+ctrl -> handler : Send request
+handler -> ctx : SaveChanges with original Version
+ctx -> db : UPDATE where Version matches (L2-078)
+alt row changed by another writer
+db --> ctx : Zero rows affected
+ctx --> handler : DbUpdateConcurrencyException <TO SUPPLY>
+handler --> ctrl : Conflict outcome <TO SUPPLY>
+ctrl --> page : 409 problem details
+page --> actor : Prompt to reload
+else row unchanged
+db --> ctx : Row updated, new Version
+ctx --> handler : Saved
+handler --> ctrl : Success
+ctrl --> page : 2xx response
+page --> actor : Confirmation
+end
+@enduml

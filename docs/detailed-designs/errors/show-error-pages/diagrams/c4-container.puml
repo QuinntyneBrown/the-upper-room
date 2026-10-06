@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Show error pages
+
+Person(member, "City member", "Sees error pages")
+System_Boundary(upperRoom, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "Router, route guards, error pages, global ErrorHandler")
+  Container(domainLib, "domain library", "Angular library", "RBAC guards that redirect to /forbidden")
+  Container(lib, "components library", "Angular library", "TarEmptyState and TarButton")
+}
+System_Ext(telemetry, "Telemetry service", "Exception reports <TO SUPPLY>")
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, domainLib, "Applies guards from", "TypeScript")
+Rel(spa, lib, "Renders with", "TypeScript")
+Rel(spa, telemetry, "Reports exceptions to", "<TO SUPPLY>")
+@enduml

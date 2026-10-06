@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Show error pages
+
+Person(member, "City member", "Navigates, hits missing or restricted pages, or triggers an unexpected failure")
+System(upperRoom, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, and boards")
+System_Ext(telemetry, "Telemetry service", "Receives exception reports <TO SUPPLY>")
+
+Rel(member, upperRoom, "Sees 404, 403, and 500 pages in")
+Rel(upperRoom, telemetry, "Sends unhandled exceptions to")
+@enduml

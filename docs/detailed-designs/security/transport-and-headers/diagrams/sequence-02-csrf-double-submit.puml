@@ -1,0 +1,35 @@
+@startuml
+title UML sequence behaviour — CSRF double-submit
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "csrfInterceptor" as int
+end box
+box "Backend — TheUpperRoom.Api application" #D1FADF
+  participant "CsrfMiddleware" as csrf
+  participant "AuthController" as ctrl
+end box
+actor -> int : POST /api/v1/auth/sign-out
+int -> int : Read XSRF-TOKEN cookie
+int -> csrf : Request with X-XSRF-TOKEN (L2-096)
+csrf -> csrf : Compare header with cookie <TO SUPPLY>
+alt tokens match or request uses bearer token
+  csrf -> ctrl : Next
+  ctrl --> int : 204
+else mismatch or header missing
+  csrf --> int : 403 code csrf.invalid (L2-066)
+end
+@enduml

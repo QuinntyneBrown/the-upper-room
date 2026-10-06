@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Format dates and time zones
+
+Person(user, "Viewer", "Reads times in the activity feed and on event cards")
+Person(org, "Organizer", "Schedules events in a chosen time zone")
+System_Boundary(trur, "The Upper Room") {
+  Container(spa, "the-upper-room application", "Angular", "Formats timestamps for display")
+  Container(lib, "components library", "Angular library", "Relative-time component")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Serves UTC timestamps, user and event time zones")
+  ContainerDb(db, "Service databases", "SQLite via EF Core", "UTC timestamps and time-zone identifiers")
+}
+Rel(user, spa, "Uses", "HTTPS")
+Rel(org, spa, "Uses", "HTTPS")
+Rel(spa, lib, "Renders", "TypeScript")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads and writes UTC", "EF Core")
+@enduml

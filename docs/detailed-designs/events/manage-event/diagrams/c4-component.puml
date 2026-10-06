@@ -1,0 +1,29 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Manage event
+Container_Boundary(spa, "The Upper Room web app") {
+  Component(detail, "EventDetail", "Angular component", "Hero, RSVP card, attendees, Add to calendar")
+  Component(form, "EventForm", "Angular component", "Grouped fields and live preview")
+  Component(rec, "RecurrenceEditDialog", "CDK/Material dialog", "Recurring edit scope")
+}
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(events, "EventsController", "ASP.NET Core controller", "GET, POST, PUT events")
+  Component(rsvp, "EventRsvpController", "ASP.NET Core controller", "RSVP endpoints")
+  Component(ics, "EventIcsController", "ASP.NET Core controller", "GET api/v1/events/{id}/ics")
+}
+Container_Boundary(core, "Application and Domain") {
+  Component(handler, "SubmitRsvpHandler", "MediatR handler", "Capacity, approval, waitlist")
+  Component(event, "Event", "Domain entity", "Schedule and field rules")
+}
+ComponentDb(db, "EventsDbContext", "EF Core", "Persists events and RSVPs")
+Rel(detail, rsvp, "Submits RSVP", "JSON/HTTPS")
+Rel(detail, ics, "Downloads ICS", "HTTPS")
+Rel(form, events, "Saves event", "JSON/HTTPS")
+Rel(form, rec, "Opens")
+Rel(rsvp, handler, "Sends SubmitRsvpCommand")
+Rel(events, event, "Creates and updates")
+Rel(handler, db, "Persists", "EF Core")
+Rel(events, db, "Persists", "EF Core")
+Rel(ics, db, "Reads", "EF Core")
+@enduml

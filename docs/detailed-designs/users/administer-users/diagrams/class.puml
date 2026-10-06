@@ -1,0 +1,58 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Administer users
+interface "ListResponse" as t0 <<existing interface>> {
+  readonly items: UserRow[]
+  readonly total: number
+  private readonly http = inject(HttpClient)
+  private readonly snackbar = inject(SnackbarService)
+}
+interface "InviteUserDialogData" as t1 <<existing interface>> {
+  readonly emailError: Signal<string | null>
+  readonly onSubmit: (payload: InvitePayload)
+  protected readonly data = inject<InviteUserDialogData>(MAT_DIALOG_DATA)
+  private readonly ref = inject<MatDialogRef<InviteUserDialog>>(MatDialogRef)
+}
+class "UserDetailDrawer" as t2 <<existing class>> {
+  private readonly perms = inject(PERMISSIONS_SERVICE)
+  protected readonly _user = signal<UserRow | null>(null)
+  protected readonly roles = ['SystemAdmin', 'CityLead', 'Member', 'Guest']
+  protected readonly roleOptions = this.roles.map((r)
+}
+class "UsersApiService" as t3 <<existing class>> {
+  private readonly http = inject(HttpClient)
+  private readonly baseUrl = inject(API_BASE_URL)
+  getMe(context?: HttpContext): Observable<Me>
+  list(query: UserListQuery): Observable<PagedList<UserRow>>
+}
+class "InvitationsApiService" as t4 <<existing class>> {
+  private readonly http = inject(HttpClient)
+  private readonly baseUrl = inject(API_BASE_URL)
+  create(payload: InvitePayload): Observable<InvitationCreatedResponse>
+  revoke(id: string): Observable<void>
+}
+class "UsersController" as t5 <<existing class>> {
+  public async Task<ActionResult<MeResponse>> Me(CancellationToken cancellationToken)
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+t0 ..> t3 : target collaboration
+t0 ..> t4 : target collaboration
+t0 ..> t5 : target collaboration
+class "Proposed Administer users application service" as proposed <<proposed responsibility>> {
+  +execute(request: FeatureRequest): FeatureOutcome
+}
+t0 ..> proposed : target application boundary
+
+@enduml

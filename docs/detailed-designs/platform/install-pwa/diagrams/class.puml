@@ -1,0 +1,34 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Install as a PWA
+class WebManifest {
+  +name: string
+  +short_name: string
+  +start_url: string
+  +display: string
+  +theme_color: string
+  +icons: Icon[]
+}
+class ServiceWorker {
+  -CACHE: "the-upper-room-shell-v1"
+  +onInstall(): void
+  +onActivate(): void
+  +onFetch(request): Response
+  +onPush(event): void
+}
+class NetworkService {
+  +online: Signal<boolean>
+}
+class OfflineBanner
+ServiceWorker ..> WebManifest : installability pairs with
+OfflineBanner ..> NetworkService : reads
+@enduml

@@ -1,0 +1,8 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Archive or delete contact
+Person(member, "Member or authorized administrator", "Uses this capability within the permitted city scope")
+System(room, "The Upper Room", "Archiving removes a contact from default lists while retaining relationships")
+Rel(member, room, "Archive or delete contact")
+@enduml

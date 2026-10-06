@@ -1,0 +1,17 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers — Notification inbox
+
+Person(member, "City member", "Reads notifications")
+System_Boundary(upperRoom, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "App shell hosting the notification bell")
+  Container(domainLib, "domain library", "Angular library", "Provides TarNotificationBell")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Hosts /api/v1/notifications")
+  ContainerDb(db, "Application database", "EF Core", "Notifications and preferences")
+}
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, domainLib, "Imports", "TypeScript")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+@enduml

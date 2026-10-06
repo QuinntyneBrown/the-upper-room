@@ -1,0 +1,33 @@
+@startuml
+title UML sequence behaviour — Route change focus
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Keyboard member" as actor
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "Router" as router
+  participant "RouteFocusManager (target)" as rf
+  participant "Page heading" as h1
+end box
+actor -> router : Activate link
+router -> router : Resolve and activate route
+router -> rf : NavigationEnd
+rf -> h1 : Query first heading
+alt heading found
+  rf -> h1 : focus() (L2-087)
+  h1 --> actor : Heading announced and ring visible
+else no heading
+  rf --> router : Leave focus on document body
+end
+@enduml

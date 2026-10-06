@@ -1,0 +1,40 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Transport, headers, secrets, and CSRF
+class CsrfMiddleware {
+  +InvokeAsync(context: HttpContext): Task
+  -XsrfCookie: "XSRF-TOKEN"
+  -XsrfHeader: "X-XSRF-TOKEN"
+}
+class SecurityHeaderMiddleware {
+  +Strict-Transport-Security
+  +Content-Security-Policy
+  +X-Content-Type-Options
+  +Referrer-Policy
+  +Permissions-Policy
+  +Cross-Origin-Opener-Policy
+}
+class JwtSettings {
+  +SigningKey: string
+  +Issuer: string
+  +Audience: string
+}
+class PushSettings {
+  +VapidPublicKey: string
+}
+class csrfInterceptor <<function>> {
+  +intercept(req, next)
+}
+csrfInterceptor ..> CsrfMiddleware : sends header to
+SecurityHeaderMiddleware ..> CsrfMiddleware : follows
+JwtSettings ..> PushSettings : bound from configuration with
+@enduml

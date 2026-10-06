@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Work board cards
+Person(member, "Member or authorized administrator")
+System_Boundary(room, "The Upper Room") {
+Container(spa, "Upper Room browser app", "Angular", "BoardView, BoardMoveSheetDialog, CardDetailDialog")
+Container(api, "Upper Room API", "ASP.NET Core", "CardsController, BoardsController")
+ContainerDb(data, "Upper Room database", "KanbanDbContext", "Boards, columns, cards")
+}
+Rel(member, spa, "Uses")
+Rel(spa, api, "Calls feature boundary", "JSON over HTTPS")
+Rel(api, data, "Reads or persists authorized state", "Application interfaces")
+@enduml

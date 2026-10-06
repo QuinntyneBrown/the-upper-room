@@ -1,0 +1,37 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Upload editor image
+actor "Member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "tar-markdown-editor" as editor
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "UploadsController" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "UploadFileHandler" as handler
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "Object storage" as store
+end box
+actor -> editor : Choose image
+editor -> ctrl : POST /api/v1/uploads
+ctrl -> handler : Send UploadFileCommand
+handler -> handler : Apply L2-051 limit of 10 MB and JPG, PNG, WEBP, GIF
+alt too large or wrong type
+handler --> ctrl : Rejected outcome
+ctrl --> editor : Error response
+editor --> actor : Image is too large (max 10MB). Try a smaller image.
+else accepted
+handler -> store : Store file
+store --> handler : File URL
+handler --> ctrl : UploadFileResult
+ctrl --> editor : URL
+editor --> actor : Insert image markdown at cursor
+end
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Log a request with a correlation identifier
+actor "Member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "correlationIdInterceptor" as interceptor
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "Correlation middleware" as mw
+participant "Controller" as ctrl
+participant "JSON console logger" as logger
+end box
+actor -> interceptor : Trigger an API call
+interceptor -> mw : Request with X-Correlation-Id
+mw -> mw : Use supplied id or create a new Guid
+mw -> mw : Set X-Correlation-Id on the response
+mw -> logger : BeginScope CorrelationId
+mw -> ctrl : next()
+ctrl --> mw : Response status
+mw -> logger : LogInformation "HTTP {Method} {Path} responded {StatusCode}" (L2-097)
+logger -> logger : Write JSON line with timestamp, level, scope; no bodies, Authorization, or Cookie
+mw --> interceptor : Response with X-Correlation-Id
+interceptor --> actor : Result
+@enduml

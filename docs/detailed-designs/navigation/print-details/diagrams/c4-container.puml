@@ -1,0 +1,11 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Print details
+Person(member, "Member or authorized administrator")
+System_Boundary(room, "The Upper Room") {
+Container(spa, "Upper Room browser app", "Angular", "ContactDetail, AttendeeDto, MeDto")
+}
+Rel(member, spa, "Uses")
+
+@enduml

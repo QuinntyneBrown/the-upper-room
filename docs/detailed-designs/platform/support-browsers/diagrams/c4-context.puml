@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Support browsers
+
+Person(user, "Member", "Opens the application in any browser")
+System(trur, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+
+Rel(user, trur, "Opens", "HTTPS")
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Notification inbox
+
+Person(member, "City member", "Reads and acts on notifications")
+Person(actor, "Other city member", "Performs actions that raise notifications")
+System(upperRoom, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, and boards")
+System_Ext(mail, "Email delivery", "Receives outbound notification email")
+
+Rel(member, upperRoom, "Opens the bell and inbox in")
+Rel(actor, upperRoom, "Triggers events in")
+Rel(upperRoom, mail, "Sends notification email via")
+@enduml

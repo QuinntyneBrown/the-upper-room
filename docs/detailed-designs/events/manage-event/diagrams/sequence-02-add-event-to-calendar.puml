@@ -1,0 +1,31 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam maxMessageSize 80
+title Target behavior - Add event to calendar
+actor "Member" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "EventDetail" as page
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "EventIcsController" as ctrl
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "EventsDbContext" as db
+end box
+actor -> page : Click Add to calendar
+page -> ctrl : GET /api/v1/events/{id}/ics
+ctrl -> db : Load event
+db --> ctrl : Event
+alt event not found
+ctrl --> page : 404
+page --> actor : Feedback shown
+else found
+ctrl -> ctrl : Build L2-055 VCALENDAR with SUMMARY, DTSTART, DTEND, LOCATION, DESCRIPTION, UID
+ctrl --> page : ICS file
+page --> actor : File downloads
+end
+@enduml

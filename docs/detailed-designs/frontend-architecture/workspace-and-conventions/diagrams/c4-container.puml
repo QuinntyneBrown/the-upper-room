@@ -1,0 +1,21 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Workspace and conventions
+Person(dev, "Frontend developer", "Edits workspace projects")
+System_Boundary(ws, "frontend/ Angular workspace") {
+  Container(api, "api library", "Angular library", "Models, API contracts, and API services")
+  Container(components, "components library", "Angular library", "Design-system components; no dependency on api or domain")
+  Container(domain, "domain library", "Angular library", "Domain services; depends on api and components")
+  Container(app, "the-upper-room application", "Angular application", "Routed pages, shell, interceptors, and Playwright e2e tests")
+}
+Container(plugins, "tools/eslint-plugin and stylelint-plugin", "Node.js", "Custom rules for component files, contract tokens, BEM, and spacing tokens")
+Rel(dev, plugins, "Runs through npm run lint")
+Rel(plugins, app, "Checks")
+Rel(plugins, components, "Checks")
+Rel(domain, api, "Depends on")
+Rel(domain, components, "Depends on")
+Rel(app, api, "Imports")
+Rel(app, components, "Imports")
+Rel(app, domain, "Imports")
+@enduml

@@ -1,0 +1,44 @@
+@startuml
+title UML sequence behaviour — Event time in viewer and organizer zones
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Viewer" as actor
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "EventDetail page" as page
+  participant "EventTimeDisplay (target)" as disp
+  participant "TimeZoneFormatter (target)" as tzf
+end box
+box "Backend — TheUpperRoom.Api application" #D1FADF
+  participant "EventsController" as ctrl
+end box
+box "Backend — TheUpperRoom Infrastructure" #FFF4E5
+  database "Events database" as db
+end box
+actor -> page : Open event
+page -> ctrl : GET event
+ctrl -> db : Load event
+db --> ctrl : StartAt in UTC and Timezone America/New_York
+ctrl --> page : Event JSON
+page -> disp : startAt, eventTimezone
+disp -> tzf : Format in viewer zone (L2-111)
+tzf --> disp : 11:00 AM PT
+alt viewer zone differs from event zone
+  disp -> tzf : Format in event zone
+  tzf --> disp : 2:00 PM ET
+  disp --> actor : 11:00 AM PT (2:00 PM ET)
+else same zone
+  disp --> actor : Single time
+end
+@enduml

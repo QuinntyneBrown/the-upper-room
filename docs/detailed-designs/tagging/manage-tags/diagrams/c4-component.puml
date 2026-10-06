@@ -1,0 +1,22 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Manage tags
+Container_Boundary(browser, "Frontend - Upper Room") {
+Component(f0, "TagList", "Angular page", "Chips grouped by color, usage counts, edit dialog")
+Component(f1, "TarTagSelector", "Angular component", "`<tar-tag-selector>` chips and autocomplete")
+Component(f2, "ITagsApi", "Contract (proposed)", "Typed client; name `<TO SUPPLY>`")
+}
+Container_Boundary(backend, "Backend - Upper Room API, Application, Domain") {
+Component(b0, "TagsController", "ASP.NET Core controller (proposed)", "Route api/v1/tags")
+Component(b1, "Tag command and query handlers", "Application (proposed)", "Uniqueness, usage counts, cascade removal")
+Component(b2, "Tag", "Domain entity", "Owns name, slug, color, description")
+}
+ContainerDb(data, "Upper Room database", "EF Core", "Tags and associations")
+Rel(f0, f2, "Manages tags")
+Rel(f1, f2, "Searches and creates")
+Rel(f2, b0, "Calls", "JSON/HTTPS")
+Rel(b0, b1, "Dispatches")
+Rel(b1, b2, "Creates and updates")
+Rel(b1, data, "Persists", "EF Core")
+@enduml

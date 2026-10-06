@@ -1,0 +1,39 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Resolve a catalog endpoint
+actor "API consumer" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "API service" as client
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "Authentication middleware" as auth
+participant "Feature controller" as ctrl
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "Feature handler" as handler
+end box
+box "Backend - Infrastructure" #FFF4E5
+database "Feature database" as db
+end box
+actor -> client : Call a catalog endpoint such as DELETE /api/v1/contacts/{id}
+client -> auth : HTTPS request under /api/v1
+auth -> auth : Validate bearer token (all endpoints except the no-auth auth routes)
+alt unauthenticated
+auth --> client : 401
+else authenticated
+auth -> ctrl : Route by controller attribute
+ctrl -> handler : Send request
+handler -> db : Apply change
+handler -> handler : Record audit entry (L2-077 criterion 2)
+db --> handler : Saved
+handler --> ctrl : Outcome
+ctrl --> client : Mapped HTTP status and body
+end
+client --> actor : Response
+@enduml

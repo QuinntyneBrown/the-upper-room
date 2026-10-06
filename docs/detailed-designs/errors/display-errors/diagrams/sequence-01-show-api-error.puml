@@ -1,0 +1,39 @@
+@startuml
+title UML sequence behaviour — Show an API error as a snackbar
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "City member" as actor
+box "Frontend — The Upper Room web app" #E0F2FE
+  participant "Feature page" as page
+  participant "correlationIdInterceptor" as corr
+  participant "errorInterceptor" as err
+  participant "mapErrorToMessage" as catalog
+end box
+box "Frontend — components library" #E0F2FE
+  participant "SnackbarService" as snack
+end box
+box "Backend — TheUpperRoom.Api" #D1FADF
+  participant "API endpoint" as api
+end box
+actor -> page : Perform action
+page -> corr : HTTP request
+corr -> api : Request with X-Correlation-Id
+api --> err : HTTP error with optional {code}
+alt Request sets SKIP_ERROR_SNACKBAR
+  err --> page : Rethrow error without snackbar
+else Global handling
+  err -> catalog : mapErrorToMessage(status, code) (L2-066)
+  alt Code is in catalog
+    catalog --> err : Catalog message
+  else Unknown code
+    catalog --> err : Status fallback or server.internal (L2-066)
+    err -> err : Log raw payload to telemetry, never display (L2-066) <TO SUPPLY>
+  end
+  err -> snack : show(message, 'error') (L2-065)
+  snack --> actor : Sticky error snackbar
+  err --> page : Rethrow error
+end
+@enduml

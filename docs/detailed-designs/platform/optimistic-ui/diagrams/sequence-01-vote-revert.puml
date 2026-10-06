@@ -1,0 +1,35 @@
+@startuml
+title UML sequence behaviour — Vote reverts on failure
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "IdeaDetail page" as page
+  participant "optimisticMutation" as om
+  participant "SnackbarService" as sn
+end box
+box "Backend — TheUpperRoom.Api application" #D1FADF
+  participant "Ideas API" as api
+end box
+actor -> page : Click vote
+page -> om : state, next (voted, count+1)
+om -> om : Save previous, set next (L2-114)
+om -> api : mutate()
+api --> om : 500
+om -> om : Restore previous within 500 ms
+om -> page : onError
+page -> sn : show("Couldn't save. Try again.", error)
+sn --> actor : Alert announced
+@enduml

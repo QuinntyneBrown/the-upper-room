@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Browse locations
+Person(member, "Member", "Browses locations")
+System_Boundary(room, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "Locations list and detail pages")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Locations endpoints")
+  ContainerDb(db, "Locations store", "EF Core", "Locations")
+}
+System_Ext(tiles, "OpenStreetMap tiles", "Static map images")
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(spa, tiles, "Loads map image from", "HTTPS")
+@enduml

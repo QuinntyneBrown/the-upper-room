@@ -1,0 +1,53 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Edit contact
+interface "PhoneRow" as t0 <<existing interface>> {
+  private readonly http = inject(HttpClient)
+  private readonly router = inject(Router)
+  private readonly confirm = inject(ConfirmService)
+  private readonly snackbar = inject(SnackbarService)
+}
+class "ContactEdit" as t1 <<existing class>> {
+  private readonly http = inject(HttpClient)
+  private readonly route = inject(ActivatedRoute)
+  private readonly router = inject(Router)
+  private readonly confirm = inject(ConfirmService)
+}
+interface "IContactsApi" as t2 <<existing interface>> {
+}
+class "ContactsController" as t3 <<existing class>> {
+  public async Task<IActionResult> List(
+  public async Task<ActionResult<Contact>> GetById(string id, [FromQuery] string? scope, CancellationToken cancellationToken)
+  public async Task<ActionResult<Contact>> Create([FromBody] CreateContactRequest? body, CancellationToken cancellationToken)
+  public async Task<IActionResult> Archive(string id, CancellationToken cancellationToken)
+}
+class "CreateContactHandler" as t4 <<existing class>> {
+  private readonly IContactsDbContext _db
+  private readonly IUserDirectory _users
+  public CreateContactHandler(IContactsDbContext db, IUserDirectory users)
+  public Task<MutateContactResult> Handle(CreateContactCommand request, CancellationToken cancellationToken)
+}
+class "UpdateContactHandler" as t5 <<existing class>> {
+  private readonly IContactsDbContext _db
+  private readonly IUserDirectory _users
+  public UpdateContactHandler(IContactsDbContext db, IUserDirectory users)
+  public Task<MutateContactResult> Handle(UpdateContactCommand request, CancellationToken cancellationToken)
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+t0 ..> t3 : target collaboration
+t0 ..> t4 : target collaboration
+t0 ..> t5 : target collaboration
+
+@enduml

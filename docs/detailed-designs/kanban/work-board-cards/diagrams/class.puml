@@ -1,0 +1,56 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Work board cards
+class BoardView <<existing>>
+class BoardDetail <<existing>>
+class BoardColumn <<existing>>
+class BoardCard <<existing>>
+class CardDetailDialog <<existing>>
+class CardDetailPatch <<existing>>
+class CardsController <<existing>> {
+  +Patch(id: string, body: Dictionary)
+  +Move(id: string, body: MoveCardRequest)
+  +Delete(id: string)
+}
+class MoveCardHandler <<existing>> {
+  +Handle(request: MoveCardCommand, ct: CancellationToken)
+}
+class PatchCardHandler <<existing>>
+class DeleteCardHandler <<existing>>
+enum KanbanOutcome <<existing>> {
+  Ok
+  Unauthorized
+  NotFound
+  BadRequest
+  Unprocessable
+}
+class KanbanCard <<existing>> {
+  +string ColumnId
+  +decimal Position
+  +Data
+  +bool Archived
+}
+interface IKanbanDbContext <<existing>>
+BoardView --> BoardDetail
+BoardDetail "1" *-- "*" BoardColumn
+BoardColumn "1" *-- "*" BoardCard
+BoardView ..> CardDetailDialog : opens
+CardDetailDialog ..> CardDetailPatch : returns
+CardsController ..> MoveCardHandler
+CardsController ..> PatchCardHandler
+CardsController ..> DeleteCardHandler
+MoveCardHandler ..> IKanbanDbContext
+MoveCardHandler --> KanbanCard : mutates
+MoveCardHandler ..> KanbanOutcome : returns
+@enduml

@@ -1,0 +1,64 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Manage notes
+class Note <<existing>> {
+  +NoteSubjectType SubjectType
+  +string SubjectId
+  +string BodyMarkdown
+  +string BodyHtmlSanitized
+  +IReadOnlyCollection<NoteVersion> History
+  +{static} MaxHistoryVersions: int = 20
+  +UpdateBody(bodyMarkdown: string, bodyHtmlSanitized: string, updatedBy: string, updatedAt: DateTimeOffset)
+}
+class NoteVersion <<existing>> {
+  +string Id
+  +string BodyMarkdown
+  +string BodyHtmlSanitized
+  +DateTimeOffset CreatedAt
+  +string CreatedBy
+}
+enum NoteSubjectType <<existing>>
+class NotesSanitizer <<existing>> {
+  +{static} Instance: HtmlSanitizer
+}
+class CreateNoteHandler <<existing>> {
+  +Handle(request: CreateNoteCommand, ct: CancellationToken)
+}
+class UpdateNoteHandler <<existing>> {
+  +Handle(request: UpdateNoteCommand, ct: CancellationToken)
+}
+class DeleteNoteHandler <<existing>>
+class NotesController <<existing>> {
+  +List(subjectType: string?, subjectId: string?)
+  +GetById(id: string)
+  +Create(body: CreateNoteRequest)
+  +Update(id: string, body: UpdateNoteRequest)
+  +Delete(id: string)
+}
+interface INotesDbContext <<existing>>
+interface INotesApi <<existing>>
+class TarNotes <<existing>>
+class NotesApiService <<existing>>
+Note "1" *-- "0..20" NoteVersion
+Note --> NoteSubjectType
+NotesController ..> CreateNoteHandler
+NotesController ..> UpdateNoteHandler
+NotesController ..> DeleteNoteHandler
+CreateNoteHandler ..> NotesSanitizer
+UpdateNoteHandler ..> NotesSanitizer
+UpdateNoteHandler --> Note : mutates
+CreateNoteHandler ..> INotesDbContext
+NotesApiService ..|> INotesApi
+TarNotes ..> INotesApi : target dependency
+@enduml

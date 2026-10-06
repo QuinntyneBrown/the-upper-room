@@ -1,0 +1,48 @@
+@startuml
+title UML sequence behaviour — Open the inbox and read a notification
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "City member" as actor
+box "Frontend — The Upper Room web app" #E0F2FE
+  participant "TarNotificationBell" as bell
+  participant "Router" as router
+end box
+box "Backend — TheUpperRoom.Api" #D1FADF
+  participant "NotificationsController" as ctrl
+end box
+box "Backend — Application and Domain" #ECFDF3
+  participant "ListNotificationsHandler" as list
+  participant "MarkNotificationReadHandler" as read
+end box
+box "Backend — Infrastructure" #FFF4E5
+  database "Application database" as db
+end box
+bell -> ctrl : GET /api/v1/notifications (on init)
+ctrl -> list : Send ListNotificationsQuery
+list -> db : Load notifications for caller
+db --> list : Rows
+list --> ctrl : Items
+ctrl --> bell : { items, total }
+bell --> actor : Show badge (max "99+", L2-062)
+actor -> bell : Click bell
+bell --> actor : Show "Notifications" panel with Unread and All tabs
+alt No notification in the active tab
+  bell --> actor : Empty state "You're all caught up" (L2-062)
+else Rows present
+  actor -> bell : Click a row
+  bell -> ctrl : POST /api/v1/notifications/{id}/read
+  ctrl -> read : Send MarkNotificationReadCommand
+  read -> db : Set ReadAt and save
+  db --> read : Commit
+  read --> ctrl : Updated notification
+  ctrl --> bell : 200 NotificationDto
+  bell -> bell : Replace row; badge decrements (L2-062)
+  opt DeepLink present
+    bell -> router : navigateByUrl(deepLink)
+    router --> actor : Show linked page
+  end
+end
+@enduml

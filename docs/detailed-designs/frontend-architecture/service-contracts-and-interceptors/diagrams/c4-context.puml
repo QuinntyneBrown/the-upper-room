@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Service contracts and interceptors
+Person(member, "Member or administrator", "Uses pages that call the API")
+Person(dev, "Frontend developer", "Writes pages that depend on contract tokens")
+System(room, "The Upper Room", "Angular application with typed API services and an HTTP interceptor chain")
+System_Ext(api, "The Upper Room API", "Backend REST API under /api/v1")
+Rel(member, room, "Uses")
+Rel(dev, room, "Extends")
+Rel(room, api, "Calls through the interceptor chain", "JSON/HTTPS")
+@enduml

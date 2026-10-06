@@ -1,0 +1,10 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Browse locations
+Person(member, "Member", "Browses venues and reads location detail")
+System(room, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+System_Ext(tiles, "OpenStreetMap tiles", "Provides static map images without an API key")
+Rel(member, room, "Browses locations using")
+Rel(room, tiles, "Requests map image from", "HTTPS")
+@enduml

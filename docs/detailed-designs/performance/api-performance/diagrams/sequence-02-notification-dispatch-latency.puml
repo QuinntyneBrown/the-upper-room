@@ -1,0 +1,40 @@
+@startuml
+title UML sequence behaviour — Notification dispatch latency
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Trigger source" as actor
+box "Backend — TheUpperRoom.Api application" #D1FADF
+  participant "Notifications controller" as ctrl
+end box
+box "Backend — TheUpperRoom Application and Domain" #ECFDF3
+  participant "DispatchNotification handler" as h
+end box
+box "Backend — TheUpperRoom Infrastructure" #FFF4E5
+  participant "PushDispatcher" as pd
+  participant "LatencyProbe (target)" as probe
+end box
+actor -> ctrl : Trigger notification
+ctrl -> h : Send DispatchNotificationCommand
+h -> probe : Record trigger time
+h -> pd : Deliver
+pd --> h : Delivered
+h -> probe : Record delivery time
+probe -> probe : Compare interval with 30 s (L2-091)
+alt interval above 30 s
+  probe --> h : Report breach <TO SUPPLY>
+end
+h --> ctrl : Result
+ctrl --> actor : Response
+@enduml

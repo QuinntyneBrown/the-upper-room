@@ -1,0 +1,19 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components — Keyboard and focus
+
+Container_Boundary(spa, "the-upper-room application") {
+  Component(shell, "AppShell", "Angular component", "Renders skip link and landmarks")
+  Component(rf, "RouteFocusManager (target)", "Angular service", "Moves focus to first heading after navigation")
+  Component(fs, "Global focus styles", "SCSS", "Focus ring on :focus-visible")
+}
+Container_Boundary(lib, "components library") {
+  Component(ph, "PageHeader", "Angular component", "Renders page heading")
+  Component(dlg, "ConfirmDialog", "CDK Dialog", "Traps focus and closes on Escape")
+}
+Rel(shell, ph, "Hosts routed page containing")
+Rel(rf, ph, "Focuses heading of", "DOM focus")
+Rel(shell, fs, "Styled by", "CSS")
+Rel(shell, dlg, "Opens", "CDK Dialog")
+@enduml

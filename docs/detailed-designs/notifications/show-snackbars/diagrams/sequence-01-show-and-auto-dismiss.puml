@@ -1,0 +1,39 @@
+@startuml
+title UML sequence behaviour — Show a snackbar and auto-dismiss it
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+actor "City member" as actor
+box "Frontend — The Upper Room web app" #E0F2FE
+  participant "Feature page" as page
+  participant "TarSnackbar" as host
+end box
+box "Frontend — components library" #E0F2FE
+  participant "SnackbarService" as svc
+end box
+page -> svc : show(message, severity, action)
+svc -> svc : Append SnackbarItem to queue
+alt No item is current
+  svc -> svc : advance() sets current (L2-061 one visible at a time)
+  alt Severity is info, success, or warning
+    svc -> svc : Start timer 4000, 5000, or 7000 ms (L2-061)
+  else Severity is error
+    svc -> svc : Start no timer, item is sticky (L2-061)
+  end
+end
+host -> svc : Read current signal
+svc --> host : SnackbarItem
+host --> actor : Render snackbar
+opt Pointer or focus enters
+  actor -> host : mouseenter or focusin
+  host -> svc : pause()
+  actor -> host : mouseleave or focusout
+  host -> svc : resume()
+end
+svc -> svc : Timer fires, dismiss()
+svc -> svc : advance() shows next queued item or clears current
+svc --> host : Updated current
+host --> actor : Remove or replace snackbar
+@enduml

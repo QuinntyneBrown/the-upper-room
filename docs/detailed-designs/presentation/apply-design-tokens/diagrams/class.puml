@@ -1,0 +1,25 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Apply design tokens
+class "TarIcon" as t0 <<existing class>> {
+}
+class "ThemeService" as t1 <<existing class>> {
+  private readonly http = inject(HttpClient)
+  private readonly tokenSource = inject(ACCESS_TOKEN_SOURCE)
+  readonly mode = signal<ThemeMode>(this.read())
+  setMode(mode: ThemeMode): void
+}
+t0 ..> t1 : target collaboration
+
+@enduml

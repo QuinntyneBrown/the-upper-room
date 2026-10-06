@@ -1,0 +1,44 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Retry an idempotent GET after 503
+actor "Member or administrator" as actor
+box "Frontend - Upper Room application" #E0F2FE
+participant "Page" as page
+participant "IContactsApi" as client
+participant "correlationIdInterceptor" as corr
+participant "authInterceptor" as auth
+participant "retryInterceptor" as retry
+participant "errorInterceptor" as err
+end box
+box "Backend - Upper Room API application" #D1FADF
+participant "ContactsController" as ctrl
+end box
+actor -> page : Open the contacts list
+page -> client : inject(CONTACTS_API) and call
+client -> corr : GET /api/v1/contacts
+corr -> auth : Add X-Correlation-Id (L2-084)
+auth -> retry : Add Authorization header
+retry -> err : Pass request on
+err -> ctrl : Send request
+ctrl --> err : 503
+err --> retry : 503 error after errorInterceptor shows a snackbar
+retry -> retry : Wait 300 ms plus jitter, retry
+retry -> err : GET again
+err -> ctrl : Send request
+ctrl --> err : 503
+err --> retry : 503 error after errorInterceptor shows a snackbar
+retry -> retry : Wait 900 ms plus jitter, retry
+retry -> err : GET third attempt
+err -> ctrl : Send request
+ctrl --> err : 200 with contacts
+err --> retry : Response
+retry --> client : Response
+client --> page : Contacts
+page --> actor : Render list
+@enduml

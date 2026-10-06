@@ -1,0 +1,8 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title Context - Manage profile
+Person(member, "Member or authorized administrator", "Uses this capability within the permitted city scope")
+System(room, "The Upper Room", "A profile stores personal display information, localization preferences, and security controls")
+Rel(member, room, "Manage profile")
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+!include <C4/C4_Context>
+LAYOUT_WITH_LEGEND()
+title System Context — Format dates and time zones
+
+Person(user, "Viewer", "Reads times in the activity feed and on event cards")
+Person(org, "Organizer", "Schedules events in a chosen time zone")
+System(trur, "The Upper Room", "Multi-city platform for contacts, partners, ideas, events, locations, and boards")
+
+Rel(user, trur, "Reads times from", "HTTPS")
+Rel(org, trur, "Chooses event time zone in", "HTTPS")
+@enduml

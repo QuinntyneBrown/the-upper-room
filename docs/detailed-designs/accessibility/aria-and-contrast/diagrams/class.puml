@@ -1,0 +1,43 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — ARIA roles and color contrast
+enum SnackbarSeverity {
+  info
+  success
+  warning
+  error
+}
+class SnackbarService {
+  +current: Signal<SnackbarItem|null>
+  +show(message: string, severity: SnackbarSeverity, action?: SnackbarAction): void
+  +dismiss(): void
+}
+class SnackbarItem {
+  +message: string
+  +severity: SnackbarSeverity
+}
+class TarSnackbar {
+  +role: "status" | "alert"
+}
+class TarIconButton {
+  +ariaLabel: string
+}
+class Chip {
+  +label: string
+  +icon: string
+  +tone: string
+}
+SnackbarService "1" --> "0..1" SnackbarItem : current
+SnackbarItem --> SnackbarSeverity
+TarSnackbar ..> SnackbarService : reads current
+TarSnackbar ..> SnackbarSeverity : maps to role
+@enduml

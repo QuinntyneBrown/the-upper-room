@@ -1,0 +1,18 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Log and audit
+Person(admin, "System administrator", "Reviews audit entries")
+System_Boundary(room, "The Upper Room") {
+  Container(spa, "Upper Room web application", "Angular", "Sends X-Correlation-Id; shows the audit log page")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Correlation middleware, JSON console logging, AuditController")
+  Container(app, "TheUpperRoom.Application", "Class library", "Handlers that call AuditStore.Record; ListAuditEntriesHandler")
+  ContainerDb(store, "AuditStore", "In-memory list", "Holds AuditEntryRecord items for the process lifetime")
+  ContainerDb(db, "Database", "EF Core", "AuditEntries table mapped by AuditEntryConfiguration; not written at run time")
+}
+Rel(admin, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, app, "Sends requests through MediatR")
+Rel(app, store, "Records and reads")
+Rel(app, db, "Target store for AuditEntries", "EF Core")
+@enduml

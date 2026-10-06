@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Target components - Display avatars
+Container_Boundary(browser, "Frontend - Upper Room") {
+Component(f0, "TarAvatar", "Angular type", "Feature presentation or client behavior")
+Component(f1, "AvatarUser", "Angular type", "Feature presentation or client behavior")
+Component(f2, "TarAvatarUploader", "Angular type", "Feature presentation or client behavior")
+}
+Rel(f0, f1, "Target collaboration")
+Rel(f0, f2, "Target collaboration")
+
+@enduml

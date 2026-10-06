@@ -1,0 +1,37 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Workspace and conventions
+
+class "component-file-per-type" as FPT <<ESLint rule>> {
+  +check(source: string): string[]
+}
+class "contract-token-import" as CTI <<ESLint rule>> {
+  +check(filename: string, source: string): string[]
+}
+class "bem-class-name" as BEM <<Stylelint rule>> {
+  +check(className: string): string | null
+}
+class "spacing-token-only" as SP <<Stylelint rule>>
+class "raw-source-parser" as RSP <<ESLint parser>>
+class "eslint.config.js" as ECFG
+class ".stylelintrc.json" as SCFG
+class "the-upper-room plugin" as TURP {
+  rules
+}
+
+ECFG --> TURP : loads
+ECFG ..> RSP : parser
+TURP *-- FPT
+TURP *-- CTI
+SCFG --> BEM : enables
+SCFG --> SP : enables
+@enduml

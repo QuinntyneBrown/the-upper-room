@@ -1,0 +1,36 @@
+@startuml
+title UML sequence behaviour — Reject a disguised executable
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Attacker" as actor
+box "Backend — TheUpperRoom.Api application" #D1FADF
+  participant "UploadsController" as ctrl
+end box
+box "Backend — TheUpperRoom Application and Domain" #ECFDF3
+  participant "UploadFileHandler" as h
+  participant "ContentSniffer (target)" as sn
+end box
+box "Backend — TheUpperRoom Infrastructure" #FFF4E5
+  participant "ObjectStore (target)" as st
+end box
+actor -> ctrl : POST malware.png with bytes MZ
+ctrl -> h : Send UploadFileCommand
+h -> sn : Sniff MIME from content (L2-113)
+sn --> h : application/x-msdownload
+h -> h : Type not in allow-list
+h --> ctrl : UnsupportedType
+ctrl --> actor : 422 code upload.unsupported_type
+note right of st : No object stored
+@enduml

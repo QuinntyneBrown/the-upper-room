@@ -1,0 +1,33 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure — Keyboard and focus
+class AppShell {
+  +drawerOpen: Signal<boolean>
+  +scrolled: Signal<boolean>
+  +skipToMain(event: Event): void
+  +toggleDrawer(): void
+}
+class RouteFocusManager <<target>> {
+  +watch(router: Router): void
+  -focusFirstHeading(): void
+}
+class PageHeader {
+  +title: string
+  +tabindex: -1
+}
+class ConfirmDialog {
+  +open(options): Observable<boolean>
+}
+AppShell ..> RouteFocusManager : starts
+RouteFocusManager ..> PageHeader : focuses heading of
+AppShell ..> ConfirmDialog : opens
+@enduml

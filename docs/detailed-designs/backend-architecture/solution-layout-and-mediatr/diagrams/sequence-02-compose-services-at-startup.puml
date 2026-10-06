@@ -1,0 +1,32 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+title Behavior - Compose services at startup
+actor "Backend developer" as actor
+box "Backend - Upper Room API application" #D1FADF
+participant "Program.cs" as program
+end box
+box "Backend - Application and Domain" #ECFDF3
+participant "AddApplication" as addapp
+end box
+box "Backend - Infrastructure" #FFF4E5
+participant "AddInfrastructure" as addinfra
+participant "SeedingHostedService" as seed
+end box
+actor -> program : Start the host
+program -> addapp : AddApplication(Program assembly)
+addapp -> addapp : Register validators and MediatR handlers (L2-075)
+addapp -> addapp : Register ValidationBehavior as IPipelineBehavior
+addapp --> program : IServiceCollection
+program -> addinfra : AddInfrastructure(configuration)
+addinfra -> addinfra : Register UsersDbContext, IUserDirectory, IPasswordHasher, IPermissionChecker
+addinfra -> seed : Register hosted seeders (L2-073b)
+addinfra --> program : IServiceCollection
+program -> program : Register per-feature DbContexts (SQLite) and build the host
+program --> actor : Host ready
+@enduml

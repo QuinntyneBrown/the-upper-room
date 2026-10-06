@@ -1,0 +1,45 @@
+@startuml
+title UML sequence behaviour — Fetch handling and offline banner
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Member" as actor
+box "Frontend — Browser platform" #F4EBFF
+  participant "Service worker" as sw
+  database "Cache Storage" as cch
+end box
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "NetworkService" as net
+  participant "Offline banner" as ob
+end box
+box "Backend — TheUpperRoom.Api application" #D1FADF
+  participant "TheUpperRoom.Api" as api
+end box
+actor -> sw : Navigate
+sw -> cch : match(request)
+alt cached shell
+  cch --> sw : Shell
+else miss
+  sw -> api : fetch (network)
+end
+actor -> sw : Application requests /api/v1/contacts
+sw -> sw : URL contains /api/, return without caching (L2-117)
+sw -> api : Network request
+alt network unavailable
+  net -> ob : offline
+  ob --> actor : Offline banner (L2-070)
+else available
+  api --> actor : Fresh JSON
+end
+@enduml

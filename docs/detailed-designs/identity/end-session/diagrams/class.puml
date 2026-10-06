@@ -1,0 +1,50 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - End session
+class "SignOutService" as t0 <<existing class>> {
+  private readonly http = inject(HttpClient)
+  private readonly router = inject(Router)
+  private readonly confirm = inject(ConfirmService)
+  private readonly snackbar = inject(SnackbarService)
+}
+class "IdleService" as t1 <<existing class>> {
+  private readonly tokenSource = inject(ACCESS_TOKEN_SOURCE)
+  private readonly signOutService = inject(SIGN_OUT_SERVICE)
+  readonly state = signal<IdleState>('active')
+  readonly countdown = signal(COUNTDOWN_SECONDS)
+}
+class "InactivityDialog" as t2 <<existing class>> {
+  protected readonly idle = inject(IDLE_SERVICE)
+}
+class "AuthController" as t3 <<existing class>> {
+  private readonly IPkceVerifier _verifier
+  private readonly ITokenService _tokens
+  private readonly IMediator _mediator
+  private readonly IAuthRateLimiter _rateLimiter
+}
+class "AccessTokenStore" as t4 <<existing class>> {
+  private token: string | null = null
+  current(): string | null
+  set(token: string | null): void
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+t0 ..> t3 : target collaboration
+t0 ..> t4 : target collaboration
+class "Proposed End session application service" as proposed <<proposed responsibility>> {
+  +execute(request: FeatureRequest): FeatureOutcome
+}
+t0 ..> proposed : target application boundary
+
+@enduml

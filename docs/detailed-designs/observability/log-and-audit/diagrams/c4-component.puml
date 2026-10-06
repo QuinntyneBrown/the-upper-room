@@ -1,0 +1,30 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Log and audit
+Container_Boundary(api, "TheUpperRoom.Api") {
+  Component(logcfg, "Logging setup in Program.cs", "AddJsonConsole", "ClearProviders, JSON output, scopes, ISO 8601 timestamps")
+  Component(corr, "Correlation middleware", "Inline middleware", "Reads or creates X-Correlation-Id, opens a CorrelationId scope, logs method, path, and status")
+  Component(ctrl, "AuditController", "ASP.NET Core controller", "GET api/v1/admin/audit")
+  Component(auth, "AuthController", "ASP.NET Core controller", "Records session audit entries")
+}
+Container_Boundary(app, "TheUpperRoom.Application") {
+  Component(upd, "UpdateContactHandler", "IRequestHandler", "Records Update with before and after JSON")
+  Component(del, "DeleteContactHandler", "IRequestHandler", "Records Delete with before JSON")
+  Component(list, "ListAuditEntriesHandler", "IRequestHandler", "Checks Audit read permission and filters entries")
+  Component(store, "AuditStore", "Static class", "Record(...) appends AuditEntryRecord")
+}
+Container_Boundary(domain, "TheUpperRoom.Domain") {
+  Component(entry, "AuditEntry", "Entity", "Full audit shape with correlation id, ip, and user agent")
+  Component(actions, "AuditActions", "Constants", "Create, Update, Delete, Archive, Restore, Login, Logout, PermissionDenied, Move")
+}
+ComponentDb(table, "AuditEntries", "EF Core table", "Mapped by AuditEntryConfiguration")
+Rel(logcfg, corr, "Supplies logger to")
+Rel(ctrl, list, "Sends ListAuditEntriesQuery")
+Rel(upd, store, "Records")
+Rel(del, store, "Records")
+Rel(auth, store, "Records")
+Rel(list, store, "Reads")
+Rel(entry, table, "Maps to")
+Rel(store, entry, "Target replacement by")
+@enduml

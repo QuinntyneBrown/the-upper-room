@@ -1,0 +1,13 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Target components - Validate and confirm input
+Container_Boundary(browser, "Frontend - Upper Room") {
+Component(f0, "TarTextField", "Angular type", "Feature presentation or client behavior")
+Component(f1, "TarFormActions", "Angular type", "Feature presentation or client behavior")
+Component(f2, "ConfirmOptions", "Angular type", "Feature presentation or client behavior")
+}
+Rel(f0, f1, "Target collaboration")
+Rel(f0, f2, "Target collaboration")
+
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+!include <C4/C4_Component>
+LAYOUT_WITH_LEGEND()
+title Components - Database schema
+Container_Boundary(infra, "TheUpperRoom.Infrastructure") {
+  Component(appctx, "AppDbContext", "EF Core DbContext", "Declares DbSets for 19 entity types and applies configurations from the assembly")
+  Component(cfgext, "EntityConfigurationExtensions", "Extension methods", "ConfigureEntityBase, ConfigureAuditable, ConfigureCityScoped")
+  Component(cfgs, "Entity configurations", "IEntityTypeConfiguration", "ContactConfiguration, PartnerConfiguration, AuditEntryConfiguration, and the others")
+  Component(featctx, "Feature DbContexts", "EF Core DbContexts", "ContactsDbContext, EventsDbContext, KanbanDbContext, and the others")
+  Component(factory, "AppDbContextFactory", "Design-time factory", "Creates AppDbContext for tooling")
+}
+Container_Boundary(domain, "TheUpperRoom.Domain") {
+  Component(entity, "Entity", "Base class", "Id")
+  Component(aud, "AuditableEntity", "Base class", "CreatedAt, CreatedBy, UpdatedAt, UpdatedBy, Version")
+  Component(city, "CityScopedAuditableEntity", "Base class", "CityId")
+}
+ComponentDb(db, "Database", "SQLite or SQL Server", "Tables created from the model")
+Rel(appctx, cfgs, "Applies")
+Rel(cfgs, cfgext, "Calls")
+Rel(cfgext, city, "Configures")
+Rel(city, aud, "Extends")
+Rel(aud, entity, "Extends")
+Rel(featctx, db, "Creates and uses", "EnsureCreated")
+Rel(appctx, db, "Targets", "EF Core")
+Rel(factory, appctx, "Creates")
+@enduml

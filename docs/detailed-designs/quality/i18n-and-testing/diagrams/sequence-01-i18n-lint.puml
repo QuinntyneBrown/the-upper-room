@@ -1,0 +1,37 @@
+@startuml
+title UML sequence behaviour — Lint literal strings
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam rectangle {
+  BorderColor #344054
+  FontColor #101828
+}
+skinparam package {
+  BorderColor #667085
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+actor "Developer" as actor
+box "Build — CI pipeline" #F2F4F7
+  participant "npm run lint" as lint
+  participant "i18n-no-literal" as rule
+end box
+box "Frontend — the-upper-room application" #E0F2FE
+  participant "Template" as tpl
+  participant "TranslocoPipe" as pipe
+end box
+actor -> lint : Run lint
+lint -> rule : Visit template nodes
+rule -> tpl : Inspect text and attributes (L2-100)
+alt literal such as "Save"
+  rule --> lint : Report file:line literal string outside transloco pipe
+  lint --> actor : Fail
+else key piped through transloco
+  tpl -> pipe : transform("contacts.list.empty.title")
+  rule --> lint : No report
+  lint --> actor : Pass
+end
+@enduml

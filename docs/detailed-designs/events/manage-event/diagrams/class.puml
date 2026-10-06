@@ -1,0 +1,56 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Class structure - Manage event
+class Event {
+  +string Title
+  +EventStatus Status
+  +DateTimeOffset StartsAt
+  +DateTimeOffset EndsAt
+  +string Timezone
+  +int? Capacity
+  +bool RequiresApproval
+}
+class EventAttendee {
+  +RsvpStatus Status
+  +DateTimeOffset RespondedAt
+}
+class SubmitRsvpCommand
+class SubmitRsvpHandler {
+  +Handle(command: SubmitRsvpCommand): Task<SubmitRsvpResult>
+}
+class SubmitRsvpResult
+class RsvpOutcome
+class EventsController {
+  +GetById(id: string): IActionResult
+  +Create(body: CreateEventRequest): IActionResult
+  +Update(id: string, body: CreateEventRequest): IActionResult
+}
+class EventRsvpController {
+  +Submit(eventId: string, body: RsvpRequest): Task<IActionResult>
+  +Approve(eventId: string, rsvpUserId: string): Task<IActionResult>
+}
+class EventIcsController {
+  +Get(id: string): IActionResult
+}
+class EventDetail
+class EventForm
+Event "1" *-- "*" EventAttendee
+EventRsvpController ..> SubmitRsvpCommand : sends
+SubmitRsvpHandler ..> SubmitRsvpCommand : handles
+SubmitRsvpHandler ..> SubmitRsvpResult : returns
+SubmitRsvpResult --> RsvpOutcome : has
+SubmitRsvpHandler --> Event : loads
+EventsController --> Event : creates / updates
+EventDetail ..> EventRsvpController : HTTP
+EventDetail ..> EventIcsController : HTTP
+EventForm ..> EventsController : HTTP
+@enduml

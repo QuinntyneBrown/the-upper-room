@@ -1,0 +1,29 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Target behavior - Retry failed list
+actor "Member or authorized administrator" as actor
+box "Frontend - Upper Room application and libraries" #E0F2FE
+participant "TarEmptyState" as page
+participant "TarListError" as client
+end box
+actor -> page : Retry failed list
+page -> client : Reissue the original query with filters intact
+client -> client : Apply L2-104 and relevant feature rules
+alt supported and successful
+client --> page : Replace the error after a successful response
+else invalid, unavailable, or failed
+client --> page : Preserve prior state or explicit fallback
+end
+page --> actor : Accessible result or recovery
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+title Containers - Edit idea
+Person(member, "Member", "Edits ideas")
+System_Boundary(room, "The Upper Room") {
+  Container(spa, "The Upper Room web app", "Angular", "Idea editor with markdown editor")
+  Container(api, "TheUpperRoom.Api", "ASP.NET Core", "Ideas and uploads endpoints")
+  ContainerDb(db, "Ideas store", "EF Core", "Ideas and partner links")
+}
+System_Ext(storage, "Object storage", "Uploaded images")
+Rel(member, spa, "Uses", "HTTPS")
+Rel(spa, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads and writes", "EF Core")
+Rel(api, storage, "Stores images in")
+@enduml

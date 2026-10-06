@@ -1,0 +1,50 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam defaultFontName Arial
+skinparam ArrowColor #344054
+skinparam sequenceMessageAlign center
+skinparam maxMessageSize 80
+skinparam class {
+  BorderColor #344054
+  FontColor #101828
+  BackgroundColor #F9FAFB
+}
+title Source types and target collaboration - Recover password
+class "ForgotPassword" as t0 <<existing class>> {
+  private readonly http = inject(HttpClient)
+  protected readonly email = signal('')
+  protected readonly submittedEmail = signal('')
+  protected readonly sent = signal(false)
+}
+class "ResetPassword" as t1 <<existing class>> {
+  private readonly route = inject(ActivatedRoute)
+  private readonly router = inject(Router)
+  private readonly http = inject(HttpClient)
+  protected readonly newPwd = signal('')
+}
+class "AuthController" as t2 <<existing class>> {
+  private readonly IPkceVerifier _verifier
+  private readonly ITokenService _tokens
+  private readonly IMediator _mediator
+  private readonly IAuthRateLimiter _rateLimiter
+}
+class "RequestPasswordResetHandler" as t3 <<existing class>> {
+  private readonly IAuthUserStore _users
+  private readonly IAuthEmailSender _emailSender
+  public RequestPasswordResetHandler(IAuthUserStore users, IAuthEmailSender emailSender)
+  public async Task<RequestPasswordResetResult> Handle(
+}
+class "ResetPasswordHandler" as t4 <<existing class>> {
+  private readonly IAuthUserStore _users
+  private readonly IPasswordHasher _passwords
+  public ResetPasswordHandler(IAuthUserStore users, IPasswordHasher passwords)
+  public async Task<ResetPasswordResult> Handle(
+}
+t0 ..> t1 : target collaboration
+t0 ..> t2 : target collaboration
+t0 ..> t3 : target collaboration
+t0 ..> t4 : target collaboration
+
+@enduml
