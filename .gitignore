@@ -1,4 +1,5 @@
 .claude/*.lock
+.claude/worktrees/
 .env
 .env.local
 .env.*.local
