@@ -1,0 +1,22 @@
+{
+  "extends": "../tsconfig.lib.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "components": ["../src/public-api.ts"]
+    }
+  },
+  "exclude": ["../src/**/*.spec.ts"],
+  "include": [
+    "../src/**/*.ts",
+    "../stories/**/*.ts",
+    "../stories/**/*.tsx",
+    "./*.ts",
+    "./**/*.tsx",
+    "./typings.d.ts"
+  ],
+  "files": ["./typings.d.ts"]
+}
