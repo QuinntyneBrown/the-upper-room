@@ -14,7 +14,8 @@ export const FullWidth: StoryObj<TarButton> = {
   parameters: {
     docs: {
       description: {
-        story: '`fullWidth` adds `.tar-button--full-width` and stretches to the container — the sign-in card and phone layouts.',
+        story:
+          '`fullWidth` adds `.tar-button--full-width` and stretches to the container — the sign-in card and phone layouts.',
       },
     },
   },

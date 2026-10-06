@@ -1,0 +1,61 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { TokenRows, previews } from './components/TokenBlocks';
+
+<Meta title="Theme/Layout" />
+
+# Layout
+
+## Breakpoints
+
+Mobile first. Breakpoints live SCSS-side in `src/lib/breakpoints/_mixins.scss`; `xs` is the default and needs no mixin.
+
+| Mixin       | Min width |
+| ----------- | --------- |
+| _(default)_ | 0         |
+| `bp.sm`     | 576px     |
+| `bp.md`     | 768px     |
+| `bp.lg`     | 992px     |
+| `bp.xl`     | 1200px    |
+| `bp.xxl`    | 1400px    |
+
+```scss
+@use '../styles' as bp; // src/lib/styles forwards the breakpoint mixins
+
+.contact-detail {
+  display: grid;
+  gap: var(--md-sys-space-4);
+
+  @include bp.lg {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+```
+
+Use the toolbar's viewport menu (mobile, tablet, desktop) to check a story at each tier.
+
+## Grid utility
+
+`.u-grid` (from `_grid.scss`, loaded globally) lays out cards: one column, then 2 / 3 / 4 / 6 columns from `sm` to `xl`.
+
+<div className="sb-unstyled u-grid" style={{ margin: '16px 0 32px' }}>
+  {['Toronto', 'Montréal', 'Vancouver', 'Calgary', 'Ottawa', 'Halifax'].map((city) => (
+    <div
+      key={city}
+      style={{
+        padding: 'var(--md-sys-space-4)',
+        borderRadius: 'var(--md-sys-shape-corner-medium)',
+        background: 'var(--md-sys-color-surface-container)',
+        font: 'var(--md-sys-typescale-title-small)',
+      }}
+    >
+      {city}
+    </div>
+  ))}
+</div>
+
+## Icon sizes
+
+`tar-icon` takes `size="xs" | "sm" | "md" | "lg" | "xl"`, mapped to these tokens.
+
+<TokenRows prefixes={['icon-size-']} preview={previews.iconSize} />

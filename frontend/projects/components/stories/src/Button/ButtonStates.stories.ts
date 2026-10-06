@@ -15,7 +15,8 @@ export const States: StoryObj<TarButton> = {
   parameters: {
     docs: {
       description: {
-        story: '`disabled` and `loading` both set the native `disabled` attribute on the inner `<button>`.',
+        story:
+          '`disabled` and `loading` both set the native `disabled` attribute on the inner `<button>`.',
       },
     },
   },

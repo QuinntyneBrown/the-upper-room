@@ -1,0 +1,68 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Concepts/Developer/Quick Start" />
+
+# Quick start
+
+## Run Storybook
+
+From `frontend/`:
+
+```sh
+npm ci
+npm run storybook        # ng run components:storybook → http://localhost:6006
+npm run build-storybook  # static build → frontend/dist/storybook
+```
+
+Storybook is an Angular builder target on the `components` project (`angular.json` → `storybook` /
+`build-storybook`). It compiles the library from source (no `ng build components` needed), runs zoneless like the app,
+loads the app's global stylesheet, and generates the API tables with compodoc on every start.
+
+## Use a component
+
+Components are standalone. Import the class from the `components` library and use its `tar-*` selector:
+
+```ts
+import { Component } from '@angular/core';
+import { TarButton, TarFormActions } from 'components';
+
+@Component({
+  selector: 'app-contact-form-footer',
+  imports: [TarButton, TarFormActions],
+  template: `
+    <tar-form-actions>
+      <tar-button variant="text" (clicked)="cancel()">Cancel</tar-button>
+      <tar-button type="submit" [loading]="saving()">Save contact</tar-button>
+    </tar-form-actions>
+  `,
+})
+export class ContactFormFooter {}
+```
+
+Class names carry the `Tar` prefix (`TarButton`, `TarChip`, `TarSideNav`); selectors use `tar-` (`tar-button`,
+`tar-chip`, `tar-side-nav`).
+
+## Register the providers
+
+Call `provideTarComponents()` once in the application config. Pass `dictionaries` to supply translated strings for the
+`transloco` pipe:
+
+```ts
+providers: [provideTarComponents({ dictionaries: DICTIONARIES })];
+```
+
+## Load the global styles
+
+The app's `styles.scss` applies the Material 3 theme (`mat.theme()`), emits the `--md-sys-*` tokens and the `.u-grid`
+utility; components need nothing else:
+
+```scss
+@use '@angular/material' as mat;
+@use '../../components/src/lib/tokens/tokens';
+@use '../../components/src/lib/breakpoints/grid';
+```
+
+## Dialogs and overlays
+
+All modals use Angular CDK Dialog/Overlay — never hand-roll one. Destructive confirmations go through `ConfirmService`;
+transient feedback through `SnackbarService`.

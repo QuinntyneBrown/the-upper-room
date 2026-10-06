@@ -1,0 +1,74 @@
+name: Storybook
+on:
+  pull_request:
+    paths:
+      - "frontend/projects/components/**"
+      - "frontend/projects/the-upper-room/src/styles.scss"
+      - "frontend/angular.json"
+      - "frontend/package.json"
+      - "frontend/package-lock.json"
+      - ".github/workflows/storybook.yml"
+  push:
+    branches: [main]
+    paths:
+      - "frontend/projects/components/**"
+      - "frontend/projects/the-upper-room/src/styles.scss"
+      - "frontend/angular.json"
+      - "frontend/package.json"
+      - "frontend/package-lock.json"
+      - ".github/workflows/storybook.yml"
+  workflow_dispatch:
+
+# Two rapid pushes touching the components library must not race the upload.
+concurrency:
+  group: storybook-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    # Compiles every story and MDX page against the real components library;
+    # a broken story or a removed input fails here.
+    name: Build Storybook
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: npm run build-storybook
+        working-directory: frontend
+      - uses: actions/upload-artifact@v4
+        with:
+          name: storybook
+          path: frontend/dist/storybook
+          retention-days: 7
+
+  deploy:
+    # Publishes main's build to an Azure Static Web App when the deployment
+    # token secret is configured; skipped otherwise.
+    name: Deploy Storybook
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    env:
+      SWA_TOKEN: ${{ secrets.SWA_STORYBOOK_DEPLOYMENT_TOKEN }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: storybook
+          path: storybook
+      - name: Deploy
+        if: env.SWA_TOKEN != ''
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ env.SWA_TOKEN }}
+          action: upload
+          app_location: storybook
+          skip_app_build: true
+          skip_api_build: true

@@ -1,16 +1,22 @@
-// Storybook preview additions. The app's own global stylesheet
-// (`projects/the-upper-room/src/styles.scss` — the Material 3 theme, the
-// `--md-sys-*` tokens and the grid utility) is listed before this file in the
-// `angular.json` storybook targets, so a component renders here exactly as it
-// does on a screen. Only docsite-specific rules belong in this file.
+/*
+ * Storybook preview additions. The app global stylesheet
+ * (`projects/the-upper-room/src/styles.scss` — the Material 3 theme, the
+ * `--md-sys-*` tokens and the grid utility) is listed before this file in the
+ * `angular.json` storybook targets, so a component renders here exactly as it
+ * does on a screen. Only docsite-specific rules belong in this file.
+ */
 
-// Docs pages render inside the preview iframe; keep the Storybook docs
-// typography on the brand stack.
+/*
+ * Docs pages render inside the preview iframe; keep the Storybook docs
+ * typography on the brand stack.
+ */
 .sbdocs-wrapper {
   font-family: 'Roboto', system-ui, sans-serif;
 }
 
-// Theme → Motion: hover a row to watch the dot travel at that duration.
+/*
+ * Theme → Motion: hover a row to watch the dot travel at that duration.
+ */
 .tar-motion-demo {
   width: 160px;
   height: 24px;

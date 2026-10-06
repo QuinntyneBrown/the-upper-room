@@ -1,0 +1,24 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Concepts/Developer/Accessibility" />
+
+# Accessibility
+
+The Upper Room targets WCAG 2.2 AA. The **Accessibility** addon panel (open the addons panel with `A`) runs axe against
+every story; violations are reported as errors.
+
+## Rules the components follow
+
+- **Native elements first.** Buttons are `<button>`, links are `<a href>`, inputs are `<input>` — the Material
+  primitives underneath keep their native semantics.
+- **State is ARIA.** The current nav item is `aria-current="page"`, invalid fields are `aria-invalid="true"` with the
+  error linked through `aria-describedby`, toggles expose `role="switch"` and `aria-checked`.
+- **Every icon-only control has a name.** `tar-icon-button` requires an `ariaLabel` that becomes its accessible name; decorative
+  icons are `aria-hidden`.
+- **Visible focus.** Material's focus indicators stay on; never remove an outline without replacing it.
+- **Colour pairs pass AA.** Pair each container role with its `on-` role (`primary-container` / `on-primary-container`).
+  Check stories in both schemes with the toolbar's **Theme** switch.
+- **Reduced motion.** `prefers-reduced-motion: reduce` collapses animations and transitions globally.
+- **Dialogs** come from Angular CDK Dialog, which traps focus, restores it on close and closes on `Escape`.
+- **Live feedback.** Snackbars and the offline banner announce through live regions; don't rely on colour alone for
+  status.

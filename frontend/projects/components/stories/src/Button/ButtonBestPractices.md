@@ -15,4 +15,4 @@
 ### Accessibility
 
 - Buttons that submit a form need `type="submit"`; everything else stays `type="button"`.
-- An icon-only action is a `tar-icon-button` with a `label`, not a `tar-button` with an icon and no text.
+- An icon-only action is a `tar-icon-button` with an `ariaLabel`, not a `tar-button` with an icon and no text.

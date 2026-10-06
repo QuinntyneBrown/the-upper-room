@@ -15,7 +15,8 @@ export const WithIcon: StoryObj<TarButton> = {
   parameters: {
     docs: {
       description: {
-        story: '`icon` takes a Material Symbols ligature and renders it before the label as `.tar-button__icon`.',
+        story:
+          '`icon` takes a Material Symbols ligature and renders it before the label as `.tar-button__icon`.',
       },
     },
   },

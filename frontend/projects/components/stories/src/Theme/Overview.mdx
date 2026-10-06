@@ -1,0 +1,46 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Theme/Overview" />
+
+# Design tokens
+
+The Upper Room's tokens follow the [Material 3 token model](https://m3.material.io/foundations/design-tokens): **system
+tokens** (`--md-sys-*`) named by role, which every component stylesheet reads as CSS custom properties. They live in one
+file, `frontend/projects/components/src/lib/tokens/_tokens.scss`, and are emitted on `:root` by the app's
+`styles.scss` — the same stylesheet this Storybook loads.
+
+| Group      | Prefix                                | What                                                                     |
+| ---------- | ------------------------------------- | ------------------------------------------------------------------------ |
+| Colour     | `--md-sys-color-*`                    | Roles from the M3 seed `#6750A4` — primary, surface containers, error, … |
+| Typography | `--md-sys-typescale-*`                | `font` shorthands for the M3 type scale on Roboto                        |
+| Spacing    | `--md-sys-space-*`                    | A 4dp scale                                                              |
+| Shape      | `--md-sys-shape-corner-*`             | Corner radii from `none` to `full`                                       |
+| Elevation  | `--md-sys-elevation-level-*`          | M3 key + ambient shadow recipes                                          |
+| Motion     | `--md-sys-motion-{duration,easing}-*` | Durations and easing curves                                              |
+| Icons      | `--icon-size-*`                       | `xs` → `xl` icon sizes for `tar-icon`                                    |
+
+Angular Material's own `--mat-sys-*` variables come from `mat.theme()` in `styles.scss` and theme the wrapped Material
+primitives; component stylesheets read the `--md-sys-*` roles.
+
+Every page in this section reads the tokens from the live stylesheet and paints with `var(--token)`, so nothing here can
+drift from what components render. Switch **Theme → Dark** in the toolbar to see the dark scheme
+(`[data-theme='dark']` on `<html>`, exactly as the app applies it).
+
+## Using tokens
+
+In a component stylesheet, read the custom property, chosen by **role** — `--md-sys-color-on-surface-variant` for
+secondary text, `--md-sys-color-primary` for an accent — never a hex value:
+
+```scss
+.contact-card__meta {
+  color: var(--md-sys-color-on-surface-variant);
+  font: var(--md-sys-typescale-body-small);
+  padding: var(--md-sys-space-2) var(--md-sys-space-4);
+  border-radius: var(--md-sys-shape-corner-medium);
+  transition: background var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+}
+```
+
+Stylelint enforces spacing tokens (`the-upper-room/spacing-token-only`) and BEM class names
+(`the-upper-room/bem-class-name`). Missing a value? Add a token to `_tokens.scss` (and its dark override if it is a
+colour) rather than hard-coding it in a component.

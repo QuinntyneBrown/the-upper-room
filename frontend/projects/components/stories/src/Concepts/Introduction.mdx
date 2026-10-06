@@ -1,0 +1,54 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Concepts/Introduction" />
+
+<div
+  className="sb-unstyled"
+  style={{
+    background: 'var(--md-sys-color-primary-container)',
+    color: 'var(--md-sys-color-on-primary-container)',
+    borderRadius: 'var(--md-sys-shape-corner-extra-large)',
+    padding: '40px 32px',
+    margin: '0 0 32px',
+  }}
+>
+  <p style={{ font: 'var(--md-sys-typescale-label-large)', margin: 0 }}>
+    The Upper Room Design System
+  </p>
+  <h1 style={{ font: 'var(--md-sys-typescale-display-small)', margin: '8px 0 12px' }}>
+    One city at a time, every relationship in view.
+  </h1>
+  <p style={{ font: 'var(--md-sys-typescale-body-large)', maxWidth: 600, margin: 0 }}>
+    Tokens, Angular components and screen patterns for The Upper Room — the multi-city platform for
+    contacts, partners, ideas, events, locations and Kanban boards. Everything here is the real{' '}
+    <code>components</code> library the app ships, rendered live.
+  </p>
+</div>
+
+## What's here
+
+| Section                                                      | What you'll find                                                                                       |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| [Concepts](?path=/docs/concepts-developer-quick-start--docs) | Quick start, how components are styled, accessibility rules and how to write stories.                  |
+| [Theme](?path=/docs/theme-overview--docs)                    | Material 3 system tokens — colour, type, spacing, shape, elevation, motion — read from the live sheet. |
+| Components                                                   | Every `tar-*` component with its API table (inputs, outputs, JSDoc), examples and best practices.      |
+| Patterns                                                     | Compositions of components that match whole screens: the shell, lists, sign-in, dialogs and boards.    |
+
+## Principles
+
+- **Material underneath, our API on top.** Each component is a thin, standalone wrapper over an Angular Material
+  primitive with a small, typed API — pages never import `@angular/material` directly.
+- **BEM classes are a contract.** Components render stable BEM classes (`.tar-button--filled`) and `data-testid`s; the
+  Playwright page objects locate by them.
+- **Tokens by role.** Styles read `--md-sys-*` roles, never hex values, so light and dark schemes come for free.
+- **Dialogs, not inline forms.** Button-triggered editing opens a CDK Dialog or navigates to a screen.
+- **Accessible state.** Selection, expansion and validity are exposed through ARIA, not classes alone.
+
+## Where the code lives
+
+| Path                                           | Purpose                                                         |
+| ---------------------------------------------- | --------------------------------------------------------------- |
+| `frontend/projects/components/src/lib/`        | Component source (`<name>/<name>.ts`, `.html`, `.scss`)         |
+| `frontend/projects/components/src/lib/tokens/` | `_tokens.scss` — the `--md-sys-*` design tokens                 |
+| `frontend/projects/components/stories/src/`    | This Storybook: concept and theme MDX, one folder per component |
+| `frontend/projects/components/.storybook/`     | Storybook configuration, manager theme and branding             |

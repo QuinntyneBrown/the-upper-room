@@ -1,0 +1,21 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import { TokenRows, previews } from './components/TokenBlocks';
+
+<Meta title="Theme/Typography" />
+
+# Typography
+
+The M3 type scale on Roboto. Each `--md-sys-typescale-*` token is a complete `font` shorthand (weight, size / line
+height, family), so one declaration sets the whole style:
+
+```scss
+.page-header__title {
+  font: var(--md-sys-typescale-headline-small);
+}
+```
+
+Use **display** for marketing-sized numbers, **headline** for page titles, **title** for card and section headings,
+**body** for running text and **label** for buttons, chips and table headers.
+
+<TokenRows prefixes={['md-sys-typescale-']} preview={previews.typescale} />
