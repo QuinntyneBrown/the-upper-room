@@ -1,0 +1,3 @@
+Page navigation for long lists. `tar-pagination` wraps Angular Material's `mat-paginator`, forwarding `length`, `pageSize`, `pageIndex`, `pageSizeOptions` (default `[10, 25, 50, 100]`), `showFirstLastButtons` (default `true`) and `hidePageSize`. It re-emits Material's `page` event as `pageChange` with a `TarPageChange { pageIndex, pageSize, previousPageIndex }`.
+
+The `mat-paginator` carries the BEM class `.tar-pagination` (transparent background, body-medium type) and `testId` is mirrored to its `data-testid`. The range label ("26 – 50 of 237") and button labels come from Material's `MatPaginatorIntl`.

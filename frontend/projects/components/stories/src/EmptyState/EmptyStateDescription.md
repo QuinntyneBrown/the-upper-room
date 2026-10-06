@@ -1,0 +1,3 @@
+The placeholder shown when a list, board column or search has nothing to display. `tar-empty-state` is a plain layout component (no Material primitive beyond `tar-icon`): a centred grid of an extra-large `tar-icon`, a heading and a body line, followed by any projected actions.
+
+Inputs: `heading` and `body` (both required) and `icon` (default `info`; library aliases such as `contacts` or `kanban` resolve through `tar-icon`). BEM classes: `.tar-empty-state__icon`, `.tar-empty-state__heading` (an `h2`), `.tar-empty-state__body` and `.tar-empty-state__actions` (the `<ng-content />` slot). Test ids: `empty-heading` and `empty-body`.

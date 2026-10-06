@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Link a contact</h2>
+<mat-dialog-content>
+  <div style="display: grid; gap: var(--md-sys-space-3); padding-top: var(--md-sys-space-1)">
+    <p
+      style="
+        margin: 0;
+        font: var(--md-sys-typescale-body-medium);
+        color: var(--md-sys-color-on-surface-variant);
+      "
+    >
+      Add someone from your Toronto contacts to {{ data.partner }}.
+    </p>
+    <tar-search-field
+      label="Contact"
+      placeholder="Search by name"
+      testId="link-contact-search"
+      [value]="query()"
+      (valueChange)="search($event)"
+    />
+    @if (!selected() && results().length > 0) {
+      <tar-list ariaLabel="Matching contacts">
+        @for (c of results(); track c.id) {
+          <tar-list-item
+            icon="person"
+            [interactive]="true"
+            [title]="c.name"
+            [description]="c.org"
+            [testId]="'link-contact-result-' + c.name"
+            (clicked)="select(c)"
+          />
+        }
+      </tar-list>
+    }
+    <tar-text-field
+      label="Role at partner"
+      hint="For example: Volunteer coordinator"
+      testId="link-contact-role"
+      [value]="role()"
+      (valueChange)="role.set($event)"
+    />
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <tar-form-actions
+    saveLabel="Link contact"
+    saveType="button"
+    saveTestId="link-contact-confirm"
+    cancelTestId="link-contact-cancel"
+    [disabled]="!selected()"
+    (saved)="ref.close(selected())"
+    (cancelled)="ref.close()"
+  />
+</mat-dialog-actions>

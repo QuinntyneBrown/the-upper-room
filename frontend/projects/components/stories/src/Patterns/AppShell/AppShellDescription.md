@@ -1,0 +1,9 @@
+The signed-in frame every authenticated route renders inside (L2-009 top app bar, L2-010 navigation drawer). It is composed entirely from library components; the app's own `AppShell` adds the city switcher, breadcrumbs and router outlet around the same structure.
+
+- **Top bar** is one `tar-toolbar` titled "The Upper Room". Its projected actions, left to right: a search `tar-icon-button` (Ctrl+K), the notification bell (`tar-icon-button` wrapped in a `[tarBadge]` host showing the unread count) and the account `tar-menu` (`triggerIcon="account_circle"`, items Profile and Sign out). `[showMenu]` adds the leading menu button on phones and tablets only.
+- **Drawer** is a `tar-side-nav` whose `[tar-side-nav-content]` slot holds a `<nav aria-label="Primary">`: a 64px header (`tar-avatar`, display name, city), a `tar-divider`, then sections Workspace, People, Activities and (SystemAdmin only) Admin. Section titles use `label-medium` in `on-surface-variant`; each section's entries sit in a `tar-list [role]="null"` (the list container loads the MDC list styles `tar-nav-item` relies on) and each entry is a `tar-nav-item` with a leading icon, an optional count `badge` and `[active]` on the current route only.
+- **Modes**: from LG the drawer is persistent (`mode="side"`, `opened`); below it is modal (`mode="over"`), starts closed, and `(openedChange)` keeps the open state in sync when the scrim or Escape closes it.
+- **Content** is a single `<main id="main" tabindex="-1">` (the skip link's target) in the side-nav's default slot; pages start with `tar-page-header` and pad their own blocks 16px (phones) to 24px.
+- **Panels** such as notifications open as a `tar-drawer` from the end edge rather than a hand-rolled overlay.
+
+Stable hooks: `data-testid="top-bar"`, `top-bar-menu`, `drawer`, `nav-<key>` on each nav item, `avatar-menu`, `notification-bell`.

@@ -1,0 +1,31 @@
+<div
+  style="
+    min-height: 100vh;
+    background: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+  "
+>
+  <tar-page-header [eyebrow]="eyebrow" [title]="pageTitle" [subtitle]="subtitle">
+    <tar-button
+      [variant]="triggerVariant"
+      [icon]="triggerIcon"
+      testId="dialog-trigger"
+      (clicked)="open()"
+    >
+      {{ triggerLabel }}
+    </tar-button>
+  </tar-page-header>
+  @if (result(); as r) {
+    <p
+      role="status"
+      style="
+        margin: 0;
+        padding: var(--md-sys-space-4) var(--md-sys-space-6);
+        font: var(--md-sys-typescale-body-medium);
+        color: var(--md-sys-color-on-surface-variant);
+      "
+    >
+      Dialog closed: {{ r }}
+    </p>
+  }
+</div>
