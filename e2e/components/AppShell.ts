@@ -36,6 +36,20 @@ export class AppShell {
     return this.page.getByTestId('avatar-menu-sign-out');
   }
 
+  navItem(name: string): Locator {
+    return this.drawer()
+      .locator('a.tar-nav-item')
+      .filter({ has: this.page.getByText(name, { exact: true }) });
+  }
+
+  navSection(name: string): Locator {
+    return this.drawer().locator('.app-shell__nav-title').filter({ hasText: new RegExp(`^${name}$`) });
+  }
+
+  activeNavItems(): Locator {
+    return this.drawer().locator('.tar-nav-item--active');
+  }
+
   scrim(): Locator {
     return this.page.getByTestId('drawer-scrim');
   }

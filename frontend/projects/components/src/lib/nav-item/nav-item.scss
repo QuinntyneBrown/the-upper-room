@@ -3,9 +3,24 @@
 }
 
 .tar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--md-sys-space-3);
+  box-sizing: border-box;
+  height: 48px;
+  margin: 0 var(--md-sys-space-3);
+  padding: 0 var(--md-sys-space-4);
+  border: 0;
+  background: transparent;
+  text-decoration: none;
+  cursor: pointer;
   border-radius: var(--md-sys-shape-corner-full);
   font: var(--md-sys-typescale-label-large);
   color: var(--md-sys-color-on-surface-variant);
+}
+
+.tar-nav-item:hover {
+  background: var(--md-sys-color-surface-container-high);
 }
 
 .tar-nav-item--active {

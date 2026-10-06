@@ -1,7 +1,9 @@
 // traces_to: L2-052, L2-053
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import { TarEmptyState } from 'components';
+import { PERMISSIONS_SERVICE } from 'domain';
 import { CalendarMonth } from '../calendar-month/calendar-month';
 
 export interface EventDto {
@@ -23,13 +25,15 @@ export interface EventDto {
 
 @Component({
   selector: 'app-event-list',
-  imports: [TarEmptyState, CalendarMonth],
+  imports: [TarEmptyState, CalendarMonth, RouterLink],
   templateUrl: './event-list.html',
   styleUrl: './event-list.scss',
 })
 export class EventList implements OnInit {
   private readonly http = inject(HttpClient);
+  private readonly perms = inject(PERMISSIONS_SERVICE);
 
+  protected readonly canCreate = computed(() => this.perms.hasPermission('Event:Create'));
   protected readonly events = signal<EventDto[]>([]);
   protected readonly statusFilter = signal('');
   protected readonly viewMode = signal<'list' | 'calendar'>('list');

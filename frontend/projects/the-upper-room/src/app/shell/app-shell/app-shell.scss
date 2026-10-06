@@ -95,6 +95,18 @@
   }
 }
 
+.app-shell__drawer {
+  overflow-y: auto;
+  padding-bottom: var(--md-sys-space-4);
+}
+
+.app-shell__nav-title {
+  margin: 0;
+  padding: var(--md-sys-space-4) var(--md-sys-space-4) var(--md-sys-space-2);
+  font: var(--md-sys-typescale-label-medium);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
 .app-shell__drawer--open {
   transform: translateX(0);
 }

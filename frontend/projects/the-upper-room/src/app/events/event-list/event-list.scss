@@ -129,3 +129,14 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
+
+.btn-filled {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: var(--md-sys-space-2) var(--md-sys-space-6);
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  font: var(--md-sys-typescale-label-large);
+  text-decoration: none;
+}

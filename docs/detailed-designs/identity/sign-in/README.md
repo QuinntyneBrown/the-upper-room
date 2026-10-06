@@ -26,7 +26,7 @@ The following source elements provide the current implementation points. Their p
 
 PkceService shall generate the verifier, state, nonce, and S256 challenge. AuthCallback shall reject mismatched state before exchange. AuthController shall exchange a validated code, issue a memory-held access token and secure refresh cookie, and support refresh through a persisted session record. PasswordPolicy shall enforce the specified rules and compromised-password check.
 
-- **Begin PKCE sign-in:** Authorize with verifier challenge, state, and nonce. Redirect to the identity provider.
+- **Begin PKCE sign-in:** The SPA posts the credentials and the `code_challenge` to the identity provider's `/__idp/authorize` endpoint and receives a single-use authorization code, then navigates to `/auth/callback?code=...&state=...`.
 - **Exchange callback:** POST /api/v1/auth/exchange after state validation. Issue access token and refresh cookie.
 - **Reject invalid credentials or callback:** Validate password or callback binding. Reject without creating a session.
 
@@ -110,7 +110,7 @@ The structure view lists source types with declared members where available. Das
 
 ### Begin PKCE sign-in
 
-The target flow performs the following operation: Authorize with verifier challenge, state, and nonce. Its successful outcome is: Redirect to the identity provider. Alternate branches retain prior state or return recoverable failure.
+The target flow performs the following operation: the SPA posts the credentials and the PKCE `code_challenge` to `/__idp/authorize`. Its successful outcome is a single-use authorization code and navigation to `/auth/callback`. Invalid credentials return `401 auth.invalid_credentials`, which the form displays. Alternate branches retain prior state or return recoverable failure.
 
 ![Begin PKCE sign-in](diagrams/sequence-01-begin-pkce-sign-in.png)
 

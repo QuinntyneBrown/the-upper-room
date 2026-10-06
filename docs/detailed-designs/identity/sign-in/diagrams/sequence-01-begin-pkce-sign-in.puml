@@ -27,7 +27,7 @@ box "Backend - Infrastructure" #FFF4E5
 database "Feature state / adapter (target role)" as state
 end box
 actor -> page : Begin PKCE sign-in
-page -> client : Authorize with verifier challenge, state, and nonce
+page -> client : POST credentials and code_challenge to /__idp/authorize
 client -> boundary : Authorized feature request
 boundary -> boundary : Authenticate and validate request shape
 alt invalid or forbidden request
@@ -43,7 +43,7 @@ logic --> boundary : Rejected feature outcome
 boundary --> client : Mapped failure response
 client --> page : Retain or restore prior state
 else success
-logic --> boundary : Redirect to the identity provider
+logic --> boundary : Return authorization code; navigate to /auth/callback
 boundary --> client : Typed response
 client --> page : Updated feature state
 end

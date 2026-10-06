@@ -10,25 +10,25 @@ const STORAGE_NONCE = 'pkce.nonce';
 export class PkceService {
   private readonly idp = inject(IDP_CONFIG);
 
-  async beginSignIn(): Promise<void> {
+  /** Generates and stores the PKCE verifier/state/nonce; returns the values the IdP needs. */
+  async prepare(): Promise<{ codeChallenge: string; state: string }> {
     const verifier = this.randomString(64);
     const state = this.randomString(32);
     const nonce = this.randomString(32);
-    const challenge = await this.sha256Base64Url(verifier);
+    const codeChallenge = await this.sha256Base64Url(verifier);
 
     sessionStorage.setItem(STORAGE_VERIFIER, verifier);
     sessionStorage.setItem(STORAGE_STATE, state);
     sessionStorage.setItem(STORAGE_NONCE, nonce);
+    return { codeChallenge, state };
+  }
 
-    const url = new URL(this.idp.authorizeUrl, window.location.origin);
-    url.searchParams.set('response_type', 'code');
-    url.searchParams.set('code_challenge_method', 'S256');
-    url.searchParams.set('code_challenge', challenge);
+  /** Sends the browser to the app's callback route carrying the authorization code. */
+  completeSignIn(code: string, state: string): void {
+    const url = new URL(this.idp.redirectUri);
+    url.searchParams.set('code', code);
     url.searchParams.set('state', state);
-    url.searchParams.set('nonce', nonce);
-    url.searchParams.set('client_id', this.idp.clientId);
-    url.searchParams.set('redirect_uri', this.idp.redirectUri);
-    window.location.href = url.toString();
+    window.location.assign(url.toString());
   }
 
   consumeState(): { verifier: string | null; state: string | null } {
