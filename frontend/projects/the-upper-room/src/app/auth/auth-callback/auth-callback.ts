@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { SnackbarService } from 'components';
+import { ME_BOOTSTRAP } from 'domain';
 import { PkceService } from '../pkce.service';
 import { AccessTokenStore } from '../access-token-store';
 
@@ -18,6 +19,7 @@ export class AuthCallback implements OnInit {
   private readonly pkce = inject(PkceService);
   private readonly tokens = inject(AccessTokenStore);
   private readonly snackbar = inject(SnackbarService);
+  private readonly meBootstrap = inject(ME_BOOTSTRAP);
 
   ngOnInit(): void {
     const params = this.route.snapshot.queryParamMap;
@@ -36,6 +38,7 @@ export class AuthCallback implements OnInit {
       .subscribe({
         next: ({ accessToken }) => {
           this.tokens.set(accessToken);
+          this.meBootstrap.load();
           this.router.navigateByUrl('/dashboard');
         },
         error: () => {

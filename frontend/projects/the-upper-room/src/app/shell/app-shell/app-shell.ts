@@ -6,9 +6,66 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { TarIconButton, OfflineBanner, breadcrumbsFromUrl, Crumb } from 'components';
-import { SIGN_OUT_SERVICE, TarCitySwitcher, TarNotificationBell } from 'domain';
+import {
+  TarIconButton,
+  TarNavItem,
+  OfflineBanner,
+  breadcrumbsFromUrl,
+  Crumb,
+} from 'components';
+import {
+  HasRoleDirective,
+  SIGN_OUT_SERVICE,
+  TarCitySwitcher,
+  TarNotificationBell,
+} from 'domain';
 import { GlobalSearch } from '../../search/global-search';
+
+interface NavEntry {
+  readonly label: string;
+  readonly icon: string;
+  readonly route: string;
+  readonly testId: string;
+}
+
+interface NavSection {
+  readonly title: string;
+  readonly roles?: readonly string[];
+  readonly items: readonly NavEntry[];
+}
+
+const NAV_SECTIONS: readonly NavSection[] = [
+  {
+    title: 'Workspace',
+    items: [{ label: 'Dashboard', icon: 'dashboard', route: '/dashboard', testId: 'nav-dashboard' }],
+  },
+  {
+    title: 'People',
+    items: [
+      { label: 'Contacts', icon: 'person', route: '/contacts', testId: 'nav-contacts' },
+      { label: 'Partners', icon: 'domain', route: '/partners', testId: 'nav-partners' },
+    ],
+  },
+  {
+    title: 'Activities',
+    items: [
+      { label: 'Kanban Boards', icon: 'view_kanban', route: '/boards', testId: 'nav-boards' },
+      { label: 'Hackathon Ideas', icon: 'lightbulb', route: '/ideas', testId: 'nav-ideas' },
+      { label: 'Events', icon: 'event', route: '/events', testId: 'nav-events' },
+      { label: 'Locations', icon: 'location_on', route: '/locations', testId: 'nav-locations' },
+    ],
+  },
+  {
+    title: 'Admin',
+    roles: ['SystemAdmin'],
+    items: [
+      { label: 'Users', icon: 'group', route: '/admin/users', testId: 'nav-admin-users' },
+      { label: 'Cities', icon: 'location_city', route: '/admin/cities', testId: 'nav-admin-cities' },
+      { label: 'Tags', icon: 'sell', route: '/admin/tags', testId: 'nav-admin-tags' },
+      { label: 'Audit Log', icon: 'receipt_long', route: '/admin/audit', testId: 'nav-admin-audit' },
+    ],
+  },
+];
 
 @Component({
   selector: 'app-shell',
@@ -19,6 +76,8 @@ import { GlobalSearch } from '../../search/global-search';
     MatIconModule,
     MatMenuModule,
     TarIconButton,
+    TarNavItem,
+    HasRoleDirective,
     OfflineBanner,
     TarCitySwitcher,
     TarNotificationBell,
@@ -32,6 +91,7 @@ export class AppShell {
   private readonly dialog = inject(MatDialog);
   private searchRef: MatDialogRef<GlobalSearch> | null = null;
 
+  protected readonly sections = NAV_SECTIONS;
   protected readonly drawerOpen = signal(false);
   protected readonly scrolled = signal(false);
   protected readonly url = signal(this.router.url);
@@ -67,6 +127,11 @@ export class AppShell {
       autoFocus: false,
     });
     this.searchRef.afterClosed().subscribe(() => (this.searchRef = null));
+  }
+
+  protected isActive(route: string): boolean {
+    const path = this.url().split(/[?#]/)[0];
+    return path === route || path.startsWith(route + '/');
   }
 
   toggleDrawer(): void {

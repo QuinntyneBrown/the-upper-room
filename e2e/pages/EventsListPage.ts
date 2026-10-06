@@ -8,6 +8,7 @@ export class EventsListPage {
 
   emptyState(): Locator { return this.page.getByTestId('event-list-empty'); }
   eventCard(id: string): Locator { return this.page.getByTestId(`event-card-${id}`); }
+  newEventButton(): Locator { return this.page.getByTestId('events-new-button'); }
   allCards(): Locator { return this.page.locator('[data-testid^="event-card-"]'); }
   statusFilter(): Locator { return this.page.getByTestId('events-filter-status'); }
   viewToggle(): Locator { return this.page.getByTestId('events-view-toggle'); }

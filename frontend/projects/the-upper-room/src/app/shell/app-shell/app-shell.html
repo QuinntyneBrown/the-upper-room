@@ -48,7 +48,39 @@
     class="app-shell__drawer"
     [attr.aria-hidden]="!isOpen"
     [class.app-shell__drawer--open]="isOpen"
-  ></nav>
+  >
+    @for (section of sections; track section.title) {
+      @if (section.roles) {
+        <section class="app-shell__nav-section" *tarHasRole="section.roles">
+          <h2 class="app-shell__nav-title">{{ section.title }}</h2>
+          @for (item of section.items; track item.route) {
+            <tar-nav-item
+              [label]="item.label"
+              [icon]="item.icon"
+              [routerLink]="item.route"
+              [active]="isActive(item.route)"
+              [testId]="item.testId"
+              (clicked)="closeDrawer()"
+            />
+          }
+        </section>
+      } @else {
+        <section class="app-shell__nav-section">
+          <h2 class="app-shell__nav-title">{{ section.title }}</h2>
+          @for (item of section.items; track item.route) {
+            <tar-nav-item
+              [label]="item.label"
+              [icon]="item.icon"
+              [routerLink]="item.route"
+              [active]="isActive(item.route)"
+              [testId]="item.testId"
+              (clicked)="closeDrawer()"
+            />
+          }
+        </section>
+      }
+    }
+  </nav>
 
   @if (isOpen) {
     <div data-testid="drawer-scrim" class="app-shell__scrim" (click)="closeDrawer()"></div>

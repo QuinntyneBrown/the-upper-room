@@ -182,6 +182,8 @@ export class MockBackend {
 
   // ---------------------------------------------------------------- helpers
 
+  private pendingSignIn = 'lead';
+
   userFromRequest(req: MockRequest): seed.MockUser | null {
     const auth = req.headers['authorization'] ?? '';
     const match = /^Bearer\s+(.+)$/i.exec(auth);
@@ -269,12 +271,14 @@ export class MockBackend {
       if (!body.email || body.password !== CANONICAL_PASSWORD) {
         return json({ code: 'auth.invalid_credentials' }, 401);
       }
+      const user = this.users.find((u) => u.email === body.email);
+      this.pendingSignIn = user?.id ?? 'lead';
       return json({ code: 'mock-auth-code' });
     });
     r.post('/api/v1/auth/exchange', (req) => {
       const body = (req.body ?? {}) as { code?: string; codeVerifier?: string };
       if (!body.code || !body.codeVerifier) return badRequest('InvalidExchange');
-      return json({ accessToken: 'lead-token' });
+      return json({ accessToken: `${this.pendingSignIn}-token` });
     });
     r.post('/api/v1/auth/sign-in', (req) => {
       // Any email signs in with the suite's canonical password; seeded users

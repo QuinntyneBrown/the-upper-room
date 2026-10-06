@@ -5,3 +5,6 @@
 .env.*.local
 *.env.secret
 e2e/.playwright-cli/
+
+.demo-work/
+.playwright-cli/

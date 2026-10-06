@@ -1,6 +1,9 @@
 <div class="events-toolbar">
   <h1 class="events-toolbar__title">Events</h1>
   <div class="events-toolbar__controls">
+    @if (canCreate()) {
+      <a data-testid="events-new-button" class="btn-filled" routerLink="/events/new">New event</a>
+    }
     <select
       data-testid="events-filter-status"
       class="filter-select"
