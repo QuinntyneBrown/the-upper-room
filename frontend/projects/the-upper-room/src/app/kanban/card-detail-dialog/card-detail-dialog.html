@@ -18,15 +18,17 @@
     <section class="dialog__section">
       <h3 class="dialog__section-title">Details</h3>
       @for (field of data.schema; track field.key) {
-        <tar-text-field
-          [testId]="'card-detail-field-' + field.key"
-          [errorTestId]="'card-detail-field-error-' + field.key"
-          [label]="field.label"
-          [required]="field.required"
-          [value]="fieldValue(field.key)"
-          [error]="fieldErrors()[field.key] ?? null"
-          (valueChange)="onFieldInput(field.key, $event)"
-        />
+        <div [attr.data-testid]="'card-field-' + field.key" [attr.data-field-type]="field.type" class="card-detail__field">
+          <tar-text-field
+            [testId]="'card-detail-field-' + field.key"
+            [errorTestId]="'card-detail-field-error-' + field.key"
+            [label]="field.label"
+            [required]="field.required"
+            [value]="fieldValue(field.key)"
+            [error]="fieldErrors()[field.key] ?? null"
+            (valueChange)="onFieldInput(field.key, $event)"
+          />
+        </div>
       }
     </section>
   }

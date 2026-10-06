@@ -57,6 +57,7 @@
             @for (card of cardsFor(column.id); track card.id) {
               <li
                 [attr.data-testid]="'board-card-' + card.title"
+                [attr.data-card-id]="card.id"
                 class="card"
                 draggable="true"
                 (dragstart)="onDragStart($event, card)"
@@ -157,6 +158,7 @@
                   @for (card of cardsForLane(column.id, lane); track card.id) {
                     <li
                       [attr.data-testid]="'board-card-' + card.title"
+                [attr.data-card-id]="card.id"
                       class="card"
                       draggable="true"
                       (dragstart)="onDragStart($event, card)"

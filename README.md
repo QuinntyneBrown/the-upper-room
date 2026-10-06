@@ -221,6 +221,7 @@ The development server runs at `http://localhost:4200/` by default and reloads w
 | `npm run build` | Build the default Angular project for production. |
 | `npm run watch` | Build continuously with the development configuration. |
 | `npm test` | Run unit tests through Angular's test builder. |
+| `npm test` (in `e2e/`) | Run the Playwright end-to-end suite against the mocked backend (see [End-to-End Tests](#end-to-end-tests)). |
 | `npm run storybook` | Start the Storybook design-system docsite for the `components` library on :6006. |
 | `npm run build-storybook` | Build the static Storybook to `frontend/dist/storybook`. |
 | `npm run ng -- <args>` | Run Angular CLI commands through the local CLI version. |
@@ -258,6 +259,21 @@ npm run ng -- test components
 npm run ng -- test domain
 npm run ng -- test the-upper-room
 ```
+
+### End-to-End Tests
+
+Playwright end-to-end tests live in the top-level [`e2e/`](e2e) package, next to `frontend/` and `backend/`. The backend is never started: every `/api/**` and `/__idp/**` request is answered in the browser by the in-memory mock installed by the `mockApi` fixture (`e2e/fixtures/test.ts`), so only the frontend dev server is needed.
+
+```bash
+cd e2e
+npm ci
+npm test            # starts the frontend dev server on :4200 if it is not already running
+npm run test:ui     # Playwright UI mode
+npm run lint        # page-object-only locator rule
+npm run typecheck
+```
+
+Tests run in Chromium only. Specs import `test` and `expect` from `../../fixtures/test`, state intent through the page objects in `e2e/pages` and `e2e/components`, and can reach the mock store through the `mockApi` fixture to seed or inspect data. A spec that needs a specific response still registers its own `page.route()`, which takes precedence over the mock.
 
 ### Building
 

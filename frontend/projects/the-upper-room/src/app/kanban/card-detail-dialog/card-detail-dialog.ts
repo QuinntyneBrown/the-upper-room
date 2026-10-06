@@ -7,7 +7,8 @@ import { BoardCard } from '../board-view/board-view';
 export interface CardSchemaField {
   readonly key: string;
   readonly label: string;
-  readonly type: 'text';
+  readonly type: string;
+  readonly options?: readonly string[];
   readonly required: boolean;
 }
 

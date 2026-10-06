@@ -23,7 +23,7 @@ The following source elements provide the current implementation points. Their p
 | [frontend/projects/components/src/lib/snackbar/tar-snackbar.html](../../../../frontend/projects/components/src/lib/snackbar/tar-snackbar.html) | `tar-snackbar` template | Live-region role attribute `<TO SUPPLY>`; no `role="status"` or `role="alert"` located by search |
 | [frontend/projects/components/src/lib/tabs](../../../../frontend/projects/components/src/lib/tabs) | Tabs component | Tab roles `<TO SUPPLY>` |
 | [frontend/projects/components/src/lib/chip](../../../../frontend/projects/components/src/lib/chip) | `chip`, `chip-set` | Status chips; icon plus label usage `<TO SUPPLY>` |
-| [frontend/projects/the-upper-room/e2e/tests/hardening/a11y.spec.ts](../../../../frontend/projects/the-upper-room/e2e/tests/hardening/a11y.spec.ts) | axe-core scan | WCAG 2.0/2.1 A and AA tags; serious and critical violations fail |
+| [e2e/tests/hardening/a11y.spec.ts](../../../../e2e/tests/hardening/a11y.spec.ts) | axe-core scan | WCAG 2.0/2.1 A and AA tags; serious and critical violations fail |
 
 ### Target behavior and interfaces
 

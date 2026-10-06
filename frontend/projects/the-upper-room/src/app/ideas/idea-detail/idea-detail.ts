@@ -1,10 +1,14 @@
 // traces_to: L2-050, L2-051, L2-052
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpErrorResponse } from '@angular/common/http';
+import { SKIP_SERVER_ERROR_SNACKBAR } from 'api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { optimisticMutation, SnackbarService, TarMarkdownEditor } from 'components';
 import type { IdeaDto, LinkedPartnerRef } from '../idea-list/idea-list';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+
+// Optimistic mutations report failure with their own snackbar (L2-114).
+const OPTIMISTIC_CONTEXT = new HttpContext().set(SKIP_SERVER_ERROR_SNACKBAR, true);
 
 export type IdeaDetailDto = IdeaDto;
 
@@ -107,7 +111,7 @@ export class IdeaDetail implements OnInit {
     optimisticMutation(
       this.idea,
       { ...idea, status: newStatus },
-      () => this.http.post<IdeaDetailDto>(`/api/v1/ideas/${this.ideaId}/status`, { status: newStatus }),
+      () => this.http.post<IdeaDetailDto>(`/api/v1/ideas/${this.ideaId}/status`, { status: newStatus }, { context: OPTIMISTIC_CONTEXT }),
       () => this.snackbar.show("Couldn't save. Try again.", 'error'),
     );
   }

@@ -24,7 +24,7 @@ The following source elements provide the current implementation points. Their p
 | [frontend/projects/the-upper-room/src/app/shell/app-shell/app-shell.ts](../../../../frontend/projects/the-upper-room/src/app/shell/app-shell/app-shell.ts) | `AppShell` (`skipToMain`, `toggleDrawer`) | Signals `drawerOpen` and `scrolled`; drawer toggle and skip-link behavior |
 | [frontend/projects/the-upper-room/src/styles.scss](../../../../frontend/projects/the-upper-room/src/styles.scss) | Global stylesheet | Shared foundations; no `:focus-visible` rule located at the time of writing |
 | [frontend/projects/components/src/lib/confirm-dialog](../../../../frontend/projects/components/src/lib/confirm-dialog) | Confirm dialog built on Angular CDK Dialog | Modal behavior and focus containment delegated to CDK |
-| [frontend/projects/the-upper-room/e2e/tests/hardening/a11y.spec.ts](../../../../frontend/projects/the-upper-room/e2e/tests/hardening/a11y.spec.ts) | axe-core scan with `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa` tags | Fails on serious or critical violations; traces to L2-085 through L2-088 |
+| [e2e/tests/hardening/a11y.spec.ts](../../../../e2e/tests/hardening/a11y.spec.ts) | axe-core scan with `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa` tags | Fails on serious or critical violations; traces to L2-085 through L2-088 |
 
 ### Target behavior and interfaces
 

@@ -1,6 +1,7 @@
 // traces_to: L2-045
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, computed, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, OnDestroy, computed, inject, signal, effect, viewChild } from '@angular/core';
+import { HttpClient, HttpContext } from '@angular/common/http';
+import { SKIP_SERVER_ERROR_SNACKBAR } from 'api';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SnackbarService, optimisticMutation } from 'components';
@@ -12,6 +13,9 @@ import {
   CardSchemaField,
 } from '../card-detail-dialog/card-detail-dialog';
 import { BoardMoveSheetDialog, BoardMoveSheetDialogData } from './board-move-sheet-dialog';
+
+// Optimistic mutations report failure with their own snackbar (L2-114).
+const OPTIMISTIC_CONTEXT = new HttpContext().set(SKIP_SERVER_ERROR_SNACKBAR, true);
 
 export interface BoardCardTag {
   readonly id: string;
@@ -45,7 +49,16 @@ export interface BoardDetail {
   readonly columns: BoardColumn[];
   readonly cards: BoardCard[];
   readonly cardSchema?: CardSchemaField[];
+  readonly schema?: CardSchemaField[];
   readonly swimlaneMode?: 'None' | 'Assignee' | 'Priority';
+}
+
+/** Cards from the API may omit optional collections; the view relies on them being arrays. */
+function normalizeBoard(board: BoardDetail): BoardDetail {
+  return {
+    ...board,
+    cards: (board.cards ?? []).map((c) => ({ ...c, tags: c.tags ?? [] })),
+  };
 }
 
 @Component({
@@ -54,13 +67,13 @@ export interface BoardDetail {
   templateUrl: './board-view.html',
   styleUrl: './board-view.scss',
 })
-export class BoardView implements AfterViewInit, OnDestroy {
+export class BoardView implements OnDestroy {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
   private readonly snackbar = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
 
-  @ViewChild('columnsEl') readonly columnsEl?: ElementRef<HTMLElement>;
+  readonly columnsEl = viewChild<ElementRef<HTMLElement>>('columnsEl');
 
   protected readonly board = signal<BoardDetail | null>(null);
   protected readonly activeTagName = signal<string | null>(null);
@@ -73,7 +86,7 @@ export class BoardView implements AfterViewInit, OnDestroy {
   private touchStartX = 0;
   private touchStartY = 0;
 
-  protected readonly cardSchema = computed(() => this.board()?.cardSchema ?? []);
+  protected readonly cardSchema = computed(() => this.board()?.cardSchema ?? this.board()?.schema ?? []);
 
   protected readonly tagChips = computed(() => {
     const seen = new Map<string, BoardCardTag>();
@@ -108,23 +121,28 @@ export class BoardView implements AfterViewInit, OnDestroy {
     return [...seen].sort();
   });
 
+  private listenedEl: HTMLElement | null = null;
+
   constructor() {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
     if (id) {
-      this.http.get<BoardDetail>(`/api/v1/boards/${id}`).subscribe((b) => this.board.set(b));
+      this.http.get<BoardDetail>(`/api/v1/boards/${id}`).subscribe((b) => this.board.set(normalizeBoard(b)));
     }
-  }
-
-  ngAfterViewInit(): void {
-    this.columnsEl?.nativeElement.addEventListener('scroll', this.scrollListener, { passive: true });
+    effect(() => {
+      const el = this.columnsEl()?.nativeElement ?? null;
+      if (el === this.listenedEl) return;
+      this.listenedEl?.removeEventListener('scroll', this.scrollListener);
+      el?.addEventListener('scroll', this.scrollListener, { passive: true });
+      this.listenedEl = el;
+    });
   }
 
   ngOnDestroy(): void {
-    this.columnsEl?.nativeElement.removeEventListener('scroll', this.scrollListener);
+    this.listenedEl?.removeEventListener('scroll', this.scrollListener);
   }
 
   private onColumnsScroll(): void {
-    const el = this.columnsEl?.nativeElement;
+    const el = this.columnsEl()?.nativeElement;
     if (!el || el.clientWidth === 0) return;
     const index = Math.round(el.scrollLeft / el.clientWidth);
     this.activeColumnIndex.set(index);
@@ -252,7 +270,7 @@ export class BoardView implements AfterViewInit, OnDestroy {
     optimisticMutation(
       this.board,
       next,
-      () => this.http.post(`/api/v1/cards/${cardId}/move`, body),
+      () => this.http.post(`/api/v1/cards/${cardId}/move`, body, { context: OPTIMISTIC_CONTEXT }),
       () => this.snackbar.show("Couldn't save. Try again.", 'error'),
     );
   }
@@ -318,7 +336,7 @@ export class BoardView implements AfterViewInit, OnDestroy {
     optimisticMutation(
       this.board,
       next,
-      () => this.http.post(`/api/v1/cards/${card.id}/move`, { targetColumnId: targetColumn.id, sourceColumnId }),
+      () => this.http.post(`/api/v1/cards/${card.id}/move`, { targetColumnId: targetColumn.id, sourceColumnId }, { context: OPTIMISTIC_CONTEXT }),
       () => this.snackbar.show("Couldn't save. Try again.", 'error'),
     );
   }

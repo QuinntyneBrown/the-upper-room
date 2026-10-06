@@ -1,5 +1,5 @@
 // traces_to: L2-061
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,10 +14,11 @@ import { SnackbarService } from './tar-snackbar.service';
 export class TarSnackbar {
   protected readonly svc = inject(SnackbarService);
 
-  protected readonly viewportClass = computed(() => {
+  /** Evaluated on every render so a viewport change moves the snackbar. */
+  protected viewportClass(): string {
     if (typeof window === 'undefined') return '';
     return window.matchMedia('(max-width: 575px)').matches ? 'tar-snackbar--xs' : '';
-  });
+  }
 
   protected onAction(): void {
     const action = this.svc.current()?.action;

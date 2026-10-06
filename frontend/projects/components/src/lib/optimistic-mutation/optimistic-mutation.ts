@@ -7,10 +7,12 @@ export function optimisticMutation<T>(
   next: T,
   mutate: () => Observable<unknown>,
   onError: () => void,
+  onSuccess?: () => void,
 ): void {
   const previous = state();
   state.set(next);
   mutate().subscribe({
+    next: () => onSuccess?.(),
     error: (err: { status?: number }) => {
       if (!err?.status || err.status >= 500) {
         state.set(previous);

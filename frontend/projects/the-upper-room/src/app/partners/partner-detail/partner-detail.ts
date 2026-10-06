@@ -1,6 +1,7 @@
 // traces_to: L2-036
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
+import { SKIP_ERROR_SNACKBAR } from 'api';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { MatIconModule } from '@angular/material/icon';
@@ -89,7 +90,9 @@ export class PartnerDetail implements OnInit {
 
     if (!confirmed) return;
 
-    this.http.delete(`/api/v1/partners/${p.id}`).subscribe({
+    this.http
+      .delete(`/api/v1/partners/${p.id}`, { context: new HttpContext().set(SKIP_ERROR_SNACKBAR, true) })
+      .subscribe({
       next: () => {
         this.snackbar.show('Partner deleted', 'info');
         void this.router.navigateByUrl('/partners');

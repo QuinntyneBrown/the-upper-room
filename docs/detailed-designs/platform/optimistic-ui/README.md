@@ -20,7 +20,7 @@ The following source elements provide the current implementation points. Their p
 |---|---|---|
 | [frontend/projects/components/src/lib/optimistic-mutation/optimistic-mutation.ts](../../../../frontend/projects/components/src/lib/optimistic-mutation/optimistic-mutation.ts) | `optimisticMutation` | Stores the previous value, sets the next value, subscribes to the mutation; on error with no status or status of 500 or above, restores the value and calls `onError` |
 | [frontend/projects/components/src/lib/snackbar/tar-snackbar.service.ts](../../../../frontend/projects/components/src/lib/snackbar/tar-snackbar.service.ts) | `SnackbarService` | `show(message, severity)` queue used for the failure message |
-| [frontend/projects/the-upper-room/e2e/tests/cross-cutting/optimistic-ui.spec.ts](../../../../frontend/projects/the-upper-room/e2e/tests/cross-cutting/optimistic-ui.spec.ts) | e2e spec | Verifies optimistic behavior |
+| [e2e/tests/cross-cutting/optimistic-ui.spec.ts](../../../../e2e/tests/cross-cutting/optimistic-ui.spec.ts) | e2e spec | Verifies optimistic behavior |
 | [backend/src/TheUpperRoom.Application/Kanban/MoveCardCommandValidator.cs](../../../../backend/src/TheUpperRoom.Application/Kanban/MoveCardCommandValidator.cs) | `MoveCardCommandValidator` | Server side of the Kanban move |
 
 ### Target behavior and interfaces

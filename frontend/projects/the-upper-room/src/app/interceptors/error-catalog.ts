@@ -18,6 +18,8 @@ const CATALOG: Record<string, string> = {
   rate_limited: 'Too many requests.',
   'server.internal': 'Something went wrong on our end.',
   'server.unavailable': 'Service temporarily unavailable.',
+  'upload.too_large': 'File is too large.',
+  'upload.unsupported_type': 'Unsupported file type.',
   'csrf.invalid': 'Your action could not be verified.',
 };
 
@@ -26,12 +28,20 @@ const FALLBACK_BY_STATUS: Record<number, string> = {
   403: CATALOG['forbidden']!,
   404: CATALOG['not_found']!,
   409: CATALOG['conflict']!,
+  413: CATALOG['upload.too_large']!,
+  415: CATALOG['upload.unsupported_type']!,
   429: CATALOG['rate_limited']!,
   500: CATALOG['server.internal']!,
   503: CATALOG['server.unavailable']!,
 };
 
-export function mapErrorToMessage(status: number, code?: string): string {
+/**
+ * Catalog codes win, then the catalog's per-status fallback; a human-readable
+ * server message is used only for a client error the catalog does not cover.
+ */
+export function mapErrorToMessage(status: number, code?: string, serverMessage?: string): string {
   if (code && CATALOG[code]) return CATALOG[code]!;
-  return FALLBACK_BY_STATUS[status] ?? CATALOG['server.internal']!;
+  if (FALLBACK_BY_STATUS[status]) return FALLBACK_BY_STATUS[status]!;
+  if (!code && serverMessage && status < 500) return serverMessage;
+  return CATALOG['server.internal']!;
 }

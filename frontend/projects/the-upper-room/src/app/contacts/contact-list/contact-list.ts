@@ -1,16 +1,5 @@
 // traces_to: L2-029, L2-030, L2-112
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  computed,
-  effect,
-  inject,
-  signal,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, computed, effect, inject, signal, untracked, viewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { MatChipsModule } from '@angular/material/chips';
@@ -52,7 +41,7 @@ const PAGE_SIZE = 25;
   styleUrl: './contact-list.scss',
 })
 export class ContactList implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('scrollSentinel') scrollSentinel?: ElementRef<HTMLElement>;
+  readonly scrollSentinel = viewChild<ElementRef<HTMLElement>>('scrollSentinel');
 
   private readonly http = inject(HttpClient);
   private readonly perms = inject(PERMISSIONS_SERVICE);
@@ -81,9 +70,15 @@ export class ContactList implements OnInit, OnDestroy, AfterViewInit {
   constructor() {
     effect(() => {
       this.cityScope.current();
-      this.contacts.set([]);
-      this.currentPage.set(1);
-      this.loadPage(1);
+      untracked(() => {
+        this.contacts.set([]);
+        this.currentPage.set(1);
+        this.loadPage(1);
+      });
+    });
+    effect(() => {
+      const sentinel = this.scrollSentinel();
+      if (sentinel && this.observer) this.observer.observe(sentinel.nativeElement);
     });
   }
 
@@ -107,9 +102,8 @@ export class ContactList implements OnInit, OnDestroy, AfterViewInit {
       },
       { threshold: 0.1 },
     );
-    if (this.scrollSentinel) {
-      this.observer.observe(this.scrollSentinel.nativeElement);
-    }
+    const sentinel = this.scrollSentinel();
+    if (sentinel) this.observer.observe(sentinel.nativeElement);
   }
 
   ngOnDestroy(): void {
