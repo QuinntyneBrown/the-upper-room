@@ -52,7 +52,6 @@ export class BoardList {
   private create(form: CreateBoardForm): void {
     this.http.post<Board>('/api/v1/boards', form).subscribe((board) => {
       this.boards.update((list) => [...list, board]);
-      this.router.navigate(['/boards', board.id]);
     });
   }
 

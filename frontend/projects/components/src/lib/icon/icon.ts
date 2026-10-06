@@ -13,7 +13,8 @@ export class TarIcon {
   @Input({ required: true }) name!: string;
   @Input() size: IconSize = 'md';
 
+  /** Material Symbols ligatures are snake_case; aliases and kebab-case names map onto them. */
   get glyph(): string {
-    return ICON_ALIASES[this.name] ?? this.name;
+    return ICON_ALIASES[this.name] ?? this.name.replace(/-/g, '_');
   }
 }

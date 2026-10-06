@@ -21,7 +21,7 @@ The following source elements provide the current implementation points. Their p
 | [backend/src/TheUpperRoom.Api/Uploads/UploadsController.cs](../../../../backend/src/TheUpperRoom.Api/Uploads/UploadsController.cs) | `UploadsController` | Route `api/v1/uploads`; `[Authorize]`; `POST` with `[FromForm] IFormFile`; maps outcomes to 401, 400, 422, 200 `{ url }` |
 | [backend/src/TheUpperRoom.Application/Uploads/UploadFileHandler.cs](../../../../backend/src/TheUpperRoom.Application/Uploads/UploadFileHandler.cs) | `UploadFileHandler`, `UploadFileCommand`, `UploadFileOutcome`, `UploadFileResult` | Checks user, presence, size above 10 MB; returns a placeholder `https://uploads.example.com/{Guid}{extension}` |
 | [frontend/projects/components/src/lib/avatar/tar-avatar-uploader.ts](../../../../frontend/projects/components/src/lib/avatar/tar-avatar-uploader.ts) | `TarAvatarUploader` | Upload control for avatars |
-| [frontend/projects/the-upper-room/e2e/components/AvatarUploader.ts](../../../../frontend/projects/the-upper-room/e2e/components/AvatarUploader.ts) | `AvatarUploader` | Component object used by e2e tests |
+| [e2e/components/AvatarUploader.ts](../../../../e2e/components/AvatarUploader.ts) | `AvatarUploader` | Component object used by e2e tests |
 | [backend/tests/TheUpperRoom.Application.Tests/UploadFileHandlerTests.cs](../../../../backend/tests/TheUpperRoom.Application.Tests/UploadFileHandlerTests.cs) | Handler tests | Existing coverage for size and presence rules |
 
 ### Target behavior and interfaces

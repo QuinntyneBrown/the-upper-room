@@ -25,7 +25,7 @@ This slice covers the workspace structure (L2-080), the component file rule (L2-
 | [frontend/projects/components/src/public-api.ts](../../../../frontend/projects/components/src/public-api.ts) | Public API of `components` | Design-system components such as `button`, `card`, `chip`, `snackbar`, `confirm-dialog`, plus `retryInterceptor` |
 | [frontend/projects/domain/src/public-api.ts](../../../../frontend/projects/domain/src/public-api.ts) | Public API of `domain` | Auth, bootstrap, cities, notifications, RBAC, tags, theme, and users services and `provideDomain` |
 | [frontend/projects/the-upper-room/src/app](../../../../frontend/projects/the-upper-room/src/app) | Application | One folder per feature (`contacts`, `partners`, `events`, ...), plus `shell`, `interceptors`, `services`, `auth`, and `error` |
-| [frontend/projects/the-upper-room/e2e](../../../../frontend/projects/the-upper-room/e2e) | Playwright tests | `pages` (page objects), `components`, and `tests` |
+| [e2e](../../../../e2e) | Playwright tests | `pages` (page objects), `components`, and `tests` |
 | [frontend/eslint.config.js](../../../../frontend/eslint.config.js) | ESLint flat config | Enables `component-file-per-type`, `contract-token-import`, `playwright-no-raw-locators`, and `i18n-no-literal` |
 | [tools/eslint-plugin-the-upper-room/lib/component-file-per-type.js](../../../../tools/eslint-plugin-the-upper-room/lib/component-file-per-type.js) | `check` | Flags inline `template:`, inline `styles:` arrays, and multiple `styleUrls` entries |
 | [frontend/.stylelintrc.json](../../../../frontend/.stylelintrc.json) | Stylelint config | Enables `bem-class-name` and `spacing-token-only` |

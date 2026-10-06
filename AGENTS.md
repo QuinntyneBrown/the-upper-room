@@ -25,7 +25,9 @@ The Upper Room is a full-stack, multi-city platform for managing contacts, partn
 
 ## E2E conventions (Playwright)
 
-Run the relevant Playwright tests for UI changes; update baselines only for intentional design changes.
+- The suite lives in the top-level `e2e/` package (`cd e2e && npm test`). It never starts the backend: `e2e/fixtures/test.ts` installs the in-memory mock from `e2e/mocks/` on every browser context, and specs import `test`/`expect` from that fixture rather than `@playwright/test`.
+- Extend `e2e/mocks/mock-backend.ts` and `e2e/mocks/seed.ts` when a page needs a new endpoint or shape; a spec that needs a specific response registers its own `page.route()`, which takes precedence over the mock.
+- Run the relevant Playwright tests for UI changes; update baselines only for intentional design changes.
 
 ## Incremental Implementation and ATDD - mandatory
 

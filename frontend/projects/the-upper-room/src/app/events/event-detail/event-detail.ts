@@ -160,10 +160,16 @@ export class EventDetail implements OnInit {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '');
-    const a = document.createElement('a');
-    a.href = `/api/v1/events/${ev.id}/ics`;
-    a.download = `${slug || 'event'}.ics`;
-    a.click();
+    this.http
+      .get(`/api/v1/events/${ev.id}/ics`, { responseType: 'blob' })
+      .subscribe((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${slug || 'event'}.ics`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
   }
 
   protected copyShareUrl(): void { /* TASK-0176 */ }

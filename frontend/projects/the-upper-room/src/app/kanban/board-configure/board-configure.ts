@@ -3,8 +3,18 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { TarButton, TarSelect } from 'components';
+import { ConfirmService, TarButton, TarCheckbox, TarSelect, TarTextField } from 'components';
 import { MoveCardsDialog, MoveCardsDialogData } from './move-cards-dialog';
+
+export type SchemaFieldType = 'Text' | 'Textarea' | 'Select';
+
+export interface SchemaField {
+  readonly key: string;
+  readonly label: string;
+  readonly type: SchemaFieldType;
+  readonly required: boolean;
+  readonly options: readonly string[];
+}
 
 interface BoardColumn {
   readonly id: string;
@@ -16,6 +26,7 @@ interface BoardColumn {
 interface BoardCard {
   readonly id: string;
   readonly columnId: string;
+  readonly data?: Record<string, string | null>;
 }
 
 interface BoardDetail {
@@ -24,11 +35,27 @@ interface BoardDetail {
   readonly columns: BoardColumn[];
   readonly cards: BoardCard[];
   readonly swimlaneMode?: string;
+  readonly schema?: readonly Partial<SchemaField>[];
+  readonly cardSchema?: readonly Partial<SchemaField>[];
+}
+
+const FIELD_TYPES: readonly SchemaFieldType[] = ['Text', 'Textarea', 'Select'];
+
+function normalizeField(raw: Partial<SchemaField>): SchemaField {
+  const rawType = String(raw.type ?? 'Text');
+  const type = FIELD_TYPES.find((t) => t.toLowerCase() === rawType.toLowerCase()) ?? 'Text';
+  return {
+    key: raw.key ?? '',
+    label: raw.label ?? '',
+    type,
+    required: raw.required ?? false,
+    options: [...(raw.options ?? [])],
+  };
 }
 
 @Component({
   selector: 'app-board-configure',
-  imports: [TarButton, TarSelect],
+  imports: [TarButton, TarCheckbox, TarSelect, TarTextField],
   templateUrl: './board-configure.html',
   styleUrl: './board-configure.scss',
 })
@@ -36,10 +63,15 @@ export class BoardConfigure {
   private readonly http = inject(HttpClient);
   private readonly route = inject(ActivatedRoute);
   private readonly dialog = inject(MatDialog);
+  private readonly confirm = inject(ConfirmService);
 
   protected readonly board = signal<BoardDetail | null>(null);
   protected readonly columns = signal<BoardColumn[]>([]);
   protected readonly swimlaneMode = signal<string>('None');
+  protected readonly schemaFields = signal<SchemaField[]>([]);
+  protected readonly savingSchema = signal(false);
+
+  protected readonly fieldTypeOptions = FIELD_TYPES.map((t) => ({ label: t, value: t }));
 
   protected readonly swimlaneModeOptions = [
     { label: 'None', value: 'None' },
@@ -59,11 +91,96 @@ export class BoardConfigure {
     const boardId = this.route.snapshot.paramMap.get('id') ?? '';
     if (boardId) {
       this.http.get<BoardDetail>(`/api/v1/boards/${boardId}`).subscribe((b) => {
-        this.board.set(b);
-        this.columns.set([...b.columns]);
-        this.swimlaneMode.set(b.swimlaneMode ?? 'None');
+        this.applyBoard(b);
       });
     }
+  }
+
+  private applyBoard(b: BoardDetail): void {
+    this.board.set(b);
+    this.columns.set([...b.columns]);
+    this.swimlaneMode.set(b.swimlaneMode ?? 'None');
+    this.schemaFields.set((b.schema ?? b.cardSchema ?? []).map(normalizeField));
+  }
+
+  // ---- card schema editor (L2-047) ------------------------------------
+
+  protected addField(): void {
+    this.schemaFields.update((fields) => [
+      ...fields,
+      { key: '', label: '', type: 'Text', required: false, options: [] },
+    ]);
+  }
+
+  protected updateField(index: number, patch: Partial<SchemaField>): void {
+    this.schemaFields.update((fields) =>
+      fields.map((f, i) => (i === index ? { ...f, ...patch } : f)),
+    );
+  }
+
+  protected moveField(index: number, delta: -1 | 1): void {
+    this.schemaFields.update((fields) => {
+      const target = index + delta;
+      if (target < 0 || target >= fields.length) return fields;
+      const next = [...fields];
+      const [moved] = next.splice(index, 1);
+      next.splice(target, 0, moved);
+      return next;
+    });
+  }
+
+  protected addOption(index: number): void {
+    this.updateField(index, { options: [...(this.schemaFields()[index]?.options ?? []), ''] });
+  }
+
+  protected updateOption(index: number, optionIndex: number, value: string): void {
+    const options = [...(this.schemaFields()[index]?.options ?? [])];
+    options[optionIndex] = value;
+    this.updateField(index, { options });
+  }
+
+  protected async removeField(index: number): Promise<void> {
+    const field = this.schemaFields()[index];
+    if (!field) return;
+    const affected = this.cardsWithData(field.key);
+    if (field.required && affected > 0) {
+      const ok = await this.confirm.confirm({
+        title: 'Remove field?',
+        body: `Removing this field will erase data on ${affected} cards. Continue?`,
+        severity: 'danger',
+        confirmLabel: 'Remove',
+      });
+      if (!ok) return;
+    }
+    this.schemaFields.update((fields) => fields.filter((_, i) => i !== index));
+  }
+
+  protected saveSchema(): void {
+    const boardId = this.board()?.id;
+    if (!boardId) return;
+    this.savingSchema.set(true);
+    const fields = this.schemaFields().map((f) => ({
+      ...f,
+      options: f.type === 'Select' ? f.options.filter((o) => o.trim().length > 0) : [],
+    }));
+    this.http
+      .patch<BoardDetail>(`/api/v1/boards/${boardId}/schema`, { fields })
+      .subscribe({
+        next: (b) => {
+          this.savingSchema.set(false);
+          if (b && Array.isArray(b.columns)) this.applyBoard(b);
+          else this.schemaFields.set(fields);
+        },
+        error: () => this.savingSchema.set(false),
+      });
+  }
+
+  private cardsWithData(key: string): number {
+    if (!key) return 0;
+    return (this.board()?.cards ?? []).filter((c) => {
+      const value = c.data?.[key];
+      return value !== undefined && value !== null && String(value).length > 0;
+    }).length;
   }
 
   protected onDragStart(event: DragEvent, column: BoardColumn): void {

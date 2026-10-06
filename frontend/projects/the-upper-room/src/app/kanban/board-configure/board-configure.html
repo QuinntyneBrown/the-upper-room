@@ -14,6 +14,88 @@
     />
   </section>
 
+  <section class="config-section" data-testid="card-schema-editor">
+    <h2 class="config-section__heading">Card fields</h2>
+    @for (field of schemaFields(); track $index; let i = $index) {
+      <div
+        [attr.data-testid]="'schema-field-' + i"
+        [attr.data-field-key]="field.key"
+        class="schema-field"
+      >
+        <div class="schema-field__row">
+          <tar-text-field
+            label="Key"
+            [testId]="'schema-field-key-' + i"
+            [value]="field.key"
+            [fullWidth]="false"
+            (valueChange)="updateField(i, { key: $event })"
+          />
+          <tar-text-field
+            label="Label"
+            [testId]="'schema-field-label-' + i"
+            [value]="field.label"
+            [fullWidth]="false"
+            (valueChange)="updateField(i, { label: $event })"
+          />
+          <tar-select
+            label="Type"
+            [testId]="'schema-field-type-' + i"
+            [value]="field.type"
+            [options]="fieldTypeOptions"
+            [fullWidth]="false"
+            (valueChange)="updateField(i, { type: $event })"
+          />
+          <tar-checkbox
+            [testId]="'schema-field-required-' + i"
+            [checked]="field.required"
+            (checkedChange)="updateField(i, { required: $event })"
+          >
+            Required
+          </tar-checkbox>
+        </div>
+        @if (field.type === 'Select') {
+          <div class="schema-field__options">
+            @for (option of field.options; track $index; let j = $index) {
+              <tar-text-field
+                label="Option"
+                [testId]="'schema-field-option-' + i + '-' + j"
+                [value]="option"
+                [fullWidth]="false"
+                (valueChange)="updateOption(i, j, $event)"
+              />
+            }
+            <tar-button variant="text" [testId]="'schema-field-add-option-' + i" type="button" (clicked)="addOption(i)">
+              Add option
+            </tar-button>
+          </div>
+        }
+        <div class="schema-field__actions">
+          <tar-button variant="text" [testId]="'schema-field-up-' + i" type="button" [disabled]="i === 0" (clicked)="moveField(i, -1)">
+            Move up
+          </tar-button>
+          <tar-button
+            variant="text"
+            [testId]="'schema-field-down-' + i"
+            type="button"
+            [disabled]="i === schemaFields().length - 1"
+            (clicked)="moveField(i, 1)"
+          >
+            Move down
+          </tar-button>
+          <tar-button variant="text" color="warn" [testId]="'schema-field-remove-' + i" type="button" (clicked)="removeField(i)">
+            Remove
+          </tar-button>
+        </div>
+      </div>
+    }
+    <div class="schema-field__actions">
+      <tar-button variant="outlined" testId="schema-add-field" type="button" (clicked)="addField()">Add field</tar-button>
+      <tar-button variant="filled" testId="board-configure-save" type="button" [disabled]="savingSchema()" (clicked)="saveSchema()">
+        Save fields
+      </tar-button>
+    </div>
+  </section>
+
   <ul class="column-list">
     @for (column of columns(); track column.id) {
       <li

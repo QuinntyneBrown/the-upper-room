@@ -18,7 +18,7 @@ The following source elements provide the current implementation points. Their p
 
 | Source | Concrete elements | Observed surface |
 |---|---|---|
-| [frontend/projects/the-upper-room/e2e/tests/cross-cutting/browser-support.spec.ts](../../../../frontend/projects/the-upper-room/e2e/tests/cross-cutting/browser-support.spec.ts) | e2e spec | IE11 user agent shows `browser-support-banner`; modern Chrome hides it; banner is dismissable and stays dismissed in the session |
+| [e2e/tests/cross-cutting/browser-support.spec.ts](../../../../e2e/tests/cross-cutting/browser-support.spec.ts) | e2e spec | IE11 user agent shows `browser-support-banner`; modern Chrome hides it; banner is dismissable and stays dismissed in the session |
 | [frontend/projects/components/src/lib/banner/banner.ts](../../../../frontend/projects/components/src/lib/banner/banner.ts) | `banner` component | Shared banner presentation |
 | [frontend/projects/the-upper-room/src/index.html](../../../../frontend/projects/the-upper-room/src/index.html) | Document shell | Host page for pre-bootstrap detection |
 | [frontend/projects/the-upper-room/src/main.ts](../../../../frontend/projects/the-upper-room/src/main.ts) | Bootstrap | Application entry point |
@@ -34,7 +34,6 @@ Dismissing the banner shall hide it for the rest of the session.
 - No detector implementation or `browser-support-banner` markup was located in the source; only the e2e spec exists, so the behavior is a target change.
 - Version thresholds for "latest 2 stable versions" `<TO SUPPLY>`.
 - The text shall use a translation key per L2-100.
-- `playwright.config.ts` also lists a `webkit` project, which AGENTS.md does not permit for frontend testing.
 
 Production implementation shall follow [AGENTS.md](../../../../AGENTS.md), including incremental acceptance testing. Existing behavior shall remain compatible until an explicit change is approved.
 

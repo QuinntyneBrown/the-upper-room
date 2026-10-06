@@ -22,8 +22,8 @@ The following source elements provide the current implementation points. Their p
 | [frontend/projects/the-upper-room/src/app/i18n/dictionaries.ts](../../../../frontend/projects/the-upper-room/src/app/i18n/dictionaries.ts) | `DEFAULT_LOCALE` | `en-CA`; traces to L2-100 and L2-110 |
 | [backend/src/TheUpperRoom.Domain/Users/User.cs](../../../../backend/src/TheUpperRoom.Domain/Users/User.cs) | `User.TimeZone` | Required string, default `UTC`, maximum 100 characters |
 | [backend/src/TheUpperRoom.Domain/Events/Event.cs](../../../../backend/src/TheUpperRoom.Domain/Events/Event.cs) | `Event.Timezone` | Required string, maximum 100 characters |
-| [frontend/projects/the-upper-room/e2e/tests/cross-cutting/timezones.spec.ts](../../../../frontend/projects/the-upper-room/e2e/tests/cross-cutting/timezones.spec.ts) | Time-zone e2e spec | Event with `startAt` `2026-06-15T19:00:00Z`; traces to L2-111 |
-| [frontend/projects/the-upper-room/e2e/pages/EventDetailPage.ts](../../../../frontend/projects/the-upper-room/e2e/pages/EventDetailPage.ts) | `EventDetailPage` | Page Object used by the spec |
+| [e2e/tests/cross-cutting/timezones.spec.ts](../../../../e2e/tests/cross-cutting/timezones.spec.ts) | Time-zone e2e spec | Event with `startAt` `2026-06-15T19:00:00Z`; traces to L2-111 |
+| [e2e/pages/EventDetailPage.ts](../../../../e2e/pages/EventDetailPage.ts) | `EventDetailPage` | Page Object used by the spec |
 
 ### Target behavior and interfaces
 

@@ -1,5 +1,5 @@
 // traces_to: L2-016
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TarButton, TarPasswordField, TarTextField } from 'components';
 import { AUTH_PROVIDER } from '../auth-provider.contract';
@@ -21,11 +21,14 @@ export class SignIn {
   protected readonly formError = signal<string | null>(null);
   protected readonly submitting = signal(false);
 
+  private readonly emailField = viewChild('emailField', { read: ElementRef<HTMLElement> });
+
   protected onSubmit(event: Event): void {
     event.preventDefault();
     this.formError.set(null);
     if (!this.email().trim()) {
       this.emailError.set('Email is required');
+      this.emailField()?.nativeElement.querySelector('input')?.focus();
       return;
     }
     this.emailError.set(null);

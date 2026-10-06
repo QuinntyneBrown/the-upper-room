@@ -1,0 +1,22 @@
+{
+  "name": "e2e",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Playwright end-to-end tests for The Upper Room. The backend is fully mocked in-browser, so only the frontend dev server is needed.",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.16.0",
+    "eslint-plugin-the-upper-room": "file:../tools/eslint-plugin-the-upper-room",
+    "typescript": "~5.9.2"
+  }
+}
